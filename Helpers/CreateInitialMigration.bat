@@ -1,0 +1,2 @@
+dotnet ef migrations add InitialMigration -p 'C:\Users\JoeMamma PC\Desktop\University\RentalManager\RentalManager.Infrastructure\' -s 'C:\Users\JoeMamma PC\Desktop\University\RentalManager\RentalManager.WebAPI'
+pause
