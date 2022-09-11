@@ -24,6 +24,9 @@ namespace RentalManager.Infrastructure.DTO
                 PhoneNumber = createClient.PhoneNumber,
                 Email = createClient.Email,
                 IdCard = ToUpperCheckForNull(createClient.IdCard),
+                City = createClient.City,
+                Street = createClient.Street,
+                StreetNumber = createClient.StreetNumber,
                 DateAdded = DateTime.Now
             };
         }
@@ -37,6 +40,9 @@ namespace RentalManager.Infrastructure.DTO
                 PhoneNumber = Regex.Replace(Regex.Replace(client.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
                 Email = client.Email,
                 IdCard = ToUpperCheckForNull(client.IdCard),
+                City = client.City,
+                Street = client.Street,
+                StreetNumber = client.StreetNumber,
                 DateAdded = client.DateAdded,
             };
             return clientDTO;
@@ -49,7 +55,10 @@ namespace RentalManager.Infrastructure.DTO
                 Surname = updateClient.Surname,
                 PhoneNumber = Regex.Replace(updateClient.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
                 Email = updateClient.Email,
-                IdCard = ToUpperCheckForNull(updateClient.IdCard)
+                IdCard = ToUpperCheckForNull(updateClient.IdCard),
+                City = updateClient.City,
+                Street = updateClient.Street,
+                StreetNumber = updateClient.StreetNumber,
             };
             return result;
         }
@@ -63,6 +72,9 @@ namespace RentalManager.Infrastructure.DTO
                 PhoneNumber = Regex.Replace(clientDTO.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
                 Email = clientDTO.Email,
                 IdCard = ToUpperCheckForNull(clientDTO.IdCard),
+                City = clientDTO.City,
+                Street = clientDTO.Street,
+                StreetNumber = clientDTO.StreetNumber,
                 DateAdded = clientDTO.DateAdded
             };
             return result;

@@ -13,13 +13,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as React from 'react';
 
-export default function ClientsDeleteDialog ({handleEditClick, clientEditName, clientEditSurname}) {
+export default function ClientsDeleteDialog ({handleDeleteClick, clientEditName, clientEditSurname}) {
     return (
         <Dialog
             open={true}
             keepMounted
             maxWidth={"lg"}
-            onClose={() => handleEditClick(false)}
+            onClose={() => handleDeleteClick(false)}
             aria-describedby="alert-dialog-slide-description"
         >
             <DialogTitle>{"Delete client"}</DialogTitle>
@@ -51,10 +51,10 @@ export default function ClientsDeleteDialog ({handleEditClick, clientEditName, c
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"ClientsDialogStack"}>
-                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleEditClick(false)} className={"ClientsDialogButton"}>
+                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"ClientsDialogButton"}>
                     Delete
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"ClientsDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"ClientsDialogButton"}>
                     Cancel
                 </Button>
             </Stack>

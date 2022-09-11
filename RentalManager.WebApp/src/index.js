@@ -23,7 +23,7 @@ const renderReactDom = () => {
             <CssBaseline />
             <HashRouter>
                 <Routes>
-                    <Route path="/" element={<RentalEquipment />} />
+                    <Route path="/" element={<Clients />} />
                 </Routes>
             </HashRouter>
         </ThemeProvider>

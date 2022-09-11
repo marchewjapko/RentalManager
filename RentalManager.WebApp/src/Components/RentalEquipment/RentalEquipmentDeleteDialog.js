@@ -13,13 +13,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as React from 'react';
 
-export default function RentalEquipmentDeleteDialog ({handleEditClick, equipmentEditName, equipmentEditPrice}) {
+export default function RentalEquipmentDeleteDialog ({handleDeleteClick, equipmentName, equipmentPrice}) {
     return (
         <Dialog
             open={true}
             keepMounted
             maxWidth={"lg"}
-            onClose={() => handleEditClick(false)}
+            onClose={() => handleDeleteClick(false)}
             aria-describedby="alert-dialog-slide-description"
         >
             <DialogTitle>{"Delete rental equipment"}</DialogTitle>
@@ -31,7 +31,7 @@ export default function RentalEquipmentDeleteDialog ({handleEditClick, equipment
                     type="email"
                     fullWidth
                     variant="outlined"
-                    value={equipmentEditName}
+                    value={equipmentName}
                     InputProps={{
                         readOnly: true
                     }}
@@ -43,7 +43,7 @@ export default function RentalEquipmentDeleteDialog ({handleEditClick, equipment
                     type="email"
                     fullWidth
                     variant="outlined"
-                    value={equipmentEditPrice}
+                    value={equipmentPrice}
                     className={"RentalEquipmentLowerTextField"}
                     InputProps={{
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>,
@@ -52,10 +52,10 @@ export default function RentalEquipmentDeleteDialog ({handleEditClick, equipment
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"RentalEquipmentDialogStack"}>
-                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleEditClick(false)} className={"RenalEquipmentDialogButton"}>
+                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"RenalEquipmentDialogButton"}>
                     Delete
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"RenalEquipmentDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"RenalEquipmentDialogButton"}>
                     Cancel
                 </Button>
             </Stack>

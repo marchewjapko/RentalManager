@@ -54,7 +54,7 @@ namespace RentalManager.Infrastructure.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Client>> BrowseAllAsync(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<Client>> BrowseAllAsync(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, string? city = null, string? street = null, DateTime? from = null, DateTime? to = null)
         {
             var result = _appDbContext.Clients.AsQueryable();
             if(name != null)
@@ -77,6 +77,14 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 result = result.Where(x => x.IdCard.Contains(idCard));
             }
+            if (city != null)
+            {
+                result = result.Where(x => x.City.Contains(city));
+            }
+            if (street != null)
+            {
+                result = result.Where(x => x.Street.Contains(street));
+            }
             if (from != null)
             {
                 result = result.Where(x => x.DateAdded.Date > from.Value.Date);
@@ -98,6 +106,9 @@ namespace RentalManager.Infrastructure.Repositories
                 z.PhoneNumber = client.PhoneNumber;
                 z.Email = client.Email;
                 z.IdCard = client.IdCard;
+                z.City = client.City;   
+                z.Street = client.Street;
+                z.StreetNumber = client.StreetNumber;
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(z);
             }

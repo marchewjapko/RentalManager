@@ -18,9 +18,9 @@ namespace RentalManager.Infrastructure.Services
             return result.ToDTO();
         }
 
-        public async Task<IEnumerable<ClientDTO>> BrowseAllAsync(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<ClientDTO>> BrowseAllAsync(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, string? city = null, string? street = null, DateTime? from = null, DateTime? to = null)
         {
-            var result = await _clientRepository.BrowseAllAsync(name, surname, phoneNumber, email, idCard, from, to);
+            var result = await _clientRepository.BrowseAllAsync(name, surname, phoneNumber, email, idCard, city, street, from, to);
             return await Task.FromResult(result.Select(x => x.ToDTO()));
         }
 

@@ -13,16 +13,16 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DoneIcon from '@mui/icons-material/Done';
 import * as React from 'react';
 
-export default function RentalEquipmentUpdateDialog ({handleEditClick, equipmentEditName, equipmentEditPrice}) {
-    const [equipmentEditDialogName, setEquipmentDialogEditName] = React.useState(equipmentEditName);
-    const [equipmentEditDialogPrice, setEquipmentDialogEditPrice] = React.useState(equipmentEditPrice);
+export default function RentalEquipmentUpdateDialog ({handleEditClick, equipmentName, equipmentPrice}) {
+    const [equipmentDialogName, setEquipmentDialogName] = React.useState(equipmentName);
+    const [equipmentDialogPrice, setEquipmentDialogPrice] = React.useState(equipmentPrice);
 
     const handleChangeName = (event) => {
-        setEquipmentDialogEditName(event.target.value);
+        setEquipmentDialogName(event.target.value);
     };
 
     const handleChangePrice = (event) => {
-        setEquipmentDialogEditPrice(event.target.value.replace(/\D/g, ""));
+        setEquipmentDialogPrice(event.target.value.replace(/\D/g, ""));
     };
 
     return (
@@ -40,7 +40,7 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                     label="Equipment name"
                     fullWidth
                     variant="outlined"
-                    value={equipmentEditDialogName}
+                    value={equipmentDialogName}
                     onChange={handleChangeName}
                 />
                 <TextField
@@ -48,7 +48,7 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                     label="Monthly price"
                     fullWidth
                     variant="outlined"
-                    value={equipmentEditDialogPrice}
+                    value={equipmentDialogPrice}
                     className={"RentalEquipmentLowerTextField"}
                     InputProps={{
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>

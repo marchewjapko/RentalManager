@@ -1,0 +1,35 @@
+Website: https://json-generator.com/
+
+1. Clients
+[
+  '{{repeat(15, 15)}}',
+  {
+    id: '{{index()}}',
+    name: '{{firstName()}}',
+    surname: '{{surname()}}',
+    phone: '{{phone("xxx xxx xxx")}}',
+    email: '{{email()}}',
+    idCard: function () {
+      var result = ''
+      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for(var i = 0; i < 3; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      result += ' ';
+      var numbers = '123456789'
+      for(var x = 0; x < 6; x++) {
+        result += numbers.charAt(Math.floor(Math.random() * numbers.length));
+      }
+      return result
+    },
+    city: '{{city()}}',
+    street: '{{street()}}',
+    streetNumber: function () {
+      var result = Math.floor(Math.random() * (99 - 1) + 1);
+      var characters = 'ABCDEFGHIJKLMN';
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      return result
+    }
+  }
+]
+##################################################################################

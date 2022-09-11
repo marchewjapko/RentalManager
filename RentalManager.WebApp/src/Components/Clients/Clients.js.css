@@ -22,7 +22,7 @@
 }
 
 .ClientsTable {
-    max-height: 450px;
+    max-height: 650px;
 }
 .ClientsDialogButton {
     margin-left: 20px !important;
@@ -40,4 +40,8 @@
     inset-block-end: 0 !important;
     background-color: #121212;
     width: 100px;
+}
+
+.ClientTableHeadDetails {
+    width: 10px;
 }

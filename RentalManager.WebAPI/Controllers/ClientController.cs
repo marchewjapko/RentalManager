@@ -21,9 +21,9 @@ namespace RentalManager.WebAPI.Controllers
             return Json(result);
         }
         [HttpGet]
-        public async Task<IActionResult> BrowseAllClients(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, DateTime? from = null, DateTime? to = null)
+        public async Task<IActionResult> BrowseAllClients(string? name = null, string? surname = null, string? phoneNumber = null, string? email = null, string? idCard = null, string? city = null, string? street = null, DateTime? from = null, DateTime? to = null)
         {
-            var result = await _clientService.BrowseAllAsync(name, surname, phoneNumber, email, idCard, from, to);
+            var result = await _clientService.BrowseAllAsync(name, surname, phoneNumber, email, idCard, city, street, from, to);
             return Json(result);
         }
         [HttpDelete("{id}")]
