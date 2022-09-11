@@ -8,7 +8,7 @@ namespace RentalManager.Core.Repositories
         Task<RentalAgreement> GetAsync(int id);
         Task DeleteAsync(int id);
         Task<RentalAgreement> UpdateAsync(RentalAgreement rentalAgreement, int id);
-        Task<IEnumerable<RentalAgreement>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool? onlyUnpaid = null, DateTime? from = null, DateTime? to = null);
+        Task<IEnumerable<RentalAgreement>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null);
         Task<RentalAgreement> ExtendValidDateAsync(int rentalAgreementId, DateTime newValidDate);
     }
 }

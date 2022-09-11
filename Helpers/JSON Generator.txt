@@ -29,7 +29,8 @@ Website: https://json-generator.com/
       var characters = 'ABCDEFGHIJKLMN';
       result += characters.charAt(Math.floor(Math.random() * characters.length));
       return result
-    }
+    },
+    dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
   }
 ]
 ##################################################################################

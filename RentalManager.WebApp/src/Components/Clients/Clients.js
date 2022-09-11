@@ -44,10 +44,10 @@ export default function Clients() {
                     <Table stickyHeader aria-label="custom pagination table">
                         <TableHead>
                             <TableRow>
-                                <TableCell className={"ClientTableHeadDetails"}></TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="right">Surname</TableCell>
-                                <TableCell align="right">
+                                <TableCell className={"ClientTableHeadDetails"}/>
+                                <TableCell className={"ClientTableHeadName"}>Name</TableCell>
+                                <TableCell align="right" className={"ClientTableHeadSurname"}>Surname</TableCell>
+                                <TableCell align="right" className={"ClientTableHeadActions"}>
                                     <IconButton color="default" onClick={() => filterData()}>
                                         <SearchIcon/>
                                     </IconButton>

@@ -31,7 +31,7 @@ namespace RentalManager.Infrastructure.Services
             return result.ToDTO();
         }
 
-        public async Task<IEnumerable<RentalAgreementDTO>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool? onlyUnpaid = null, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<RentalAgreementDTO>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null)
         {
             var result = await _rentalAgreementRepository.BrowseAllAsync(clientId, rentalEquipmentId, onlyUnpaid, from, to);
             return await Task.FromResult(result.Select(x => x.ToDTO()));

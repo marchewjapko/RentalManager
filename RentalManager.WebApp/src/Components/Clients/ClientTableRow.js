@@ -27,7 +27,6 @@ export default function ClientTableRow(props) {
         setClientEditSurname(ClientSurname)
         setShowDeleteDialog(isShown)
     }
-
     return (
         <React.Fragment>
             {showEditDialog ? <ClientsUpdateDialog handleEditClick={handleEditClick} clientEditName={ClientEditName}
@@ -70,9 +69,7 @@ export default function ClientTableRow(props) {
                         <Box sx={{ margin: 1 }}>
                             <TextField
                                 margin="dense"
-                                id="name"
                                 label="Phone number"
-                                type="email"
                                 fullWidth
                                 variant="outlined"
                                 value={row.phone}
@@ -82,36 +79,42 @@ export default function ClientTableRow(props) {
                             />
                             <TextField
                                 margin="dense"
-                                id="name"
                                 label="Email"
-                                type="email"
                                 fullWidth
                                 variant="outlined"
                                 value={row.email}
                                 InputProps={{
                                     readOnly: true
                                 }}
+                                disabled={row.email.trim().length === 0 ? true : false}
                             />
                             <TextField
                                 margin="dense"
-                                id="name"
                                 label="ID card"
-                                type="email"
                                 fullWidth
                                 variant="outlined"
                                 value={row.idCard}
                                 InputProps={{
                                     readOnly: true
                                 }}
+                                disabled={row.idCard.trim().length === 0 ? true : false}
                             />
                             <TextField
                                 margin="dense"
-                                id="name"
                                 label="Address"
-                                type="email"
                                 fullWidth
                                 variant="outlined"
                                 value={row.city + ' ' + row.street + ' ' + row.streetNumber}
+                                InputProps={{
+                                    readOnly: true
+                                }}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Date added"
+                                fullWidth
+                                variant="outlined"
+                                value={new Date(row.dateAdded).getDate().toString() + '.' + new Date(row.dateAdded).getMonth().toString() + '.' + new Date(row.dateAdded).getFullYear().toString()}
                                 InputProps={{
                                     readOnly: true
                                 }}

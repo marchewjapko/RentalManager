@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using System.Diagnostics;
 
 namespace RentalManager.Infrastructure.Repositories
 {
@@ -48,7 +49,7 @@ namespace RentalManager.Infrastructure.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<RentalAgreement>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool? onlyUnpaid = null, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<RentalAgreement>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null)
         {
             var result = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).AsQueryable();
             if (clientId != null)
@@ -59,7 +60,7 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 result = result.Where(x => x.RentalEquipment.Any(a => a.Id == rentalEquipmentId));
             }
-            if (onlyUnpaid != null)
+            if (onlyUnpaid)
             {
                 result = result.Where(x => x.ValidUntil.Date < DateTime.Now.Date);
             }
