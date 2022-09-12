@@ -34,3 +34,12 @@ Website: https://json-generator.com/
   }
 ]
 ##################################################################################
+2. Employees
+[
+  '{{repeat(5, 5)}}',
+  {
+    id: '{{index()}}',
+    name: '{{firstName()}}',
+    surname: '{{surname()}}'
+  }
+]

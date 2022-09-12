@@ -8,13 +8,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ClientTableRow(props) {
-    const { row } = props;
+    const {row} = props;
     const [open, setOpen] = React.useState(false);
 
     const [showEditDialog, setShowEditDialog] = React.useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [ClientEditName, setClientEditName] = React.useState("");
-    const [ClientEditSurname, setClientEditSurname] = React.useState("");
+    const [clientEditName, setClientEditName] = React.useState("");
+    const [clientEditSurname, setClientEditSurname] = React.useState("");
+    const [hiddenRowStyle, setHiddenRowStyle] = React.useState("HiddenRow");
 
     const handleEditClick = (isShown, ClientId, ClientName, ClientSurname) => {
         setClientEditName(ClientName)
@@ -27,21 +28,27 @@ export default function ClientTableRow(props) {
         setClientEditSurname(ClientSurname)
         setShowDeleteDialog(isShown)
     }
+
+    const handleOpen = () => {
+        setOpen(!open);
+        if (open) {
+            setTimeout(() => setHiddenRowStyle("HiddenRow"), 450);
+        } else {
+            setHiddenRowStyle("")
+        }
+    }
+
     return (
         <React.Fragment>
-            {showEditDialog ? <ClientsUpdateDialog handleEditClick={handleEditClick} clientEditName={ClientEditName}
-                                                   clientEditSurname={ClientEditSurname}/> : null}
+            {showEditDialog ? <ClientsUpdateDialog handleEditClick={handleEditClick} clientEditName={clientEditName}
+                                                   clientEditSurname={clientEditSurname}/> : null}
             {showDeleteDialog ?
-                <ClientsDeleteDialog handleDeleteClick={handleDeleteClick} clientEditName={ClientEditName}
-                                     clientEditSurname={ClientEditSurname}/> : null}
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                <ClientsDeleteDialog handleDeleteClick={handleDeleteClick} clientEditName={clientEditName}
+                                     clientEditSurname={clientEditSurname}/> : null}
+            <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                 <TableCell>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+                    <IconButton size="small" onClick={handleOpen}>
+                        {open ? <KeyboardArrowUpIcon fontSize="small"/> : <KeyboardArrowDownIcon fontSize="small"/>}
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
@@ -64,9 +71,9 @@ export default function ClientTableRow(props) {
                 </TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+                <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={4} className={hiddenRowStyle}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
+                        <Box sx={{margin: 1}}>
                             <TextField
                                 margin="dense"
                                 label="Phone number"
@@ -86,7 +93,7 @@ export default function ClientTableRow(props) {
                                 InputProps={{
                                     readOnly: true
                                 }}
-                                disabled={row.email.trim().length === 0 ? true : false}
+                                disabled={row.email.trim().length === 0}
                             />
                             <TextField
                                 margin="dense"
@@ -97,7 +104,7 @@ export default function ClientTableRow(props) {
                                 InputProps={{
                                     readOnly: true
                                 }}
-                                disabled={row.idCard.trim().length === 0 ? true : false}
+                                disabled={row.idCard.trim().length === 0}
                             />
                             <TextField
                                 margin="dense"

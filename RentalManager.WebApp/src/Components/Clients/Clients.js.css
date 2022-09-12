@@ -37,24 +37,27 @@
 
 .ClientsTableFooter {
     position: sticky;
-    inset-block-end: 0 !important;
+    inset-block-end: 0px !important;
     background-color: #121212;
-    width: 100px;
+    z-index: 2;
 }
 
 .ClientTableHeadDetails {
     width: 0;
 }
 
-
-/*.ClientTableHeadName {
-    width: 35%;
+.ClientTableHeadName {
+    width: 50%;
 }
 
 .ClientTableHeadSurname {
-    width: calc((100% - 100) * 0.55)
-}*/
+    width: 50%;
+}
 
 .ClientTableHeadActions {
-    width: 100px !important;
+    min-width: 95px !important;
+}
+
+.HiddenRow {
+    display: none !important;
 }

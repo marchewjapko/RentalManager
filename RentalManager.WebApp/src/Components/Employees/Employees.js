@@ -1,6 +1,6 @@
 import * as React from 'react';
-import "./RentalEquipment.js.css"
-import {RentalEquipmentMock} from "../../Mocks/RentalEquipmentMock";
+import "./Employees.js.css"
+import {EmployeesMock} from "../../Mocks/EmployeesMock";
 import {
     Box,
     IconButton,
@@ -10,29 +10,24 @@ import {
     TableBody,
     TableCell,
     TableContainer,
-    TableFooter,
     TableHead,
-    TablePagination,
     TableRow,
     TextField
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import RentalEquipmentUpdateDialog from "./RentalEquipmentUpdateDialog";
-import RentalEquipmentDeleteDialog from "./RentalEquipmentDeleteDialog";
-import TablePaginationActions from "../TablePaginationActions";
+import EmployeesUpdateDialog from "./EmployeesUpdateDialog";
+import EmployeesDeleteDialog from "./EmployeesDeleteDialog";
 import {Scrollbars} from 'react-custom-scrollbars';
 import {Link} from "react-router-dom";
 
-export default function RentalEquipment() {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function Employees() {
     const [showEditDialog, setShowEditDialog] = React.useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [equipmentName, setEquipmentName] = React.useState("");
-    const [equipmentPrice, setEquipmentPrice] = React.useState(0);
-    const [data, setData] = React.useState(RentalEquipmentMock);
+    const [employeeName, setEmployeeName] = React.useState("");
+    const [employeeSurname, setEmployeeSurname] = React.useState(0);
+    const [data, setData] = React.useState(EmployeesMock);
     const [searchName, setSearchName] = React.useState('');
 
     const handleKeyDown = (event) => {
@@ -43,52 +38,42 @@ export default function RentalEquipment() {
     const handleChangeName = (event) => {
         setSearchName(event.target.value);
         if (event.target.value.length === 0) {
-            setData(RentalEquipmentMock.filter(x => x.name.includes('')));
+            setData(EmployeesMock.filter(x => x.surname.includes('')));
         }
     };
 
     const filterData = () => {
-        setData(RentalEquipmentMock.filter(x => x.name.includes(searchName)));
+        setData(EmployeesMock.filter(x => x.surname.toLowerCase().includes(searchName.toLowerCase())));
     }
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleEditClick = (isShown, equipmentId, equipmentName, equipmentPrice) => {
-        setEquipmentName(equipmentName)
-        setEquipmentPrice(equipmentPrice)
+    const handleEditClick = (isShown, employeeName, employeeSurname) => {
+        setEmployeeName(employeeName)
+        setEmployeeSurname(employeeSurname)
         setShowEditDialog(isShown)
     }
 
-    const handleDeleteClick = (isShown, equipmentId, equipmentName, equipmentPrice) => {
-        setEquipmentName(equipmentName)
-        setEquipmentPrice(equipmentPrice)
+    const handleDeleteClick = (isShown, employeeName, employeeSurname) => {
+        setEmployeeName(employeeName)
+        setEmployeeSurname(employeeSurname)
         setShowDeleteDialog(isShown)
     }
 
     return (
-        <Paper elevation={5} className={"RentalEquipmentContainer"}>
+        <Paper elevation={5} className={"EmployeesContainer"}>
             {showEditDialog ?
-                <RentalEquipmentUpdateDialog handleEditClick={handleEditClick} equipmentName={equipmentName}
-                                             equipmentPrice={equipmentPrice}/> : null}
+                <EmployeesUpdateDialog handleEditClick={handleEditClick} employeeName={employeeName}
+                                       employeeSurname={employeeSurname}/> : null}
             {showDeleteDialog ?
-                <RentalEquipmentDeleteDialog handleDeleteClick={handleDeleteClick} equipmentName={equipmentName}
-                                             equipmentPrice={equipmentPrice}/> : null}
-            <TableContainer className={"RentalEquipmentTable"}>
+                <EmployeesDeleteDialog handleDeleteClick={handleDeleteClick} employeeName={employeeName}
+                                       employeeSurname={employeeSurname}/> : null}
+            <TableContainer className={"EmployeesTable"}>
                 <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide autoHideTimeout={750} autoHideDuration={500}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
-                                <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
-                                    price</TableCell>
-                                <TableCell align="right">
+                                <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
+                                <TableCell align="right" className={"EmployeesTableHeadSurname"}>Surname</TableCell>
+                                <TableCell align="right" className={"EmployeesTableHeadActions"}>
                                     <Stack direction="row" justifyContent="flex-end">
                                         <TextField
                                             value={searchName}
@@ -96,7 +81,7 @@ export default function RentalEquipment() {
                                             placeholder="Search"
                                             variant="standard"
                                             size="small"
-                                            className={"TableRentalEquipmentSearchInput"}
+                                            className={"TableEmployeesSearchInput"}
                                             InputProps={{
                                                 style: {fontSize: '0.875em'},
                                             }}
@@ -110,25 +95,22 @@ export default function RentalEquipment() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {(rowsPerPage > 0
-                                    ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : data
-                            ).map((row) => (
+                            {data.map((row) => (
                                 <TableRow key={row.name}>
                                     <TableCell component="th" scope="row">
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="right">
-                                        {row.monthlyPrice} zł
+                                        {row.surname}
                                     </TableCell>
                                     <TableCell align="right" className={"TableRentalEquipmentColumnActions"}>
                                         <Box>
                                             <IconButton aria-label="delete" size="small"
-                                                        onClick={() => handleEditClick(true, row.id, row.name, row.monthlyPrice)}>
+                                                        onClick={() => handleEditClick(true, row.name, row.surname)}>
                                                 <EditIcon fontSize="small"/>
                                             </IconButton>
                                             <IconButton aria-label="delete" size="small" color={"error"}
-                                                        onClick={() => handleDeleteClick(true, row.id, row.name, row.monthlyPrice)}>
+                                                        onClick={() => handleDeleteClick(true, row.name, row.surname)}>
                                                 <DeleteIcon fontSize="small"/>
                                             </IconButton>
                                         </Box>
@@ -136,25 +118,11 @@ export default function RentalEquipment() {
                                 </TableRow>
                             ))}
                         </TableBody>
-                        <TableFooter className={"RentalEquipmentTableFooter"}>
-                            <TableRow>
-                                <TablePagination
-                                    rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-                                    colSpan={4}
-                                    count={data.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
                     </Table>
                 </Scrollbars>
             </TableContainer>
-            <Link to="/">Client</Link>
-            <Link to="/3">Employees</Link>
+            <Link to="/">Clients</Link>
+            <Link to="/2">RentalEquipment</Link>
         </Paper>
     );
 }
