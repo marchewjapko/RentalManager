@@ -14,7 +14,7 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField
+    TextField, useTheme
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -34,6 +34,7 @@ export default function RentalEquipment() {
     const [equipmentPrice, setEquipmentPrice] = React.useState(0);
     const [data, setData] = React.useState(RentalEquipmentMock);
     const [searchName, setSearchName] = React.useState('');
+    const theme = useTheme()
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter')
@@ -73,7 +74,7 @@ export default function RentalEquipment() {
     }
 
     return (
-        <Paper elevation={5} className={"RentalEquipmentContainer"}>
+        <Paper elevation={5} className={"ComponentContainer"}>
             {showEditDialog ?
                 <RentalEquipmentUpdateDialog handleEditClick={handleEditClick} equipmentName={equipmentName}
                                              equipmentPrice={equipmentPrice}/> : null}
@@ -88,7 +89,7 @@ export default function RentalEquipment() {
                                 <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
                                 <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
                                     price</TableCell>
-                                <TableCell align="right">
+                                <TableCell align="right" className={"TableHeadActionsWithSearch"}>
                                     <Stack direction="row" justifyContent="flex-end">
                                         <TextField
                                             value={searchName}
@@ -96,9 +97,9 @@ export default function RentalEquipment() {
                                             placeholder="Search"
                                             variant="standard"
                                             size="small"
-                                            className={"TableRentalEquipmentSearchInput"}
+                                            className={"TableSearchInput"}
                                             InputProps={{
-                                                style: {fontSize: '0.875em'},
+                                                style: {fontSize: '1em'},
                                             }}
                                             onKeyDown={handleKeyDown}
                                         />
@@ -136,7 +137,7 @@ export default function RentalEquipment() {
                                 </TableRow>
                             ))}
                         </TableBody>
-                        <TableFooter className={"RentalEquipmentTableFooter"}>
+                        <TableFooter className={"TableFooter"} style={{backgroundColor: theme.palette.background.default}}>
                             <TableRow>
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}

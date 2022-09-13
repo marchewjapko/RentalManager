@@ -59,7 +59,7 @@ export default function Employees() {
     }
 
     return (
-        <Paper elevation={5} className={"EmployeesContainer"}>
+        <Paper elevation={5} className={"ComponentContainer"}>
             {showEditDialog ?
                 <EmployeesUpdateDialog handleEditClick={handleEditClick} employeeName={employeeName}
                                        employeeSurname={employeeSurname}/> : null}
@@ -73,7 +73,7 @@ export default function Employees() {
                             <TableRow>
                                 <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
                                 <TableCell align="right" className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                                <TableCell align="right" className={"EmployeesTableHeadActions"}>
+                                <TableCell align="right" className={"TableHeadActionsWithSearch"}>
                                     <Stack direction="row" justifyContent="flex-end">
                                         <TextField
                                             value={searchName}
@@ -81,9 +81,9 @@ export default function Employees() {
                                             placeholder="Search"
                                             variant="standard"
                                             size="small"
-                                            className={"TableEmployeesSearchInput"}
+                                            className={"TableSearchInput"}
                                             InputProps={{
-                                                style: {fontSize: '0.875em'},
+                                                style: {fontSize: '1em'},
                                             }}
                                             onKeyDown={handleKeyDown}
                                         />

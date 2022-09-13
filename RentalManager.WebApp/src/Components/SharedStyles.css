@@ -1,0 +1,30 @@
+.TableFooter {
+    position: sticky;
+    inset-block-end: 0px !important;
+    z-index: 2;
+}
+
+.ComponentContainer {
+    margin: 10px;
+    max-width: 600px;
+}
+
+.DialogStack {
+    padding: 0 24px 0 4px;
+}
+
+.DialogButton {
+    margin-left: 20px !important;
+    width: 45%;
+    margin-bottom: 24px !important;
+}
+
+.TableHeadActionsWithSearch {
+    width: 13em !important;
+}
+
+.TableSearchInput {
+    margin-top: 8px !important;
+    /*min-width: 100px;*/
+    /*max-width: 200px;*/
+}

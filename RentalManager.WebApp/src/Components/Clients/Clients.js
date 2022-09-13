@@ -1,5 +1,6 @@
 import * as React from 'react';
 import "./Clients.js.css"
+import "../SharedStyles.css"
 import {
     IconButton,
     Paper,
@@ -10,7 +11,7 @@ import {
     TableFooter,
     TableHead,
     TablePagination,
-    TableRow,
+    TableRow, useTheme,
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import {ClientsMock} from "../../Mocks/ClientsMock";
@@ -23,6 +24,7 @@ export default function Clients() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [data, setData] = React.useState(ClientsMock);
+    const theme = useTheme()
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -34,7 +36,7 @@ export default function Clients() {
     };
 
     return (
-        <Paper elevation={5} className={"ClientsContainer"}>
+        <Paper elevation={5} className={"ComponentContainer"}>
             <TableContainer className={"ClientsTable"}>
                 <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={650} autoHide autoHideTimeout={750} autoHideDuration={500}>
                     <Table stickyHeader>
@@ -58,7 +60,7 @@ export default function Clients() {
                                 <ClientTableRow key={row.id} row={row}/>
                             ))}
                         </TableBody>
-                        <TableFooter className={"ClientsTableFooter"}>
+                        <TableFooter className={"TableFooter"} style={{backgroundColor: theme.palette.background.default}}>
                             <TableRow>
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
@@ -75,6 +77,7 @@ export default function Clients() {
                     </Table>
                 </Scrollbars>
             </TableContainer>
+            <Link to="/">Clients</Link>
             <Link to="/2">RentalEquipment</Link>
             <Link to="/3">Employees</Link>
         </Paper>

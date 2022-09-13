@@ -56,11 +56,11 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                     onChange={handleChangePrice}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"RentalEquipmentDialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"RenalEquipmentDialogButton"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Save
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"RenalEquipmentDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

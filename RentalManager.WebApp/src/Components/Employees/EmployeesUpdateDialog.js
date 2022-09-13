@@ -51,11 +51,11 @@ export default function EmployeesUpdateDialog ({handleEditClick, employeeName, e
                     onChange={handleChangeSurname}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"EmployeesDialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"EmployeesDialogButton"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Save
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"EmployeesDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

@@ -1,13 +1,10 @@
 import {
     Button,
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
-    InputAdornment, Stack,
-    TextField,
-    Zoom
+    Stack,
+    TextField
 } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,15 +17,12 @@ export default function ClientsDeleteDialog ({handleDeleteClick, clientEditName,
             keepMounted
             maxWidth={"lg"}
             onClose={() => handleDeleteClick(false)}
-            aria-describedby="alert-dialog-slide-description"
         >
             <DialogTitle>{"Delete client"}</DialogTitle>
             <DialogContent>
                 <TextField
                     margin="dense"
-                    id="name"
                     label="Name"
-                    type="email"
                     fullWidth
                     variant="outlined"
                     value={clientEditName}
@@ -38,9 +32,7 @@ export default function ClientsDeleteDialog ({handleDeleteClick, clientEditName,
                 />
                 <TextField
                     margin="dense"
-                    id="name"
                     label="Surname"
-                    type="email"
                     fullWidth
                     variant="outlined"
                     value={clientEditSurname}
@@ -50,11 +42,11 @@ export default function ClientsDeleteDialog ({handleDeleteClick, clientEditName,
                     }}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"ClientsDialogStack"}>
-                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"ClientsDialogButton"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"DialogButton"}>
                     Delete
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"ClientsDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

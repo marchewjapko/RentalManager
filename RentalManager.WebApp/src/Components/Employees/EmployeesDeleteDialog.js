@@ -44,11 +44,11 @@ export default function EmployeesDeleteDialog ({handleDeleteClick, employeeName,
                     }}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"RentalEquipmentDialogStack"}>
-                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"RenalEquipmentDialogButton"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"DialogButton"}>
                     Delete
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"RenalEquipmentDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleDeleteClick(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

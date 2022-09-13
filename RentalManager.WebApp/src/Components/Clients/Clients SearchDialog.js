@@ -44,13 +44,12 @@ export default function ClientsSearchDialog ({handleDeleteClick, clientEditName,
                     fullWidth
                     variant="outlined"
                     value={clientEditSurname}
-                    className={"ClientsLowerTextField"}
                     InputProps={{
                         readOnly: true
                     }}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"ClientsDialogStack"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
                 <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={() => handleDeleteClick(false)} className={"ClientsDialogButton"}>
                     Delete
                 </Button>

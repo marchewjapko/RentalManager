@@ -53,11 +53,11 @@ export default function ClientsUpdateDialog ({handleEditClick, clientEditName, c
                     onChange={handleChangeSurname}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"ClientsDialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"ClientsDialogButton"}>
+            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Save
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"ClientsDialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>
