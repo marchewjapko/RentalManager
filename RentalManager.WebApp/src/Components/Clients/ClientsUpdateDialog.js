@@ -49,7 +49,7 @@ export default function ClientsUpdateDialog ({handleEditClick, clientEditName, c
                     fullWidth
                     variant="outlined"
                     value={ClientEditDialogSurname}
-                    className={"ClientsLowerTextField"}
+                    className={"DialogLowerTextField"}
                     onChange={handleChangeSurname}
                 />
             </DialogContent>

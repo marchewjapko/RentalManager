@@ -14,14 +14,13 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField, useTheme
+    TextField,
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import RentalEquipmentUpdateDialog from "./RentalEquipmentUpdateDialog";
 import RentalEquipmentDeleteDialog from "./RentalEquipmentDeleteDialog";
-import TablePaginationActions from "../TablePaginationActions";
 import {Scrollbars} from 'react-custom-scrollbars';
 import {Link} from "react-router-dom";
 
@@ -34,7 +33,6 @@ export default function RentalEquipment() {
     const [equipmentPrice, setEquipmentPrice] = React.useState(0);
     const [data, setData] = React.useState(RentalEquipmentMock);
     const [searchName, setSearchName] = React.useState('');
-    const theme = useTheme()
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter')
@@ -74,88 +72,86 @@ export default function RentalEquipment() {
     }
 
     return (
-        <Paper elevation={5} className={"ComponentContainer"}>
-            {showEditDialog ?
-                <RentalEquipmentUpdateDialog handleEditClick={handleEditClick} equipmentName={equipmentName}
-                                             equipmentPrice={equipmentPrice}/> : null}
-            {showDeleteDialog ?
-                <RentalEquipmentDeleteDialog handleDeleteClick={handleDeleteClick} equipmentName={equipmentName}
-                                             equipmentPrice={equipmentPrice}/> : null}
-            <TableContainer className={"RentalEquipmentTable"}>
-                <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide autoHideTimeout={750} autoHideDuration={500}>
-                    <Table stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
-                                <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
-                                    price</TableCell>
-                                <TableCell align="right" className={"TableHeadActionsWithSearch"}>
-                                    <Stack direction="row" justifyContent="flex-end">
-                                        <TextField
-                                            value={searchName}
-                                            onChange={handleChangeName}
-                                            placeholder="Search"
-                                            variant="standard"
-                                            size="small"
-                                            className={"TableSearchInput"}
-                                            InputProps={{
-                                                style: {fontSize: '1em'},
-                                            }}
-                                            onKeyDown={handleKeyDown}
-                                        />
-                                        <IconButton color="default" onClick={() => filterData()}>
-                                            <SearchIcon/>
-                                        </IconButton>
-                                    </Stack>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {(rowsPerPage > 0
-                                    ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : data
-                            ).map((row) => (
-                                <TableRow key={row.name}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        {row.monthlyPrice} zł
-                                    </TableCell>
-                                    <TableCell align="right" className={"TableRentalEquipmentColumnActions"}>
-                                        <Box>
-                                            <IconButton aria-label="delete" size="small"
-                                                        onClick={() => handleEditClick(true, row.id, row.name, row.monthlyPrice)}>
-                                                <EditIcon fontSize="small"/>
+        <div>
+            <Paper className={"ComponentContainer"}>
+                {showEditDialog ?
+                    <RentalEquipmentUpdateDialog handleEditClick={handleEditClick} equipmentName={equipmentName}
+                                                 equipmentPrice={equipmentPrice}/> : null}
+                {showDeleteDialog ?
+                    <RentalEquipmentDeleteDialog handleDeleteClick={handleDeleteClick} equipmentName={equipmentName}
+                                                 equipmentPrice={equipmentPrice}/> : null}
+                <TableContainer className={"RentalEquipmentTable"}>
+                    <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide autoHideTimeout={750}
+                                autoHideDuration={500}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
+                                    <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
+                                        price</TableCell>
+                                    <TableCell align="right" className={"TableHeadActionsWithSearch"}>
+                                        <Stack direction="row" justifyContent="flex-end">
+                                            <TextField
+                                                value={searchName}
+                                                onChange={handleChangeName}
+                                                placeholder="Search"
+                                                variant="standard"
+                                                size="small"
+                                                className={"TableSearchInput"}
+                                                InputProps={{
+                                                    style: {fontSize: '1em'},
+                                                }}
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                            <IconButton color="default" onClick={() => filterData()}>
+                                                <SearchIcon/>
                                             </IconButton>
-                                            <IconButton aria-label="delete" size="small" color={"error"}
-                                                        onClick={() => handleDeleteClick(true, row.id, row.name, row.monthlyPrice)}>
-                                                <DeleteIcon fontSize="small"/>
-                                            </IconButton>
-                                        </Box>
+                                        </Stack>
                                     </TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                        <TableFooter className={"TableFooter"} style={{backgroundColor: theme.palette.background.default}}>
-                            <TableRow>
-                                <TablePagination
-                                    rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-                                    colSpan={4}
-                                    count={data.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                </Scrollbars>
-            </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {(rowsPerPage > 0
+                                        ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        : data
+                                ).map((row) => (
+                                    <TableRow key={row.name}>
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.monthlyPrice} zł
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Box>
+                                                <IconButton aria-label="delete" size="small"
+                                                            onClick={() => handleEditClick(true, row.id, row.name, row.monthlyPrice)}>
+                                                    <EditIcon fontSize="small"/>
+                                                </IconButton>
+                                                <IconButton aria-label="delete" size="small" color={"error"}
+                                                            onClick={() => handleDeleteClick(true, row.id, row.name, row.monthlyPrice)}>
+                                                    <DeleteIcon fontSize="small"/>
+                                                </IconButton>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Scrollbars>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                    component="div"
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
             <Link to="/">Client</Link>
             <Link to="/3">Employees</Link>
-        </Paper>
+        </div>
     );
 }

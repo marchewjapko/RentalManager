@@ -47,6 +47,7 @@ export default function EmployeesUpdateDialog ({handleEditClick, employeeName, e
                     label="Surname"
                     fullWidth
                     variant="outlined"
+                    className={"DialogLowerTextField"}
                     value={equipmentDialogSurname}
                     onChange={handleChangeSurname}
                 />

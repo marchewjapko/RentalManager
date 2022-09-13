@@ -15,7 +15,7 @@ export default function ClientTableRow(props) {
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
     const [clientEditName, setClientEditName] = React.useState("");
     const [clientEditSurname, setClientEditSurname] = React.useState("");
-    const [hiddenRowStyle, setHiddenRowStyle] = React.useState("HiddenRow");
+    const [hiddenRowStyle, setHiddenRowStyle] = React.useState("");
 
     const handleEditClick = (isShown, ClientId, ClientName, ClientSurname) => {
         setClientEditName(ClientName)
@@ -32,7 +32,7 @@ export default function ClientTableRow(props) {
     const handleOpen = () => {
         setOpen(!open);
         if (open) {
-            setTimeout(() => setHiddenRowStyle("HiddenRow"), 450);
+            setTimeout(() => setHiddenRowStyle(""), 450);
         } else {
             setHiddenRowStyle("")
         }
@@ -46,18 +46,18 @@ export default function ClientTableRow(props) {
                 <ClientsDeleteDialog handleDeleteClick={handleDeleteClick} clientEditName={clientEditName}
                                      clientEditSurname={clientEditSurname}/> : null}
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-                <TableCell>
+                <TableCell className={"ClientTableDetailsCell"}>
                     <IconButton size="small" onClick={handleOpen}>
                         {open ? <KeyboardArrowUpIcon fontSize="small"/> : <KeyboardArrowDownIcon fontSize="small"/>}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" className={"ClientTableNameCell"}>
                     {row.name}
                 </TableCell>
                 <TableCell align="right">
                     {row.surname}
                 </TableCell>
-                <TableCell align="right" className={"TableClientsColumnActions"}>
+                <TableCell align="right">
                     <Box>
                         <IconButton aria-label="delete" size="small"
                                     onClick={() => handleEditClick(true, row.id, row.name, row.surname)}>

@@ -43,3 +43,14 @@ Website: https://json-generator.com/
     surname: '{{surname()}}'
   }
 ]
+##################################################################################
+3. Equipment
+[
+  '{{repeat(40, 40)}}',
+  {
+    id: '{{index()}}',
+    name: '{{random(lorem(1, "words"), lorem(2, "words"), lorem(3, "words"))}}',
+    monthlyPrice: '{{integer(50, 200)}}',
+    dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}'
+  }
+]

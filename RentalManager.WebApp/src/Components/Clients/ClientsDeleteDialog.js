@@ -36,7 +36,7 @@ export default function ClientsDeleteDialog ({handleDeleteClick, clientEditName,
                     fullWidth
                     variant="outlined"
                     value={clientEditSurname}
-                    className={"ClientsLowerTextField"}
+                    className={"DialogLowerTextField"}
                     InputProps={{
                         readOnly: true
                     }}

@@ -38,6 +38,7 @@ export default function EmployeesDeleteDialog ({handleDeleteClick, employeeName,
                     label="Surname"
                     fullWidth
                     variant="outlined"
+                    className={"DialogLowerTextField"}
                     value={employeeSurname}
                     InputProps={{
                         readOnly: true

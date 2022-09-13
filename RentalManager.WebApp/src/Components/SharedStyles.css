@@ -25,6 +25,22 @@
 
 .TableSearchInput {
     margin-top: 8px !important;
-    /*min-width: 100px;*/
-    /*max-width: 200px;*/
+}
+
+.DialogLowerTextField {
+    margin-top: 24px !important;
+}
+
+.MuiTablePagination-spacer {
+    display: none !important;
+}
+
+.MuiTablePagination-displayedRows {
+    margin-left: auto;
+}
+
+.SkeletonTableRow {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-right: 5px !important;
 }

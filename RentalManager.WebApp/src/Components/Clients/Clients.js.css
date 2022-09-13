@@ -7,7 +7,7 @@
 }
 
 .ClientsTable {
-    max-height: 650px;
+    max-height: 600px;
 }
 
 .ClientTableHeadDetails {
@@ -16,6 +16,7 @@
 
 .ClientTableHeadName {
     width: 50%;
+    padding-left: 0px !important;
 }
 
 .ClientTableHeadSurname {
@@ -28,4 +29,12 @@
 
 .HiddenRow {
     display: none !important;
+}
+
+.ClientTableDetailsCell {
+    padding: 10px !important;
+}
+
+.ClientTableNameCell {
+    padding-left: 0px !important;
 }

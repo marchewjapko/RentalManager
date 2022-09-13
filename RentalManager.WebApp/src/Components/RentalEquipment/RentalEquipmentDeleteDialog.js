@@ -44,7 +44,7 @@ export default function RentalEquipmentDeleteDialog ({handleDeleteClick, equipme
                     fullWidth
                     variant="outlined"
                     value={equipmentPrice}
-                    className={"RentalEquipmentLowerTextField"}
+                    className={"DialogLowerTextField"}
                     InputProps={{
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>,
                         readOnly: true

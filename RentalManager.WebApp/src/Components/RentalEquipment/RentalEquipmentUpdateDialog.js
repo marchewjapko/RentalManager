@@ -49,7 +49,7 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                     fullWidth
                     variant="outlined"
                     value={equipmentDialogPrice}
-                    className={"RentalEquipmentLowerTextField"}
+                    className={"DialogLowerTextField"}
                     InputProps={{
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>
                     }}
