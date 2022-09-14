@@ -19,7 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import EmployeesUpdateDialog from "./EmployeesUpdateDialog";
 import EmployeesDeleteDialog from "./EmployeesDeleteDialog";
-import {Scrollbars} from 'react-custom-scrollbars';
+import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {filterEmployees, getAllEmployees} from "../../Actions/EmployeeActions";
 import SkeletonTableEmployees from "./SkeletonTableEmployees";

@@ -21,7 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import RentalEquipmentUpdateDialog from "./RentalEquipmentUpdateDialog";
 import RentalEquipmentDeleteDialog from "./RentalEquipmentDeleteDialog";
-import {Scrollbars} from 'react-custom-scrollbars';
+import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {filterRentalEquipment, getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 import SkeletonTableRentalEquipment from "./SkeletonTableRentalEquipment";

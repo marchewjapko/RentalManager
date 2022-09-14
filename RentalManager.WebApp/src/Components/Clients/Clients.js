@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import ClientTableRow from "./ClientTableRow";
-import {Scrollbars} from 'react-custom-scrollbars';
+import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {getAllClients} from "../../Actions/ClientActions";
 import SkeletonTableClients from "./SkeletonTableClients";
