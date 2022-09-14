@@ -2,14 +2,14 @@ import * as React from 'react';
 import "./Clients.js.css"
 import "../SharedStyles.css"
 import {
-    CircularProgress,
+    Alert,
+    Dialog, DialogTitle,
     IconButton,
-    Paper,
+    Paper, Snackbar,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableFooter,
     TableHead,
     TablePagination,
     TableRow,
@@ -20,12 +20,19 @@ import {Scrollbars} from 'react-custom-scrollbars';
 import {Link} from "react-router-dom";
 import {getAllClients} from "../../Actions/ClientActions";
 import SkeletonTableClients from "./SkeletonTableClients";
+import ClientsUpdateDialog from "./ClientsUpdateDialog";
+import ClientsDeleteDialog from "./ClientsDeleteDialog";
 
 export default function Clients() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
     const [data, setData] = React.useState();
+    const [showSnackbar, setShowSnackbar] = React.useState(false);
+    const [snackbarText, setSnackbarText] = React.useState("");
+    const [showEditDialog, setShowEditDialog] = React.useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [focusedClient, setFocusedClient] = React.useState();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -45,13 +52,81 @@ export default function Clients() {
         getData();
     }, []);
 
+    const handleEditClick = (client) => {
+        setFocusedClient(client)
+        setShowEditDialog(true)
+    }
+
+    const handleDeleteClick = (client) => {
+        setFocusedClient(client)
+        setShowDeleteDialog(true)
+    }
+
+    const handleCloseDialog = () => {
+        setShowDeleteDialog(false)
+        setShowEditDialog(false)
+    }
+
+    const handleDialogSuccess = async (mode) => {
+        setIsLoading(true);
+        setShowSnackbar(true);
+        if(mode === "edit") {
+            setSnackbarText("Client updated successfully")
+        } else if(mode === "delete") {
+            setSnackbarText("Client deleted successfully")
+        } else {
+            setSnackbarText("How did you do that?")
+        }
+        handleCloseDialog()
+        const result = await getAllClients();
+        setData(result);
+        setIsLoading(false)
+    }
+
+    const closeSnackbars = () => {
+        setShowSnackbar(false);
+    }
+
+    const editDialog = () => {
+        return (
+            <Dialog
+                open={showEditDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{"Edit client"}</DialogTitle>
+                <ClientsUpdateDialog client={focusedClient} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+            </Dialog>
+        );
+    }
+
+    const deleteDialog = () => {
+        return (
+            <Dialog
+                open={showDeleteDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{"Delete client"}</DialogTitle>
+                <ClientsDeleteDialog client={focusedClient} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+            </Dialog>
+        );
+    }
+
     return (
         <div>
+            <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                <Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
+                    {snackbarText}
+                </Alert>
+            </Snackbar>
             <Paper className={"ComponentContainer"}>
                 {isLoading ? (
                     <SkeletonTableClients/>
                 ) : (
                     <div>
+                        {editDialog()}
+                        {deleteDialog()}
                     <TableContainer className={"ClientsTable"}>
                         <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={600} autoHide autoHideTimeout={750}
                                     autoHideDuration={500}>
@@ -73,7 +148,7 @@ export default function Clients() {
                                             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             : data
                                     ).map((row) => (
-                                        <ClientTableRow key={row.id} row={row}/>
+                                        <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick} handleDeleteClick={handleDeleteClick}/>
                                     ))}
                                 </TableBody>
                             </Table>

@@ -16,7 +16,7 @@
 
 .ClientTableHeadName {
     width: 50%;
-    padding-left: 0px !important;
+    padding-left: 0 !important;
 }
 
 .ClientTableHeadSurname {
@@ -25,6 +25,7 @@
 
 .ClientTableHeadActions {
     min-width: 95px !important;
+    max-width: 100px !important;
 }
 
 .HiddenRow {
@@ -36,5 +37,13 @@
 }
 
 .ClientTableNameCell {
-    padding-left: 0px !important;
+    padding-left: 0 !important;
+}
+
+.ClientHiddenRowDatePicker {
+    margin-top: 8px !important;
+}
+
+.ClientDialogContainer {
+    overflow: hidden !important;
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import "./Employees.js.css"
-import {EmployeesMock} from "../../Mocks/EmployeesMock";
 import {
-    Box,
+    Alert,
+    Box, Dialog, DialogTitle,
     IconButton,
-    Paper,
+    Paper, Snackbar,
     Stack,
     Table,
     TableBody,
@@ -27,11 +27,12 @@ import SkeletonTableEmployees from "./SkeletonTableEmployees";
 export default function Employees() {
     const [showEditDialog, setShowEditDialog] = React.useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [employeeName, setEmployeeName] = React.useState("");
-    const [employeeSurname, setEmployeeSurname] = React.useState(0);
+    const [focusedEmployee, setFocusedEmployee] = React.useState();
     const [data, setData] = React.useState();
     const [searchName, setSearchName] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(true);
+    const [showSnackbar, setShowSnackbar] = React.useState(false);
+    const [snackbarText, setSnackbarText] = React.useState("");
 
     const handleSearch = async () => {
         setIsLoading(true);
@@ -50,16 +51,39 @@ export default function Employees() {
         setSearchName(event.target.value);
     };
 
-    const handleEditClick = (isShown, employeeName, employeeSurname) => {
-        setEmployeeName(employeeName)
-        setEmployeeSurname(employeeSurname)
-        setShowEditDialog(isShown)
+    const handleEditClick = (employee) => {
+        setFocusedEmployee(employee)
+        setShowEditDialog(true)
     }
 
-    const handleDeleteClick = (isShown, employeeName, employeeSurname) => {
-        setEmployeeName(employeeName)
-        setEmployeeSurname(employeeSurname)
-        setShowDeleteDialog(isShown)
+    const handleDeleteClick = (employee) => {
+        setFocusedEmployee(employee)
+        setShowDeleteDialog(true)
+    }
+
+    const handleCloseDialog = () => {
+        setShowDeleteDialog(false)
+        setShowEditDialog(false)
+    }
+
+    const handleDialogSuccess = async (mode) => {
+        setIsLoading(true);
+        setShowSnackbar(true);
+        if(mode === "edit") {
+            setSnackbarText("Employee updated successfully")
+        } else if(mode === "delete") {
+            setSnackbarText("Employee deleted successfully")
+        } else {
+            setSnackbarText("How did you do that?")
+        }
+        handleCloseDialog()
+        const result = await getAllEmployees();
+        setData(result);
+        setIsLoading(false)
+    }
+
+    const closeSnackbars = () => {
+        setShowSnackbar(false);
     }
 
     React.useEffect(() => {
@@ -70,19 +94,47 @@ export default function Employees() {
         };
         getData();
     }, []);
+
+    const editDialog = () => {
+        return (
+            <Dialog
+                open={showEditDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{"Edit employee"}</DialogTitle>
+                <EmployeesUpdateDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+            </Dialog>
+        );
+    }
+
+    const deleteDialog = () => {
+        return (
+            <Dialog
+                open={showDeleteDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{"Delete employee"}</DialogTitle>
+                <EmployeesDeleteDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+            </Dialog>
+        );
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
+                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
+                        {snackbarText}
+                    </Alert>
+                </Snackbar>
                 {isLoading ? (
                     <SkeletonTableEmployees searchPrase={searchName}/>
                 ) : (
                     <div>
-                        {showEditDialog ?
-                            <EmployeesUpdateDialog handleEditClick={handleEditClick} employeeName={employeeName}
-                                                   employeeSurname={employeeSurname}/> : null}
-                        {showDeleteDialog ?
-                            <EmployeesDeleteDialog handleDeleteClick={handleDeleteClick} employeeName={employeeName}
-                                                   employeeSurname={employeeSurname}/> : null}
+                        {editDialog()}
+                        {deleteDialog()}
                         <TableContainer className={"EmployeesTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
                                         autoHideTimeout={750} autoHideDuration={500}>
@@ -126,11 +178,11 @@ export default function Employees() {
                                                 <TableCell align="right">
                                                     <Box>
                                                         <IconButton aria-label="delete" size="small"
-                                                                    onClick={() => handleEditClick(true, row.name, row.surname)}>
+                                                                    onClick={() => handleEditClick(row)}>
                                                             <EditIcon fontSize="small"/>
                                                         </IconButton>
                                                         <IconButton aria-label="delete" size="small" color={"error"}
-                                                                    onClick={() => handleDeleteClick(true, row.name, row.surname)}>
+                                                                    onClick={() => handleDeleteClick(row)}>
                                                             <DeleteIcon fontSize="small"/>
                                                         </IconButton>
                                                     </Box>

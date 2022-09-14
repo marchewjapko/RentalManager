@@ -1,49 +1,57 @@
 import {
     Box,
-    IconButton, Skeleton,
+    IconButton, Skeleton, Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead, TablePagination,
-    TableRow
+    TableRow, TextField
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import * as React from 'react';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SkeletonTablePagination from "../SkeletonTablePagination";
 
-export default function SkeletonTable(props) {
+export default function SkeletonTableRentalEquipment(props) {
     return (
         <div>
-            <TableContainer className={"ClientsTable"}>
+            <TableContainer className={"RentalEquipmentTable"}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={"ClientTableHeadDetails"}/>
-                            <TableCell className={"ClientTableHeadName"}>Name</TableCell>
-                            <TableCell align="right" className={"ClientTableHeadSurname"}>Surname</TableCell>
-                            <TableCell align="right" className={"ClientTableHeadActions"}>
-                                <IconButton color="default" disabled>
-                                    <SearchIcon/>
-                                </IconButton>
+                            <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
+                            <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly price</TableCell>
+                            <TableCell align="right" className={"TableHeadActionsWithSearch"}>
+                                <Stack direction="row" justifyContent="flex-end">
+                                    <TextField
+                                        value={props.searchPrase}
+                                        onChange={() => null}
+                                        placeholder="Search"
+                                        variant="standard"
+                                        size="small"
+                                        className={"TableSearchInput"}
+                                        InputProps={{
+                                            style: {fontSize: '1em'},
+                                        }}
+                                        disabled
+                                    />
+                                    <IconButton color="default" disabled>
+                                        <SearchIcon/>
+                                    </IconButton>
+                                </Stack>
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {[...Array(5).keys()].map((x) =>
                             <TableRow key={x}>
-                                <TableCell className={"ClientTableDetailsCell"}>
-                                    <IconButton size="small" disabled>
-                                        <KeyboardArrowDownIcon fontSize="small"/>
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell className={"SkeletonTableRow ClientTableNameCell"}>
+                                <TableCell className={"SkeletonTableRow"}>
                                     <Skeleton variant="rounded" width={'100%'} height={35} />
                                 </TableCell>
                                 <TableCell className={"SkeletonTableRow"}>
-                                        <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35} />
                                 </TableCell>
                                 <TableCell align="right" className={"TableRentalEquipmentColumnActions"} >
                                     <Box>
@@ -60,18 +68,7 @@ export default function SkeletonTable(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={['']}
-                component="div"
-                count={''}
-                rowsPerPage={''}
-                page={''}
-                onPageChange={() => null}
-                onRowsPerPageChange={() => null}
-                SelectProps={{
-                    disabled: true,
-                }}
-            />
+            <SkeletonTablePagination/>
         </div>
     );
 }

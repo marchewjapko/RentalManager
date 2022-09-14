@@ -1,46 +1,55 @@
 import {
-    Button,
-    Dialog,
-    DialogActions,
+    Backdrop,
+    Button, CircularProgress,
     DialogContent,
-    DialogTitle,
-    IconButton,
     InputAdornment, Stack,
     TextField,
-    Zoom
 } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import DoneIcon from '@mui/icons-material/Done';
 import * as React from 'react';
+import {updateRentalEquipment} from "../../Actions/RentalEquipmentActions";
 
-export default function RentalEquipmentUpdateDialog ({handleEditClick, equipmentName, equipmentPrice}) {
-    const [equipmentDialogName, setEquipmentDialogName] = React.useState(equipmentName);
-    const [equipmentDialogPrice, setEquipmentDialogPrice] = React.useState(equipmentPrice);
+export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
+    const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
+    const [isLoading, setIsLoading] = React.useState(false)
 
     const handleChangeName = (event) => {
-        setEquipmentDialogName(event.target.value);
+        setRentalEquipmentDialog({
+            ...rentalEquipmentDialog,
+            name: event.target.value
+        });
     };
 
     const handleChangePrice = (event) => {
-        setEquipmentDialogPrice(event.target.value.replace(/\D/g, ""));
+        setRentalEquipmentDialog({
+            ...rentalEquipmentDialog,
+            monthlyPrice: event.target.value.replace(/\D/g, "")
+        });
     };
 
+    const handleSave = async () => {
+        setIsLoading(true);
+        await updateRentalEquipment(rentalEquipment);
+        setIsLoading(false);
+        handleDialogSuccess("edit")
+    }
+
     return (
-        <Dialog
-            open={true}
-            keepMounted
-            maxWidth={"lg"}
-            onClose={() => handleEditClick(false)}
-            aria-describedby="alert-dialog-slide-description"
-        >
-            <DialogTitle>{"Edit rental equipment"}</DialogTitle>
+        <div>
             <DialogContent>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={isLoading}
+                >
+                    <CircularProgress/>
+                </Backdrop>
                 <TextField
                     margin="dense"
                     label="Equipment name"
                     fullWidth
                     variant="outlined"
-                    value={equipmentDialogName}
+                    value={rentalEquipmentDialog.name}
                     onChange={handleChangeName}
                 />
                 <TextField
@@ -48,7 +57,7 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                     label="Monthly price"
                     fullWidth
                     variant="outlined"
-                    value={equipmentDialogPrice}
+                    value={rentalEquipmentDialog.monthlyPrice}
                     className={"DialogLowerTextField"}
                     InputProps={{
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>
@@ -57,13 +66,13 @@ export default function RentalEquipmentUpdateDialog ({handleEditClick, equipment
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={handleSave} className={"DialogButton"}>
                     Save
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleEditClick(false)} className={"DialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>
-        </Dialog>
+        </div>
     );
 }

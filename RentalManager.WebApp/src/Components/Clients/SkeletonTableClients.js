@@ -13,6 +13,7 @@ import * as React from 'react';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SkeletonTablePagination from "../SkeletonTablePagination";
 
 export default function SkeletonTableClients() {
     return (
@@ -60,18 +61,7 @@ export default function SkeletonTableClients() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-                component="div"
-                count={0}
-                rowsPerPage={1}
-                page={0}
-                onPageChange={() => null}
-                onRowsPerPageChange={() => null}
-                SelectProps={{
-                    disabled: true,
-                }}
-            />
+            <SkeletonTablePagination/>
         </div>
     );
 }
