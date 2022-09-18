@@ -1,12 +1,15 @@
 import {
     Box,
-    IconButton, Skeleton, Stack,
+    IconButton,
+    Skeleton,
+    Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableHead, TablePagination,
-    TableRow, TextField
+    TableHead,
+    TableRow,
+    TextField
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import * as React from 'react';
@@ -22,38 +25,21 @@ export default function SkeletonTableRentalEquipment(props) {
                     <TableHead>
                         <TableRow>
                             <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
-                            <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly price</TableCell>
-                            <TableCell align="right" className={"TableHeadActionsWithSearch"}>
-                                <Stack direction="row" justifyContent="flex-end">
-                                    <TextField
-                                        value={props.searchPrase}
-                                        onChange={() => null}
-                                        placeholder="Search"
-                                        variant="standard"
-                                        size="small"
-                                        className={"TableSearchInput"}
-                                        InputProps={{
-                                            style: {fontSize: '1em'},
-                                        }}
-                                        disabled
-                                    />
-                                    <IconButton color="default" disabled>
-                                        <SearchIcon/>
-                                    </IconButton>
-                                </Stack>
-                            </TableCell>
+                            <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
+                                price</TableCell>
+                            <TableCell align="right" sx={{width: "100px"}}/>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {[...Array(5).keys()].map((x) =>
                             <TableRow key={x}>
                                 <TableCell className={"SkeletonTableRow"}>
-                                    <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
                                 <TableCell className={"SkeletonTableRow"}>
-                                    <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
-                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"} >
+                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"}>
                                     <Box>
                                         <IconButton aria-label="delete" size="small" disabled>
                                             <EditIcon fontSize="small"/>

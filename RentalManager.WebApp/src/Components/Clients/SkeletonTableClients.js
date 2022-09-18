@@ -1,11 +1,12 @@
 import {
     Box,
-    IconButton, Skeleton,
+    IconButton,
+    Skeleton,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableHead, TablePagination,
+    TableHead,
     TableRow
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -41,12 +42,12 @@ export default function SkeletonTableClients() {
                                     </IconButton>
                                 </TableCell>
                                 <TableCell className={"SkeletonTableRow ClientTableNameCell"}>
-                                    <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
                                 <TableCell className={"SkeletonTableRow"}>
-                                        <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
-                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"} >
+                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"}>
                                     <Box>
                                         <IconButton aria-label="delete" size="small" disabled>
                                             <EditIcon fontSize="small"/>

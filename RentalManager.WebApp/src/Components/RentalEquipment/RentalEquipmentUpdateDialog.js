@@ -1,19 +1,11 @@
-import {
-    Backdrop,
-    Button, CircularProgress,
-    DialogContent,
-    InputAdornment, Stack,
-    TextField,
-} from "@mui/material";
+import {Backdrop, Button, CircularProgress, DialogContent, InputAdornment, Stack, TextField,} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import DoneIcon from '@mui/icons-material/Done';
 import * as React from 'react';
 import {updateRentalEquipment} from "../../Actions/RentalEquipmentActions";
-import ValidateClient from "../../Actions/ValidateClient";
 import ValidateRentalEquipment from "../../Actions/ValidateRentalEquipment";
-import {updateClient} from "../../Actions/ClientActions";
 
-export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
+export default function RentalEquipmentUpdateDialog({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
     const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
     const [isLoading, setIsLoading] = React.useState(false)
     const [errorCodes, setErrorCodes] = React.useState('')
@@ -53,7 +45,7 @@ export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rental
         <div>
             <DialogContent>
                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
                     open={isLoading}
                 >
                     <CircularProgress/>
@@ -86,10 +78,12 @@ export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rental
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={handleSave} className={"DialogButton"} disabled={errorCodes.length !== 0}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>} onClick={handleSave}
+                        className={"DialogButton"} disabled={errorCodes.length !== 0}>
                     Save
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
+                        onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

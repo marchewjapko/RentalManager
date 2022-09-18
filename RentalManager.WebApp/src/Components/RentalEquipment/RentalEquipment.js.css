@@ -1,5 +1,6 @@
 .RentalEquipmentTable {
     max-height: 460px;
+    border-radius: 10px;
 }
 
 .TableRentalEquipmentColumnName {

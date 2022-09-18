@@ -187,20 +187,20 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangePhone}
                                     onBlur={validateForm}
                                 >
-                                {() => (
-                                    <TextField
-                                        margin="dense"
-                                        label="Phone number"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={clientDialog.phone}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">+48</InputAdornment>,
-                                        }}
-                                        error={errorCodes.includes("invalidPhone") || errorCodes.includes("noPhone")}
-                                        helperText={errorCodes.includes("invalidPhone") ? "Invalid phone" : "Required"}
-                                    />
-                                )}
+                                    {() => (
+                                        <TextField
+                                            margin="dense"
+                                            label="Phone number"
+                                            variant="outlined"
+                                            fullWidth
+                                            value={clientDialog.phone}
+                                            InputProps={{
+                                                startAdornment: <InputAdornment position="start">+48</InputAdornment>,
+                                            }}
+                                            error={errorCodes.includes("invalidPhone") || errorCodes.includes("noPhone")}
+                                            helperText={errorCodes.includes("invalidPhone") ? "Invalid phone" : "Required"}
+                                        />
+                                    )}
                                 </InputMask>
                             </Grid>
                             <Grid xs={6} md={7}>

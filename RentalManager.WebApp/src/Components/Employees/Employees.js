@@ -2,9 +2,12 @@ import * as React from 'react';
 import "./Employees.js.css"
 import {
     Alert,
-    Box, Dialog, DialogTitle,
+    Box,
+    Dialog,
+    DialogTitle,
     IconButton,
-    Paper, Snackbar,
+    Paper,
+    Snackbar,
     Stack,
     Table,
     TableBody,
@@ -69,9 +72,9 @@ export default function Employees() {
     const handleDialogSuccess = async (mode) => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if(mode === "edit") {
+        if (mode === "edit") {
             setSnackbarText("Employee updated successfully")
-        } else if(mode === "delete") {
+        } else if (mode === "delete") {
             setSnackbarText("Employee deleted successfully")
         } else {
             setSnackbarText("How did you do that?")
@@ -103,7 +106,8 @@ export default function Employees() {
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Edit employee"}</DialogTitle>
-                <EmployeesUpdateDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <EmployeesUpdateDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog}
+                                       handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
@@ -116,7 +120,8 @@ export default function Employees() {
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Delete employee"}</DialogTitle>
-                <EmployeesDeleteDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <EmployeesDeleteDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog}
+                                       handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
@@ -124,8 +129,9 @@ export default function Employees() {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                    <Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
+                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
+                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                         {snackbarText}
                     </Alert>
                 </Snackbar>

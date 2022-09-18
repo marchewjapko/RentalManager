@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom/client";
-import {Routes, Route, HashRouter, BrowserRouter } from "react-router-dom";
+import {Routes, Route, HashRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import {createTheme, ThemeProvider} from "@mui/material";
 import CssBaseline from '@mui/material/CssBaseline';

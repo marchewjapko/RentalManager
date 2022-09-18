@@ -7,11 +7,13 @@
 .ComponentContainer {
     margin: 10px;
     max-width: 600px;
+    padding: 10px;
 }
 
 .DialogStack {
     padding-right: 24px;
     padding-left: 24px;
+    padding-top: 12px;
 }
 
 .DialogButton {
@@ -24,7 +26,7 @@
 }
 
 .TableSearchInput {
-    margin-top: 8px !important;
+    max-width: 50%;
 }
 
 .DialogLowerTextField {

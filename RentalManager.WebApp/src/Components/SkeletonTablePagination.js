@@ -1,8 +1,7 @@
 import {TablePagination} from "@mui/material";
 
 export default function SkeletonTablePagination() {
-    return (
-        <TablePagination
+    return (<TablePagination
             rowsPerPageOptions={[0, {label: '-', value: -1}]}
             component="div"
             count={0}
@@ -13,6 +12,5 @@ export default function SkeletonTablePagination() {
             SelectProps={{
                 disabled: true,
             }}
-        />
-    );
+        />);
 }

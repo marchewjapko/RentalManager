@@ -1,12 +1,15 @@
 import {
     Box,
-    IconButton, Skeleton, Stack,
+    IconButton,
+    Skeleton,
+    Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TextField
+    TableRow,
+    TextField
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import * as React from 'react';
@@ -47,12 +50,12 @@ export default function SkeletonTableEmployees(props) {
                         {[...Array(6).keys()].map((x) =>
                             <TableRow key={x}>
                                 <TableCell className={"SkeletonTableRow"}>
-                                    <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
                                 <TableCell className={"SkeletonTableRow"}>
-                                        <Skeleton variant="rounded" width={'100%'} height={35} />
+                                    <Skeleton variant="rounded" width={'100%'} height={35}/>
                                 </TableCell>
-                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"} >
+                                <TableCell align="right" className={"TableRentalEquipmentColumnActions"}>
                                     <Box>
                                         <IconButton aria-label="delete" size="small" disabled>
                                             <EditIcon fontSize="small"/>

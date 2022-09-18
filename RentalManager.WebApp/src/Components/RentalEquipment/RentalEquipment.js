@@ -3,9 +3,13 @@ import "./RentalEquipment.js.css"
 import {RentalEquipmentMock} from "../../Mocks/RentalEquipmentMock";
 import {
     Alert,
-    Box, Dialog, DialogTitle,
+    Box,
+    Dialog,
+    DialogTitle,
     IconButton,
-    Paper, Snackbar,
+    InputAdornment,
+    Paper,
+    Snackbar,
     Stack,
     Table,
     TableBody,
@@ -25,6 +29,7 @@ import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {filterRentalEquipment, getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 import SkeletonTableRentalEquipment from "./SkeletonTableRentalEquipment";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 
 export default function RentalEquipment() {
     const [page, setPage] = React.useState(0);
@@ -82,9 +87,9 @@ export default function RentalEquipment() {
     const handleDialogSuccess = async (mode) => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if(mode === "edit") {
+        if (mode === "edit") {
             setSnackbarText("Rental Equipment updated successfully")
-        } else if(mode === "delete") {
+        } else if (mode === "delete") {
             setSnackbarText("Rental Equipment deleted successfully")
         } else {
             setSnackbarText("How did you do that?")
@@ -116,7 +121,9 @@ export default function RentalEquipment() {
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Edit rental equipment"}</DialogTitle>
-                <RentalEquipmentUpdateDialog rentalEquipment={focusedRentalEquipment} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <RentalEquipmentUpdateDialog rentalEquipment={focusedRentalEquipment}
+                                             handleCancelDialog={handleCloseDialog}
+                                             handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
@@ -129,7 +136,9 @@ export default function RentalEquipment() {
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Delete rental equipment"}</DialogTitle>
-                <RentalEquipmentDeleteDialog rentalEquipment={focusedRentalEquipment} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <RentalEquipmentDeleteDialog rentalEquipment={focusedRentalEquipment}
+                                             handleCancelDialog={handleCloseDialog}
+                                             handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
@@ -137,8 +146,35 @@ export default function RentalEquipment() {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                    <Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" sx={{margin: "10px"}}>
+                    <IconButton color="default" size={"large"}>
+                        <AddCircleRoundedIcon fontSize={"large"}/>
+                    </IconButton>
+                    <TextField
+                        value={searchName}
+                        onChange={handleChangeName}
+                        placeholder="Search"
+                        variant="standard"
+                        size="small"
+                        className={"TableSearchInput"}
+                        InputProps={{
+                            style: {fontSize: '1em'},
+                        }}
+                        disabled={isLoading}
+                        onKeyDown={handleKeyDown}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">
+                                <IconButton color="default" onClick={handleSearch} sx={{marginRight: "-8px"}}
+                                            disabled={isLoading}>
+                                    <SearchIcon/>
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                    />
+                </Stack>
+                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
+                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                         {snackbarText}
                     </Alert>
                 </Snackbar>
@@ -149,33 +185,17 @@ export default function RentalEquipment() {
                         {editDialog()}
                         {deleteDialog()}
                         <TableContainer className={"RentalEquipmentTable"}>
-                            <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide autoHideTimeout={750}
+                            <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
+                                        autoHideTimeout={750}
                                         autoHideDuration={500}>
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell className={"TableRentalEquipmentColumnName"}>Equipment name</TableCell>
+                                            <TableCell className={"TableRentalEquipmentColumnName"}>Equipment
+                                                name</TableCell>
                                             <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
                                                 price</TableCell>
-                                            <TableCell align="right" className={"TableHeadActionsWithSearch"}>
-                                                <Stack direction="row" justifyContent="flex-end">
-                                                    <TextField
-                                                        value={searchName}
-                                                        onChange={handleChangeName}
-                                                        placeholder="Search"
-                                                        variant="standard"
-                                                        size="small"
-                                                        className={"TableSearchInput"}
-                                                        InputProps={{
-                                                            style: {fontSize: '1em'},
-                                                        }}
-                                                        onKeyDown={handleKeyDown}
-                                                    />
-                                                    <IconButton color="default" onClick={handleSearch}>
-                                                        <SearchIcon/>
-                                                    </IconButton>
-                                                </Stack>
-                                            </TableCell>
+                                            <TableCell align="right" sx={{width: "100px"}}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

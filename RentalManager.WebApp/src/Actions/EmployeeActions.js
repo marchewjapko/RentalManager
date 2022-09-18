@@ -1,4 +1,5 @@
 import {EmployeesMock} from "../Mocks/EmployeesMock";
+
 export const getAllEmployees = () =>
     new Promise((resolve) => {
         setTimeout(() => resolve(Object.values(EmployeesMock)), 2500);

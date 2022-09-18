@@ -1,17 +1,10 @@
-import {
-    Backdrop,
-    Button, CircularProgress,
-    DialogContent,
-    InputAdornment,
-    Stack,
-    TextField,
-} from "@mui/material";
+import {Backdrop, Button, CircularProgress, DialogContent, InputAdornment, Stack, TextField,} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as React from 'react';
 import {deleteRentalEquipment} from "../../Actions/RentalEquipmentActions";
 
-export default function RentalEquipmentDeleteDialog ({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
+export default function RentalEquipmentDeleteDialog({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
     const [isLoading, setIsLoading] = React.useState(false)
 
     const handleDelete = async () => {
@@ -25,7 +18,7 @@ export default function RentalEquipmentDeleteDialog ({handleCancelDialog, rental
         <div>
             <DialogContent>
                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
                     open={isLoading}
                 >
                     <CircularProgress/>
@@ -58,10 +51,12 @@ export default function RentalEquipmentDeleteDialog ({handleCancelDialog, rental
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon />} onClick={handleDelete} className={"DialogButton"}>
+                <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>} onClick={handleDelete}
+                        className={"DialogButton"}>
                     Delete
                 </Button>
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
+                        onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>
