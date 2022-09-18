@@ -9,10 +9,14 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DoneIcon from '@mui/icons-material/Done';
 import * as React from 'react';
 import {updateRentalEquipment} from "../../Actions/RentalEquipmentActions";
+import ValidateClient from "../../Actions/ValidateClient";
+import ValidateRentalEquipment from "../../Actions/ValidateRentalEquipment";
+import {updateClient} from "../../Actions/ClientActions";
 
 export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rentalEquipment, handleDialogSuccess}) {
     const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
     const [isLoading, setIsLoading] = React.useState(false)
+    const [errorCodes, setErrorCodes] = React.useState('')
 
     const handleChangeName = (event) => {
         setRentalEquipmentDialog({
@@ -29,10 +33,20 @@ export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rental
     };
 
     const handleSave = async () => {
-        setIsLoading(true);
-        await updateRentalEquipment(rentalEquipment);
-        setIsLoading(false);
-        handleDialogSuccess("edit")
+        const res = ValidateRentalEquipment(rentalEquipmentDialog);
+        if (res.length === 0) {
+            setIsLoading(true);
+            await updateRentalEquipment(rentalEquipmentDialog);
+            setIsLoading(false);
+            handleDialogSuccess("edit")
+        } else {
+            setErrorCodes(res)
+        }
+    }
+
+    const validateForm = () => {
+        const res = ValidateRentalEquipment(rentalEquipmentDialog);
+        setErrorCodes(res)
     }
 
     return (
@@ -51,6 +65,9 @@ export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rental
                     variant="outlined"
                     value={rentalEquipmentDialog.name}
                     onChange={handleChangeName}
+                    onBlur={validateForm}
+                    error={errorCodes.includes("noName")}
+                    helperText="Required"
                 />
                 <TextField
                     margin="dense"
@@ -63,10 +80,13 @@ export default function RentalEquipmentUpdateDialog ({handleCancelDialog, rental
                         endAdornment: <InputAdornment position="start">zł</InputAdornment>
                     }}
                     onChange={handleChangePrice}
+                    onBlur={validateForm}
+                    error={errorCodes.includes("noPrice")}
+                    helperText="Required"
                 />
             </DialogContent>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={handleSave} className={"DialogButton"}>
+                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon />} onClick={handleSave} className={"DialogButton"} disabled={errorCodes.length !== 0}>
                     Save
                 </Button>
                 <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon />} onClick={() => handleCancelDialog(false)} className={"DialogButton"}>

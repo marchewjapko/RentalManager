@@ -20,18 +20,16 @@ const renderReactDom = () => {
         document.getElementById("root")
     );
     root.render(
-        <React.StrictMode>
-            <ThemeProvider theme={darkTheme}>
-                <CssBaseline />
-                <HashRouter>
-                    <Routes>
-                        <Route exact path="/" element={<Clients />} />
-                        <Route exact path="/2" element={<RentalEquipment />} />
-                        <Route exact path="/3" element={<Employees />} />
-                    </Routes>
-                </HashRouter>
-            </ThemeProvider>
-        </React.StrictMode>
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <HashRouter>
+                <Routes>
+                    <Route exact path="/" element={<Clients />} />
+                    <Route exact path="/2" element={<RentalEquipment />} />
+                    <Route exact path="/3" element={<Employees />} />
+                </Routes>
+            </HashRouter>
+        </ThemeProvider>
     );
 };
 

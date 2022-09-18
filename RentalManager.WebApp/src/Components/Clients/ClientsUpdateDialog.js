@@ -3,7 +3,7 @@ import {
     Button,
     CircularProgress,
     DialogContent,
-    Divider, FormHelperText,
+    Divider,
     InputAdornment,
     Stack,
     TextField,
@@ -20,6 +20,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import HomeIcon from '@mui/icons-material/Home';
 import ValidateClient from "../../Actions/ValidateClient";
+import InputMask from "react-input-mask";
+
 
 export default function ClientsUpdateDialog({handleCancelDialog, client, handleDialogSuccess}) {
     const [clientDialog, setClientDialog] = React.useState(client);
@@ -41,11 +43,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
     };
 
     const handleChangePhone = (event) => {
-        if(event.target.value.replace(/[^0-9]/g, '').length < 10)
-            setClientDialog({
-                ...clientDialog,
-                phone: event.target.value
-            });
+        setClientDialog({
+            ...clientDialog,
+            phone: event.target.value
+        });
     };
 
     const handleChangeEmail = (event) => {
@@ -90,7 +91,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
 
     const handleSave = async () => {
         const res = ValidateClient(clientDialog);
-        if(res.length === 0) {
+        if (res.length === 0) {
             setIsLoading(true);
             await updateClient(clientDialog);
             setIsLoading(false);
@@ -119,23 +120,21 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                 Personal information
                             </Typography>
                         </Stack>
-                        <Grid container spacing={2} columns={{xs: 6, sm: 12}}>
-                            <Grid xs={6} md={5}>
+                        <Grid container spacing={2}>
+                            <Grid xs={5}>
                                 <TextField
-                                    id="name"
                                     margin="dense"
                                     label="Name"
                                     variant="outlined"
                                     fullWidth
                                     value={clientDialog.name}
-                                    className={""}
                                     onChange={handleChangeName}
                                     onBlur={validateForm}
                                     error={errorCodes.includes("noName")}
+                                    helperText="Required"
                                 />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("noName") ? "Required" : ''}</FormHelperText>
                             </Grid>
-                            <Grid xs={6} md={7}>
+                            <Grid xs={7}>
                                 <TextField
                                     margin="dense"
                                     label="Surname"
@@ -145,21 +144,30 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangeSurname}
                                     onBlur={validateForm}
                                     error={errorCodes.includes("noSurname")}
+                                    helperText="Required"
                                 />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("noSurname") ? "Required" : ''}</FormHelperText>
                             </Grid>
-                            <Grid xs={6} md={5}>
-                                <TextField
-                                    margin="dense"
-                                    label="ID Card"
-                                    variant="outlined"
-                                    fullWidth
+                            <Grid xs={12} md={5}>
+                                <InputMask
+                                    mask="aaa 999999"
                                     value={clientDialog.idCard}
+                                    disabled={false}
+                                    maskChar=" "
                                     onChange={handleChangeIdCard}
                                     onBlur={validateForm}
-                                    error={errorCodes.includes("invalidIdCard")}
-                                />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("invalidIdCard") ? "Invalid ID card" : ''}</FormHelperText>
+                                >
+                                    {() => (
+                                        <TextField
+                                            margin="dense"
+                                            label="ID Card"
+                                            variant="outlined"
+                                            fullWidth
+                                            value={clientDialog.idCard}
+                                            error={errorCodes.includes("invalidIdCard")}
+                                            helperText={errorCodes.includes("invalidIdCard") ? "Invalid ID card" : ''}
+                                        />
+                                    )}
+                                </InputMask>
                             </Grid>
                         </Grid>
                         <Divider/>
@@ -171,20 +179,29 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                         </Stack>
                         <Grid container spacing={2} columns={{xs: 6, sm: 12}}>
                             <Grid xs={6} md={5}>
-                                <TextField
-                                    margin="dense"
-                                    label="Phone number"
-                                    variant="outlined"
-                                    fullWidth
+                                <InputMask
+                                    mask="999 999 999"
                                     value={clientDialog.phone}
+                                    disabled={false}
+                                    maskChar=" "
                                     onChange={handleChangePhone}
-                                    InputProps={{
-                                        startAdornment: <InputAdornment position="start">+48</InputAdornment>,
-                                    }}
                                     onBlur={validateForm}
-                                    error={errorCodes.includes("invalidPhone") || errorCodes.includes("noPhone")}
-                                />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("invalidPhone") ? "Invalid phone" : errorCodes.includes("noPhone") ? "Required" : ''}</FormHelperText>
+                                >
+                                {() => (
+                                    <TextField
+                                        margin="dense"
+                                        label="Phone number"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={clientDialog.phone}
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">+48</InputAdornment>,
+                                        }}
+                                        error={errorCodes.includes("invalidPhone") || errorCodes.includes("noPhone")}
+                                        helperText={errorCodes.includes("invalidPhone") ? "Invalid phone" : "Required"}
+                                    />
+                                )}
+                                </InputMask>
                             </Grid>
                             <Grid xs={6} md={7}>
                                 <TextField
@@ -196,8 +213,8 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangeEmail}
                                     onBlur={validateForm}
                                     error={errorCodes.includes("invalidEmail")}
+                                    helperText={errorCodes.includes("invalidEmail") ? "Invalid email" : ''}
                                 />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("invalidEmail") ? "Invalid email" : ''}</FormHelperText>
                             </Grid>
                         </Grid>
                         <Divider/>
@@ -218,8 +235,8 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangeCity}
                                     onBlur={validateForm}
                                     error={errorCodes.includes("noCity")}
+                                    helperText="Required"
                                 />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("noCity") ? "Required" : ''}</FormHelperText>
                             </Grid>
                             <Grid xs={7} md={7}>
                                 <TextField
@@ -241,8 +258,8 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangeStreetNumber}
                                     onBlur={validateForm}
                                     error={errorCodes.includes("noStreetNumber")}
+                                    helperText="Required"
                                 />
-                                <FormHelperText id="component-error-text" error>{errorCodes.includes("noStreetNumber") ? "Required" : ''}</FormHelperText>
                             </Grid>
                         </Grid>
                     </Stack>
