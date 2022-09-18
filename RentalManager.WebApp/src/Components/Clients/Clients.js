@@ -3,9 +3,11 @@ import "./Clients.js.css"
 import "../SharedStyles.css"
 import {
     Alert,
-    Dialog, DialogTitle,
+    Dialog,
+    DialogTitle,
     IconButton,
-    Paper, Snackbar,
+    Paper,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
@@ -70,9 +72,9 @@ export default function Clients() {
     const handleDialogSuccess = async (mode) => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if(mode === "edit") {
+        if (mode === "edit") {
             setSnackbarText("Client updated successfully")
-        } else if(mode === "delete") {
+        } else if (mode === "delete") {
             setSnackbarText("Client deleted successfully")
         } else {
             setSnackbarText("How did you do that?")
@@ -91,11 +93,11 @@ export default function Clients() {
         return (
             <Dialog
                 open={showEditDialog}
-                maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Edit client"}</DialogTitle>
-                <ClientsUpdateDialog client={focusedClient} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <ClientsUpdateDialog client={focusedClient} handleCancelDialog={handleCloseDialog}
+                                     handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
@@ -108,15 +110,17 @@ export default function Clients() {
                 onClose={() => handleCloseDialog()}
             >
                 <DialogTitle>{"Delete client"}</DialogTitle>
-                <ClientsDeleteDialog client={focusedClient} handleCancelDialog={handleCloseDialog} handleDialogSuccess={handleDialogSuccess}/>
+                <ClientsDeleteDialog client={focusedClient} handleCancelDialog={handleCloseDialog}
+                                     handleDialogSuccess={handleDialogSuccess}/>
             </Dialog>
         );
     }
 
     return (
         <div>
-            <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                <Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
+            <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
+                      anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                     {snackbarText}
                 </Alert>
             </Snackbar>
@@ -127,42 +131,45 @@ export default function Clients() {
                     <div>
                         {editDialog()}
                         {deleteDialog()}
-                    <TableContainer className={"ClientsTable"}>
-                        <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={600} autoHide autoHideTimeout={750}
-                                    autoHideDuration={500}>
-                            <Table stickyHeader>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell className={"ClientTableHeadDetails"}/>
-                                        <TableCell className={"ClientTableHeadName"}>Name</TableCell>
-                                        <TableCell align="right" className={"ClientTableHeadSurname"}>Surname</TableCell>
-                                        <TableCell align="right" className={"ClientTableHeadActions"}>
-                                            <IconButton color="default">
-                                                <SearchIcon/>
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {(rowsPerPage > 0
-                                            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : data
-                                    ).map((row) => (
-                                        <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick} handleDeleteClick={handleDeleteClick}/>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Scrollbars>
-                    </TableContainer>
-                    <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-                    component="div"
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                        <TableContainer className={"ClientsTable"}>
+                            <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={600} autoHide
+                                        autoHideTimeout={750}
+                                        autoHideDuration={500}>
+                                <Table stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell className={"ClientTableHeadDetails"}/>
+                                            <TableCell className={"ClientTableHeadName"}>Name</TableCell>
+                                            <TableCell align="right"
+                                                       className={"ClientTableHeadSurname"}>Surname</TableCell>
+                                            <TableCell align="right" className={"ClientTableHeadActions"}>
+                                                <IconButton color="default">
+                                                    <SearchIcon/>
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {(rowsPerPage > 0
+                                                ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                : data
+                                        ).map((row) => (
+                                            <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick}
+                                                            handleDeleteClick={handleDeleteClick}/>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Scrollbars>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                            component="div"
+                            count={data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
                     </div>
                 )}
             </Paper>

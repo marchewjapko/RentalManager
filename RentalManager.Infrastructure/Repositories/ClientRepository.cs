@@ -128,7 +128,7 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 return false;
             }
-            if (client.IdCard != null && !Regex.IsMatch(client.IdCard, @"([a-zA-Z]){3}[ ]?([0-9]{6})"))
+            if (client.IdCard != null && !Regex.IsMatch(client.IdCard, @"\b([a-zA-Z]){3}[ ]?[0-9]{6}\b"))
             {
                 return false;
             }

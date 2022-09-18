@@ -47,3 +47,13 @@
 .ClientDialogContainer {
     overflow: hidden !important;
 }
+
+.ClientUpdateDialogContainer {
+    overflow: hidden !important;
+    padding-left: 17px !important;
+    padding-right: 17px !important;
+}
+
+.ClientUpdateDialogStack {
+    margin-left: 8px !important;
+}

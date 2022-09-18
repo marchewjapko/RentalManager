@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Box, Collapse, IconButton, TableCell, TableRow, TextField} from "@mui/material";
+import {Box, Collapse, IconButton, InputAdornment, TableCell, TableRow, TextField} from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,12 +16,12 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick}
         setOpenDetails(!openDetails);
     }
 
-    return (
-        <React.Fragment>
+    return (<React.Fragment>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                 <TableCell className={"ClientTableDetailsCell"}>
                     <IconButton size="small" onClick={handleOpenDetails}>
-                        {openDetails ? <KeyboardArrowUpIcon fontSize="small"/> : <KeyboardArrowDownIcon fontSize="small"/>}
+                        {openDetails ? <KeyboardArrowUpIcon fontSize="small"/> :
+                            <KeyboardArrowDownIcon fontSize="small"/>}
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row" className={"ClientTableNameCell"}>
@@ -54,7 +54,8 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick}
                                 variant="outlined"
                                 value={row.phone}
                                 InputProps={{
-                                    readOnly: true
+                                    readOnly: true,
+                                    startAdornment: <InputAdornment position="start">+48</InputAdornment>
                                 }}
                             />
                             <TextField
@@ -104,6 +105,5 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick}
                     </Collapse>
                 </TableCell>
             </TableRow>
-        </React.Fragment>
-    );
+        </React.Fragment>);
 }

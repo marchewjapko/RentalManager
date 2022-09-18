@@ -10,12 +10,12 @@
 }
 
 .DialogStack {
-    padding: 0 24px 0 4px;
+    padding-right: 24px;
+    padding-left: 24px;
 }
 
 .DialogButton {
-    margin-left: 20px !important;
-    width: 45%;
+    width: 47%;
     margin-bottom: 24px !important;
 }
 
