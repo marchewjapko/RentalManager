@@ -97,7 +97,7 @@ export default function Clients() {
             >
                 <DialogTitle>{"Edit client"}</DialogTitle>
                 <ClientsUpdateDialog client={focusedClient} handleCancelDialog={handleCloseDialog}
-                                     handleDialogSuccess={handleDialogSuccess}/>
+                                     handleDialogSuccess={handleDialogSuccess} BackdropComponent={null}/>
             </Dialog>
         );
     }

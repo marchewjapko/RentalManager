@@ -147,7 +147,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     helperText="Required"
                                 />
                             </Grid>
-                            <Grid xs={12} md={5}>
+                            <Grid xs={5} md={5}>
                                 <InputMask
                                     mask="aaa 999999"
                                     value={clientDialog.idCard}
@@ -224,8 +224,8 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                 Address
                             </Typography>
                         </Stack>
-                        <Grid container spacing={2} columns={{xs: 12, sm: 12}}>
-                            <Grid xs={12} md={5}>
+                        <Grid container spacing={2} columns={{xs: 24, sm: 12}}>
+                            <Grid xs={24} md={5}>
                                 <TextField
                                     margin="dense"
                                     label="City"
@@ -238,7 +238,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     helperText="Required"
                                 />
                             </Grid>
-                            <Grid xs={7} md={7}>
+                            <Grid xs={13} md={7}>
                                 <TextField
                                     margin="dense"
                                     label="Street"
@@ -248,7 +248,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     onChange={handleChangeStreet}
                                 />
                             </Grid>
-                            <Grid xs={5} md={5}>
+                            <Grid xs={11} md={5}>
                                 <TextField
                                     margin="dense"
                                     label="Street number"
@@ -266,10 +266,11 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                 </DialogContent>
             </Scrollbars>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>} onClick={handleSave}
-                        className={"DialogButton"} disabled={errorCodes.length !== 0}>
+                <LoadingButton variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
+                               onClick={handleSave}
+                               className={"DialogButton"} disabled={errorCodes.length !== 0}>
                     Save
-                </Button>
+                </LoadingButton>
                 <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
                         onClick={() => handleCancelDialog()} className={"DialogButton"}>
                     Cancel

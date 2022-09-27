@@ -3,7 +3,7 @@ import "./RentalEquipment.js.css"
 import {RentalEquipmentMock} from "../../Mocks/RentalEquipmentMock";
 import {
     Alert,
-    Box,
+    Box, Button,
     Dialog,
     DialogTitle,
     IconButton,
@@ -30,12 +30,14 @@ import {Link} from "react-router-dom";
 import {filterRentalEquipment, getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 import SkeletonTableRentalEquipment from "./SkeletonTableRentalEquipment";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import RentalEquipmentAddDialog from "./RentalEquipmentAddDialog";
 
 export default function RentalEquipment() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [showEditDialog, setShowEditDialog] = React.useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [showAddDialog, setShowAddDialog] = React.useState(false);
     const [focusedRentalEquipment, setFocusedRentalEquipment] = React.useState();
     const [data, setData] = React.useState(RentalEquipmentMock);
     const [searchName, setSearchName] = React.useState('');
@@ -79,9 +81,14 @@ export default function RentalEquipment() {
         setShowDeleteDialog(true)
     }
 
+    const handleAddClick = () => {
+        setShowAddDialog(true)
+    }
+
     const handleCloseDialog = () => {
         setShowDeleteDialog(false)
         setShowEditDialog(false)
+        setShowAddDialog(false)
     }
 
     const handleDialogSuccess = async (mode) => {
@@ -143,13 +150,27 @@ export default function RentalEquipment() {
         );
     }
 
+    const addDialog = () => {
+        return (
+            <Dialog
+                open={showAddDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{"Add rental equipment"}</DialogTitle>
+                <RentalEquipmentAddDialog handleCancelDialog={handleCloseDialog}
+                                             handleDialogSuccess={handleDialogSuccess}/>
+            </Dialog>
+        );
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center" sx={{margin: "10px"}}>
-                    <IconButton color="default" size={"large"}>
-                        <AddCircleRoundedIcon fontSize={"large"}/>
-                    </IconButton>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" sx={{marginRight: "10px", marginBottom: "10px"}}>
+                    <Button startIcon={<AddCircleRoundedIcon />} size={"large"} color={"inherit"} variant={"text"} onClick={handleAddClick} disabled={isLoading}>
+                        Add equipment
+                    </Button>
                     <TextField
                         value={searchName}
                         onChange={handleChangeName}
@@ -184,6 +205,7 @@ export default function RentalEquipment() {
                     <div>
                         {editDialog()}
                         {deleteDialog()}
+                        {addDialog()}
                         <TableContainer className={"RentalEquipmentTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
                                         autoHideTimeout={750}

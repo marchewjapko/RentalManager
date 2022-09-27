@@ -91,6 +91,7 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick}
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'pl'}>
                             <DatePicker
                                 label="Date added"
+                                disableOpenPicker={true}
                                 className={"DialogDatePicker ClientHiddenRowDatePicker"}
                                 value={dayjs(row.dateAdded)}
                                 onChange={() => null}
