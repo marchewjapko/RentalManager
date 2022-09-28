@@ -26,11 +26,7 @@ export default function SkeletonTableClients() {
                             <TableCell className={"ClientTableHeadDetails"}/>
                             <TableCell className={"ClientTableHeadName"}>Name</TableCell>
                             <TableCell align="right" className={"ClientTableHeadSurname"}>Surname</TableCell>
-                            <TableCell align="right" className={"ClientTableHeadActions"}>
-                                <IconButton color="default" disabled>
-                                    <SearchIcon/>
-                                </IconButton>
-                            </TableCell>
+                            <TableCell align="right" className={"ClientTableHeadActions"}/>
                         </TableRow>
                     </TableHead>
                     <TableBody>

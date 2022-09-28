@@ -9,15 +9,13 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TextField
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import * as React from 'react';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SkeletonTablePagination from "../SkeletonTablePagination";
 
-export default function SkeletonTableRentalEquipment(props) {
+export default function SkeletonTableRentalEquipment() {
     return (
         <div>
             <TableContainer className={"RentalEquipmentTable"}>

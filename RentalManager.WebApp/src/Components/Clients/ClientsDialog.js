@@ -1,3 +1,7 @@
+import * as React from 'react';
+import ValidateClient from "../../Actions/ValidateClient";
+import {addClient, deleteClient, updateClient} from "../../Actions/ClientActions";
+import {Scrollbars} from "react-custom-scrollbars-2";
 import {
     Backdrop,
     Button,
@@ -7,97 +11,199 @@ import {
     InputAdornment,
     Stack,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DoneIcon from '@mui/icons-material/Done';
-import * as React from 'react';
-import {Scrollbars} from 'react-custom-scrollbars-2';
-import 'dayjs/locale/pl';
-import {updateClient} from "../../Actions/ClientActions";
-import PersonIcon from '@mui/icons-material/Person';
-import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
-import HomeIcon from '@mui/icons-material/Home';
-import ValidateClient from "../../Actions/ValidateClient";
+import PersonIcon from "@mui/icons-material/Person";
+import Grid from "@mui/material/Unstable_Grid2";
 import InputMask from "react-input-mask";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import HomeIcon from "@mui/icons-material/Home";
+import DoneIcon from "@mui/icons-material/Done";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ValidateEmployee from "../../Actions/ValidateEmployee";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-
-export default function ClientsUpdateDialog({handleCancelDialog, client, handleDialogSuccess}) {
+export default function ClientsDialog({handleCancelDialog, client, handleDialogSuccess, mode}) {
     const [clientDialog, setClientDialog] = React.useState(client);
     const [isLoading, setIsLoading] = React.useState(false)
-    const [errorCodes, setErrorCodes] = React.useState('')
+    const [validationState, setValidationState] = React.useState({
+        name: false,
+        surname: false,
+        idCard: false,
+        phone: '',
+        email: false,
+        city: false,
+        streetNumber: false
+    })
 
     const handleChangeName = (event) => {
         setClientDialog({
             ...clientDialog,
             name: event.target.value
         });
-    };
+    }
 
     const handleChangeSurname = (event) => {
         setClientDialog({
             ...clientDialog,
             surname: event.target.value
         });
-    };
+    }
 
     const handleChangePhone = (event) => {
         setClientDialog({
             ...clientDialog,
             phone: event.target.value
         });
-    };
+    }
 
     const handleChangeEmail = (event) => {
         setClientDialog({
             ...clientDialog,
             email: event.target.value
         });
-    };
+    }
 
     const handleChangeIdCard = (event) => {
         setClientDialog({
             ...clientDialog,
             idCard: event.target.value.toUpperCase()
         });
-    };
+    }
 
     const handleChangeCity = (event) => {
         setClientDialog({
             ...clientDialog,
             city: event.target.value
         });
-    };
+    }
 
     const handleChangeStreet = (event) => {
         setClientDialog({
             ...clientDialog,
             street: event.target.value
         });
-    };
+    }
 
     const handleChangeStreetNumber = (event) => {
         setClientDialog({
             ...clientDialog,
             streetNumber: event.target.value
         });
-    };
+    }
 
-    const validateForm = () => {
+    const validateName = () => {
         const res = ValidateClient(clientDialog);
-        setErrorCodes(res)
+        if (res.includes("noName")) {
+            setValidationState({
+                ...validationState, name: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, name: false
+            })
+        }
+    }
+
+    const validateSurname = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("noSurname")) {
+            setValidationState({
+                ...validationState, surname: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, surname: false
+            })
+        }
+    }
+
+    const validateIdCard = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("invalidIdCard")) {
+            setValidationState({
+                ...validationState, idCard: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, idCard: false
+            })
+        }
+    }
+
+    const validatePhone = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("noPhone")) {
+            setValidationState({
+                ...validationState, phone: "noPhone"
+            })
+        } else if (res.includes("invalidPhone")) {
+            setValidationState({
+                ...validationState, phone: "invalidPhone"
+            })
+        } else {
+            setValidationState({
+                ...validationState, phone: ""
+            })
+        }
+    }
+
+    const validateEmail = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("invalidEmail")) {
+            setValidationState({
+                ...validationState, email: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, email: false
+            })
+        }
+    }
+
+    const validateCity = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("noCity")) {
+            setValidationState({
+                ...validationState, city: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, city: false
+            })
+        }
+    }
+
+    const validateStreetNumber = () => {
+        const res = ValidateClient(clientDialog);
+        if (res.includes("noStreetNumber")) {
+            setValidationState({
+                ...validationState, streetNumber: true
+            })
+        } else {
+            setValidationState({
+                ...validationState, streetNumber: false
+            })
+        }
     }
 
     const handleSave = async () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateEmployee(clientDialog);
         if (res.length === 0) {
             setIsLoading(true);
-            await updateClient(clientDialog);
+            switch (mode) {
+                case 'delete':
+                    await deleteClient(clientDialog.id);
+                    break;
+                case 'update':
+                    await updateClient(clientDialog);
+                    break;
+                case 'post':
+                    await addClient(clientDialog);
+                    break;
+            }
             setIsLoading(false);
-            handleDialogSuccess("edit")
-        } else {
-            setErrorCodes(res)
+            handleDialogSuccess(mode)
         }
     }
 
@@ -129,9 +235,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.name}
                                     onChange={handleChangeName}
-                                    onBlur={validateForm}
-                                    error={errorCodes.includes("noName")}
+                                    onBlur={validateName}
+                                    error={validationState.name}
                                     helperText="Required"
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                             <Grid xs={7}>
@@ -142,9 +249,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.surname}
                                     onChange={handleChangeSurname}
-                                    onBlur={validateForm}
-                                    error={errorCodes.includes("noSurname")}
+                                    onBlur={validateSurname}
+                                    error={validationState.surname}
                                     helperText="Required"
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                             <Grid xs={5} md={5}>
@@ -154,7 +262,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     disabled={false}
                                     maskChar=" "
                                     onChange={handleChangeIdCard}
-                                    onBlur={validateForm}
+                                    onBlur={validateIdCard}
                                 >
                                     {() => (
                                         <TextField
@@ -163,8 +271,9 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                             variant="outlined"
                                             fullWidth
                                             value={clientDialog.idCard}
-                                            error={errorCodes.includes("invalidIdCard")}
-                                            helperText={errorCodes.includes("invalidIdCard") ? "Invalid ID card" : ''}
+                                            error={validationState.idCard}
+                                            helperText={validationState.idCard ? "Invalid ID card" : ''}
+                                            InputProps={mode === 'delete' ? {readOnly: true} : null}
                                         />
                                     )}
                                 </InputMask>
@@ -185,7 +294,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     disabled={false}
                                     maskChar=" "
                                     onChange={handleChangePhone}
-                                    onBlur={validateForm}
+                                    onBlur={validatePhone}
                                 >
                                     {() => (
                                         <TextField
@@ -194,11 +303,12 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                             variant="outlined"
                                             fullWidth
                                             value={clientDialog.phone}
-                                            InputProps={{
-                                                startAdornment: <InputAdornment position="start">+48</InputAdornment>,
-                                            }}
-                                            error={errorCodes.includes("invalidPhone") || errorCodes.includes("noPhone")}
-                                            helperText={errorCodes.includes("invalidPhone") ? "Invalid phone" : "Required"}
+                                            error={validationState.phone !== ""}
+                                            helperText={validationState.phone === "invalidPhone" ? "Invalid phone" : "Required"}
+                                            InputProps={mode === 'delete' ? {
+                                                readOnly: true,
+                                                startAdornment: <InputAdornment position="start">+48</InputAdornment>
+                                            } : {startAdornment: <InputAdornment position="start">+48</InputAdornment>}}
                                         />
                                     )}
                                 </InputMask>
@@ -211,9 +321,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.email}
                                     onChange={handleChangeEmail}
-                                    onBlur={validateForm}
-                                    error={errorCodes.includes("invalidEmail")}
-                                    helperText={errorCodes.includes("invalidEmail") ? "Invalid email" : ''}
+                                    onBlur={validateEmail}
+                                    error={validationState.email}
+                                    helperText={validationState.email ? "Invalid email" : ''}
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                         </Grid>
@@ -233,9 +344,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.city}
                                     onChange={handleChangeCity}
-                                    onBlur={validateForm}
-                                    error={errorCodes.includes("noCity")}
+                                    onBlur={validateCity}
+                                    error={validationState.city}
                                     helperText="Required"
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                             <Grid xs={13} md={7}>
@@ -246,6 +358,7 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.street}
                                     onChange={handleChangeStreet}
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                             <Grid xs={11} md={5}>
@@ -256,9 +369,10 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                                     fullWidth
                                     value={clientDialog.streetNumber}
                                     onChange={handleChangeStreetNumber}
-                                    onBlur={validateForm}
-                                    error={errorCodes.includes("noStreetNumber")}
+                                    onBlur={validateStreetNumber}
+                                    error={validationState.streetNumber}
                                     helperText="Required"
+                                    InputProps={mode === 'delete' ? {readOnly: true} : null}
                                 />
                             </Grid>
                         </Grid>
@@ -266,11 +380,16 @@ export default function ClientsUpdateDialog({handleCancelDialog, client, handleD
                 </DialogContent>
             </Scrollbars>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                <LoadingButton variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
-                               onClick={handleSave}
-                               className={"DialogButton"} disabled={errorCodes.length !== 0}>
+                {mode === 'delete' ? (<Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>}
+                                              onClick={handleSave}
+                                              className={"DialogButton"}>
+                    Delete
+                </Button>) : (<Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
+                                      onClick={handleSave}
+                                      className={"DialogButton"}
+                                      disabled={ValidateClient(clientDialog).length !== 0}>
                     Save
-                </LoadingButton>
+                </Button>)}
                 <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
                         onClick={() => handleCancelDialog()} className={"DialogButton"}>
                     Cancel

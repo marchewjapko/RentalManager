@@ -3,11 +3,16 @@ import "./Clients.js.css"
 import "../SharedStyles.css"
 import {
     Alert,
+    Button,
+    Checkbox,
     Dialog,
     DialogTitle,
-    IconButton,
+    MenuItem,
+    OutlinedInput,
     Paper,
+    Select,
     Snackbar,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -15,15 +20,16 @@ import {
     TableHead,
     TablePagination,
     TableRow,
+    TextField,
 } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
 import ClientTableRow from "./ClientTableRow";
 import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
-import {getAllClients} from "../../Actions/ClientActions";
+import {filterClients, getAllClients} from "../../Actions/ClientActions";
 import SkeletonTableClients from "./SkeletonTableClients";
-import ClientsUpdateDialog from "./ClientsUpdateDialog";
-import ClientsDeleteDialog from "./ClientsDeleteDialog";
+import ClientsDialog from "./ClientsDialog";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import ClientsSearchSelect from "./ClientsSearchSelect";
 
 export default function Clients() {
     const [page, setPage] = React.useState(0);
@@ -31,10 +37,9 @@ export default function Clients() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [data, setData] = React.useState();
     const [showSnackbar, setShowSnackbar] = React.useState(false);
-    const [snackbarText, setSnackbarText] = React.useState("");
-    const [showEditDialog, setShowEditDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
     const [focusedClient, setFocusedClient] = React.useState();
+    const [dialogMode, setDialogMode] = React.useState("")
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -54,31 +59,62 @@ export default function Clients() {
         getData();
     }, []);
 
+    const getDialogTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Add client'
+            case 'update':
+                return 'Edit client'
+            case 'delete':
+                return 'Delete client'
+        }
+    }
+
+    const getSnackbarTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Client added successfully'
+            case 'update':
+                return 'Client updated successfully'
+            case 'delete':
+                return 'Client deleted successfully'
+        }
+    }
+
     const handleEditClick = (client) => {
         setFocusedClient(client)
-        setShowEditDialog(true)
+        setDialogMode("update")
+        setShowDialog(true)
     }
 
     const handleDeleteClick = (client) => {
         setFocusedClient(client)
-        setShowDeleteDialog(true)
+        setDialogMode("delete")
+        setShowDialog(true)
+    }
+
+    const handleAddClick = () => {
+        setDialogMode("post")
+        setFocusedClient({
+            name: "",
+            surname: "",
+            phone: "",
+            email: "",
+            idCard: "",
+            city: "",
+            street: "",
+            streetNumber: ""
+        })
+        setShowDialog(true)
     }
 
     const handleCloseDialog = () => {
-        setShowDeleteDialog(false)
-        setShowEditDialog(false)
+        setShowDialog(false)
     }
 
     const handleDialogSuccess = async (mode) => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if (mode === "edit") {
-            setSnackbarText("Client updated successfully")
-        } else if (mode === "delete") {
-            setSnackbarText("Client deleted successfully")
-        } else {
-            setSnackbarText("How did you do that?")
-        }
         handleCloseDialog()
         const result = await getAllClients();
         setData(result);
@@ -89,31 +125,28 @@ export default function Clients() {
         setShowSnackbar(false);
     }
 
-    const editDialog = () => {
+    const dialog = () => {
         return (
             <Dialog
-                open={showEditDialog}
+                open={showDialog}
+                maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                <DialogTitle>{"Edit client"}</DialogTitle>
-                <ClientsUpdateDialog client={focusedClient} handleCancelDialog={handleCloseDialog}
-                                     handleDialogSuccess={handleDialogSuccess} BackdropComponent={null}/>
+                {}
+                <DialogTitle>{getDialogTitle()}</DialogTitle>
+                <ClientsDialog client={focusedClient}
+                               handleCancelDialog={handleCloseDialog}
+                               handleDialogSuccess={handleDialogSuccess}
+                               mode={dialogMode}/>
             </Dialog>
         );
     }
 
-    const deleteDialog = () => {
-        return (
-            <Dialog
-                open={showDeleteDialog}
-                maxWidth={"sm"}
-                onClose={() => handleCloseDialog()}
-            >
-                <DialogTitle>{"Delete client"}</DialogTitle>
-                <ClientsDeleteDialog client={focusedClient} handleCancelDialog={handleCloseDialog}
-                                     handleDialogSuccess={handleDialogSuccess}/>
-            </Dialog>
-        );
+    const handleSearch = async (searchValues) => {
+        setIsLoading(true);
+        const result = await filterClients(searchValues);
+        setData(result);
+        setIsLoading(false)
     }
 
     return (
@@ -121,16 +154,23 @@ export default function Clients() {
             <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
                 <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
-                    {snackbarText}
+                    {getSnackbarTitle()}
                 </Alert>
             </Snackbar>
             <Paper className={"ComponentContainer"}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
+                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"primary"} variant={"text"}
+                            onClick={handleAddClick} disabled={isLoading}>
+                        Add client
+                    </Button>
+                    <ClientsSearchSelect isLoading={isLoading} handleSearch={handleSearch}/>
+                </Stack>
                 {isLoading ? (
                     <SkeletonTableClients/>
                 ) : (
                     <div>
-                        {editDialog()}
-                        {deleteDialog()}
+                        {dialog()}
                         <TableContainer className={"ClientsTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={600} autoHide
                                         autoHideTimeout={750}
@@ -142,11 +182,7 @@ export default function Clients() {
                                             <TableCell className={"ClientTableHeadName"}>Name</TableCell>
                                             <TableCell align="right"
                                                        className={"ClientTableHeadSurname"}>Surname</TableCell>
-                                            <TableCell align="right" className={"ClientTableHeadActions"}>
-                                                <IconButton color="default">
-                                                    <SearchIcon/>
-                                                </IconButton>
-                                            </TableCell>
+                                            <TableCell align="right" className={"ClientTableHeadActions"}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

@@ -9,14 +9,12 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TextField
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import * as React from 'react';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function SkeletonTableEmployees(props) {
+export default function SkeletonTableEmployees() {
     return (
         <div>
             <TableContainer className={"EmployeesTable"}>
@@ -25,25 +23,7 @@ export default function SkeletonTableEmployees(props) {
                         <TableRow>
                             <TableCell className={"EmployeesTableHeadNameTableHeadName"}>Name</TableCell>
                             <TableCell align="right" className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                            <TableCell align="right" className={"TableHeadActionsWithSearch"}>
-                                <Stack direction="row" justifyContent="flex-end">
-                                    <TextField
-                                        value={props.searchPrase}
-                                        onChange={() => null}
-                                        placeholder="Search"
-                                        variant="standard"
-                                        size="small"
-                                        className={"TableSearchInput"}
-                                        InputProps={{
-                                            style: {fontSize: '1em'},
-                                        }}
-                                        disabled
-                                    />
-                                    <IconButton color="default" disabled>
-                                        <SearchIcon/>
-                                    </IconButton>
-                                </Stack>
-                            </TableCell>
+                            <TableCell align="right" className={"TableHeadActionsWithSearch"}/>
                         </TableRow>
                     </TableHead>
                     <TableBody>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import "./Employees.js.css"
 import {
     Alert,
-    Box,
+    Box, Button,
     Dialog,
     DialogTitle,
     IconButton,
@@ -15,70 +15,57 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TextField
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
-import EmployeesUpdateDialog from "./EmployeesUpdateDialog";
-import EmployeesDeleteDialog from "./EmployeesDeleteDialog";
 import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {filterEmployees, getAllEmployees} from "../../Actions/EmployeeActions";
 import SkeletonTableEmployees from "./SkeletonTableEmployees";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import SearchTextField from "../Shared/SearchTextField";
+import EmployeeDialog from "./EmployeeDialog";
 
 export default function Employees() {
-    const [showEditDialog, setShowEditDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
     const [focusedEmployee, setFocusedEmployee] = React.useState();
     const [data, setData] = React.useState();
-    const [searchName, setSearchName] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(true);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
-    const [snackbarText, setSnackbarText] = React.useState("");
+    const [dialogMode, setDialogMode] = React.useState("")
 
-    const handleSearch = async () => {
+    const handleSearch = async (searchName) => {
         setIsLoading(true);
         const result = await filterEmployees(searchName);
         setData(result)
         setIsLoading(false);
     }
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
+    const handleAddClick = () => {
+        setDialogMode("post")
+        setFocusedEmployee({name: "", surname: ""})
+        setShowDialog(true)
     }
 
-    const handleChangeName = (event) => {
-        setSearchName(event.target.value);
-    };
-
     const handleEditClick = (employee) => {
+        setDialogMode("update")
         setFocusedEmployee(employee)
-        setShowEditDialog(true)
+        setShowDialog(true)
     }
 
     const handleDeleteClick = (employee) => {
+        setDialogMode("delete")
         setFocusedEmployee(employee)
-        setShowDeleteDialog(true)
+        setShowDialog(true)
     }
 
     const handleCloseDialog = () => {
-        setShowDeleteDialog(false)
-        setShowEditDialog(false)
+        setShowDialog(false)
     }
 
     const handleDialogSuccess = async (mode) => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if (mode === "edit") {
-            setSnackbarText("Employee updated successfully")
-        } else if (mode === "delete") {
-            setSnackbarText("Employee deleted successfully")
-        } else {
-            setSnackbarText("How did you do that?")
-        }
         handleCloseDialog()
         const result = await getAllEmployees();
         setData(result);
@@ -98,30 +85,35 @@ export default function Employees() {
         getData();
     }, []);
 
-    const editDialog = () => {
-        return (
-            <Dialog
-                open={showEditDialog}
-                maxWidth={"sm"}
-                onClose={() => handleCloseDialog()}
-            >
-                <DialogTitle>{"Edit employee"}</DialogTitle>
-                <EmployeesUpdateDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog}
-                                       handleDialogSuccess={handleDialogSuccess}/>
-            </Dialog>
-        );
+    const getDialogTitle = () => {
+        switch (dialogMode) {
+            case 'post': return 'Add employee'
+            case 'update': return 'Edit employee'
+            case 'delete': return 'Delete employee'
+        }
     }
 
-    const deleteDialog = () => {
+    const getSnackbarTitle = () => {
+        switch (dialogMode) {
+            case 'post': return 'Employee added successfully'
+            case 'update': return 'Employee updated successfully'
+            case 'delete': return 'Employee deleted successfully'
+        }
+    }
+
+    const dialog = () => {
         return (
             <Dialog
-                open={showDeleteDialog}
+                open={showDialog}
                 maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                <DialogTitle>{"Delete employee"}</DialogTitle>
-                <EmployeesDeleteDialog employee={focusedEmployee} handleCancelDialog={handleCloseDialog}
-                                       handleDialogSuccess={handleDialogSuccess}/>
+                {}
+                <DialogTitle>{getDialogTitle()}</DialogTitle>
+                <EmployeeDialog employee={focusedEmployee}
+                                       handleCancelDialog={handleCloseDialog}
+                                       handleDialogSuccess={handleDialogSuccess}
+                                       mode={dialogMode}/>
             </Dialog>
         );
     }
@@ -129,18 +121,25 @@ export default function Employees() {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
+                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"inherit"} variant={"text"}
+                            onClick={handleAddClick} disabled={isLoading}>
+                        Add employee
+                    </Button>
+                    <SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>
+                </Stack>
                 <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
                           anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
                     <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
-                        {snackbarText}
+                        {getSnackbarTitle()}
                     </Alert>
                 </Snackbar>
                 {isLoading ? (
-                    <SkeletonTableEmployees searchPrase={searchName}/>
+                    <SkeletonTableEmployees/>
                 ) : (
                     <div>
-                        {editDialog()}
-                        {deleteDialog()}
+                        {dialog()}
                         <TableContainer className={"EmployeesTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
                                         autoHideTimeout={750} autoHideDuration={500}>
@@ -150,26 +149,7 @@ export default function Employees() {
                                             <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
                                             <TableCell align="right"
                                                        className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                                            <TableCell align="right" className={"TableHeadActionsWithSearch"}>
-                                                <Stack direction="row" justifyContent="flex-end">
-                                                    <TextField
-                                                        value={searchName}
-                                                        onChange={handleChangeName}
-                                                        placeholder="Search"
-                                                        variant="standard"
-                                                        size="small"
-                                                        className={"TableSearchInput"}
-                                                        InputProps={{
-                                                            style: {fontSize: '1em'},
-                                                        }}
-                                                        onKeyDown={handleKeyDown}
-                                                    />
-                                                    <IconButton color="default"
-                                                                onClick={handleSearch}>
-                                                        <SearchIcon/>
-                                                    </IconButton>
-                                                </Stack>
-                                            </TableCell>
+                                            <TableCell align="right" className={"TableHeadActionsWithSearch"}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

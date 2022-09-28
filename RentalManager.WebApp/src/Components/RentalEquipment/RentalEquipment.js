@@ -3,11 +3,11 @@ import "./RentalEquipment.js.css"
 import {RentalEquipmentMock} from "../../Mocks/RentalEquipmentMock";
 import {
     Alert,
-    Box, Button,
+    Box,
+    Button,
     Dialog,
     DialogTitle,
     IconButton,
-    InputAdornment,
     Paper,
     Snackbar,
     Stack,
@@ -18,49 +18,33 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField,
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
-import RentalEquipmentUpdateDialog from "./RentalEquipmentUpdateDialog";
-import RentalEquipmentDeleteDialog from "./RentalEquipmentDeleteDialog";
 import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
 import {filterRentalEquipment, getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 import SkeletonTableRentalEquipment from "./SkeletonTableRentalEquipment";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import RentalEquipmentAddDialog from "./RentalEquipmentAddDialog";
+import SearchTextField from "../Shared/SearchTextField";
+import RentalEquipmentDialog from "./RentalEquipmentDialog";
 
 export default function RentalEquipment() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [showEditDialog, setShowEditDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [showAddDialog, setShowAddDialog] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
     const [focusedRentalEquipment, setFocusedRentalEquipment] = React.useState();
     const [data, setData] = React.useState(RentalEquipmentMock);
-    const [searchName, setSearchName] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(true);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
-    const [snackbarText, setSnackbarText] = React.useState("");
+    const [dialogMode, setDialogMode] = React.useState("")
 
-    const handleSearch = async () => {
+    const handleSearch = async (searchName) => {
         setIsLoading(true);
         const result = await filterRentalEquipment(searchName);
         setData(result)
         setIsLoading(false);
     }
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    }
-
-    const handleChangeName = (event) => {
-        setSearchName(event.target.value);
-    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -71,36 +55,31 @@ export default function RentalEquipment() {
         setPage(0);
     };
 
-    const handleEditClick = (employee) => {
-        setFocusedRentalEquipment(employee)
-        setShowEditDialog(true)
+    const handleEditClick = (rentalEquipment) => {
+        setFocusedRentalEquipment(rentalEquipment)
+        setDialogMode("update")
+        setShowDialog(true)
     }
 
-    const handleDeleteClick = (employee) => {
-        setFocusedRentalEquipment(employee)
-        setShowDeleteDialog(true)
+    const handleDeleteClick = (rentalEquipment) => {
+        setFocusedRentalEquipment(rentalEquipment)
+        setDialogMode("delete")
+        setShowDialog(true)
     }
 
     const handleAddClick = () => {
-        setShowAddDialog(true)
+        setDialogMode("post")
+        setFocusedRentalEquipment({name: "", monthlyPrice: ""})
+        setShowDialog(true)
     }
 
     const handleCloseDialog = () => {
-        setShowDeleteDialog(false)
-        setShowEditDialog(false)
-        setShowAddDialog(false)
+        setShowDialog(false)
     }
 
-    const handleDialogSuccess = async (mode) => {
+    const handleDialogSuccess = async () => {
         setIsLoading(true);
         setShowSnackbar(true);
-        if (mode === "edit") {
-            setSnackbarText("Rental Equipment updated successfully")
-        } else if (mode === "delete") {
-            setSnackbarText("Rental Equipment deleted successfully")
-        } else {
-            setSnackbarText("How did you do that?")
-        }
         handleCloseDialog()
         const result = await getAllRentalEquipment();
         setData(result);
@@ -120,46 +99,41 @@ export default function RentalEquipment() {
         getData();
     }, []);
 
-    const editDialog = () => {
-        return (
-            <Dialog
-                open={showEditDialog}
-                maxWidth={"sm"}
-                onClose={() => handleCloseDialog()}
-            >
-                <DialogTitle>{"Edit rental equipment"}</DialogTitle>
-                <RentalEquipmentUpdateDialog rentalEquipment={focusedRentalEquipment}
-                                             handleCancelDialog={handleCloseDialog}
-                                             handleDialogSuccess={handleDialogSuccess}/>
-            </Dialog>
-        );
+    const getDialogTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Add rental equipment'
+            case 'update':
+                return 'Edit rental equipment'
+            case 'delete':
+                return 'Delete rental equipment'
+        }
     }
 
-    const deleteDialog = () => {
-        return (
-            <Dialog
-                open={showDeleteDialog}
-                maxWidth={"sm"}
-                onClose={() => handleCloseDialog()}
-            >
-                <DialogTitle>{"Delete rental equipment"}</DialogTitle>
-                <RentalEquipmentDeleteDialog rentalEquipment={focusedRentalEquipment}
-                                             handleCancelDialog={handleCloseDialog}
-                                             handleDialogSuccess={handleDialogSuccess}/>
-            </Dialog>
-        );
+    const getSnackbarTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Equipment added successfully'
+            case 'update':
+                return 'Equipment updated successfully'
+            case 'delete':
+                return 'Equipment deleted successfully'
+        }
     }
 
-    const addDialog = () => {
+    const dialog = () => {
         return (
             <Dialog
-                open={showAddDialog}
+                open={showDialog}
                 maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                <DialogTitle>{"Add rental equipment"}</DialogTitle>
-                <RentalEquipmentAddDialog handleCancelDialog={handleCloseDialog}
-                                             handleDialogSuccess={handleDialogSuccess}/>
+                {}
+                <DialogTitle>{getDialogTitle()}</DialogTitle>
+                <RentalEquipmentDialog rentalEquipment={focusedRentalEquipment}
+                                       handleCancelDialog={handleCloseDialog}
+                                       handleDialogSuccess={handleDialogSuccess}
+                                       mode={dialogMode}/>
             </Dialog>
         );
     }
@@ -167,45 +141,25 @@ export default function RentalEquipment() {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center" sx={{marginRight: "10px", marginBottom: "10px"}}>
-                    <Button startIcon={<AddCircleRoundedIcon />} size={"large"} color={"inherit"} variant={"text"} onClick={handleAddClick} disabled={isLoading}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
+                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"inherit"} variant={"text"}
+                            onClick={handleAddClick} disabled={isLoading}>
                         Add equipment
                     </Button>
-                    <TextField
-                        value={searchName}
-                        onChange={handleChangeName}
-                        placeholder="Search"
-                        variant="standard"
-                        size="small"
-                        className={"TableSearchInput"}
-                        InputProps={{
-                            style: {fontSize: '1em'},
-                        }}
-                        disabled={isLoading}
-                        onKeyDown={handleKeyDown}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">
-                                <IconButton color="default" onClick={handleSearch} sx={{marginRight: "-8px"}}
-                                            disabled={isLoading}>
-                                    <SearchIcon/>
-                                </IconButton>
-                            </InputAdornment>
-                        }}
-                    />
+                    <SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>
                 </Stack>
                 <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
                           anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
                     <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
-                        {snackbarText}
+                        {getSnackbarTitle()}
                     </Alert>
                 </Snackbar>
                 {isLoading ? (
-                    <SkeletonTableRentalEquipment searchPrase={searchName}/>
+                    <SkeletonTableRentalEquipment/>
                 ) : (
                     <div>
-                        {editDialog()}
-                        {deleteDialog()}
-                        {addDialog()}
+                        {dialog()}
                         <TableContainer className={"RentalEquipmentTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
                                         autoHideTimeout={750}

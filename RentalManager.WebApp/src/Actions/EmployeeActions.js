@@ -4,6 +4,10 @@ export const getAllEmployees = () => new Promise((resolve) => {
     setTimeout(() => (resolve(Object.values(EmployeesMock)), console.log("Got all employees")), 2500);
 });
 
+export const addEmployee = (employee) => new Promise((resolve) => {
+    setTimeout(() => (resolve("Employee added!"), console.log("Added employee:", employee)), 2500);
+});
+
 export const filterEmployees = (name) => new Promise((resolve) => {
     setTimeout(() => (resolve(Object.values(EmployeesMock.filter(x => x.surname.toLowerCase().includes(name.toLowerCase())))), console.log("Filtered employees")), 2500);
 });
