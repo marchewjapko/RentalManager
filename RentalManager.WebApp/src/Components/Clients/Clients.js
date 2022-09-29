@@ -4,13 +4,9 @@ import "../SharedStyles.css"
 import {
     Alert,
     Button,
-    Checkbox,
     Dialog,
     DialogTitle,
-    MenuItem,
-    OutlinedInput,
     Paper,
-    Select,
     Snackbar,
     Stack,
     Table,
@@ -20,16 +16,15 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField,
 } from "@mui/material";
 import ClientTableRow from "./ClientTableRow";
 import {Scrollbars} from 'react-custom-scrollbars-2';
-import {Link} from "react-router-dom";
 import {filterClients, getAllClients} from "../../Actions/ClientActions";
 import SkeletonTableClients from "./SkeletonTableClients";
 import ClientsDialog from "./ClientsDialog";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ClientsSearchSelect from "./ClientsSearchSelect";
+import TempNavigation from "../Shared/TempNavigation";
 
 export default function Clients() {
     const [page, setPage] = React.useState(0);
@@ -152,7 +147,7 @@ export default function Clients() {
     return (
         <div>
             <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
-                      anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                      anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
                 <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                     {getSnackbarTitle()}
                 </Alert>
@@ -160,7 +155,7 @@ export default function Clients() {
             <Paper className={"ComponentContainer"}>
                 <Stack direction={"row"} justifyContent="space-between" alignItems="center"
                        sx={{marginRight: "10px", marginBottom: "10px"}}>
-                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"primary"} variant={"text"}
+                    <Button startIcon={<AddCircleRoundedIcon/>} color={"primary"} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add client
                     </Button>
@@ -209,9 +204,7 @@ export default function Clients() {
                     </div>
                 )}
             </Paper>
-            <Link to="/">Clients</Link>
-            <Link to="/2">RentalEquipment</Link>
-            <Link to="/3">Employees</Link>
+            <TempNavigation/>
         </div>
     );
 }

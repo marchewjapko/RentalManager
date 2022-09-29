@@ -1,5 +1,4 @@
 import {ClientsMock} from "../Mocks/ClientsMock";
-import {EmployeesMock} from "../Mocks/EmployeesMock";
 
 export const getAllClients = () => new Promise((resolve) => {
     setTimeout(() => (resolve(Object.values(ClientsMock)), console.log("Got all clients")), 2500);

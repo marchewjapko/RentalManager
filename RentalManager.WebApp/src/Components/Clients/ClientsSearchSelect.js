@@ -1,22 +1,11 @@
-import {
-    Box,
-    Button,
-    FormControl,
-    IconButton,
-    InputAdornment,
-    MenuItem,
-    OutlinedInput,
-    Select,
-    Stack,
-    TextField
-} from "@mui/material";
+import {Box, Button, IconButton, InputAdornment, Popover, Stack, TextField} from "@mui/material";
 import * as React from 'react';
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import InputMask from "react-input-mask";
 
 export default function ClientsSearchSelect({isLoading, handleSearch}) {
-    const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const [searchValues, setSearchValues] = React.useState({
         surname: "",
         phone: "",
@@ -26,6 +15,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
+            setAnchorEl(null);
             handleSearch(searchValues);
         }
     }
@@ -54,25 +44,35 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
         })
     }
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
     };
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleClose = () => {
+        setAnchorEl(null);
     };
+
+    const open = Boolean(anchorEl);
 
     return (
-        <FormControl sx={{width: "10rem"}}>
-            <Select
-                multiple
-                value={[""]}
-                renderValue={() => "Search options"}
-                disabled={isLoading}
+        <div>
+            <Button variant="outlined" color={"inherit"} endIcon={<SearchIcon/>} onClick={handleClick}
+                    disabled={isLoading}>
+                Search options
+            </Button>
+            <Popover
                 open={open}
+                anchorEl={anchorEl}
                 onClose={handleClose}
-                onOpen={handleOpen}
-                sx={{width: "100%"}}>
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
                 <Stack direction={"column"}
                        sx={{
                            paddingTop: "10px",
@@ -90,6 +90,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                         value={searchValues.surname}
                         onChange={handleSearchSurname}
                         onKeyDown={handleKeyDown}
+                        size="small"
                         InputProps={{
                             endAdornment: <InputAdornment position="end">
                                 {searchValues.surname.trim().length !== 0 ? (
@@ -118,6 +119,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                                 label="Phone"
                                 variant="outlined"
                                 fullWidth
+                                size="small"
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">
                                         {searchValues.phone.trim().length !== 0 ? (
@@ -143,6 +145,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                         value={searchValues.city}
                         onChange={handleSearchCity}
                         onKeyDown={handleKeyDown}
+                        size="small"
                         InputProps={{
                             endAdornment: <InputAdornment position="end">
                                 {searchValues.city.trim().length !== 0 ? (
@@ -165,6 +168,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                         value={searchValues.street}
                         onChange={handleSearchStreet}
                         onKeyDown={handleKeyDown}
+                        size="small"
                         InputProps={{
                             endAdornment: <InputAdornment position="end">
                                 {searchValues.street.trim().length !== 0 ? (
@@ -179,11 +183,15 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                             </InputAdornment>
                         }}
                     />
-                    <Button variant="contained" color={"primary"} endIcon={<SearchIcon />} onClick={function(){ handleSearch(searchValues); setOpen(false);}}>
+                    <Button variant="contained" color={"primary"} sx={{height: "2.7em"}} endIcon={<SearchIcon/>}
+                            onClick={function () {
+                                handleSearch(searchValues);
+                                setAnchorEl(null);
+                            }}>
                         Search
                     </Button>
                 </Stack>
-            </Select>
-        </FormControl>
+            </Popover>
+        </div>
     );
 }

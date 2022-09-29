@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Clients from "./Components/Clients/Clients";
 import RentalEquipment from "./Components/RentalEquipment/RentalEquipment";
 import Employees from "./Components/Employees/Employees";
+import RentalAgreement from "./Components/RentalAgreement/RentalAgreement";
 
 const darkTheme = createTheme({
     palette: {
@@ -27,6 +28,7 @@ const renderReactDom = () => {
                     <Route exact path="/" element={<Clients />} />
                     <Route exact path="/2" element={<RentalEquipment />} />
                     <Route exact path="/3" element={<Employees />} />
+                    <Route exact path="/4" element={<RentalAgreement />} />
                 </Routes>
             </HashRouter>
         </ThemeProvider>

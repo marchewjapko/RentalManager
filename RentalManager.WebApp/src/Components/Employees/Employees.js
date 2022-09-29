@@ -2,11 +2,11 @@ import * as React from 'react';
 import "./Employees.js.css"
 import {
     Alert,
-    Box, Button,
+    Box,
+    Button,
     Dialog,
     DialogTitle,
     IconButton,
-    Paper,
     Snackbar,
     Stack,
     Table,
@@ -19,12 +19,12 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {Scrollbars} from 'react-custom-scrollbars-2';
-import {Link} from "react-router-dom";
 import {filterEmployees, getAllEmployees} from "../../Actions/EmployeeActions";
 import SkeletonTableEmployees from "./SkeletonTableEmployees";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import SearchTextField from "../Shared/SearchTextField";
 import EmployeeDialog from "./EmployeeDialog";
+import TempNavigation from "../Shared/TempNavigation";
 
 export default function Employees() {
     const [showDialog, setShowDialog] = React.useState(false);
@@ -87,17 +87,23 @@ export default function Employees() {
 
     const getDialogTitle = () => {
         switch (dialogMode) {
-            case 'post': return 'Add employee'
-            case 'update': return 'Edit employee'
-            case 'delete': return 'Delete employee'
+            case 'post':
+                return 'Add employee'
+            case 'update':
+                return 'Edit employee'
+            case 'delete':
+                return 'Delete employee'
         }
     }
 
     const getSnackbarTitle = () => {
         switch (dialogMode) {
-            case 'post': return 'Employee added successfully'
-            case 'update': return 'Employee updated successfully'
-            case 'delete': return 'Employee deleted successfully'
+            case 'post':
+                return 'Employee added successfully'
+            case 'update':
+                return 'Employee updated successfully'
+            case 'delete':
+                return 'Employee deleted successfully'
         }
     }
 
@@ -111,9 +117,9 @@ export default function Employees() {
                 {}
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
                 <EmployeeDialog employee={focusedEmployee}
-                                       handleCancelDialog={handleCloseDialog}
-                                       handleDialogSuccess={handleDialogSuccess}
-                                       mode={dialogMode}/>
+                                handleCancelDialog={handleCloseDialog}
+                                handleDialogSuccess={handleDialogSuccess}
+                                mode={dialogMode}/>
             </Dialog>
         );
     }
@@ -123,14 +129,14 @@ export default function Employees() {
             <Paper className={"ComponentContainer"}>
                 <Stack direction={"row"} justifyContent="space-between" alignItems="center"
                        sx={{marginRight: "10px", marginBottom: "10px"}}>
-                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"inherit"} variant={"text"}
+                    <Button startIcon={<AddCircleRoundedIcon/>} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add employee
                     </Button>
                     <SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>
                 </Stack>
                 <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
-                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                          anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
                     <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                         {getSnackbarTitle()}
                     </Alert>
@@ -182,8 +188,7 @@ export default function Employees() {
                     </div>
                 )}
             </Paper>
-            <Link to="/">Clients</Link>
-            <Link to="/2">RentalEquipment</Link>
+            <TempNavigation/>
         </div>
     );
 }

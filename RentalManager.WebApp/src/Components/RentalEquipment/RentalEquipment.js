@@ -22,12 +22,12 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {Scrollbars} from 'react-custom-scrollbars-2';
-import {Link} from "react-router-dom";
 import {filterRentalEquipment, getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 import SkeletonTableRentalEquipment from "./SkeletonTableRentalEquipment";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SearchTextField from "../Shared/SearchTextField";
 import RentalEquipmentDialog from "./RentalEquipmentDialog";
+import TempNavigation from "../Shared/TempNavigation";
 
 export default function RentalEquipment() {
     const [page, setPage] = React.useState(0);
@@ -143,14 +143,14 @@ export default function RentalEquipment() {
             <Paper className={"ComponentContainer"}>
                 <Stack direction={"row"} justifyContent="space-between" alignItems="center"
                        sx={{marginRight: "10px", marginBottom: "10px"}}>
-                    <Button startIcon={<AddCircleRoundedIcon/>} size={"large"} color={"inherit"} variant={"text"}
+                    <Button startIcon={<AddCircleRoundedIcon/>} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add equipment
                     </Button>
                     <SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>
                 </Stack>
                 <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
-                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                          anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
                     <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
                         {getSnackbarTitle()}
                     </Alert>
@@ -216,8 +216,7 @@ export default function RentalEquipment() {
                     </div>
                 )}
             </Paper>
-            <Link to="/">Client</Link>
-            <Link to="/3">Employees</Link>
+            <TempNavigation/>
         </div>
     );
 }
