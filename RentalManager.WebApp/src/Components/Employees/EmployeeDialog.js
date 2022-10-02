@@ -106,22 +106,24 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                     InputProps={mode === 'delete' ? {readOnly: true} : null}
                 />
             </DialogContent>
-            <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-                {mode === 'delete' ? (
-                    <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>} onClick={handleSave}
-                            className={"DialogButton"}>
-                        Delete
-                    </Button>) : (
-                    <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>} onClick={handleSave}
-                            className={"DialogButton"}
-                            disabled={ValidateEmployee(employeeDialog).length !== 0}>
-                        Save
-                    </Button>)}
-                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
-                        onClick={() => handleCancelDialog()} className={"DialogButton"}>
-                    Cancel
-                </Button>
-            </Stack>
+            {mode !== 'info' ? (
+                <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                    {mode === 'delete' ? (
+                        <Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>} onClick={handleSave}
+                                className={"DialogButton"}>
+                            Delete
+                        </Button>) : (
+                        <Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>} onClick={handleSave}
+                                className={"DialogButton"}
+                                disabled={ValidateEmployee(employeeDialog).length !== 0}>
+                            Save
+                        </Button>)}
+                    <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
+                            onClick={() => handleCancelDialog()} className={"DialogButton"}>
+                        Cancel
+                    </Button>
+                </Stack>
+            ) : null}
         </div>
     );
 }

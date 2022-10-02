@@ -23,7 +23,7 @@ export default function SkeletonTableEmployees() {
                         <TableRow>
                             <TableCell className={"EmployeesTableHeadNameTableHeadName"}>Name</TableCell>
                             <TableCell align="right" className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                            <TableCell align="right" className={"TableHeadActionsWithSearch"}/>
+                            <TableCell align="right" sx={{width: "100px"}}/>
                         </TableRow>
                     </TableHead>
                     <TableBody>

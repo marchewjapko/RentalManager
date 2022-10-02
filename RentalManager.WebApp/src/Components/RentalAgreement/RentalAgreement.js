@@ -3,15 +3,15 @@ import * as React from 'react';
 import "../SharedStyles.css"
 import {
     Alert, Box,
-    Button,
-    Checkbox,
+    Button, ButtonGroup,
+    Checkbox, createStyles,
     Dialog,
-    DialogTitle, IconButton,
+    DialogTitle, Fade, IconButton, InputAdornment,
     MenuItem,
     OutlinedInput,
-    Paper,
+    Paper, Popover,
     Select,
-    Snackbar,
+    Snackbar, SpeedDial, SpeedDialAction, SpeedDialIcon,
     Stack,
     Table,
     TableBody,
@@ -20,7 +20,7 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField,
+    TextField, Zoom,
 } from "@mui/material";
 import {Scrollbars} from 'react-custom-scrollbars-2';
 import {Link} from "react-router-dom";
@@ -38,16 +38,25 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import dayjs from "dayjs";
 import 'dayjs/locale/pl';
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import InputMask from "react-input-mask";
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import InfoIcon from '@mui/icons-material/Info';
+import RentalAgreementDialog from "./RentalAgreementDialog";
 
 export default function RentalAgreement() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(false);
     const [data, setData] = React.useState(RentalAgreementMock);
-    // const [showSnackbar, setShowSnackbar] = React.useState(false);
-    // const [showDialog, setShowDialog] = React.useState(false);
-    // const [focusedClient, setFocusedClient] = React.useState();
-    // const [dialogMode, setDialogMode] = React.useState("")
+    const [showSnackbar, setShowSnackbar] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [focusedAgreement, setFocusedAgreement] = React.useState();
+    const [dialogMode, setDialogMode] = React.useState("")
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    dayjs.locale('pl')
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -67,16 +76,16 @@ export default function RentalAgreement() {
     //     getData();
     // }, []);
 
-    // const getDialogTitle = () => {
-    //     switch (dialogMode) {
-    //         case 'post':
-    //             return 'Add client'
-    //         case 'update':
-    //             return 'Edit client'
-    //         case 'delete':
-    //             return 'Delete client'
-    //     }
-    // }
+    const getDialogTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Add agreement'
+            case 'update':
+                return 'Edit agreement'
+            case 'delete':
+                return 'Delete agreement'
+        }
+    }
     //
     // const getSnackbarTitle = () => {
     //     switch (dialogMode) {
@@ -89,17 +98,21 @@ export default function RentalAgreement() {
     //     }
     // }
 
-    const handleEditClick = (client) => {
-        // setFocusedClient(client)
-        // setDialogMode("update")
-        // setShowDialog(true)
+    const handleEditClick = () => {
+        setDialogMode("update")
+        setShowDialog(true)
     }
 
-    const handleDeleteClick = (client) => {
-        // setFocusedClient(client)
-        // setDialogMode("delete")
-        // setShowDialog(true)
+    const handleDeleteClick = () => {
+        setDialogMode("delete")
+        setShowDialog(true)
     }
+
+    const handleDetailsClick = () => {
+        setDialogMode("info")
+        setShowDialog(true)
+    }
+
     const handleAddClick = () => {
         // setDialogMode("post")
         // setFocusedClient({
@@ -115,41 +128,22 @@ export default function RentalAgreement() {
         // setShowDialog(true)
     }
 
-    // const handleCloseDialog = () => {
-    //     setShowDialog(false)
-    // }
-    //
-    // const handleDialogSuccess = async (mode) => {
-    //     setIsLoading(true);
-    //     setShowSnackbar(true);
-    //     handleCloseDialog()
-    //     const result = await getAllClients();
-    //     setData(result);
-    //     setIsLoading(false)
-    // }
-    //
-    // const closeSnackbars = () => {
-    //     setShowSnackbar(false);
-    // }
+    const handleCloseDialog = () => {
+        setShowDialog(false)
+    }
 
+    const handleDialogSuccess = async (mode) => {
+        setIsLoading(true);
+        setShowSnackbar(true);
+        handleCloseDialog()
+        // const result = await getAllClients();
+        // setData(result);
+        setIsLoading(false)
+    }
 
-
-    // const dialog = () => {
-    //     return (
-    //         <Dialog
-    //             open={showDialog}
-    //             maxWidth={"sm"}
-    //             onClose={() => handleCloseDialog()}
-    //         >
-    //             {}
-    //             <DialogTitle>{getDialogTitle()}</DialogTitle>
-    //             <ClientsDialog client={focusedClient}
-    //                            handleCancelDialog={handleCloseDialog}
-    //                            handleDialogSuccess={handleDialogSuccess}
-    //                            mode={dialogMode}/>
-    //         </Dialog>
-    //     );
-    // }
+    const closeSnackbars = () => {
+        setShowSnackbar(false);
+    }
 
     // const handleSearch = async (searchValues) => {
     //     setIsLoading(true);
@@ -157,11 +151,68 @@ export default function RentalAgreement() {
     //     setData(result);
     //     setIsLoading(false)
     // }
+
+    const dialog = () => {
+        return (
+            <Dialog
+                open={showDialog}
+                maxWidth={"sm"}
+                onClose={() => handleCloseDialog()}
+            >
+                <DialogTitle>{getDialogTitle()}</DialogTitle>
+                <RentalAgreementDialog agreement={focusedAgreement}
+                               handleCancelDialog={handleCloseDialog}
+                               handleDialogSuccess={handleDialogSuccess}
+                               mode={dialogMode}/>
+            </Dialog>
+        );
+    }
+
     const getDate = (date) => {
         let formatData = dayjs(date).format('dddd, DD MMMM YYYY').replace(/(^|\s)\S/g, l => l.toUpperCase())
         return formatData
     }
-    dayjs.locale('pl')
+
+    const handleOpenPopper = (event, agreement) => {
+        setAnchorEl(event.currentTarget);
+        setFocusedAgreement(agreement)
+        console.log(agreement)
+    };
+
+    const handleClosePopper = () => {
+        setAnchorEl(null);
+    };
+
+    const tablePopper = () => {
+        return (
+            <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClosePopper}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+                    <Button variant="contained" color="success" startIcon={<EditIcon />} sx={{width: "6.5rem", height: "2.5rem"}} onClick={handleEditClick}>
+                        Edit
+                    </Button>
+                    <Button variant="contained" color="error" startIcon={<DeleteIcon />} sx={{width: "7rem", height: "2.5rem"}} onClick={handleDeleteClick}>
+                        Delete
+                    </Button>
+                    <Button variant="contained" startIcon={<InfoIcon />} sx={{width: "6.5rem", height: "2.5rem"}} onClick={handleDetailsClick}>
+                        Details
+                    </Button>
+                </ButtonGroup>
+            </Popover>
+        );
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
@@ -183,7 +234,8 @@ export default function RentalAgreement() {
                 {/*    <SkeletonTableRentalEquipment/>*/}
                 {/*) : (*/}
                     <div>
-                        {/*{dialog()}*/}
+                        {tablePopper()}
+                        {dialog()}
                         <TableContainer className={"RentalEquipmentTable"}>
                             <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={460} autoHide
                                         autoHideTimeout={750}
@@ -193,7 +245,7 @@ export default function RentalAgreement() {
                                         <TableRow>
                                             <TableCell className={"TableRentalEquipmentColumnName"}>Client</TableCell>
                                             <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Date added</TableCell>
-                                            <TableCell align="right" sx={{width: "150px"}}/>
+                                            <TableCell align="right" sx={{width: "10px"}}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -210,17 +262,8 @@ export default function RentalAgreement() {
                                                 </TableCell>
                                                 <TableCell align="right">
                                                     <Box>
-                                                        <IconButton aria-label="delete" size="small"
-                                                                    onClick={() => handleEditClick(row)}>
-                                                            <EditIcon fontSize="small"/>
-                                                        </IconButton>
-                                                        <IconButton aria-label="delete" size="small" color={"error"}
-                                                                    onClick={() => handleDeleteClick(row)}>
-                                                            <DeleteIcon fontSize="small"/>
-                                                        </IconButton>
-                                                        <IconButton aria-label="delete" size="small"
-                                                                    onClick={() => handleDeleteClick(row)}>
-                                                            <MoreHorizIcon fontSize="small"/>
+                                                        <IconButton color={"inherit"} onClick={(event) => handleOpenPopper(event, row)} disabled={isLoading}>
+                                                            <MoreHorizIcon fontSize="inherit" />
                                                         </IconButton>
                                                     </Box>
                                                 </TableCell>

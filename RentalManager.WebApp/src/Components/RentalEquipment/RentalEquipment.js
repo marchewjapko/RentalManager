@@ -44,6 +44,7 @@ export default function RentalEquipment() {
         const result = await filterRentalEquipment(searchName);
         setData(result)
         setIsLoading(false);
+        setPage(0);
     }
 
     const handleChangePage = (event, newPage) => {
@@ -128,7 +129,6 @@ export default function RentalEquipment() {
                 maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                {}
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
                 <RentalEquipmentDialog rentalEquipment={focusedRentalEquipment}
                                        handleCancelDialog={handleCloseDialog}

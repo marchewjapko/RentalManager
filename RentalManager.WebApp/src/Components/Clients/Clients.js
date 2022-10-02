@@ -127,7 +127,6 @@ export default function Clients() {
                 maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                {}
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
                 <ClientsDialog client={focusedClient}
                                handleCancelDialog={handleCloseDialog}
@@ -141,7 +140,8 @@ export default function Clients() {
         setIsLoading(true);
         const result = await filterClients(searchValues);
         setData(result);
-        setIsLoading(false)
+        setIsLoading(false);
+        setPage(0);
     }
 
     return (

@@ -6,7 +6,7 @@ import {
     Button,
     Dialog,
     DialogTitle,
-    IconButton,
+    IconButton, Paper,
     Snackbar,
     Stack,
     Table,
@@ -114,7 +114,6 @@ export default function Employees() {
                 maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
             >
-                {}
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
                 <EmployeeDialog employee={focusedEmployee}
                                 handleCancelDialog={handleCloseDialog}
@@ -155,7 +154,7 @@ export default function Employees() {
                                             <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
                                             <TableCell align="right"
                                                        className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                                            <TableCell align="right" className={"TableHeadActionsWithSearch"}/>
+                                            <TableCell align="right" sx={{width: "100px"}}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

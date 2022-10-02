@@ -57,7 +57,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
     return (
         <div>
             <Button variant="outlined" color={"inherit"} endIcon={<SearchIcon/>} onClick={handleClick}
-                    disabled={isLoading}>
+                    disabled={isLoading} sx={{height: "40px"}}>
                 Search options
             </Button>
             <Popover
