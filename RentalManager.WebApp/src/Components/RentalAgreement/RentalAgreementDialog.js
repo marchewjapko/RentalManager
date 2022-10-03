@@ -3,20 +3,11 @@ import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import ClientsDialog from "../Clients/ClientsDialog";
 import "./RentalAgreement.js.css"
+import EmployeeDialog from "../Employees/EmployeeDialog";
+import Clients from "../Clients/Clients";
+import Employees from "../Employees/Employees";
 
-function TabPanel({index, children}) {
-    return (
-        <div
-            role="tabpanel"
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-        >
-            {children}
-        </div>
-    );
-}
-
-export default function RentalAgreementDialog({agreement, mode}) {
+export default function RentalAgreementDialog({agreement, mode, handleCancelDialog}) {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -27,14 +18,37 @@ export default function RentalAgreementDialog({agreement, mode}) {
         setValue(index);
     };
 
-    const clientTab = () => {
-        return (
-            <ClientsDialog client={agreement.client}
-                           handleCancelDialog={() => null}
-                           handleDialogSuccess={() => null}
-                           mode={mode}
-                           isResettable={true}/>
-        );
+    const clientTab = (mode) => {
+        if (mode === 'update') {
+            return (
+                <Clients isCheckable={true} initialClient={agreement.client}/>
+            );
+        } else if (mode === 'info') {
+            return (
+                <ClientsDialog client={agreement.client}
+                               handleCancelDialog={() => null}
+                               handleDialogSuccess={() => null}
+                               mode={mode}
+                               isResettable={true}/>
+            );
+        }
+    }
+
+    const employeeTab = () => {
+        if (mode === 'update') {
+            return (
+                <Employees isCheckable={true} initialEmployee={agreement.employee}/>
+            );
+        } else if (mode === 'info') {
+            return (
+                <EmployeeDialog employee={agreement.employee}
+                                handleCancelDialog={() => null}
+                                handleDialogSuccess={() => null}
+                                mode={mode}
+                                isResettable={true}/>
+            );
+        }
+
     }
 
     return (
@@ -62,13 +76,13 @@ export default function RentalAgreementDialog({agreement, mode}) {
                     LOL
                 </div>
                 <div className={"rentalAgreementSlide"}>
-                    {clientTab()}
+                    {clientTab(mode)}
                 </div>
                 <div className={"rentalAgreementSlide"}>
                     LOL
                 </div>
                 <div className={"rentalAgreementSlide"}>
-                    LOL
+                    {employeeTab()}
                 </div>
             </SwipeableViews>
         </div>

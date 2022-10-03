@@ -5,8 +5,9 @@ import {Backdrop, Button, CircularProgress, DialogContent, Stack, TextField} fro
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReplayIcon from "@mui/icons-material/Replay";
 
-export default function EmployeeDialog({handleCancelDialog, employee, handleDialogSuccess, mode}) {
+export default function EmployeeDialog({handleCancelDialog, employee, handleDialogSuccess, mode, isResettable}) {
     const [employeeDialog, setEmployeeDialog] = React.useState(employee);
     const [isLoading, setIsLoading] = React.useState(false)
     const [validationState, setValidationState] = React.useState({name: false, surname: false})
@@ -67,8 +68,16 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                     break;
             }
             setIsLoading(false);
-            handleDialogSuccess(mode)
+            handleDialogSuccess(mode, employeeDialog)
         }
+    }
+
+    const handleReset = () => {
+        setEmployeeDialog(employee)
+        setValidationState({
+            name: false,
+            surname: false,
+        })
     }
 
     return (
@@ -118,10 +127,17 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                                 disabled={ValidateEmployee(employeeDialog).length !== 0}>
                             Save
                         </Button>)}
-                    <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
-                            onClick={() => handleCancelDialog()} className={"DialogButton"}>
-                        Cancel
-                    </Button>
+                    {isResettable ? (
+                        <Button variant="outlined" color={"primary"} size="large" endIcon={<ReplayIcon/>}
+                                onClick={handleReset} className={"DialogButton"}>
+                            Reset
+                        </Button>
+                    ) : (
+                        <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
+                                onClick={() => handleCancelDialog()} className={"DialogButton"}>
+                            Cancel
+                        </Button>
+                    )}
                 </Stack>
             ) : null}
         </div>

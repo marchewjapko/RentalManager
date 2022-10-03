@@ -44,6 +44,9 @@ import InputMask from "react-input-mask";
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import InfoIcon from '@mui/icons-material/Info';
 import RentalAgreementDialog from "./RentalAgreementDialog";
+import Grid from "@mui/material/Unstable_Grid2";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 
 export default function RentalAgreement() {
     const [page, setPage] = React.useState(0);
@@ -55,6 +58,7 @@ export default function RentalAgreement() {
     const [focusedAgreement, setFocusedAgreement] = React.useState();
     const [dialogMode, setDialogMode] = React.useState("")
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const theme = useTheme();
 
     dayjs.locale('pl')
 
@@ -84,6 +88,8 @@ export default function RentalAgreement() {
                 return 'Edit agreement'
             case 'delete':
                 return 'Delete agreement'
+            case 'info':
+                return 'Agreement details'
         }
     }
     //
@@ -99,16 +105,19 @@ export default function RentalAgreement() {
     // }
 
     const handleEditClick = () => {
+        setAnchorEl(null)
         setDialogMode("update")
         setShowDialog(true)
     }
 
     const handleDeleteClick = () => {
+        setAnchorEl(null)
         setDialogMode("delete")
         setShowDialog(true)
     }
 
     const handleDetailsClick = () => {
+        setAnchorEl(null)
         setDialogMode("info")
         setShowDialog(true)
     }
@@ -152,14 +161,27 @@ export default function RentalAgreement() {
     //     setIsLoading(false)
     // }
 
+
     const dialog = () => {
         return (
             <Dialog
                 open={showDialog}
-                maxWidth={"sm"}
                 onClose={() => handleCloseDialog()}
+                fullScreen={useMediaQuery(theme.breakpoints.down("xs"))}
             >
-                <DialogTitle>{getDialogTitle()}</DialogTitle>
+                <DialogTitle>
+                    <Stack direction={"row"} justifyContent="space-between">
+                        {getDialogTitle()}
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleCloseDialog}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
+                </DialogTitle>
                 <RentalAgreementDialog agreement={focusedAgreement}
                                handleCancelDialog={handleCloseDialog}
                                handleDialogSuccess={handleDialogSuccess}
@@ -176,7 +198,6 @@ export default function RentalAgreement() {
     const handleOpenPopper = (event, agreement) => {
         setAnchorEl(event.currentTarget);
         setFocusedAgreement(agreement)
-        console.log(agreement)
     };
 
     const handleClosePopper = () => {

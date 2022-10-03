@@ -4,9 +4,11 @@ import {
     Alert,
     Box,
     Button,
+    Checkbox,
     Dialog,
     DialogTitle,
-    IconButton, Paper,
+    IconButton,
+    Paper,
     Snackbar,
     Stack,
     Table,
@@ -26,24 +28,27 @@ import SearchTextField from "../Shared/SearchTextField";
 import EmployeeDialog from "./EmployeeDialog";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Employees() {
+export default function Employees({isCheckable, initialEmployee}) {
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedEmployee, setFocusedEmployee] = React.useState();
     const [data, setData] = React.useState();
     const [isLoading, setIsLoading] = React.useState(true);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [dialogMode, setDialogMode] = React.useState("")
+    const [checkedEmployee, setCheckedEmployee] = React.useState(initialEmployee ? initialEmployee : null)
+
 
     const handleSearch = async (searchName) => {
         setIsLoading(true);
         const result = await filterEmployees(searchName);
         setData(result)
         setIsLoading(false);
+        setCheckedEmployee(result[0]);
     }
 
     const handleAddClick = () => {
         setDialogMode("post")
-        setFocusedEmployee({name: "", surname: ""})
+        setFocusedEmployee({id: 0, name: "", surname: ""})
         setShowDialog(true)
     }
 
@@ -63,13 +68,17 @@ export default function Employees() {
         setShowDialog(false)
     }
 
-    const handleDialogSuccess = async (mode) => {
+    const handleDialogSuccess = async (mode, employee) => {
         setIsLoading(true);
         setShowSnackbar(true);
         handleCloseDialog()
         const result = await getAllEmployees();
         setData(result);
         setIsLoading(false)
+        if (mode === 'delete' && employee.id === checkedEmployee.id)
+            setCheckedEmployee(result[0]);
+        if (mode === 'post')
+            setCheckedEmployee(employee)
     }
 
     const closeSnackbars = () => {
@@ -123,6 +132,10 @@ export default function Employees() {
         );
     }
 
+    const handleCheckboxChange = (row) => {
+        setCheckedEmployee(row)
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
@@ -141,7 +154,7 @@ export default function Employees() {
                     </Alert>
                 </Snackbar>
                 {isLoading ? (
-                    <SkeletonTableEmployees/>
+                    <SkeletonTableEmployees isCheckable={isCheckable}/>
                 ) : (
                     <div>
                         {dialog()}
@@ -151,6 +164,7 @@ export default function Employees() {
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
+                                            {isCheckable ? <TableCell sx={{width: 0}}/> : null}
                                             <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
                                             <TableCell align="right"
                                                        className={"EmployeesTableHeadSurname"}>Surname</TableCell>
@@ -160,6 +174,13 @@ export default function Employees() {
                                     <TableBody>
                                         {data.map((row) => (
                                             <TableRow key={row.name}>
+                                                {isCheckable ? (
+                                                    <TableCell component="th" scope="row">
+                                                        <Checkbox onChange={() => handleCheckboxChange(row)}
+                                                                  checked={checkedEmployee.id === row.id}
+                                                                  sx={{height: "30px", width: "30px"}}/>
+                                                    </TableCell>
+                                                ) : null}
                                                 <TableCell component="th" scope="row">
                                                     {row.name}
                                                 </TableCell>

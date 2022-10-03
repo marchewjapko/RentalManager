@@ -26,7 +26,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ClientsSearchSelect from "./ClientsSearchSelect";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Clients() {
+export default function Clients({isCheckable, initialClient}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -35,6 +35,7 @@ export default function Clients() {
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedClient, setFocusedClient] = React.useState();
     const [dialogMode, setDialogMode] = React.useState("")
+    const [checkedClient, setCheckedClient] = React.useState(initialClient ? initialClient : null)
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -50,6 +51,9 @@ export default function Clients() {
             const result = await getAllClients();
             setData(result);
             setIsLoading(false)
+            if(checkedClient) {
+                navigateToInitialClient(result);
+            }
         };
         getData();
     }, []);
@@ -91,6 +95,7 @@ export default function Clients() {
     const handleAddClick = () => {
         setDialogMode("post")
         setFocusedClient({
+            id: 0,
             name: "",
             surname: "",
             phone: "",
@@ -107,13 +112,17 @@ export default function Clients() {
         setShowDialog(false)
     }
 
-    const handleDialogSuccess = async (mode) => {
+    const handleDialogSuccess = async (mode, client) => {
         setIsLoading(true);
         setShowSnackbar(true);
         handleCloseDialog()
         const result = await getAllClients();
         setData(result);
         setIsLoading(false)
+        if(mode === 'delete' && client.id === checkedClient.id)
+            setCheckedClient();
+        if(mode === 'post')
+            setCheckedClient(client)
     }
 
     const closeSnackbars = () => {
@@ -142,6 +151,16 @@ export default function Clients() {
         setData(result);
         setIsLoading(false);
         setPage(0);
+        setCheckedClient(result[0])
+    }
+
+    const handleCheckboxChange = (row) => {
+        setCheckedClient(row)
+    }
+
+    const navigateToInitialClient = (clients) => {
+        const newPage = Math.floor(clients.findIndex(x => x.id === checkedClient.id) / rowsPerPage)
+        setPage(newPage)
     }
 
     return (
@@ -186,7 +205,7 @@ export default function Clients() {
                                                 : data
                                         ).map((row) => (
                                             <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick}
-                                                            handleDeleteClick={handleDeleteClick}/>
+                                                            handleDeleteClick={handleDeleteClick} isCheckable={isCheckable} handleCheckboxChange={handleCheckboxChange} checkedRow={checkedClient ? checkedClient.id : 0}/>
                                         ))}
                                     </TableBody>
                                 </Table>
