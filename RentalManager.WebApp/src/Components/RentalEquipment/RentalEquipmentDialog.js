@@ -1,10 +1,21 @@
 import * as React from 'react';
 import ValidateRentalEquipment from "../../Actions/ValidateRentalEquipment";
 import {addRentalEquipment, deleteRentalEquipment, updateRentalEquipment} from "../../Actions/RentalEquipmentActions";
-import {Backdrop, Button, CircularProgress, DialogContent, InputAdornment, Stack, TextField} from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    DialogContent,
+    InputAdornment,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Grid from "@mui/material/Unstable_Grid2";
+import EngineeringIcon from "@mui/icons-material/Engineering";
 
 export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipment, handleDialogSuccess, mode}) {
     const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
@@ -39,7 +50,7 @@ export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipme
                     break;
             }
             setIsLoading(false);
-            handleDialogSuccess(mode)
+            handleDialogSuccess(mode, rentalEquipmentDialog)
         }
     }
 
@@ -77,49 +88,54 @@ export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipme
             >
                 <CircularProgress/>
             </Backdrop>
-            <TextField
-                margin="dense"
-                label="Equipment name"
-                fullWidth
-                variant="outlined"
-                value={rentalEquipmentDialog.name}
-                onChange={handleChangeName}
-                onBlur={validateName}
-                error={validationState.name}
-                helperText="Required"
-                InputProps={mode === 'delete' ? {readOnly: true} : null}
-            />
-            <TextField
-                margin="dense"
-                label="Monthly price"
-                fullWidth
-                variant="outlined"
-                value={rentalEquipmentDialog.monthlyPrice}
-                className={"DialogLowerTextField"}
-                InputProps={mode === 'delete' ? {
-                    readOnly: true, endAdornment: <InputAdornment position="start">zł</InputAdornment>
-                } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
-                onChange={handleChangePrice}
-                onBlur={validatePrice}
-                error={validationState.price}
-                helperText="Required"
-            />
+            <Grid container spacing={2}>
+                <Grid xs={12} md={6}>
+                    <TextField
+                        margin="dense"
+                        label="Equipment name"
+                        fullWidth
+                        variant="outlined"
+                        value={rentalEquipmentDialog.name}
+                        onChange={handleChangeName}
+                        onBlur={validateName}
+                        error={validationState.name}
+                        helperText="Required"
+                        InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                    />
+                </Grid>
+                <Grid xs={12} md={6}>
+                    <TextField
+                        margin="dense"
+                        label="Monthly price"
+                        fullWidth
+                        variant="outlined"
+                        value={rentalEquipmentDialog.monthlyPrice}
+                        InputProps={mode === 'delete' || mode === 'info' ? {
+                            readOnly: true, endAdornment: <InputAdornment position="start">zł</InputAdornment>
+                        } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
+                        onChange={handleChangePrice}
+                        onBlur={validatePrice}
+                        error={validationState.price}
+                        helperText="Required"
+                    />
+                </Grid>
+            </Grid>
         </DialogContent>
-        <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
-            {mode === 'delete' ? (<Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>}
-                                          onClick={handleSave}
-                                          className={"DialogButton"}>
-                Delete
-            </Button>) : (<Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
-                                  onClick={handleSave}
-                                  className={"DialogButton"}
-                                  disabled={ValidateRentalEquipment(rentalEquipmentDialog).length !== 0}>
-                Save
-            </Button>)}
-            <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
-                    onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
-                Cancel
-            </Button>
-        </Stack>
+        {mode !== 'info' ? (<Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
+                {mode === 'delete' ? (<Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>}
+                                              onClick={handleSave}
+                                              className={"DialogButton"}>
+                    Delete
+                </Button>) : (<Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
+                                      onClick={handleSave}
+                                      className={"DialogButton"}
+                                      disabled={ValidateRentalEquipment(rentalEquipmentDialog).length !== 0}>
+                    Save
+                </Button>)}
+                <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
+                        onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
+                    Cancel
+                </Button>
+            </Stack>) : null}
     </div>);
 }

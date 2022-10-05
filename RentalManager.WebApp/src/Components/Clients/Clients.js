@@ -26,7 +26,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ClientsSearchSelect from "./ClientsSearchSelect";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Clients({isCheckable, initialClient}) {
+export default function Clients({isCheckable}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -35,7 +35,7 @@ export default function Clients({isCheckable, initialClient}) {
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedClient, setFocusedClient] = React.useState();
     const [dialogMode, setDialogMode] = React.useState("")
-    const [checkedClient, setCheckedClient] = React.useState(initialClient ? initialClient : null)
+    const [checkedClient, setCheckedClient] = React.useState()
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -51,9 +51,6 @@ export default function Clients({isCheckable, initialClient}) {
             const result = await getAllClients();
             setData(result);
             setIsLoading(false)
-            if(checkedClient) {
-                navigateToInitialClient(result);
-            }
         };
         getData();
     }, []);
@@ -158,11 +155,6 @@ export default function Clients({isCheckable, initialClient}) {
         setCheckedClient(row)
     }
 
-    const navigateToInitialClient = (clients) => {
-        const newPage = Math.floor(clients.findIndex(x => x.id === checkedClient.id) / rowsPerPage)
-        setPage(newPage)
-    }
-
     return (
         <div>
             <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
@@ -181,7 +173,7 @@ export default function Clients({isCheckable, initialClient}) {
                     <ClientsSearchSelect isLoading={isLoading} handleSearch={handleSearch}/>
                 </Stack>
                 {isLoading ? (
-                    <SkeletonTableClients/>
+                    <SkeletonTableClients />
                 ) : (
                     <div>
                         {dialog()}

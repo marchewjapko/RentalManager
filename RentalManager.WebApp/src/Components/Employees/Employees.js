@@ -28,14 +28,14 @@ import SearchTextField from "../Shared/SearchTextField";
 import EmployeeDialog from "./EmployeeDialog";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Employees({isCheckable, initialEmployee}) {
+export default function Employees({isCheckable}) {
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedEmployee, setFocusedEmployee] = React.useState();
     const [data, setData] = React.useState();
     const [isLoading, setIsLoading] = React.useState(true);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [dialogMode, setDialogMode] = React.useState("")
-    const [checkedEmployee, setCheckedEmployee] = React.useState(initialEmployee ? initialEmployee : null)
+    const [checkedEmployee, setCheckedEmployee] = React.useState()
 
 
     const handleSearch = async (searchName) => {
@@ -77,8 +77,9 @@ export default function Employees({isCheckable, initialEmployee}) {
         setIsLoading(false)
         if (mode === 'delete' && employee.id === checkedEmployee.id)
             setCheckedEmployee(result[0]);
-        if (mode === 'post')
+        if (mode === 'post') {
             setCheckedEmployee(employee)
+        }
     }
 
     const closeSnackbars = () => {
@@ -88,6 +89,7 @@ export default function Employees({isCheckable, initialEmployee}) {
     React.useEffect(() => {
         const getData = async () => {
             const result = await getAllEmployees();
+            setCheckedEmployee(result[0])
             setData(result);
             setIsLoading(false)
         };

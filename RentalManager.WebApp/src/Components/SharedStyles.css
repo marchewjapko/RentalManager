@@ -46,3 +46,7 @@
 .DialogDatePicker {
     width: 100%;
 }
+
+.NoTopMargin {
+    margin-top: 4px !important;
+}

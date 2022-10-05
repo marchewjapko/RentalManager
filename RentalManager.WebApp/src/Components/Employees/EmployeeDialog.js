@@ -1,11 +1,13 @@
 import * as React from 'react';
 import ValidateEmployee from "../../Actions/ValidateEmployee";
 import {addEmployee, deleteEmployee, updateEmployee} from "../../Actions/EmployeeActions";
-import {Backdrop, Button, CircularProgress, DialogContent, Stack, TextField} from "@mui/material";
+import {Backdrop, Button, CircularProgress, DialogContent, Stack, TextField, Typography} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReplayIcon from "@mui/icons-material/Replay";
+import Grid from "@mui/material/Unstable_Grid2";
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 export default function EmployeeDialog({handleCancelDialog, employee, handleDialogSuccess, mode, isResettable}) {
     const [employeeDialog, setEmployeeDialog] = React.useState(employee);
@@ -89,31 +91,44 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                 >
                     <CircularProgress/>
                 </Backdrop>
-                <TextField
-                    margin="dense"
-                    label="Name"
-                    fullWidth
-                    variant="outlined"
-                    value={employeeDialog.name}
-                    onChange={handleChangeName}
-                    onBlur={validateName}
-                    error={validationState.name}
-                    helperText="Required"
-                    InputProps={mode === 'delete' ? {readOnly: true} : null}
-                />
-                <TextField
-                    margin="dense"
-                    label="Surname"
-                    fullWidth
-                    variant="outlined"
-                    className={"DialogLowerTextField"}
-                    value={employeeDialog.surname}
-                    onChange={handleChangeSurname}
-                    onBlur={validateSurname}
-                    error={validationState.surname}
-                    helperText="Required"
-                    InputProps={mode === 'delete' ? {readOnly: true} : null}
-                />
+                <Stack spacing={2}>
+                    <Stack direction={"row"} className={"ClientUpdateDialogStack"}>
+                        <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
+                        <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                            Employee information
+                        </Typography>
+                    </Stack>
+                    <Grid container spacing={2}>
+                        <Grid xs={12} md={6}>
+                            <TextField
+                                margin="dense"
+                                label="Name"
+                                fullWidth
+                                variant="outlined"
+                                value={employeeDialog.name}
+                                onChange={handleChangeName}
+                                onBlur={validateName}
+                                error={validationState.name}
+                                helperText="Required"
+                                InputProps={mode === 'delete' ? {readOnly: true} : null}
+                            />
+                        </Grid>
+                        <Grid xs={12} md={6}>
+                            <TextField
+                                margin="dense"
+                                label="Surname"
+                                fullWidth
+                                variant="outlined"
+                                value={employeeDialog.surname}
+                                onChange={handleChangeSurname}
+                                onBlur={validateSurname}
+                                error={validationState.surname}
+                                helperText="Required"
+                                InputProps={mode === 'delete' ? {readOnly: true} : null}
+                            />
+                        </Grid>
+                    </Grid>
+                </Stack>
             </DialogContent>
             {mode !== 'info' ? (
                 <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>

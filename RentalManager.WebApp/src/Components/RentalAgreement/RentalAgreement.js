@@ -123,18 +123,21 @@ export default function RentalAgreement() {
     }
 
     const handleAddClick = () => {
-        // setDialogMode("post")
-        // setFocusedClient({
-        //     name: "",
-        //     surname: "",
-        //     phone: "",
-        //     email: "",
-        //     idCard: "",
-        //     city: "",
-        //     street: "",
-        //     streetNumber: ""
-        // })
-        // setShowDialog(true)
+        setDialogMode("post")
+        setAnchorEl(null)
+        setFocusedAgreement({
+            id: 0,
+            IsActive: true,
+            ClientId: 0,
+            RentalEquipmentIds: [],
+            Comment: "",
+            Deposit: 0,
+            TransportFrom: 0,
+            TransportTo: null,
+            ValidUntil: dayjs(),
+            DateAdded: dayjs()
+        })
+        setShowDialog(true)
     }
 
     const handleCloseDialog = () => {
@@ -167,7 +170,7 @@ export default function RentalAgreement() {
             <Dialog
                 open={showDialog}
                 onClose={() => handleCloseDialog()}
-                fullScreen={useMediaQuery(theme.breakpoints.down("xs"))}
+                fullScreen={useMediaQuery(theme.breakpoints.down("xs")) && dialogMode === 'post'}
             >
                 <DialogTitle>
                     <Stack direction={"row"} justifyContent="space-between">

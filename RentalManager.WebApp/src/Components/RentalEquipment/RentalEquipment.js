@@ -5,6 +5,7 @@ import {
     Alert,
     Box,
     Button,
+    Checkbox,
     Dialog,
     DialogTitle,
     IconButton,
@@ -29,15 +30,16 @@ import SearchTextField from "../Shared/SearchTextField";
 import RentalEquipmentDialog from "./RentalEquipmentDialog";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function RentalEquipment() {
+export default function RentalEquipment({isCheckable, initialIds}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedRentalEquipment, setFocusedRentalEquipment] = React.useState();
-    const [data, setData] = React.useState(RentalEquipmentMock);
+    const [data, setData] = React.useState();
     const [isLoading, setIsLoading] = React.useState(true);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [dialogMode, setDialogMode] = React.useState("")
+    const [checkedIds, setCheckedIds] = React.useState(initialIds ? initialIds : [0])
 
     const handleSearch = async (searchName) => {
         setIsLoading(true);
@@ -70,7 +72,7 @@ export default function RentalEquipment() {
 
     const handleAddClick = () => {
         setDialogMode("post")
-        setFocusedRentalEquipment({name: "", monthlyPrice: ""})
+        setFocusedRentalEquipment({id: 0, name: "", monthlyPrice: ""})
         setShowDialog(true)
     }
 
@@ -78,13 +80,19 @@ export default function RentalEquipment() {
         setShowDialog(false)
     }
 
-    const handleDialogSuccess = async () => {
+    const handleDialogSuccess = async (mode, rentalEquipment) => {
         setIsLoading(true);
         setShowSnackbar(true);
         handleCloseDialog()
         const result = await getAllRentalEquipment();
         setData(result);
         setIsLoading(false)
+        if(mode === 'delete' && checkedIds.includes(rentalEquipment.id)) {
+            setCheckedIds(checkedIds.filter(x => x !== rentalEquipment.id))
+        }
+        if(mode === 'post') {
+            setCheckedIds(x => [...x, rentalEquipment.id])
+        }
     }
 
     const closeSnackbars = () => {
@@ -138,6 +146,14 @@ export default function RentalEquipment() {
         );
     }
 
+    const handleCheckboxChange = (equipment) => {
+        if (checkedIds.includes(equipment.id)) {
+            setCheckedIds(checkedIds.filter(x => x !== equipment.id))
+        } else {
+            setCheckedIds(x => [...x, equipment.id])
+        }
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
@@ -167,6 +183,7 @@ export default function RentalEquipment() {
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
+                                            {isCheckable ? <TableCell sx={{width: 0}}/> : null}
                                             <TableCell className={"TableRentalEquipmentColumnName"}>Equipment
                                                 name</TableCell>
                                             <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
@@ -180,6 +197,13 @@ export default function RentalEquipment() {
                                                 : data
                                         ).map((row) => (
                                             <TableRow key={row.name}>
+                                                {isCheckable ? (
+                                                    <TableCell component="th" scope="row">
+                                                        <Checkbox onChange={() => handleCheckboxChange(row)}
+                                                                  checked={checkedIds.includes(row.id)}
+                                                                  sx={{height: "30px", width: "30px"}}/>
+                                                    </TableCell>
+                                                ) : null}
                                                 <TableCell component="th" scope="row">
                                                     {row.name}
                                                 </TableCell>
