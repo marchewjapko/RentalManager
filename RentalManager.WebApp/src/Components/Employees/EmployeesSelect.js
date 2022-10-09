@@ -1,6 +1,6 @@
 import {
     Autocomplete,
-    CircularProgress,
+    CircularProgress, DialogContent,
     Stack,
     TextField,
     Typography
@@ -10,7 +10,7 @@ import * as React from 'react';
 import {getAllEmployees} from "../../Actions/EmployeeActions";
 
 
-export default function EmployeesSelect({selectedEmployee}) {
+export default function EmployeesSelect({selectedEmployee, handleChangeEmployee}) {
     const [value, setValue] = React.useState(null);
     const [data, setData] = React.useState([]);
     const [open, setOpen] = React.useState(false);
@@ -21,13 +21,14 @@ export default function EmployeesSelect({selectedEmployee}) {
             const result = await getAllEmployees();
             setData(result);
             setIsLoading(false)
-            setValue(selectedEmployee)
+            setValue(selectedEmployee ? selectedEmployee : null)
         };
         getData();
     }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
+        handleChangeEmployee(newValue)
     }
 
     return (
@@ -35,7 +36,7 @@ export default function EmployeesSelect({selectedEmployee}) {
             <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", paddingTop: "20px"}}>
                 <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
                 <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
-                    Employee information
+                    Employee
                 </Typography>
             </Stack>
             <Autocomplete
@@ -46,11 +47,11 @@ export default function EmployeesSelect({selectedEmployee}) {
                 onOpen={() => setOpen(true)}
                 onClose={() => setOpen(false)}
                 options={data}
-                disableCloseOnSelect={true}
                 getOptionLabel={(option) => option.name + ' ' + option.surname}
                 loading={isLoading}
+                fullWidth={true}
                 renderInput={(params) => (
-                    <TextField {...params} label="Selected employee" InputProps={{
+                    <TextField {...params} label="Select employee" InputProps={{
                         ...params.InputProps,
                         endAdornment: (
                             <React.Fragment>
@@ -60,7 +61,6 @@ export default function EmployeesSelect({selectedEmployee}) {
                         ),
                     }}/>
                 )}
-                sx={{ width: '75%', paddingLeft: "17px" }}
             />
         </Stack>
     );

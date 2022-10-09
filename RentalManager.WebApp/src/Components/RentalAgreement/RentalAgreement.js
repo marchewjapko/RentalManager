@@ -1,17 +1,16 @@
 import * as React from 'react';
-// import "./Clients.js.css"
 import "../SharedStyles.css"
 import {
-    Alert, Box,
-    Button, ButtonGroup,
-    Checkbox, createStyles,
+    Alert,
+    Box,
+    Button,
+    ButtonGroup,
     Dialog,
-    DialogTitle, Fade, IconButton, InputAdornment,
-    MenuItem,
-    OutlinedInput,
-    Paper, Popover,
-    Select,
-    Snackbar, SpeedDial, SpeedDialAction, SpeedDialIcon,
+    DialogTitle,
+    IconButton,
+    Paper,
+    Popover,
+    Snackbar,
     Stack,
     Table,
     TableBody,
@@ -20,38 +19,28 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TextField, Zoom,
 } from "@mui/material";
 import {Scrollbars} from 'react-custom-scrollbars-2';
-import {Link} from "react-router-dom";
-import {filterClients, getAllClients} from "../../Actions/ClientActions";
-// import SkeletonTableClients from "./SkeletonTableClients";
-// import ClientsDialog from "./ClientsDialog";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-// import ClientsSearchSelect from "./ClientsSearchSelect";
 import TempNavigation from "../Shared/TempNavigation";
 import {RentalAgreementMock} from "../../Mocks/RentalAgreementMock";
-import SearchTextField from "../Shared/SearchTextField";
-import SkeletonTableRentalEquipment from "../RentalEquipment/SkeletonTableRentalEquipment";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import dayjs from "dayjs";
 import 'dayjs/locale/pl';
-import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import InputMask from "react-input-mask";
-import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import InfoIcon from '@mui/icons-material/Info';
 import RentalAgreementDialog from "./RentalAgreementDialog";
-import Grid from "@mui/material/Unstable_Grid2";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import {getAllAgreements} from "../../Actions/RentalAgreementActions";
+import SkeletonTableRentalAgreement from "./SkeletonTableRentalAgreement";
 
 export default function RentalAgreement() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
     const [data, setData] = React.useState(RentalAgreementMock);
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
@@ -59,8 +48,17 @@ export default function RentalAgreement() {
     const [dialogMode, setDialogMode] = React.useState("")
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
-
+    const dialogFullScreen = useMediaQuery(theme.breakpoints.down("xs"))
     dayjs.locale('pl')
+
+    React.useEffect(() => {
+        const getData = async () => {
+            const result = await getAllAgreements();
+            setData(result);
+            setIsLoading(false)
+        };
+        getData();
+    }, []);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -70,15 +68,6 @@ export default function RentalAgreement() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    // React.useEffect(() => {
-    //     const getData = async () => {
-    //         const result = await getAllClients();
-    //         setData(result);
-    //         setIsLoading(false)
-    //     };
-    //     getData();
-    // }, []);
 
     const getDialogTitle = () => {
         switch (dialogMode) {
@@ -92,17 +81,17 @@ export default function RentalAgreement() {
                 return 'Agreement details'
         }
     }
-    //
-    // const getSnackbarTitle = () => {
-    //     switch (dialogMode) {
-    //         case 'post':
-    //             return 'Client added successfully'
-    //         case 'update':
-    //             return 'Client updated successfully'
-    //         case 'delete':
-    //             return 'Client deleted successfully'
-    //     }
-    // }
+
+    const getSnackbarTitle = () => {
+        switch (dialogMode) {
+            case 'post':
+                return 'Client added successfully'
+            case 'update':
+                return 'Client updated successfully'
+            case 'delete':
+                return 'Client deleted successfully'
+        }
+    }
 
     const handleEditClick = () => {
         setAnchorEl(null)
@@ -169,8 +158,8 @@ export default function RentalAgreement() {
         return (
             <Dialog
                 open={showDialog}
-                onClose={() => handleCloseDialog()}
-                fullScreen={useMediaQuery(theme.breakpoints.down("xs")) && dialogMode === 'post'}
+                onClose={handleCloseDialog}
+                fullScreen={dialogFullScreen && dialogMode === 'post'}
             >
                 <DialogTitle>
                     <Stack direction={"row"} justifyContent="space-between">
@@ -248,15 +237,15 @@ export default function RentalAgreement() {
                     </Button>
                     {/*<SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>*/}
                 </Stack>
-                {/*<Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}*/}
-                {/*          anchorOrigin={{vertical: 'top', horizontal: 'left'}}>*/}
-                {/*    <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>*/}
-                {/*        {getSnackbarTitle()}*/}
-                {/*    </Alert>*/}
-                {/*</Snackbar>*/}
-                {/*{isLoading ? (*/}
-                {/*    <SkeletonTableRentalEquipment/>*/}
-                {/*) : (*/}
+                <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
+                          anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
+                    <Alert onClose={closeSnackbars} severity="success" sx={{width: '100%'}}>
+                        {getSnackbarTitle()}
+                    </Alert>
+                </Snackbar>
+                {isLoading ? (
+                    <SkeletonTableRentalAgreement/>
+                ) : (
                     <div>
                         {tablePopper()}
                         {dialog()}
@@ -307,7 +296,7 @@ export default function RentalAgreement() {
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </div>
-                {/*)}*/}
+                )}
             </Paper>
             <TempNavigation/>
         </div>

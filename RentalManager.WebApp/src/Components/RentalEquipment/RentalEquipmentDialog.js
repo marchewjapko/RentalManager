@@ -15,7 +15,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Unstable_Grid2";
-import EngineeringIcon from "@mui/icons-material/Engineering";
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipment, handleDialogSuccess, mode}) {
     const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
@@ -88,38 +88,46 @@ export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipme
             >
                 <CircularProgress/>
             </Backdrop>
-            <Grid container spacing={2}>
-                <Grid xs={12} md={6}>
-                    <TextField
-                        margin="dense"
-                        label="Equipment name"
-                        fullWidth
-                        variant="outlined"
-                        value={rentalEquipmentDialog.name}
-                        onChange={handleChangeName}
-                        onBlur={validateName}
-                        error={validationState.name}
-                        helperText="Required"
-                        InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
-                    />
+            <Stack spacing={2}>
+                <Stack direction={"row"} className={"DialogTopStack"}>
+                    <ConstructionIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
+                    <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                        Equipment information
+                    </Typography>
+                </Stack>
+                <Grid container spacing={2}>
+                    <Grid xs={12} md={6}>
+                        <TextField
+                            margin="dense"
+                            label="Equipment name"
+                            fullWidth
+                            variant="outlined"
+                            value={rentalEquipmentDialog.name}
+                            onChange={handleChangeName}
+                            onBlur={validateName}
+                            error={validationState.name}
+                            helperText="Required"
+                            InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                        />
+                    </Grid>
+                    <Grid xs={12} md={6}>
+                        <TextField
+                            margin="dense"
+                            label="Monthly price"
+                            fullWidth
+                            variant="outlined"
+                            value={rentalEquipmentDialog.monthlyPrice}
+                            InputProps={mode === 'delete' || mode === 'info' ? {
+                                readOnly: true, endAdornment: <InputAdornment position="start">zł</InputAdornment>
+                            } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
+                            onChange={handleChangePrice}
+                            onBlur={validatePrice}
+                            error={validationState.price}
+                            helperText="Required"
+                        />
+                    </Grid>
                 </Grid>
-                <Grid xs={12} md={6}>
-                    <TextField
-                        margin="dense"
-                        label="Monthly price"
-                        fullWidth
-                        variant="outlined"
-                        value={rentalEquipmentDialog.monthlyPrice}
-                        InputProps={mode === 'delete' || mode === 'info' ? {
-                            readOnly: true, endAdornment: <InputAdornment position="start">zł</InputAdornment>
-                        } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
-                        onChange={handleChangePrice}
-                        onBlur={validatePrice}
-                        error={validationState.price}
-                        helperText="Required"
-                    />
-                </Grid>
-            </Grid>
+            </Stack>
         </DialogContent>
         {mode !== 'info' ? (<Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
                 {mode === 'delete' ? (<Button variant="contained" color={"error"} size="large" endIcon={<DeleteIcon/>}

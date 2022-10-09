@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ReplayIcon from "@mui/icons-material/Replay";
 import Grid from "@mui/material/Unstable_Grid2";
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 export default function EmployeeDialog({handleCancelDialog, employee, handleDialogSuccess, mode, isResettable}) {
     const [employeeDialog, setEmployeeDialog] = React.useState(employee);
@@ -92,7 +93,7 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                     <CircularProgress/>
                 </Backdrop>
                 <Stack spacing={2}>
-                    <Stack direction={"row"} className={"ClientUpdateDialogStack"}>
+                    <Stack direction={"row"} className={"DialogTopStack"}>
                         <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
                         <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
                             Employee information
@@ -110,7 +111,7 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                                 onBlur={validateName}
                                 error={validationState.name}
                                 helperText="Required"
-                                InputProps={mode === 'delete' ? {readOnly: true} : null}
+                                InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
                             />
                         </Grid>
                         <Grid xs={12} md={6}>
@@ -124,7 +125,7 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                                 onBlur={validateSurname}
                                 error={validationState.surname}
                                 helperText="Required"
-                                InputProps={mode === 'delete' ? {readOnly: true} : null}
+                                InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
                             />
                         </Grid>
                     </Grid>
@@ -142,17 +143,10 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                                 disabled={ValidateEmployee(employeeDialog).length !== 0}>
                             Save
                         </Button>)}
-                    {isResettable ? (
-                        <Button variant="outlined" color={"primary"} size="large" endIcon={<ReplayIcon/>}
-                                onClick={handleReset} className={"DialogButton"}>
-                            Reset
-                        </Button>
-                    ) : (
                         <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
                                 onClick={() => handleCancelDialog()} className={"DialogButton"}>
                             Cancel
                         </Button>
-                    )}
                 </Stack>
             ) : null}
         </div>

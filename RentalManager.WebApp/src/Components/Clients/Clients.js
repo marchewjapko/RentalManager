@@ -26,7 +26,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ClientsSearchSelect from "./ClientsSearchSelect";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Clients({isCheckable}) {
+export default function Clients({isCheckable, handleChangeClient}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -77,6 +77,11 @@ export default function Clients({isCheckable}) {
         }
     }
 
+    const handleCheckChange = (client) => {
+        setCheckedClient(client)
+        handleChangeClient(client)
+    }
+
     const handleEditClick = (client) => {
         setFocusedClient(client)
         setDialogMode("update")
@@ -116,10 +121,8 @@ export default function Clients({isCheckable}) {
         const result = await getAllClients();
         setData(result);
         setIsLoading(false)
-        if(mode === 'delete' && client.id === checkedClient.id)
-            setCheckedClient();
-        if(mode === 'post')
-            setCheckedClient(client)
+        if (mode === 'delete' || mode === 'post')
+            handleCheckChange(client);
     }
 
     const closeSnackbars = () => {
@@ -131,13 +134,15 @@ export default function Clients({isCheckable}) {
             <Dialog
                 open={showDialog}
                 maxWidth={"sm"}
-                onClose={() => handleCloseDialog()}
+                onClose={handleCloseDialog}
             >
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
                 <ClientsDialog client={focusedClient}
                                handleCancelDialog={handleCloseDialog}
                                handleDialogSuccess={handleDialogSuccess}
-                               mode={dialogMode}/>
+                               mode={dialogMode}
+                               handleChangeClient={() => null}
+                               showDialogButtons={true}/>
             </Dialog>
         );
     }
@@ -148,11 +153,11 @@ export default function Clients({isCheckable}) {
         setData(result);
         setIsLoading(false);
         setPage(0);
-        setCheckedClient(result[0])
+        handleCheckChange(result[0])
     }
 
     const handleCheckboxChange = (row) => {
-        setCheckedClient(row)
+        handleCheckChange(row)
     }
 
     return (
@@ -173,7 +178,7 @@ export default function Clients({isCheckable}) {
                     <ClientsSearchSelect isLoading={isLoading} handleSearch={handleSearch}/>
                 </Stack>
                 {isLoading ? (
-                    <SkeletonTableClients />
+                    <SkeletonTableClients/>
                 ) : (
                     <div>
                         {dialog()}
@@ -197,7 +202,10 @@ export default function Clients({isCheckable}) {
                                                 : data
                                         ).map((row) => (
                                             <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick}
-                                                            handleDeleteClick={handleDeleteClick} isCheckable={isCheckable} handleCheckboxChange={handleCheckboxChange} checkedRow={checkedClient ? checkedClient.id : 0}/>
+                                                            handleDeleteClick={handleDeleteClick}
+                                                            isCheckable={isCheckable}
+                                                            handleCheckboxChange={handleCheckboxChange}
+                                                            checkedRow={checkedClient ? checkedClient.id : -1}/>
                                         ))}
                                     </TableBody>
                                 </Table>

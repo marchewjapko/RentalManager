@@ -16,14 +16,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pl';
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 
 export default function ClientTableRow({row, handleEditClick, handleDeleteClick, isCheckable, handleCheckboxChange, checkedRow}) {
     const [openDetails, setOpenDetails] = React.useState(false);
 
     const handleOpenDetails = () => {
         setOpenDetails(!openDetails);
+    }
+
+    const getDate = (date) => {
+        let formatData = dayjs(date).format('dddd, DD MMMM YYYY').replace(/(^|\s)\S/g, l => l.toUpperCase())
+        return formatData
     }
 
     return (<React.Fragment>
@@ -103,18 +106,16 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick,
                                 readOnly: true
                             }}
                         />
-                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'pl'}>
-                            <DatePicker
-                                label="Date added"
-                                disableOpenPicker={true}
-                                className={"DialogDatePicker ClientHiddenRowDatePicker"}
-                                value={dayjs(row.dateAdded)}
-                                onChange={() => null}
-                                minDate={dayjs(row.dateAdded)}
-                                maxDate={dayjs(row.dateAdded)}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </LocalizationProvider>
+                        <TextField
+                            margin="dense"
+                            label="Date added"
+                            fullWidth
+                            variant="outlined"
+                            value={getDate(row.dateAdded)}
+                            InputProps={{
+                                readOnly: true
+                            }}
+                        />
                     </Box>
                 </Collapse>
             </TableCell>

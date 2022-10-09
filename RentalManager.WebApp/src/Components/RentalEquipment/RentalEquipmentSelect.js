@@ -1,6 +1,6 @@
 import {
     Autocomplete,
-    CircularProgress,
+    CircularProgress, DialogContent,
     Stack,
     TextField,
     Typography
@@ -10,7 +10,7 @@ import * as React from 'react';
 import {getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 
 
-export default function RentalEquipmentSelect({selectedEquipment}) {
+export default function RentalEquipmentSelect({selectedEquipment, handleChangeEquipment}) {
     const [value, setValue] = React.useState([]);
     const [data, setData] = React.useState([]);
     const [open, setOpen] = React.useState(false);
@@ -21,13 +21,14 @@ export default function RentalEquipmentSelect({selectedEquipment}) {
             const result = await getAllRentalEquipment();
             setData(result);
             setIsLoading(false)
-            setValue(selectedEquipment)
+            setValue(selectedEquipment ? selectedEquipment : [])
         };
         getData();
     }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
+        handleChangeEquipment(newValue)
     }
 
     return (
@@ -35,7 +36,7 @@ export default function RentalEquipmentSelect({selectedEquipment}) {
             <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", paddingTop: "20px"}}>
                 <ConstructionIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
                 <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
-                    Equipment information
+                    Equipment
                 </Typography>
             </Stack>
             <Autocomplete
@@ -51,8 +52,9 @@ export default function RentalEquipmentSelect({selectedEquipment}) {
                 disableCloseOnSelect={true}
                 getOptionLabel={(option) => option.name + ' (' + option.monthlyPrice + ' zł)'}
                 loading={isLoading}
+                fullWidth={true}
                 renderInput={(params) => (
-                    <TextField {...params} label="Selected equipment" InputProps={{
+                    <TextField {...params} label="Select equipment" InputProps={{
                         ...params.InputProps,
                         endAdornment: (
                             <React.Fragment>
@@ -62,7 +64,6 @@ export default function RentalEquipmentSelect({selectedEquipment}) {
                         ),
                     }}/>
                 )}
-                sx={{ width: '75%', paddingLeft: "17px" }}
             />
         </Stack>
     );
