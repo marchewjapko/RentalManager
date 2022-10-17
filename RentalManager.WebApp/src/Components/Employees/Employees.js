@@ -141,8 +141,7 @@ export default function Employees({isCheckable}) {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
-                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" className={"ComponentHeadStack"}>
                     <Button startIcon={<AddCircleRoundedIcon/>} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add employee
@@ -170,7 +169,7 @@ export default function Employees({isCheckable}) {
                                             <TableCell className={"EmployeesTableHeadName"}>Name</TableCell>
                                             <TableCell align="right"
                                                        className={"EmployeesTableHeadSurname"}>Surname</TableCell>
-                                            <TableCell align="right" sx={{width: "100px"}}/>
+                                            <TableCell align="right" className={"EmployeesTableHeadActions"}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

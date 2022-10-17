@@ -5,8 +5,15 @@
 
 .EmployeesTableHeadName {
     max-width: 50%;
+    font-weight: bold !important;
 }
 
 .EmployeesTableHeadSurname {
     max-width: 50%;
+    font-weight: bold !important;
+}
+
+.EmployeesTableHeadActions {
+    font-weight: bold !important;
+    width: 100px;
 }

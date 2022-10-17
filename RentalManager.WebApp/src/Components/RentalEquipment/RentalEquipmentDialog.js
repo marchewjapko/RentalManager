@@ -90,8 +90,8 @@ export default function RentalEquipmentDialog({handleCancelDialog, rentalEquipme
             </Backdrop>
             <Stack spacing={2}>
                 <Stack direction={"row"} className={"DialogTopStack"}>
-                    <ConstructionIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                    <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                    <ConstructionIcon className={"DividerIcon"}/>
+                    <Typography variant="h6" className={"MarginTopBottomAuto"}>
                         Equipment information
                     </Typography>
                 </Stack>

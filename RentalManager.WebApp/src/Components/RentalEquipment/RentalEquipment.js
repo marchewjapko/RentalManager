@@ -157,8 +157,7 @@ export default function RentalEquipment({isCheckable, initialIds}) {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
-                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" className={"ComponentHeadStack"}>
                     <Button startIcon={<AddCircleRoundedIcon/>} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add equipment
@@ -188,7 +187,7 @@ export default function RentalEquipment({isCheckable, initialIds}) {
                                                 name</TableCell>
                                             <TableCell align="right" className={"TableRentalEquipmentColumnPrice"}>Monthly
                                                 price</TableCell>
-                                            <TableCell align="right" sx={{width: "100px"}}/>
+                                            <TableCell align="right" className={"TableRentalEquipmentActions"}/>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

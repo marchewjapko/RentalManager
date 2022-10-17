@@ -100,8 +100,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                                                 disabled={isLoading}>
                                         <CloseIcon/>
                                     </IconButton>
-                                ) : (<Box component="span"
-                                          sx={{width: "40px", height: "40px", marginRight: "-4px"}}/>)}
+                                ) : (<Box component="span" className={"ClientSearchBox"}/>)}
                             </InputAdornment>
                         }}
                     />
@@ -129,8 +128,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                                                         disabled={isLoading}>
                                                 <CloseIcon/>
                                             </IconButton>
-                                        ) : (<Box component="span"
-                                                  sx={{width: "40px", height: "40px", marginRight: "-4px"}}/>)}
+                                        ) : (<Box component="span" className={"ClientSearchBox"}/>)}
                                     </InputAdornment>,
                                     startAdornment: <InputAdornment position="start">+48</InputAdornment>
                                 }}
@@ -155,8 +153,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                                                 disabled={isLoading}>
                                         <CloseIcon/>
                                     </IconButton>
-                                ) : (<Box component="span"
-                                          sx={{width: "40px", height: "40px", marginRight: "-4px"}}/>)}
+                                ) : (<Box component="span" className={"ClientSearchBox"}/>)}
                             </InputAdornment>
                         }}
                     />
@@ -178,8 +175,7 @@ export default function ClientsSearchSelect({isLoading, handleSearch}) {
                                                 disabled={isLoading}>
                                         <CloseIcon/>
                                     </IconButton>
-                                ) : (<Box component="span"
-                                          sx={{width: "40px", height: "40px", marginRight: "-4px"}}/>)}
+                                ) : (<Box component="span" className={"ClientSearchBox"}/>)}
                             </InputAdornment>
                         }}
                     />

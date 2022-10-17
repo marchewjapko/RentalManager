@@ -4,7 +4,6 @@ import {Routes, Route, HashRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import {createTheme, ThemeProvider} from "@mui/material";
 import CssBaseline from '@mui/material/CssBaseline';
-import Clients from "./Components/Clients/Clients";
 import RentalEquipment from "./Components/RentalEquipment/RentalEquipment";
 import Employees from "./Components/Employees/Employees";
 import RentalAgreement from "./Components/RentalAgreement/RentalAgreement";
@@ -25,10 +24,9 @@ const renderReactDom = () => {
             <CssBaseline />
             <HashRouter>
                 <Routes>
-                    <Route exact path="/" element={<Clients />} />
                     <Route exact path="/2" element={<RentalEquipment />} />
                     <Route exact path="/3" element={<Employees />} />
-                    <Route exact path="/4" element={<RentalAgreement />} />
+                    <Route exact path="/" element={<RentalAgreement />} />
                 </Routes>
             </HashRouter>
         </ThemeProvider>

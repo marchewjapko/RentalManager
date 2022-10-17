@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import * as React from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import SkeletonTablePagination from "../SkeletonTablePagination";
 
 
 export default function SkeletonTableRentalAgreement() {
@@ -47,6 +48,7 @@ export default function SkeletonTableRentalAgreement() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <SkeletonTablePagination/>
         </div>
     );
 }

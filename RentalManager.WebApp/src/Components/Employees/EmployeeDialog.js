@@ -94,8 +94,8 @@ export default function EmployeeDialog({handleCancelDialog, employee, handleDial
                 </Backdrop>
                 <Stack spacing={2}>
                     <Stack direction={"row"} className={"DialogTopStack"}>
-                        <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                        <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                        <EngineeringIcon className={"DividerIcon"}/>
+                        <Typography variant="h6" className={"MarginTopBottomAuto"}>
                             Employee information
                         </Typography>
                     </Stack>

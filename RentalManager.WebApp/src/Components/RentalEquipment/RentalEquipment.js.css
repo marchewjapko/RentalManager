@@ -5,8 +5,15 @@
 
 .TableRentalEquipmentColumnName {
     max-width: 66%;
+    font-weight: bold !important;
 }
 
 .TableRentalEquipmentColumnPrice {
     max-width: 33%;
+    font-weight: bold !important;
+}
+
+.TableRentalEquipmentActions {
+    font-weight: bold !important;
+    width: 100px;
 }

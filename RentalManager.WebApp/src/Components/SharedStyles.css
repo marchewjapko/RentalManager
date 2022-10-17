@@ -46,3 +46,19 @@
 .DialogDatePicker {
     width: 100%;
 }
+
+.ComponentHeadStack {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.MarginTopBottomAuto {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.DividerIcon {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 8px;
+}

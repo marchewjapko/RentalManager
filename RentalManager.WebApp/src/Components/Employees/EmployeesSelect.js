@@ -1,6 +1,6 @@
 import {
     Autocomplete,
-    CircularProgress, DialogContent,
+    CircularProgress,
     Stack,
     TextField,
     Typography
@@ -10,37 +10,36 @@ import * as React from 'react';
 import {getAllEmployees} from "../../Actions/EmployeeActions";
 
 
-export default function EmployeesSelect({selectedEmployee, handleChangeEmployee}) {
-    const [value, setValue] = React.useState(null);
+export default function EmployeesSelect({agreement, setAgreement}) {
     const [data, setData] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
-
     React.useEffect(() => {
         const getData = async () => {
             const result = await getAllEmployees();
             setData(result);
             setIsLoading(false)
-            setValue(selectedEmployee ? selectedEmployee : null)
         };
         getData();
     }, []);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue)
-        handleChangeEmployee(newValue)
+        setAgreement({
+            ...agreement,
+            employee: newValue
+        })
     }
 
     return (
         <Stack spacing={2}>
             <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", paddingTop: "20px"}}>
-                <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                <EngineeringIcon className={"DividerIcon"}/>
+                <Typography variant="h6" className={"MarginTopBottomAuto"}>
                     Employee
                 </Typography>
             </Stack>
             <Autocomplete
-                value={value}
+                value={agreement.employee}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 onChange={(event, newValue) => handleChange(event, newValue)}
                 open={open}

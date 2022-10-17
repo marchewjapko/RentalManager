@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pl';
 
-export default function ClientTableRow({row, handleEditClick, handleDeleteClick, isCheckable, handleCheckboxChange, checkedRow}) {
+export default function ClientTableRow({row, handleEditClick, handleDeleteClick, isCheckable, setClient, client}) {
     const [openDetails, setOpenDetails] = React.useState(false);
 
     const handleOpenDetails = () => {
@@ -33,7 +33,7 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick,
         <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
             <TableCell className={"ClientTableDetailsCell"}>
                 <Stack direction={"row"}>
-                    {isCheckable ? <Checkbox onChange={() => handleCheckboxChange(row)} checked={row.id === checkedRow}/> : null}
+                    {isCheckable ? <Checkbox onChange={() => setClient(row)} checked={client && row.id === client.id}/> : null}
                     <IconButton size="small" onClick={handleOpenDetails}
                                 sx={{width: "30px", height: "30px", marginTop: 'auto', marginBottom: "auto"}}>
                         {openDetails ? <KeyboardArrowUpIcon fontSize="small"/> :

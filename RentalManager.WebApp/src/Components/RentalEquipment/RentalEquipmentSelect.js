@@ -1,17 +1,10 @@
-import {
-    Autocomplete,
-    CircularProgress, DialogContent,
-    Stack,
-    TextField,
-    Typography
-} from "@mui/material";
+import {Autocomplete, CircularProgress, Stack, TextField, Typography} from "@mui/material";
 import ConstructionIcon from '@mui/icons-material/Construction';
 import * as React from 'react';
 import {getAllRentalEquipment} from "../../Actions/RentalEquipmentActions";
 
 
-export default function RentalEquipmentSelect({selectedEquipment, handleChangeEquipment}) {
-    const [value, setValue] = React.useState([]);
+export default function RentalEquipmentSelect({agreement, setAgreement}) {
     const [data, setData] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -21,26 +14,28 @@ export default function RentalEquipmentSelect({selectedEquipment, handleChangeEq
             const result = await getAllRentalEquipment();
             setData(result);
             setIsLoading(false)
-            setValue(selectedEquipment ? selectedEquipment : [])
         };
         getData();
     }, []);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue)
-        handleChangeEquipment(newValue)
+        setAgreement({
+            ...agreement,
+            rentalEquipment: newValue
+        })
     }
 
     return (
         <Stack spacing={2}>
-            <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", paddingTop: "20px"}}>
-                <ConstructionIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+            <Stack direction={"row"} className={"ClientUpdateDialogStack"}
+                   sx={{paddingLeft: "17px", paddingTop: "20px"}}>
+                <ConstructionIcon className={"DividerIcon"}/>
+                <Typography variant="h6" className={"MarginTopBottomAuto"}>
                     Equipment
                 </Typography>
             </Stack>
             <Autocomplete
-                value={value}
+                value={agreement.rentalEquipment}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 onChange={(event, newValue) => handleChange(event, newValue)}
                 multiple
@@ -58,7 +53,7 @@ export default function RentalEquipmentSelect({selectedEquipment, handleChangeEq
                         ...params.InputProps,
                         endAdornment: (
                             <React.Fragment>
-                                {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
                                 {params.InputProps.endAdornment}
                             </React.Fragment>
                         ),

@@ -23,8 +23,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ValidateEmployee from "../../Actions/ValidateEmployee";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ClientsDialog({handleCancelDialog, client, handleDialogSuccess, mode, handleChangeClient, showDialogButtons}) {
-    const [clientDialog, setClientDialog] = React.useState(client);
+export default function ClientsDialog({handleCancelDialog, client, setClient, handleDialogSuccess, mode, showDialogButtons}) {
     const [isLoading, setIsLoading] = React.useState(false)
     const [validationState, setValidationState] = React.useState({
         name: false,
@@ -38,15 +37,14 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
 
     const handleChange = (event) => {
         const newClient = {
-            ...clientDialog,
+            ...client,
             [event.target.name]: event.target.value
         }
-        setClientDialog(newClient);
-        handleChangeClient(newClient)
+        setClient(newClient);
     }
 
     const validateName = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("noName")) {
             setValidationState({
                 ...validationState, name: true
@@ -59,7 +57,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validateSurname = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("noSurname")) {
             setValidationState({
                 ...validationState, surname: true
@@ -72,7 +70,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validateIdCard = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("invalidIdCard")) {
             setValidationState({
                 ...validationState, idCard: true
@@ -85,7 +83,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validatePhone = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("noPhone")) {
             setValidationState({
                 ...validationState, phone: "noPhone"
@@ -102,7 +100,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validateEmail = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("invalidEmail")) {
             setValidationState({
                 ...validationState, email: true
@@ -115,7 +113,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validateCity = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("noCity")) {
             setValidationState({
                 ...validationState, city: true
@@ -128,7 +126,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const validateStreetNumber = () => {
-        const res = ValidateClient(clientDialog);
+        const res = ValidateClient(client);
         if (res.includes("noStreetNumber")) {
             setValidationState({
                 ...validationState, streetNumber: true
@@ -141,27 +139,27 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
     }
 
     const handleSave = async () => {
-        const res = ValidateEmployee(clientDialog);
+        const res = ValidateEmployee(client);
         if (res.length === 0) {
             setIsLoading(true);
             switch (mode) {
                 case 'delete':
-                    await deleteClient(clientDialog.id);
+                    await deleteClient(client.id);
                     break;
                 case 'update':
-                    await updateClient(clientDialog);
+                    await updateClient(client);
                     break;
                 case 'post':
-                    await addClient(clientDialog);
+                    await addClient(client);
                     break;
             }
             setIsLoading(false);
-            handleDialogSuccess(mode, clientDialog)
+            handleDialogSuccess(mode, client)
         }
     }
 
     const handleReset = () => {
-        setClientDialog(client);
+        setClient(client);
         setValidationState({
             name: false,
             surname: false,
@@ -175,7 +173,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
 
     return (
         <div>
-            <Scrollbars autoHeight={true} autoHeightMin={200} autoHeightMax={'50vh'} autoHide
+            <Scrollbars autoHeight={true} autoHeightMin={200} autoHeightMax={'57vh'} autoHide
                         autoHideTimeout={750} autoHideDuration={500}>
                 <DialogContent>
                     <Backdrop
@@ -186,8 +184,8 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                     </Backdrop>
                     <Stack spacing={2}>
                         <Stack direction={"row"} className={"DialogTopStack"}>
-                            <PersonIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                            <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                            <PersonIcon className={"DividerIcon"}/>
+                            <Typography variant="h6" className={"MarginTopBottomAuto"}>
                                 Personal information
                             </Typography>
                         </Stack>
@@ -199,12 +197,12 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="Name"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.name}
+                                    value={client.name}
                                     onChange={handleChange}
                                     onBlur={validateName}
                                     error={validationState.name}
                                     helperText="Required"
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                             <Grid xs={7}>
@@ -214,18 +212,18 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="Surname"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.surname}
+                                    value={client.surname}
                                     onChange={handleChange}
                                     onBlur={validateSurname}
                                     error={validationState.surname}
                                     helperText="Required"
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                             <Grid xs={5} md={5}>
                                 <InputMask
                                     mask="aaa 999999"
-                                    value={clientDialog.idCard}
+                                    value={client.idCard}
                                     disabled={false}
                                     maskChar=" "
                                     onChange={handleChange}
@@ -238,10 +236,10 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                             label="ID Card"
                                             variant="outlined"
                                             fullWidth
-                                            value={clientDialog.idCard}
+                                            value={client.idCard}
                                             error={validationState.idCard}
                                             helperText={validationState.idCard ? "Invalid ID card" : ''}
-                                            InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                            InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                         />
                                     )}
                                 </InputMask>
@@ -249,8 +247,8 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                         </Grid>
                         <Divider/>
                         <Stack direction={"row"} className={"ClientUpdateDialogStack"}>
-                            <ContactPhoneIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                            <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                            <ContactPhoneIcon className={"DividerIcon"}/>
+                            <Typography variant="h6" className={"MarginTopBottomAuto"}>
                                 Contact information
                             </Typography>
                         </Stack>
@@ -258,7 +256,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                             <Grid xs={6} md={5}>
                                 <InputMask
                                     mask="999 999 999"
-                                    value={clientDialog.phone}
+                                    value={client.phone}
                                     disabled={false}
                                     maskChar=" "
                                     onChange={handleChange}
@@ -271,13 +269,13 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                             label="Phone number"
                                             variant="outlined"
                                             fullWidth
-                                            value={clientDialog.phone}
+                                            value={client.phone}
                                             error={validationState.phone !== ""}
                                             helperText={validationState.phone === "invalidPhone" ? "Invalid phone" : "Required"}
-                                            InputProps={mode === 'delete' || mode === 'info' ? {
-                                                readOnly: true,
+                                            InputProps={{
+                                                readOnly: mode === 'delete' || mode === 'info',
                                                 startAdornment: <InputAdornment position="start">+48</InputAdornment>
-                                            } : {startAdornment: <InputAdornment position="start">+48</InputAdornment>}}
+                                            }}
                                         />
                                     )}
                                 </InputMask>
@@ -289,19 +287,19 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="Email"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.email}
+                                    value={client.email}
                                     onChange={handleChange}
                                     onBlur={validateEmail}
                                     error={validationState.email}
                                     helperText={validationState.email ? "Invalid email" : ''}
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                         </Grid>
                         <Divider/>
                         <Stack direction={"row"} className={"ClientUpdateDialogStack"}>
-                            <HomeIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                            <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                            <HomeIcon className={"DividerIcon"}/>
+                            <Typography variant="h6" className={"MarginTopBottomAuto"}>
                                 Address
                             </Typography>
                         </Stack>
@@ -313,12 +311,12 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="City"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.city}
+                                    value={client.city}
                                     onChange={handleChange}
                                     onBlur={validateCity}
                                     error={validationState.city}
                                     helperText="Required"
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                             <Grid xs={13} md={7}>
@@ -328,9 +326,9 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="Street"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.street}
+                                    value={client.street}
                                     onChange={handleChange}
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                             <Grid xs={11} md={5}>
@@ -340,12 +338,12 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                                     label="Street number"
                                     variant="outlined"
                                     fullWidth
-                                    value={clientDialog.streetNumber}
+                                    value={client.streetNumber}
                                     onChange={handleChange}
                                     onBlur={validateStreetNumber}
                                     error={validationState.streetNumber}
                                     helperText="Required"
-                                    InputProps={mode === 'delete' || mode === 'info' ? {readOnly: true} : null}
+                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
                         </Grid>
@@ -362,7 +360,7 @@ export default function ClientsDialog({handleCancelDialog, client, handleDialogS
                         </Button>) : (<Button variant="contained" color={"success"} size="large" endIcon={<DoneIcon/>}
                                               onClick={handleSave}
                                               className={"DialogButton"}
-                                              disabled={ValidateClient(clientDialog).length !== 0}>
+                                              disabled={ValidateClient(client).length !== 0}>
                         Save
                     </Button>)}
                     <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}

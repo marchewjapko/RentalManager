@@ -11,42 +11,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ValidateClient from "../../Actions/ValidateClient";
+import {Scrollbars} from "react-custom-scrollbars-2";
 
 export default function RentalAgreementDialog({agreement, mode}) {
     const [value, setValue] = React.useState(0);
-    const [client, setClient] = React.useState(agreement.client ? agreement.client : null);
-    const [employee, setEmployee] = React.useState(agreement.employee ? agreement.employee : null)
-    const [rentalEquipment, setRentalEquipment] = React.useState(agreement.rentalEquipment ? agreement.rentalEquipment : null)
+    const [client, setClient] = React.useState(agreement.client ? agreement.client : {});
+    const [agreementDialog, setAgreementDialog] = React.useState(agreement ? agreement : null)
 
     const handleChange = (event, newValue) => {
+        console.log("value:", newValue)
         setValue(newValue);
     };
 
     const handleChangeIndex = (index) => {
+        console.log("index:", index)
         setValue(index);
     };
-
-    const handleChangeClient = (updatedClient) => {
-        setClient(updatedClient)
-    }
-    const clientTab = () => {
-        if (mode === 'post') {
-            return (<Clients isCheckable={true} handleChangeClient={handleChangeClient}/>);
-        }
-        return (<ClientsDialog client={agreement.client}
-                               handleCancelDialog={() => null}
-                               handleDialogSuccess={() => null}
-                               mode={mode === 'delete' ? 'info' : mode}
-                               isResettable={true}
-                               handleChangeClient={handleChangeClient}/>);
-    }
-    const handleChangeEmployee = (employee) => {
-        setEmployee(employee)
-    }
-
-    const handleChangeEquipment = (equipment) => {
-        setRentalEquipment(equipment)
-    }
     return (
         <div>
             <AppBar position="static">
@@ -66,13 +46,49 @@ export default function RentalAgreementDialog({agreement, mode}) {
                 index={value}
                 onChangeIndex={handleChangeIndex}
             >
+                {/*{value === 0 ? (*/}
+                {/*    <div className={"rentalAgreementSlide"}>*/}
+                {/*        <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={'57vh'} autoHide*/}
+                {/*                    autoHideTimeout={750}*/}
+                {/*                    autoHideDuration={500}>*/}
+                {/*            <RentalAgreementDialogAgreementTab mode={mode} agreement={agreementDialog}*/}
+                {/*                                               setAgreement={setAgreementDialog}/>*/}
+                {/*        </Scrollbars>*/}
+                {/*    </div>*/}
+                {/*) : <div/>}*/}
+
+                {/*{value === 1 ? (*/}
+                {/*    <div className={"rentalAgreementSlide"}>*/}
+                {/*        {mode === 'post' ? (*/}
+                {/*            <Clients isCheckable={true} client={client} setClient={setClient}/>*/}
+                {/*        ) : (*/}
+                {/*            <ClientsDialog client={client}*/}
+                {/*                           handleCancelDialog={() => null}*/}
+                {/*                           handleDialogSuccess={() => null}*/}
+                {/*                           mode={mode === 'delete' ? 'info' : mode}*/}
+                {/*                           setClient={setClient}/>*/}
+                {/*        )}*/}
+                {/*    </div>*/}
+                {/*) : <div/>}*/}
+
                 <div className={"rentalAgreementSlide"}>
-                    <RentalAgreementDialogAgreementTab mode={mode} agreement={agreement}
-                                                       handleChangeEmployee={handleChangeEmployee}
-                                                       handleChangeEquipment={handleChangeEquipment}/>
+                    <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={'57vh'} autoHide
+                                autoHideTimeout={750}
+                                autoHideDuration={500}>
+                    <RentalAgreementDialogAgreementTab mode={mode} agreement={agreementDialog}
+                                                       setAgreement={setAgreementDialog}/>
+                    </Scrollbars>
                 </div>
                 <div className={"rentalAgreementSlide"}>
-                    {clientTab(mode)}
+                    {mode === 'post' ? (
+                        <Clients isCheckable={true} client={client} setClient={setClient}/>
+                    ) : (
+                        <ClientsDialog client={client}
+                                       handleCancelDialog={() => null}
+                                       handleDialogSuccess={() => null}
+                                       mode={mode === 'delete' ? 'info' : mode}
+                                       setClient={setClient}/>
+                    )}
                 </div>
             </SwipeableViews>
             <Stack direction="row" justifyContent="space-between" className={"DialogStack"}>
@@ -89,7 +105,7 @@ export default function RentalAgreementDialog({agreement, mode}) {
                         Save
                     </Button>)}
                 <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
-                        onClick={() => console.log("AAAAAAAAAA", client)} className={"DialogButton"}>
+                        onClick={() => console.log("agreementDialog:", agreementDialog)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

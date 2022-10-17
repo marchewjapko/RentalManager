@@ -116,15 +116,16 @@ export default function RentalAgreement() {
         setAnchorEl(null)
         setFocusedAgreement({
             id: 0,
-            IsActive: true,
-            ClientId: 0,
-            RentalEquipmentIds: [],
-            Comment: "",
-            Deposit: 0,
-            TransportFrom: 0,
-            TransportTo: null,
-            ValidUntil: dayjs(),
-            DateAdded: dayjs()
+            isActive: true,
+            employee: null,
+            client: {},
+            rentalEquipment: [],
+            comment: "",
+            deposit: null,
+            transportFrom: null,
+            transportTo: null,
+            validUntil: dayjs().add(1, 'month'),
+            dateAdded: dayjs()
         })
         setShowDialog(true)
     }
@@ -229,8 +230,7 @@ export default function RentalAgreement() {
     return (
         <div>
             <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
-                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" className={"ComponentHeadStack"}>
                     <Button startIcon={<AddCircleRoundedIcon/>} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add agreement

@@ -1,6 +1,8 @@
 import Grid from "@mui/material/Unstable_Grid2";
 import {
-    DialogContent, Divider, InputAdornment,
+    DialogContent,
+    Divider,
+    InputAdornment,
     Stack,
     Table,
     TableBody,
@@ -16,99 +18,49 @@ import * as React from 'react';
 import EmployeesSelect from "../Employees/EmployeesSelect";
 import RentalEquipmentSelect from "../RentalEquipment/RentalEquipmentSelect";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import CommentIcon from '@mui/icons-material/Comment';
 
-export default function RentalAgreementDialogAgreementTab({mode, agreement, handleChangeEmployee, handleChangeEquipment}) {
-    const [agreementDialog, setAgreementDialog] = React.useState(agreement);
-    console.log(agreement)
-
+export default function RentalAgreementDialogAgreementTab({mode, agreement, setAgreement}) {
     const handleChange = (event) => {
-        const newAgreement = {
-            ...agreementDialog,
-            [event.target.name]: event.target.value
+        let newValue = event.target.value
+        if (['transportTo', 'transportFrom', 'deposit'].includes(event.target.name)) {
+            newValue = newValue.replace(/\D/g, "")
         }
-        setAgreementDialog(newAgreement);
+        const newAgreement = {
+            ...agreement,
+            [event.target.name]: newValue
+        }
+        setAgreement(newAgreement);
     }
 
-    const agreementDetailsInputs = () => {
-        return (
-            <div>
-                <Divider/>
-                <Stack direction={"row"} className={"ClientUpdateDialogStack"}>
-                    <AttachMoneyIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                    <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
-                        Costs
-                    </Typography>
-                </Stack>
-                <Grid container spacing={2}>
-                    <Grid xs={12} md={6}>
-                        <TextField
-                            name="transportFrom"
-                            margin="dense"
-                            label="Transport from"
-                            variant="outlined"
-                            fullWidth
-                            value={agreementDialog.transportFrom}
-                            onChange={handleChange}
-                            // onBlur={validateName}
-                            // error={validationState.name}
-                            helperText="Required"
-                            InputProps={mode === 'delete' || mode === 'info' ? {
-                                readOnly: true,
-                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
-                            } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
-                        />
-                    </Grid>
-                    <Grid xs={12} md={6}>
-                        <TextField
-                            name="transportTo"
-                            margin="dense"
-                            label="Transport to"
-                            variant="outlined"
-                            fullWidth
-                            value={agreementDialog.transportTo ? agreementDialog.transportTo : ''}
-                            onChange={handleChange}
-                            // onBlur={validateName}
-                            // error={validationState.name}
-                            helperText="Required"
-                            InputProps={mode === 'delete' || mode === 'info' ? {
-                                readOnly: true,
-                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
-                            } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
-                        />
-                    </Grid>
-                    <Grid xs={12} md={6}>
-                        <TextField
-                            name="deposit"
-                            margin="dense"
-                            label="Deposit"
-                            variant="outlined"
-                            fullWidth
-                            value={agreementDialog.deposit}
-                            onChange={handleChange}
-                            // onBlur={validateName}
-                            // error={validationState.name}
-                            helperText="Required"
-                            InputProps={mode === 'delete' || mode === 'info' ? {
-                                readOnly: true,
-                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
-                            } : {endAdornment: <InputAdornment position="start">zł</InputAdornment>}}
-                        />
-                    </Grid>
-                </Grid>
-            </div>
-        );
+    const handleChangeDateAdded = (event) => {
+        setAgreement({
+            ...agreement,
+            dateAdded: event
+        })
     }
 
-    if(mode === 'info' || mode === 'delete') {
-        return (
-            <DialogContent>
-                <Stack spacing={2}>
+    const handleChangeValidUntil = (event) => {
+        setAgreement({
+            ...agreement,
+            validUntil: event
+        })
+    }
+
+    return (
+        <DialogContent>
+            <Stack spacing={2}>
+                {mode === 'info' || mode === 'delete' ? (
                     <Grid container spacing={2}>
                         <Grid xs={12} md={6}>
                             <div>
-                                <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", marginBottom: "24px"}}>
-                                    <EngineeringIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                                    <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
+                                <Stack direction={"row"} className={"ClientUpdateDialogStack"}
+                                       sx={{paddingLeft: "17px", marginBottom: "24px"}}>
+                                    <EngineeringIcon className={"DividerIcon"}/>
+                                    <Typography variant="h6" className={"MarginTopBottomAuto"}>
                                         Employee
                                     </Typography>
                                 </Stack>
@@ -123,49 +75,164 @@ export default function RentalAgreementDialogAgreementTab({mode, agreement, hand
                             </div>
                         </Grid>
                         <Grid xs={12} md={6}>
-                            <div>
-                                <Stack direction={"row"} className={"ClientUpdateDialogStack"} sx={{paddingLeft: "17px", marginBottom: "24px"}}>
-                                    <ConstructionIcon sx={{marginRight: 1, marginTop: "auto", marginBottom: "auto"}}/>
-                                    <Typography variant="h6" sx={{marginTop: "auto", marginBottom: "auto"}}>
-                                        Rental Equipment
-                                    </Typography>
-                                </Stack>
-                                <TableContainer sx={{width: "100%"}}>
-                                    <Table>
-                                        <TableBody>
-                                            {agreement.rentalEquipment.map((row) => (
-                                                <TableRow key={row.name}>
-                                                    <TableCell component="th" scope="row">
-                                                        {row.name}
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        {row.monthlyPrice + ' zł'}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </div>
+                            <Stack direction={"row"} className={"ClientUpdateDialogStack"}
+                                   sx={{paddingLeft: "17px", marginBottom: "24px"}}>
+                                <ConstructionIcon className={"DividerIcon"}/>
+                                <Typography variant="h6" className={"MarginTopBottomAuto"}>
+                                    Rental Equipment
+                                </Typography>
+                            </Stack>
+                            <TableContainer sx={{width: "100%"}}>
+                                <Table>
+                                    <TableBody>
+                                        {agreement.rentalEquipment.map((row) => (
+                                            <TableRow key={row.name}>
+                                                <TableCell component="th" scope="row">
+                                                    {row.name}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {row.monthlyPrice + ' zł'}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
                     </Grid>
-                    {agreementDetailsInputs()}
+                ) : (
+                    <Grid container spacing={2} sx={{paddingLeft: "8px", paddingRight: "8px", paddingBottom: "8px"}}>
+                        <Grid xs={12} md={6}>
+                            <EmployeesSelect agreement={agreement}
+                                             setAgreement={setAgreement}/>
+                        </Grid>
+                        <Grid xs={12} md={6}>
+                            <RentalEquipmentSelect agreement={agreement}
+                                                   setAgreement={setAgreement}/>
+                        </Grid>
+                    </Grid>
+                )}
+                <Divider/>
+                <Stack direction={"row"} className={"DialogTopStack"}>
+                    <AttachMoneyIcon className={"DividerIcon"}/>
+                    <Typography variant="h6" className={"MarginTopBottomAuto"}>
+                        Costs
+                    </Typography>
                 </Stack>
-            </DialogContent>
-        );
-    }
-    return (
-        <DialogContent>
-            <Stack spacing={2}>
                 <Grid container spacing={2}>
                     <Grid xs={12} md={6}>
-                        <EmployeesSelect selectedEmployee={agreement.employee} handleChangeEmployee={handleChangeEmployee}/>
+                        <TextField
+                            name="transportTo"
+                            margin="dense"
+                            label="Transport to"
+                            variant="outlined"
+                            fullWidth
+                            value={agreement.transportTo ? agreement.transportTo : ''}
+                            onChange={handleChange}
+                            // onBlur={validateName}
+                            // error={validationState.name}
+                            helperText="Required"
+                            InputProps={{
+                                readOnly: mode === 'delete' || mode === 'info',
+                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
+                            }}
+                        />
                     </Grid>
                     <Grid xs={12} md={6}>
-                        <RentalEquipmentSelect selectedEquipment={agreement.rentalEquipment} handleChangeEquipment={handleChangeEquipment}/>
+                        <TextField
+                            name="transportFrom"
+                            margin="dense"
+                            label="Transport from"
+                            variant="outlined"
+                            fullWidth
+                            value={agreement.transportFrom ? agreement.transportFrom : ''}
+                            onChange={handleChange}
+                            // onBlur={validateName}
+                            // error={validationState.name}
+                            InputProps={{
+                                readOnly: mode === 'delete' || mode === 'info',
+                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
+                            }}
+                        />
+                    </Grid>
+                    <Grid xs={12} md={6}>
+                        <TextField
+                            name="deposit"
+                            margin="dense"
+                            label="Deposit"
+                            variant="outlined"
+                            fullWidth
+                            value={agreement.deposit ? agreement.deposit : ''}
+                            onChange={handleChange}
+                            // onBlur={validateName}
+                            // error={validationState.name}
+                            helperText="Required"
+                            InputProps={{
+                                readOnly: mode === 'delete' || mode === 'info',
+                                endAdornment: <InputAdornment position="start">zł</InputAdornment>
+                            }}
+                        />
                     </Grid>
                 </Grid>
-                {agreementDetailsInputs()}
+                <Divider/>
+                <Stack direction={"row"} className={"DialogTopStack"}>
+                    <CalendarMonthIcon className={"DividerIcon"}/>
+                    <Typography variant="h6" className={"MarginTopBottomAuto"}>
+                        Dates
+                    </Typography>
+                </Stack>
+                <Grid container spacing={2}>
+                    <Grid xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                name={"dateAdded"}
+                                label="Date added"
+                                value={agreement.dateAdded}
+                                onChange={handleChangeDateAdded}
+                                readOnly={mode === 'info' || mode === 'delete'}
+                                renderInput={(params) => <TextField {...params} fullWidth/>}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                    <Grid xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                name={"validUntil"}
+                                label="Valid until"
+                                value={agreement.validUntil}
+                                onChange={handleChangeValidUntil}
+                                readOnly={mode === 'info' || mode === 'delete'}
+                                renderInput={(params) => <TextField {...params} fullWidth/>}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                </Grid>
+                <Divider/>
+                <Stack direction={"row"} className={"DialogTopStack"}>
+                    <CommentIcon className={"DividerIcon"}/>
+                    <Typography variant="h6" className={"MarginTopBottomAuto"}>
+                        Comment
+                    </Typography>
+                </Stack>
+                <Grid container spacing={2}>
+                    <Grid xs={12}>
+                        <TextField
+                            name="comment"
+                            margin="dense"
+                            label="Comment"
+                            variant="outlined"
+                            multiline
+                            fullWidth
+                            value={agreement.comment ? agreement.comment : ''}
+                            onChange={handleChange}
+                            // onBlur={validateName}
+                            // error={validationState.name}
+                            InputProps={{
+                                readOnly: mode === 'delete' || mode === 'info'
+                            }}
+                        />
+                    </Grid>
+                </Grid>
             </Stack>
         </DialogContent>
     );

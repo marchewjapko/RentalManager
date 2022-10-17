@@ -26,16 +26,14 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ClientsSearchSelect from "./ClientsSearchSelect";
 import TempNavigation from "../Shared/TempNavigation";
 
-export default function Clients({isCheckable, handleChangeClient}) {
+export default function Clients({isCheckable, client, setClient}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
     const [data, setData] = React.useState();
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
-    const [focusedClient, setFocusedClient] = React.useState();
     const [dialogMode, setDialogMode] = React.useState("")
-    const [checkedClient, setCheckedClient] = React.useState()
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -77,27 +75,22 @@ export default function Clients({isCheckable, handleChangeClient}) {
         }
     }
 
-    const handleCheckChange = (client) => {
-        setCheckedClient(client)
-        handleChangeClient(client)
-    }
-
     const handleEditClick = (client) => {
-        setFocusedClient(client)
+        setClient(client)
         setDialogMode("update")
         setShowDialog(true)
     }
 
     const handleDeleteClick = (client) => {
-        setFocusedClient(client)
+        setClient(client)
         setDialogMode("delete")
         setShowDialog(true)
     }
 
     const handleAddClick = () => {
         setDialogMode("post")
-        setFocusedClient({
-            id: 0,
+        setClient({
+            id: -1,
             name: "",
             surname: "",
             phone: "",
@@ -121,8 +114,9 @@ export default function Clients({isCheckable, handleChangeClient}) {
         const result = await getAllClients();
         setData(result);
         setIsLoading(false)
-        if (mode === 'delete' || mode === 'post')
-            handleCheckChange(client);
+        if (mode === 'delete' || mode === 'post') {
+            setClient(client)
+        }
     }
 
     const closeSnackbars = () => {
@@ -137,11 +131,11 @@ export default function Clients({isCheckable, handleChangeClient}) {
                 onClose={handleCloseDialog}
             >
                 <DialogTitle>{getDialogTitle()}</DialogTitle>
-                <ClientsDialog client={focusedClient}
+                <ClientsDialog client={client}
                                handleCancelDialog={handleCloseDialog}
                                handleDialogSuccess={handleDialogSuccess}
                                mode={dialogMode}
-                               handleChangeClient={() => null}
+                               setClient={setClient}
                                showDialogButtons={true}/>
             </Dialog>
         );
@@ -153,11 +147,7 @@ export default function Clients({isCheckable, handleChangeClient}) {
         setData(result);
         setIsLoading(false);
         setPage(0);
-        handleCheckChange(result[0])
-    }
-
-    const handleCheckboxChange = (row) => {
-        handleCheckChange(row)
+        setClient(result[0])
     }
 
     return (
@@ -168,9 +158,8 @@ export default function Clients({isCheckable, handleChangeClient}) {
                     {getSnackbarTitle()}
                 </Alert>
             </Snackbar>
-            <Paper className={"ComponentContainer"}>
-                <Stack direction={"row"} justifyContent="space-between" alignItems="center"
-                       sx={{marginRight: "10px", marginBottom: "10px"}}>
+            <div className={"ComponentContainer"}>
+                <Stack direction={"row"} justifyContent="space-between" alignItems="center" className={"ComponentHeadStack"}>
                     <Button startIcon={<AddCircleRoundedIcon/>} color={"primary"} variant={"contained"}
                             onClick={handleAddClick} disabled={isLoading}>
                         Add client
@@ -183,7 +172,7 @@ export default function Clients({isCheckable, handleChangeClient}) {
                     <div>
                         {dialog()}
                         <TableContainer className={"ClientsTable"}>
-                            <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={600} autoHide
+                            <Scrollbars autoHeight={true} autoHeightMin={0} autoHeightMax={'45vh'} autoHide
                                         autoHideTimeout={750}
                                         autoHideDuration={500}>
                                 <Table stickyHeader>
@@ -204,8 +193,8 @@ export default function Clients({isCheckable, handleChangeClient}) {
                                             <ClientTableRow key={row.id} row={row} handleEditClick={handleEditClick}
                                                             handleDeleteClick={handleDeleteClick}
                                                             isCheckable={isCheckable}
-                                                            handleCheckboxChange={handleCheckboxChange}
-                                                            checkedRow={checkedClient ? checkedClient.id : -1}/>
+                                                            setClient={setClient}
+                                                            client={client}/>
                                         ))}
                                     </TableBody>
                                 </Table>
@@ -222,7 +211,7 @@ export default function Clients({isCheckable, handleChangeClient}) {
                         />
                     </div>
                 )}
-            </Paper>
+            </div>
             <TempNavigation/>
         </div>
     );
