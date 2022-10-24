@@ -23,8 +23,8 @@ export default function ValidateClient(client) {
     if (client.city.trim().length === 0) {
         result.push("noCity")
     }
-    if (client.streetNumber.trim().length === 0) {
-        result.push("noStreetNumber")
+    if (client.street.trim().length === 0) {
+        result.push("noStreet")
     }
     return (result)
 }

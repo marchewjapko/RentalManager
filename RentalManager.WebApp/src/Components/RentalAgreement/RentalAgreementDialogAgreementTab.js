@@ -190,7 +190,7 @@ export default function RentalAgreementDialogAgreementTab({mode, agreement, setA
                                 value={agreement.dateAdded}
                                 onChange={handleChangeDateAdded}
                                 readOnly={mode === 'info' || mode === 'delete'}
-                                renderInput={(params) => <TextField {...params} fullWidth/>}
+                                renderInput={(params) => <TextField {...params} fullWidth helperText="Required"/>}
                             />
                         </LocalizationProvider>
                     </Grid>
@@ -202,7 +202,7 @@ export default function RentalAgreementDialogAgreementTab({mode, agreement, setA
                                 value={agreement.validUntil}
                                 onChange={handleChangeValidUntil}
                                 readOnly={mode === 'info' || mode === 'delete'}
-                                renderInput={(params) => <TextField {...params} fullWidth/>}
+                                renderInput={(params) => <TextField {...params} fullWidth helperText="Required"/>}
                             />
                         </LocalizationProvider>
                     </Grid>

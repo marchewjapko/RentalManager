@@ -32,7 +32,7 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
         phone: '',
         email: false,
         city: false,
-        streetNumber: false
+        street: false
     })
 
     const handleChange = (event) => {
@@ -125,15 +125,15 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
         }
     }
 
-    const validateStreetNumber = () => {
+    const validateStreet = () => {
         const res = ValidateClient(client);
-        if (res.includes("noStreetNumber")) {
+        if (res.includes("noStreet")) {
             setValidationState({
-                ...validationState, streetNumber: true
+                ...validationState, street: true
             })
         } else {
             setValidationState({
-                ...validationState, streetNumber: false
+                ...validationState, street: false
             })
         }
     }
@@ -156,19 +156,6 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
             setIsLoading(false);
             handleDialogSuccess(mode, client)
         }
-    }
-
-    const handleReset = () => {
-        setClient(client);
-        setValidationState({
-            name: false,
-            surname: false,
-            idCard: false,
-            phone: '',
-            email: false,
-            city: false,
-            streetNumber: false
-        })
     }
 
     return (
@@ -328,20 +315,8 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
                                     fullWidth
                                     value={client.street}
                                     onChange={handleChange}
-                                    InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
-                                />
-                            </Grid>
-                            <Grid xs={11} md={5}>
-                                <TextField
-                                    name="streetNumber"
-                                    margin="dense"
-                                    label="Street number"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={client.streetNumber}
-                                    onChange={handleChange}
-                                    onBlur={validateStreetNumber}
-                                    error={validationState.streetNumber}
+                                    onBlur={validateStreet}
+                                    error={validationState.street}
                                     helperText="Required"
                                     InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />

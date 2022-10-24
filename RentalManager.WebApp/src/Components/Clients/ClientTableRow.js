@@ -33,7 +33,7 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick,
         <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
             <TableCell className={"ClientTableDetailsCell"}>
                 <Stack direction={"row"}>
-                    {isCheckable ? <Checkbox onChange={() => setClient(row)} checked={client && row.id === client.id}/> : null}
+                    {isCheckable ? <Checkbox onChange={() => setClient(row)} checked={(client && row.id === client.id) || false}/> : null}
                     <IconButton size="small" onClick={handleOpenDetails}
                                 sx={{width: "30px", height: "30px", marginTop: 'auto', marginBottom: "auto"}}>
                         {openDetails ? <KeyboardArrowUpIcon fontSize="small"/> :
@@ -101,7 +101,7 @@ export default function ClientTableRow({row, handleEditClick, handleDeleteClick,
                             label="Address"
                             fullWidth
                             variant="outlined"
-                            value={row.city + ' ' + row.street + ' ' + row.streetNumber}
+                            value={row.city + ' ' + row.street}
                             InputProps={{
                                 readOnly: true
                             }}

@@ -23,12 +23,12 @@ Website: https://json-generator.com/
       return result
     },
     city: '{{city()}}',
-    street: '{{street()}}',
-    streetNumber: function () {
-      var result = Math.floor(Math.random() * (99 - 1) + 1);
-      var characters = 'ABCDEFGHIJKLMN';
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-      return result
+    street: function (obj) {
+        var street = obj.street()
+        var result = Math.floor(Math.random() * (99 - 1) + 1);
+        var characters = 'ABCDEFGHIJKLMN';
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+        return street + ' ' + result;
     },
     dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
   }
@@ -88,12 +88,12 @@ Website: https://json-generator.com/
         return result;
       },
       city: '{{city()}}',
-      street: '{{street()}}',
-      streetNumber: function () {
+      street: function (obj) {
+        var street = obj.street()
         var result = Math.floor(Math.random() * (99 - 1) + 1);
         var characters = 'ABCDEFGHIJKLMN';
         result += characters.charAt(Math.floor(Math.random() * characters.length));
-        return result;
+        return street + ' ' + result;
       },
       dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}'
     },
@@ -113,6 +113,6 @@ Website: https://json-generator.com/
     transportFrom: '{{integer(0, 200)}}',
     transportTo: '{{random(null, integer(0, 200))}}',
     validUntil: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
-    dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}'
+    dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
   }
 ]

@@ -34,14 +34,15 @@ import InfoIcon from '@mui/icons-material/Info';
 import RentalAgreementDialog from "./RentalAgreementDialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import {getAllAgreements} from "../../Actions/RentalAgreementActions";
+import {filterAgreements, getAllAgreements} from "../../Actions/RentalAgreementActions";
 import SkeletonTableRentalAgreement from "./SkeletonTableRentalAgreement";
+import RentalAgreementSearchSelect from "./RentalAgreementSearchSelect";
 
 export default function RentalAgreement() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [data, setData] = React.useState(RentalAgreementMock);
+    const [data, setData] = React.useState();
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
     const [focusedAgreement, setFocusedAgreement] = React.useState();
@@ -49,11 +50,19 @@ export default function RentalAgreement() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
     const dialogFullScreen = useMediaQuery(theme.breakpoints.down("xs"))
+    const [searchValues, setSearchValues] = React.useState({
+        surname: "",
+        phone: "",
+        city: "",
+        street: "",
+        onlyActive: true,
+        onlyUnpaid: false
+    })
     dayjs.locale('pl')
 
     React.useEffect(() => {
         const getData = async () => {
-            const result = await getAllAgreements();
+            const result = await filterAgreements(searchValues);
             setData(result);
             setIsLoading(false)
         };
@@ -85,11 +94,11 @@ export default function RentalAgreement() {
     const getSnackbarTitle = () => {
         switch (dialogMode) {
             case 'post':
-                return 'Client added successfully'
+                return 'Agreement added successfully'
             case 'update':
-                return 'Client updated successfully'
+                return 'Agreement updated successfully'
             case 'delete':
-                return 'Client deleted successfully'
+                return 'Agreement deleted successfully'
         }
     }
 
@@ -118,12 +127,12 @@ export default function RentalAgreement() {
             id: 0,
             isActive: true,
             employee: null,
-            client: {},
+            client: null,
             rentalEquipment: [],
             comment: "",
-            deposit: null,
+            deposit: "",
             transportFrom: null,
-            transportTo: null,
+            transportTo: "",
             validUntil: dayjs().add(1, 'month'),
             dateAdded: dayjs()
         })
@@ -134,12 +143,21 @@ export default function RentalAgreement() {
         setShowDialog(false)
     }
 
-    const handleDialogSuccess = async (mode) => {
+    const handleDialogSuccess = async () => {
         setIsLoading(true);
         setShowSnackbar(true);
         handleCloseDialog()
-        // const result = await getAllClients();
-        // setData(result);
+        const newSearchParams = {
+            surname: "",
+            phone: "",
+            city: "",
+            street: "",
+            onlyActive: true,
+            onlyUnpaid: false
+        }
+        setSearchValues(newSearchParams)
+        const result = await filterAgreements(newSearchParams);
+        setData(result);
         setIsLoading(false)
     }
 
@@ -147,12 +165,12 @@ export default function RentalAgreement() {
         setShowSnackbar(false);
     }
 
-    // const handleSearch = async (searchValues) => {
-    //     setIsLoading(true);
-    //     const result = await filterClients(searchValues);
-    //     setData(result);
-    //     setIsLoading(false)
-    // }
+    const handleSearch = async () => {
+        setIsLoading(true);
+        const result = await filterAgreements(searchValues);
+        setData(result);
+        setIsLoading(false)
+    }
 
 
     const dialog = () => {
@@ -227,6 +245,14 @@ export default function RentalAgreement() {
         );
     }
 
+    const getRowColor = (row) => {
+        if(!row.isActive) {
+            return 'rgba(245,0,87,0.2)'
+        } else if(dayjs(row.validUntil).diff(dayjs(), 'day') < 0) {
+            return 'rgba(244,67,54,0.2)'
+        }
+    }
+
     return (
         <div>
             <Paper className={"ComponentContainer"}>
@@ -235,7 +261,7 @@ export default function RentalAgreement() {
                             onClick={handleAddClick} disabled={isLoading}>
                         Add agreement
                     </Button>
-                    {/*<SearchTextField isLoading={isLoading} handleSearch={handleSearch}/>*/}
+                    <RentalAgreementSearchSelect isLoading={isLoading} handleSearch={handleSearch} searchValues={searchValues} setSearchValues={setSearchValues}/>
                 </Stack>
                 <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={closeSnackbars}
                           anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
@@ -266,7 +292,7 @@ export default function RentalAgreement() {
                                                 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                 : data
                                         ).map((row) => (
-                                            <TableRow key={row.id}>
+                                            <TableRow key={row.id} sx={{backgroundColor: getRowColor(row)}}>
                                                 <TableCell component="th" scope="row">
                                                     {row.client.name + ' ' + row.client.surname}
                                                 </TableCell>
