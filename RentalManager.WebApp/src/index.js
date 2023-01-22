@@ -10,7 +10,7 @@ import RentalAgreement from "./Components/RentalAgreement/RentalAgreement";
 
 const darkTheme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: 'light',
     },
 });
 

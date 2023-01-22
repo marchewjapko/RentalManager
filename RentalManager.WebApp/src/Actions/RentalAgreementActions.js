@@ -18,5 +18,12 @@ export const addRentalAgreement = (rentalAgreement) => new Promise((resolve) => 
 });
 
 export const filterAgreements = (searchParams) => new Promise((resolve) => {
-    setTimeout(() => (resolve(Object.values(RentalAgreementMock.filter(x => x.client.surname.toLowerCase().includes(searchParams.surname.toLowerCase()) && x.client.phone.toLowerCase().includes(searchParams.phone.toLowerCase()) && x.client.city.toLowerCase().includes(searchParams.city.toLowerCase()) && x.client.street.toLowerCase().includes(searchParams.street.toLowerCase()) && ((searchParams.onlyUnpaid && dayjs(x.validUntil).diff(dayjs(), 'day') < 0) || !searchParams.onlyUnpaid) && (x.isActive === searchParams.onlyActive || !searchParams.onlyActive)))), console.log("Filtered clients, params:", searchParams)), 2500);
+    setTimeout(() => (resolve(Object.values(RentalAgreementMock.filter(x =>
+        x.client.surname.toLowerCase().includes(searchParams.surname.toLowerCase()) &&
+        x.client.phone.toLowerCase().includes(searchParams.phone.toLowerCase()) &&
+        x.client.city.toLowerCase().includes(searchParams.city.toLowerCase()) &&
+        x.client.street.toLowerCase().includes(searchParams.street.toLowerCase()) &&
+        ((searchParams.onlyUnpaid && dayjs(x.validUntil).diff(dayjs(), 'day') < 0) || !searchParams.onlyUnpaid) &&
+        (x.isActive === searchParams.onlyActive || !searchParams.onlyActive))))
+        , console.log("Filtered clients, params:", searchParams)), 2500);
 });

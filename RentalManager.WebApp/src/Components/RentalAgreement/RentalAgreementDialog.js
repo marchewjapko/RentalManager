@@ -118,7 +118,7 @@ export default function RentalAgreementDialog({agreement, mode, handleCancelDial
                         </Button>)
                 ) : null}
                 <Button variant="outlined" color={"primary"} size="large" endIcon={<CancelIcon/>}
-                        onClick={() => handleCancelDialog(false)} className={"DialogButton"} sx={mode === 'info' ? ({width: "100%"}) : ({})}>
+                        onClick={() => handleCancelDialog(false)} className={"DialogButton"}>
                     Cancel
                 </Button>
             </Stack>

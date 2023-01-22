@@ -23,7 +23,6 @@ import {
 import {Scrollbars} from 'react-custom-scrollbars-2';
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TempNavigation from "../Shared/TempNavigation";
-import {RentalAgreementMock} from "../../Mocks/RentalAgreementMock";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -49,7 +48,7 @@ export default function RentalAgreement() {
     const [dialogMode, setDialogMode] = React.useState("")
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
-    const dialogFullScreen = useMediaQuery(theme.breakpoints.down("xs"))
+    const dialogFullScreen = useMediaQuery(theme.breakpoints.down("sm"))
     const [searchValues, setSearchValues] = React.useState({
         surname: "",
         phone: "",
@@ -247,9 +246,9 @@ export default function RentalAgreement() {
 
     const getRowColor = (row) => {
         if(!row.isActive) {
-            return 'rgba(245,0,87,0.2)'
+            return theme.palette.text.disabled
         } else if(dayjs(row.validUntil).diff(dayjs(), 'day') < 0) {
-            return 'rgba(244,67,54,0.2)'
+            return theme.palette.error.light
         }
     }
 

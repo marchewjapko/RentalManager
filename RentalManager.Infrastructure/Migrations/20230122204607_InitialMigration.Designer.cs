@@ -12,7 +12,7 @@ using RentalManager.Infrastructure.Repositories;
 namespace RentalManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220911151546_InitialMigration")]
+    [Migration("20230122204607_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

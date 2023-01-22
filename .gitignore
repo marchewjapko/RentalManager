@@ -1,6 +1,7 @@
 */obj/*
 */bin/*
 /.vs/*
+/.vscode/*
 
 */node_modules/
 */.expo/
@@ -21,6 +22,7 @@
 */platforms/
 
 */build/
-*/www/
+**/static/**
 */.idea/
 */package-lock.json
+/.fleet/*

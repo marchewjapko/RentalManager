@@ -5,7 +5,7 @@ export default function ValidateRentalAgreement(rentalAgreement) {
     if (rentalAgreement.deposit.length === 0) {
         result.push("noDeposit")
     }
-    if (rentalAgreement.transportTo.length === 0) {
+    if (!rentalAgreement.transportTo || rentalAgreement.transportTo.length === 0) {
         result.push("noTransportTo")
     }
     if (!rentalAgreement.validUntil || rentalAgreement.validUntil.length === 0) {

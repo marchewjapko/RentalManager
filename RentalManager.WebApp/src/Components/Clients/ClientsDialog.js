@@ -177,7 +177,7 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
                             </Typography>
                         </Stack>
                         <Grid container spacing={2}>
-                            <Grid xs={5}>
+                            <Grid xs={6} md={5}>
                                 <TextField
                                     name="name"
                                     margin="dense"
@@ -192,7 +192,7 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
                                     InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
-                            <Grid xs={7}>
+                            <Grid xs={6} md={7}>
                                 <TextField
                                     name="surname"
                                     margin="dense"
@@ -207,7 +207,7 @@ export default function ClientsDialog({handleCancelDialog, client, setClient, ha
                                     InputProps={{readOnly: mode === 'delete' || mode === 'info'}}
                                 />
                             </Grid>
-                            <Grid xs={5} md={5}>
+                            <Grid xs={6} md={5}>
                                 <InputMask
                                     mask="aaa 999999"
                                     value={client.idCard}
