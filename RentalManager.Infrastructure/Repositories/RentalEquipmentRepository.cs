@@ -81,7 +81,7 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 var z = _appDbContext.RentalEquipment.FirstOrDefault(x => x.Id == id);
                 z.Name = rentalEquipment.Name;
-                z.MonthlyPrice = rentalEquipment.MonthlyPrice;
+                z.Price = rentalEquipment.Price;
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(z);
             }

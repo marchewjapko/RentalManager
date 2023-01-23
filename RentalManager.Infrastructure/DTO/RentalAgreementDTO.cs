@@ -12,7 +12,6 @@
         public int Deposit { get; set; }
         public int TransportFrom { get; set; }
         public int? TransportTo { get; set; }
-        public DateTime ValidUntil { get; set; }
         public DateTime DateAdded { get; set; }
     }
 }

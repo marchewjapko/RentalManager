@@ -4,9 +4,7 @@ namespace RentalManager.Infrastructure.Commands
 {
     public class UpdateEmployee
     {
-        [Required]
-        public string? Name { get; set; }
-        [Required]
-        public string? Surname { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
     }
 }

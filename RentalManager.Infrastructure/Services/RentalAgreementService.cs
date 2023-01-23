@@ -61,11 +61,5 @@ namespace RentalManager.Infrastructure.Services
             agreement.Payments = (await _paymentRepository.BrowseAllAsync(id, null, null)).ToList();
             return await Task.FromResult(agreement.ToDTO());
         }
-
-        public async Task<RentalAgreementDTO> ExtendValidDateAsync(int rentalAgreementId, DateTime newValidDate)
-        {
-            var result = await _rentalAgreementRepository.ExtendValidDateAsync(rentalAgreementId, newValidDate);
-            return await Task.FromResult(result.ToDTO());
-        }
     }
 }

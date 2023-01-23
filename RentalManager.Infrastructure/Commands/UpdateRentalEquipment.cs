@@ -4,8 +4,7 @@ namespace RentalManager.Infrastructure.Commands
 {
     public class UpdateRentalEquipment
     {
-        [Required]
-        public string? Name { get; set; }
-        public int MonthlyPrice { get; set; }
+        public string Name { get; set; }
+        public int Price { get; set; }
     }
 }

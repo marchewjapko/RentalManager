@@ -108,7 +108,6 @@ namespace RentalManager.Infrastructure.Repositories
                 z.IdCard = client.IdCard;
                 z.City = client.City;   
                 z.Street = client.Street;
-                z.StreetNumber = client.StreetNumber;
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(z);
             }

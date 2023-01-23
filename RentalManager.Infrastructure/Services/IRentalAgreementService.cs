@@ -11,6 +11,5 @@ namespace RentalManager.Infrastructure.Services
         Task<IEnumerable<RentalAgreementDTO>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null);
         Task DeleteAsync(int id);
         Task<RentalAgreementDTO> UpdateAsync(UpdateRentalAgreement updateRentalAgreement, int id);
-        Task<RentalAgreementDTO> ExtendValidDateAsync(int rentalAgreementId, DateTime newValidDate);
     }
 }

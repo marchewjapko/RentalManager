@@ -26,7 +26,6 @@ namespace RentalManager.Infrastructure.DTO
                 IdCard = ToUpperCheckForNull(createClient.IdCard),
                 City = createClient.City,
                 Street = createClient.Street,
-                StreetNumber = createClient.StreetNumber,
                 DateAdded = DateTime.Now
             };
         }
@@ -42,7 +41,6 @@ namespace RentalManager.Infrastructure.DTO
                 IdCard = ToUpperCheckForNull(client.IdCard),
                 City = client.City,
                 Street = client.Street,
-                StreetNumber = client.StreetNumber,
                 DateAdded = client.DateAdded,
             };
             return clientDTO;
@@ -58,7 +56,6 @@ namespace RentalManager.Infrastructure.DTO
                 IdCard = ToUpperCheckForNull(updateClient.IdCard),
                 City = updateClient.City,
                 Street = updateClient.Street,
-                StreetNumber = updateClient.StreetNumber,
             };
             return result;
         }
@@ -74,7 +71,6 @@ namespace RentalManager.Infrastructure.DTO
                 IdCard = ToUpperCheckForNull(clientDTO.IdCard),
                 City = clientDTO.City,
                 Street = clientDTO.Street,
-                StreetNumber = clientDTO.StreetNumber,
                 DateAdded = clientDTO.DateAdded
             };
             return result;
@@ -116,7 +112,7 @@ namespace RentalManager.Infrastructure.DTO
             return new RentalEquipment()
             {
                 Name = createRentalEquipment.Name,
-                MonthlyPrice = createRentalEquipment.MonthlyPrice,
+                Price = createRentalEquipment.Price,
                 DateAdded = DateTime.Now
             };
         }
@@ -126,7 +122,7 @@ namespace RentalManager.Infrastructure.DTO
             {
                 Id = rentalEquipment.Id,
                 Name = rentalEquipment.Name,
-                MonthlyPrice = rentalEquipment.MonthlyPrice,
+                Price = rentalEquipment.Price,
                 DateAdded= rentalEquipment.DateAdded
             };
         }
@@ -135,7 +131,7 @@ namespace RentalManager.Infrastructure.DTO
             var result = new RentalEquipment()
             {
                 Name = updateRentalEquipment.Name,
-                MonthlyPrice = updateRentalEquipment.MonthlyPrice
+                Price = updateRentalEquipment.Price
             };
             return result;
         }
@@ -145,7 +141,7 @@ namespace RentalManager.Infrastructure.DTO
             {
                 Id = rentalEquipmentDTO.Id,
                 Name = rentalEquipmentDTO.Name,
-                MonthlyPrice = rentalEquipmentDTO.MonthlyPrice,
+                Price = rentalEquipmentDTO.Price,
                 DateAdded = rentalEquipmentDTO.DateAdded
             };
             return result;
@@ -163,7 +159,7 @@ namespace RentalManager.Infrastructure.DTO
                 Deposit = createRentalAgreement.Deposit,
                 TransportFrom = createRentalAgreement.TransportFrom,
                 TransportTo = createRentalAgreement.TransportTo,
-                ValidUntil = createRentalAgreement.ValidUntil,
+                Payments = createRentalAgreement.Payments.Select(x => x.ToDomain()).ToList(),
                 DateAdded = createRentalAgreement.DateAdded
             };
         }
@@ -176,12 +172,11 @@ namespace RentalManager.Infrastructure.DTO
                 IsActive = rentalAgreement.IsActive,
                 Client = rentalAgreement.Client.ToDTO(),
                 RentalEquipment = rentalAgreement.RentalEquipment.Select(x => x.ToDTO()),
-                Payments = rentalAgreement.Payments.Select(x => x.ToDTO()),
                 Comment = rentalAgreement.Comment,
                 Deposit = rentalAgreement.Deposit,
                 TransportFrom = rentalAgreement.TransportFrom,
                 TransportTo = rentalAgreement.TransportTo,
-                ValidUntil = rentalAgreement.ValidUntil,
+                Payments = rentalAgreement.Payments.Select(x => x.ToDTO()),
                 DateAdded = rentalAgreement.DateAdded,
             };
         }
@@ -196,7 +191,6 @@ namespace RentalManager.Infrastructure.DTO
                 Deposit = updateRentalAgreement.Deposit,
                 TransportFrom = updateRentalAgreement.TransportFrom,
                 TransportTo = updateRentalAgreement.TransportTo,
-                ValidUntil = updateRentalAgreement.ValidUntil,
                 DateAdded = updateRentalAgreement.DateAdded,
             };
             return result;
@@ -207,10 +201,11 @@ namespace RentalManager.Infrastructure.DTO
         {
             return new Payment()
             {
-                RentalAgreementId = createPayment.RentalAgreementId,
                 Method = createPayment.Method,
                 Amount = createPayment.Amount,
-                DateAdded = DateTime.Now
+                DateAdded = DateTime.Now,
+                From = createPayment.From,
+                To = createPayment.To
             };
         }
         public static PaymentDTO ToDTO(this Payment payment)
@@ -218,19 +213,21 @@ namespace RentalManager.Infrastructure.DTO
             return new PaymentDTO()
             {
                 Id = payment.Id,
-                RentalAgreementId = payment.RentalAgreementId,
                 Method = payment.Method,
                 Amount = payment.Amount,
-                DateAdded = payment.DateAdded
+                DateAdded = payment.DateAdded,
+                From = payment.From,
+                To = payment.To
             };
         }
         public static Payment ToDomain(this UpdatePayment updatePayment)
         {
             return new Payment()
             {
-                RentalAgreementId = updatePayment.RentalAgreementId,
                 Method = updatePayment.Method,
-                Amount = updatePayment.Amount
+                Amount = updatePayment.Amount,
+                From = updatePayment.From,
+                To = updatePayment.To
             };
         }
         #endregion

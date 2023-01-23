@@ -44,11 +44,5 @@ namespace RentalManager.WebAPI.Controllers
             var result = await _rentalAgreementService.UpdateAsync(updateRentalAgreement, id);
             return Json(result);
         }
-        [HttpGet("newValidDate")]
-        public async Task<IActionResult> ExtendValidDate([FromQuery] DateTime newValidDate, int id)
-        {
-            var result = await _rentalAgreementService.ExtendValidDateAsync(id, newValidDate);
-            return Json(result);
-        }
     }
 }

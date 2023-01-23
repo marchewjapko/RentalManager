@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
-using System.Diagnostics;
 
 namespace RentalManager.Infrastructure.Repositories
 {
@@ -62,7 +61,7 @@ namespace RentalManager.Infrastructure.Repositories
             }
             if (onlyUnpaid)
             {
-                result = result.Where(x => x.ValidUntil.Date < DateTime.Now.Date);
+                result = result.Where(x => x.Payments.OrderByDescending(x => x.To).First().To < DateTime.Now.Date);
             }
             if (from != null)
             {
@@ -90,23 +89,7 @@ namespace RentalManager.Infrastructure.Repositories
                 x.RentalEquipment = rentalAgreement.RentalEquipment;
                 x.TransportFrom = rentalAgreement.TransportFrom;
                 x.TransportTo = rentalAgreement.TransportTo;
-                x.ValidUntil = rentalAgreement.ValidUntil;
                 x.DateAdded = rentalAgreement.DateAdded;
-                await _appDbContext.SaveChangesAsync();
-                return await Task.FromResult(x);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Unable to update agreement");
-            }
-        }
-
-        public async Task<RentalAgreement> ExtendValidDateAsync(int rentalAgreementId, DateTime newValidDate)
-        {
-            try
-            {
-                var x = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).FirstOrDefault(x => x.Id == rentalAgreementId);
-                x.ValidUntil = newValidDate;
                 await _appDbContext.SaveChangesAsync();
                 return await Task.FromResult(x);
             }

@@ -12,9 +12,9 @@ namespace RentalManager.Infrastructure.Services
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<PaymentDTO> AddAsync(CreatePayment createPayment)
+        public async Task<PaymentDTO> AddAsync(CreatePayment createPayment, int rentalAgreementId)
         {
-            var result = await _paymentRepository.AddAsync(createPayment.ToDomain());
+            var result = await _paymentRepository.AddAsync(createPayment.ToDomain(), rentalAgreementId);
             return result.ToDTO();
         }
 

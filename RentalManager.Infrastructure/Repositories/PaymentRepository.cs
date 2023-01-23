@@ -11,8 +11,9 @@ namespace RentalManager.Infrastructure.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<Payment> AddAsync(Payment payment)
+        public async Task<Payment> AddAsync(Payment payment, int rentalAgreementId)
         {
+            payment.RentalAgreementId = rentalAgreementId;
             try
             {
                 _appDbContext.Payments.Add(payment);
@@ -76,6 +77,8 @@ namespace RentalManager.Infrastructure.Repositories
                 z.RentalAgreementId = payment.RentalAgreementId;
                 z.Method = payment.Method;
                 z.Amount = payment.Amount;
+                z.From = payment.From;
+                z.To = payment.To;
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(z);
             }

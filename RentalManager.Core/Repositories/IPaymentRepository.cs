@@ -4,7 +4,7 @@ namespace RentalManager.Core.Repositories
 {
     public interface IPaymentRepository
     {
-        Task<Payment> AddAsync(Payment rentalPayment);
+        Task<Payment> AddAsync(Payment rentalPayment, int rentalAgreementId);
         Task<Payment> GetAsync(int id);
         Task DeleteAsync(int id);
         Task<Payment> UpdateAsync(Payment rentalPayment, int id);

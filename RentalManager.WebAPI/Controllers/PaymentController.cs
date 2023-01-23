@@ -14,9 +14,9 @@ namespace RentalManager.WebAPI.Controllers
             _paymentService = paymentService;
         }
         [HttpPost]
-        public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment)
+        public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment, int rentalAgreementId)
         {
-            var result = await _paymentService.AddAsync(createPayment);
+            var result = await _paymentService.AddAsync(createPayment, rentalAgreementId);
             return Json(result);
         }
         [HttpGet]
