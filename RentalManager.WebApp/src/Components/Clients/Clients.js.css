@@ -7,8 +7,8 @@
 }
 
 .ClientsTable {
-    max-height: 600px;
     border-radius: 10px;
+    max-height: 460px;
 }
 
 .ClientTableHeadDetails {
@@ -33,10 +33,6 @@
 
 .HiddenRow {
     display: none !important;
-}
-
-.ClientTableDetailsCell {
-    padding: 10px !important;
 }
 
 .ClientTableNameCell {

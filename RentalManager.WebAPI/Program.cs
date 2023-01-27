@@ -38,11 +38,16 @@ builder.Services.AddScoped<IRentalAgreementService, RentalAgreementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-//builder.Services.AddDbContext<AppDbContext>(
-//    options => options.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
-//);
-
-builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(
+        options => options.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+    );
+}
 
 var app = builder.Build();
 

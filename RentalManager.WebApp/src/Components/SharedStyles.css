@@ -50,8 +50,7 @@
 }
 
 .ComponentHeadStack {
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .MarginTopBottomAuto {
@@ -63,4 +62,29 @@
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 8px;
+}
+
+@media only screen and (max-width: 500px) {
+    .MuiTablePagination-toolbar {
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+    }
+
+    .MuiTablePagination-toolbar > div {
+        margin: 0 !important;
+    }
+
+    .MuiTablePagination-toolbar > p {
+        margin: 0 !important;
+    }
+
+    .MuiTablePagination-actions {
+        margin: 5px !important;
+        justify-content: flex-end !important;
+    }
+
+    .MuiTablePagination-actions > button {
+        padding: 5px !important;
+    }
 }
