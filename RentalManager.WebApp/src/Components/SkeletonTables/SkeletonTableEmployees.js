@@ -55,12 +55,7 @@ export default function SkeletonTableEmployees() {
 										height={35}
 									/>
 								</TableCell>
-								<TableCell
-									align="right"
-									className={
-										'TableRentalEquipmentColumnActions'
-									}
-								>
+								<TableCell align="right">
 									<Box>
 										<IconButton
 											aria-label="delete"

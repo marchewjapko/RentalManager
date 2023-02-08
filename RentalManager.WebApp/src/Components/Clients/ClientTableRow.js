@@ -26,11 +26,9 @@ export default function ClientTableRow({
 	client,
 }) {
 	const [openDetails, setOpenDetails] = React.useState(false);
-
 	const handleOpenDetails = () => {
 		setOpenDetails(!openDetails);
 	};
-
 	const getDate = (date) => {
 		let formatData = dayjs(date)
 			.format('dddd, DD MMMM YYYY')
@@ -74,9 +72,8 @@ export default function ClientTableRow({
 					scope="row"
 					className={'ClientTableNameCell'}
 				>
-					{row.name}
+					{row.name + ' ' + row.surname}
 				</TableCell>
-				<TableCell align="right">{row.surname}</TableCell>
 				<TableCell align="right">
 					<Box>
 						<IconButton

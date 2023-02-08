@@ -19,7 +19,7 @@ import ValidateRentalAgreement from '../../Actions/ValidateRentalAgreement';
 import RentalAgreementAgreementDetails from './RentalAgreementAgreementDetails';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import TempNavigation from '../Shared/TempNavigation';
+import Payments from '../Payments/Payments';
 
 function GetSteps(newRentalAgreement, setNewRentalAgreement) {
 	return [
@@ -50,7 +50,13 @@ function GetSteps(newRentalAgreement, setNewRentalAgreement) {
 		},
 		{
 			label: 'Add payment',
-			content: <div>:P</div>,
+			content: (
+				<Payments
+					mode={'post'}
+					agreement={newRentalAgreement}
+					setAgreement={setNewRentalAgreement}
+				/>
+			),
 		},
 	];
 }
@@ -91,11 +97,6 @@ export default function AddRentalEquipmentForm() {
 		payments: [],
 		dateAdded: dayjs(),
 	});
-	console.log(
-		GetSteps(newRentalAgreement, setNewRentalAgreement).findIndex(
-			(step, i) => !(i in completed)
-		)
-	);
 	const [validationState, setValidationState] = React.useState({
 		'Choose client': null,
 		'Fill the details': null,
@@ -141,12 +142,8 @@ export default function AddRentalEquipmentForm() {
 		delete newCompleted[activeStep];
 		setCompleted(newCompleted);
 	};
-
-	console.log('completed', completed);
-
 	const validateCurrentStep = () => {
 		const validationResult = ValidateRentalAgreement(newRentalAgreement);
-		console.log('validationResult', validationResult);
 		switch (activeStep) {
 			case 0:
 				setValidationState({
@@ -191,10 +188,16 @@ export default function AddRentalEquipmentForm() {
 		}
 	};
 
-	console.log('validationState', validationState);
-
 	return (
-		<Box sx={{ padding: '10px', height: '90vh', maxWidth: '2000px' }}>
+		<Box
+			sx={{
+				height: '90vh',
+				width: '100%',
+				display: 'flex',
+				alignItems: 'flex-start',
+				justifyContent: 'center',
+			}}
+		>
 			<Stepper nonLinear activeStep={activeStep} orientation="vertical">
 				{GetSteps(newRentalAgreement, setNewRentalAgreement).map(
 					(step, index) => (
@@ -220,7 +223,9 @@ export default function AddRentalEquipmentForm() {
 									autoHide
 									autoHeight={true}
 									autoHeightMin={0}
-									autoHeightMax={isSmallScreen ? 460 : '60vh'}
+									autoHeightMax={
+										isSmallScreen ? 460 : 'max-content'
+									}
 									autoHideTimeout={750}
 									autoHideDuration={500}
 								>
@@ -257,7 +262,6 @@ export default function AddRentalEquipmentForm() {
 					)
 				)}
 			</Stepper>
-			<TempNavigation />
 		</Box>
 	);
 }

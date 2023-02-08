@@ -168,7 +168,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 					{getSnackbarTitle()}
 				</Alert>
 			</Snackbar>
-			<Paper className={'ComponentContainer'}>
+			<div className={'ComponentContainer'}>
 				<Stack
 					direction={'row'}
 					spacing={2}
@@ -253,7 +253,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 						/>
 					</>
 				)}
-			</Paper>
+			</div>
 		</div>
 	);
 }

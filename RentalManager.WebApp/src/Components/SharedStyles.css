@@ -64,6 +64,14 @@
     margin-right: 8px;
 }
 
+.MuiStepConnector-vertical {
+    margin-left: 19px  !important
+}
+
+.MuiStepContent-root {
+    margin-left: 19px  !important
+}
+
 @media only screen and (max-width: 500px) {
     .MuiTablePagination-toolbar {
         padding: 0 !important;

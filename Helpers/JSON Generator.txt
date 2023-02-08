@@ -107,7 +107,17 @@ Website: https://json-generator.com/
         dateAdded: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}'
       }
     ],
-    payments: [],
+    payments: 
+    [
+      '{{repeat(1, 3)}}',
+      {
+        id: '{{index()}}',
+        method: '{{lorem(1, "words")}}',
+        amount: '{{integer(50, 200)}}',
+        from: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
+        to: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}'
+      }
+    ],
     comment: '{{random(lorem(1, "sentences"), lorem(2, "sentences"))}}',
     deposit: '{{integer(0, 200)}}',
     transportFrom: '{{integer(0, 200)}}',

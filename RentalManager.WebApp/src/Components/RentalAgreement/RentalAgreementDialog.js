@@ -21,16 +21,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ValidateClient from '../../Actions/ValidateClient';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import ValidateRentalAgreement from '../../Actions/ValidateRentalAgreement';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { deleteClient, updateClient } from '../../Actions/ClientActions';
 import {
-	addClient,
-	deleteClient,
-	updateClient,
-} from '../../Actions/ClientActions';
-import {
-	addRentalAgreement,
 	deleteRentalAgreement,
 	updateRentalAgreement,
 } from '../../Actions/RentalAgreementActions';
+import Payments from '../Payments/Payments';
 
 export default function RentalAgreementDialog({
 	agreement,
@@ -39,49 +36,35 @@ export default function RentalAgreementDialog({
 	handleDialogSuccess,
 }) {
 	const [value, setValue] = React.useState(0);
-	const [client, setClient] = React.useState(
-		agreement.client ? agreement.client : null
-	);
 	const [agreementDialog, setAgreementDialog] = React.useState(
 		agreement ? agreement : null
 	);
 	const [isLoading, setIsLoading] = React.useState(false);
-
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
-
 	const handleChangeIndex = (index) => {
 		setValue(index);
 	};
 
 	const handleSave = async () => {
 		const resAgreement = ValidateRentalAgreement(agreementDialog);
-		if (client) {
-			const resClient = ValidateClient(client);
+		if (agreementDialog.client) {
+			const resClient = ValidateClient(agreementDialog.client);
 			if (resAgreement.length === 0 && resClient.length === 0) {
 				setIsLoading(true);
 				switch (mode) {
 					case 'delete':
 						await Promise.all([
-							deleteClient(client.id),
+							deleteClient(agreementDialog.client.id),
 							deleteRentalAgreement(agreementDialog.id),
 						]);
 						break;
 					case 'update':
 						await Promise.all([
-							updateClient(client),
+							updateClient(agreementDialog.client),
 							updateRentalAgreement(agreementDialog),
 						]);
-						break;
-					case 'post':
-						let postAgreement = { ...agreementDialog };
-						postAgreement.client = client;
-						postAgreement.dateAdded =
-							postAgreement.dateAdded.format('DD.MM.YYYY');
-						postAgreement.validUntil =
-							postAgreement.validUntil.format('DD.MM.YYYY');
-						await addRentalAgreement(postAgreement);
 						break;
 				}
 				setIsLoading(false);
@@ -111,6 +94,8 @@ export default function RentalAgreementDialog({
 					centered={true}
 				>
 					<Tab icon={<PersonIcon />} label="Client" />
+					<Tab icon={<DescriptionIcon />} label="Agreement" />
+					<Tab icon={<AttachMoneyIcon />} label="Payments" />
 				</Tabs>
 			</AppBar>
 			<SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
@@ -119,17 +104,50 @@ export default function RentalAgreementDialog({
 						<Clients
 							isCheckable={true}
 							client={client}
-							setClient={setClient}
+							setClient={(newClient) =>
+								setAgreementDialog({
+									...agreementDialog,
+									client: newClient,
+								})
+							}
 						/>
 					) : (
 						<ClientsDialog
-							client={client}
+							client={agreementDialog.client}
 							handleCancelDialog={() => null}
 							handleDialogSuccess={() => null}
 							mode={mode === 'delete' ? 'info' : mode}
-							setClient={setClient}
+							setClient={(newClient) =>
+								setAgreementDialog({
+									...agreementDialog,
+									client: newClient,
+								})
+							}
 						/>
 					)}
+				</div>
+				<div className={'rentalAgreementSlide'}>
+					<Scrollbars
+						autoHeight={true}
+						autoHeightMin={0}
+						autoHeightMax={'57vh'}
+						autoHide
+						autoHideTimeout={750}
+						autoHideDuration={500}
+					>
+						<RentalAgreementAgreementDetails
+							mode={mode}
+							agreement={agreementDialog}
+							setAgreement={setAgreementDialog}
+						/>
+					</Scrollbars>
+				</div>
+				<div className={'rentalAgreementSlide'}>
+					<Payments
+						agreement={agreementDialog}
+						mode={mode}
+						setAgreement={setAgreementDialog}
+					/>
 				</div>
 			</SwipeableViews>
 			<Stack
@@ -137,37 +155,38 @@ export default function RentalAgreementDialog({
 				justifyContent="space-between"
 				className={'DialogStack'}
 			>
-				{mode !== 'info' ? (
-					mode === 'delete' ? (
-						<Button
-							variant="contained"
-							color={'error'}
-							size="large"
-							endIcon={<DeleteIcon />}
-							onClick={handleSave}
-							className={'DialogButton'}
-						>
-							Delete
-						</Button>
-					) : (
-						<Button
-							variant="contained"
-							color={'success'}
-							size="large"
-							endIcon={<DoneIcon />}
-							onClick={handleSave}
-							className={'DialogButton'}
-							disabled={
-								!client ||
-								ValidateClient(client).length !== 0 ||
-								ValidateRentalAgreement(agreementDialog)
-									.length !== 0
-							}
-						>
-							Save
-						</Button>
-					)
-				) : null}
+				{mode === 'delete' && (
+					<Button
+						variant="contained"
+						color={'error'}
+						size="large"
+						endIcon={<DeleteIcon />}
+						onClick={handleSave}
+						className={'DialogButton'}
+					>
+						Delete
+					</Button>
+				)}
+
+				{mode === 'update' && (
+					<Button
+						variant="contained"
+						color={'success'}
+						size="large"
+						endIcon={<DoneIcon />}
+						onClick={handleSave}
+						className={'DialogButton'}
+						disabled={
+							!agreementDialog.client ||
+							ValidateClient(agreementDialog.client).length !==
+								0 ||
+							ValidateRentalAgreement(agreementDialog).length !==
+								0
+						}
+					>
+						Save
+					</Button>
+				)}
 				<Button
 					variant="outlined"
 					color={'primary'}

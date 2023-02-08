@@ -3,6 +3,7 @@ import {
 	DialogContent,
 	Divider,
 	InputAdornment,
+	Paper,
 	Stack,
 	Table,
 	TableBody,
@@ -52,19 +53,20 @@ export default function RentalAgreementAgreementDetails({
 	};
 
 	return (
-		<DialogContent
-			sx={{ padding: 0, overflow: 'hidden', maxWidth: '800px' }}
-		>
+		<DialogContent sx={{ overflow: 'hidden', maxWidth: '800px' }}>
 			<Stack spacing={2}>
 				{mode === 'info' || mode === 'delete' ? (
-					<Grid container spacing={2}>
-						<Grid xs={12} md={6}>
+					<Grid container spacing={2} sx={{ margin: '0 !important' }}>
+						<Grid
+							xs={12}
+							md={6}
+							sx={{ paddingTop: '0 !important' }}
+						>
 							<div>
 								<Stack
 									direction={'row'}
 									className={'ClientUpdateDialogStack'}
 									sx={{
-										paddingLeft: '17px',
 										marginBottom: '24px',
 									}}
 								>
@@ -96,12 +98,15 @@ export default function RentalAgreementAgreementDetails({
 								/>
 							</div>
 						</Grid>
-						<Grid xs={12} md={6}>
+						<Grid
+							xs={12}
+							md={6}
+							sx={{ paddingTop: '0 !important' }}
+						>
 							<Stack
 								direction={'row'}
 								className={'ClientUpdateDialogStack'}
 								sx={{
-									paddingLeft: '17px',
 									marginBottom: '24px',
 								}}
 							>
@@ -114,11 +119,17 @@ export default function RentalAgreementAgreementDetails({
 								</Typography>
 							</Stack>
 							<TableContainer sx={{ width: '100%' }}>
-								<Table>
+								<Table size="small">
 									<TableBody>
 										{agreement.rentalEquipment.map(
 											(row) => (
-												<TableRow key={row.name}>
+												<TableRow
+													key={row.name}
+													sx={{
+														'&:last-child td, &:last-child th':
+															{ border: 0 },
+													}}
+												>
 													<TableCell
 														component="th"
 														scope="row"
@@ -132,6 +143,21 @@ export default function RentalAgreementAgreementDetails({
 												</TableRow>
 											)
 										)}
+										<TableRow>
+											<TableCell
+												colSpan={2}
+												align="right"
+											>
+												{'Total: '}
+												{agreement.rentalEquipment
+													.map((x) => x.monthlyPrice)
+													.reduce(
+														(partialSum, a) =>
+															partialSum + a,
+														0
+													) + ' zł'}
+											</TableCell>
+										</TableRow>
 									</TableBody>
 								</Table>
 							</TableContainer>

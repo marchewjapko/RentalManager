@@ -36,6 +36,7 @@ import { useTheme } from '@mui/material/styles';
 import { filterAgreements } from '../../Actions/RentalAgreementActions';
 import RentalAgreementSearchSelect from './RentalAgreementSearchSelect';
 import SkeletonTableRentalAgreement from '../SkeletonTables/SkeletonTableRentalAgreement';
+import { useNavigate } from 'react-router-dom';
 
 export default function RentalAgreement() {
 	const [page, setPage] = React.useState(0);
@@ -48,6 +49,7 @@ export default function RentalAgreement() {
 	const [dialogMode, setDialogMode] = React.useState('');
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const theme = useTheme();
+	const navigate = useNavigate();
 	const dialogFullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 	const [searchValues, setSearchValues] = React.useState({
 		surname: '',
@@ -121,22 +123,7 @@ export default function RentalAgreement() {
 	};
 
 	const handleAddClick = () => {
-		setDialogMode('post');
-		setAnchorEl(null);
-		setFocusedAgreement({
-			id: 0,
-			isActive: true,
-			employee: null,
-			client: null,
-			rentalEquipment: [],
-			comment: '',
-			deposit: '',
-			transportFrom: null,
-			transportTo: '',
-			validUntil: dayjs().add(1, 'month'),
-			dateAdded: dayjs(),
-		});
-		setShowDialog(true);
+		navigate('/4');
 	};
 
 	const handleCloseDialog = () => {
