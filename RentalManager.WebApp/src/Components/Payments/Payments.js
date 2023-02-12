@@ -1,6 +1,7 @@
 import {
 	Autocomplete,
 	Button,
+	IconButton,
 	InputAdornment,
 	Stack,
 	Table,
@@ -17,10 +18,23 @@ import * as React from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CheckIcon from '@mui/icons-material/Check';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { addPayment, deletePayment } from '../../Actions/PaymentActions';
+import { getAgreement } from '../../Actions/RentalAgreementActions';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const paymentOptions = ['Card', 'Cash', 'Transfer'];
 
-export default function Payments({ mode, agreement, setAgreement }) {
+export default function Payments({
+	mode,
+	agreement,
+	setAgreement,
+	isLoading,
+	setIsLoading,
+}) {
+	const theme = useTheme();
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 	const [newPayment, setNewPayment] = useState({
 		id:
 			agreement.payments.length > 0
@@ -53,15 +67,64 @@ export default function Payments({ mode, agreement, setAgreement }) {
 			to: date.format('YYYY-MM-DDTHH:mm:ss'),
 		});
 	};
-	const handleAddPayment = () => {
-		setAgreement({
-			...agreement,
-			payments: [...agreement.payments, newPayment],
-		});
-		setNewPayment({
-			...newPayment,
-			id: newPayment.id + 1,
-		});
+	const handleAddPayment = async () => {
+		if (mode === 'post') {
+			setAgreement({
+				...agreement,
+				payments: [...agreement.payments, newPayment],
+			});
+			setNewPayment({
+				...newPayment,
+				amount: '',
+				id: newPayment.id + 1,
+			});
+		} else {
+			setIsLoading(true);
+			console.log('AS', agreement.id, newPayment);
+			addPayment(agreement.id, newPayment)
+				.then((result) => {
+					console.log(result);
+					setAgreement({
+						...agreement,
+						payments: [...agreement.payments, newPayment],
+					});
+					setNewPayment({
+						...newPayment,
+						amount: '',
+						id: newPayment.id + 1,
+					});
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					console.log(err);
+					setIsLoading(false);
+				});
+		}
+	};
+	const handleDeletePayment = async (id) => {
+		if (mode === 'post') {
+			setAgreement({
+				...agreement,
+				payments: [...agreement.payments.filter((x) => x.id !== id)],
+			});
+		} else {
+			setIsLoading(true);
+			deletePayment(id)
+				.then((result) => {
+					console.log(result);
+					setAgreement({
+						...agreement,
+						payments: [
+							...agreement.payments.filter((x) => x.id !== id),
+						],
+					});
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					console.log(err);
+					setIsLoading(false);
+				});
+		}
 	};
 	function validateNewPayment() {
 		if (newPayment.amount === '' || newPayment.amount == 0) {
@@ -107,7 +170,11 @@ export default function Payments({ mode, agreement, setAgreement }) {
 							value={newPayment.method}
 							fullWidth
 							renderInput={(params) => (
-								<TextField {...params} label="Payment option" />
+								<TextField
+									{...params}
+									label="Payment option"
+									size={isSmallScreen ? 'small' : 'medium'}
+								/>
 							)}
 						/>
 						<TextField
@@ -116,6 +183,7 @@ export default function Payments({ mode, agreement, setAgreement }) {
 							variant="outlined"
 							fullWidth
 							value={newPayment.amount}
+							size={isSmallScreen ? 'small' : 'medium'}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
@@ -142,7 +210,13 @@ export default function Payments({ mode, agreement, setAgreement }) {
 								fullWidth
 								onChange={handleChangeFrom}
 								renderInput={(params) => (
-									<TextField {...params} fullWidth />
+									<TextField
+										{...params}
+										fullWidth
+										size={
+											isSmallScreen ? 'small' : 'medium'
+										}
+									/>
 								)}
 							/>
 							<DatePicker
@@ -152,7 +226,13 @@ export default function Payments({ mode, agreement, setAgreement }) {
 								fullWidth
 								onChange={handleChangeTo}
 								renderInput={(params) => (
-									<TextField {...params} fullWidth />
+									<TextField
+										{...params}
+										fullWidth
+										size={
+											isSmallScreen ? 'small' : 'medium'
+										}
+									/>
 								)}
 							/>
 						</LocalizationProvider>
@@ -168,13 +248,14 @@ export default function Payments({ mode, agreement, setAgreement }) {
 				</Stack>
 			) : null}
 			<TableContainer>
-				<Table aria-label="simple table">
+				<Table size={isSmallScreen ? 'small' : 'medium'}>
 					<TableHead>
 						<TableRow>
 							<TableCell>Method</TableCell>
 							<TableCell align="right">Amount</TableCell>
 							<TableCell align="right">From</TableCell>
 							<TableCell align="right">To</TableCell>
+							<TableCell />
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -200,6 +281,18 @@ export default function Payments({ mode, agreement, setAgreement }) {
 									<TableCell align="right">
 										{dayjs(row.to).format('DD MMMM YYYY')}
 									</TableCell>
+									<TableCell align="right">
+										<IconButton
+											aria-label="delete"
+											size="small"
+											color={'error'}
+											onClick={() =>
+												handleDeletePayment(row.id)
+											}
+										>
+											<DeleteIcon fontSize="small" />
+										</IconButton>
+									</TableCell>
 								</TableRow>
 							))
 						) : (
@@ -207,7 +300,7 @@ export default function Payments({ mode, agreement, setAgreement }) {
 								<TableCell
 									component="th"
 									scope="row"
-									colSpan={4}
+									colSpan={5}
 									align={'center'}
 								>
 									<b>No payments</b>

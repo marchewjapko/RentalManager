@@ -106,7 +106,7 @@ export default function ClientTableRow({
 								label="Phone number"
 								fullWidth
 								variant="outlined"
-								value={row.phone}
+								value={row.phoneNumber}
 								InputProps={{
 									readOnly: true,
 									startAdornment: (
@@ -125,7 +125,10 @@ export default function ClientTableRow({
 								InputProps={{
 									readOnly: true,
 								}}
-								disabled={row.email.trim().length === 0}
+								disabled={
+									row.email === null ||
+									row.email.trim().length === 0
+								}
 							/>
 							<TextField
 								margin="dense"
@@ -136,7 +139,10 @@ export default function ClientTableRow({
 								InputProps={{
 									readOnly: true,
 								}}
-								disabled={row.idCard.trim().length === 0}
+								disabled={
+									row.idCard === null ||
+									row.idCard.trim().length === 0
+								}
 							/>
 							<TextField
 								margin="dense"

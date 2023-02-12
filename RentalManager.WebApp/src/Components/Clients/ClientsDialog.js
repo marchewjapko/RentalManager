@@ -173,6 +173,7 @@ export default function ClientsDialog({
 					await deleteClient(client.id);
 					break;
 				case 'update':
+					console.log('AAAA', client);
 					await updateClient(client);
 					break;
 				case 'post':
@@ -186,236 +187,225 @@ export default function ClientsDialog({
 
 	return (
 		<div>
-			<Scrollbars
-				autoHeight={true}
-				autoHeightMin={200}
-				autoHeightMax={'57vh'}
-				autoHide
-				autoHideTimeout={750}
-				autoHideDuration={500}
-			>
-				<DialogContent>
-					<Backdrop
-						sx={{
-							color: '#fff',
-							zIndex: (theme) => theme.zIndex.drawer + 1,
-						}}
-						open={isLoading}
-					>
-						<CircularProgress />
-					</Backdrop>
-					<Stack spacing={2}>
-						<Stack direction={'row'} className={'DialogTopStack'}>
-							<PersonIcon className={'DividerIcon'} />
-							<Typography
-								variant="h6"
-								className={'MarginTopBottomAuto'}
-							>
-								Personal information
-							</Typography>
-						</Stack>
-						<Grid container spacing={2}>
-							<Grid xs={6} md={5}>
-								<TextField
-									name="name"
-									margin="dense"
-									label="Name"
-									variant="outlined"
-									fullWidth
-									value={client.name}
-									onChange={handleChange}
-									onBlur={validateName}
-									error={validationState.name}
-									helperText="Required"
-									InputProps={{
-										readOnly:
-											mode === 'delete' ||
-											mode === 'info',
-									}}
-								/>
-							</Grid>
-							<Grid xs={6} md={7}>
-								<TextField
-									name="surname"
-									margin="dense"
-									label="Surname"
-									variant="outlined"
-									fullWidth
-									value={client.surname}
-									onChange={handleChange}
-									onBlur={validateSurname}
-									error={validationState.surname}
-									helperText="Required"
-									InputProps={{
-										readOnly:
-											mode === 'delete' ||
-											mode === 'info',
-									}}
-								/>
-							</Grid>
-							<Grid xs={6} md={5}>
-								<InputMask
-									mask="aaa 999999"
-									value={client.idCard}
-									disabled={false}
-									maskChar=" "
-									onChange={handleChange}
-									onBlur={validateIdCard}
-								>
-									{() => (
-										<TextField
-											name="idCard"
-											margin="dense"
-											label="ID Card"
-											variant="outlined"
-											fullWidth
-											value={client.idCard}
-											error={validationState.idCard}
-											helperText={
-												validationState.idCard
-													? 'Invalid ID card'
-													: ''
-											}
-											InputProps={{
-												readOnly:
-													mode === 'delete' ||
-													mode === 'info',
-											}}
-										/>
-									)}
-								</InputMask>
-							</Grid>
-						</Grid>
-						<Divider />
-						<Stack direction={'row'} className={'DialogTopStack'}>
-							<ContactPhoneIcon className={'DividerIcon'} />
-							<Typography
-								variant="h6"
-								className={'MarginTopBottomAuto'}
-							>
-								Contact information
-							</Typography>
-						</Stack>
-						<Grid container spacing={2} columns={{ xs: 6, sm: 12 }}>
-							<Grid xs={6} md={5}>
-								<InputMask
-									mask="999 999 999"
-									value={client.phone}
-									disabled={false}
-									maskChar=" "
-									onChange={handleChange}
-									onBlur={validatePhone}
-								>
-									{() => (
-										<TextField
-											name="phone"
-											margin="dense"
-											label="Phone number"
-											variant="outlined"
-											fullWidth
-											value={client.phone}
-											error={validationState.phone !== ''}
-											helperText={
-												validationState.phone ===
-												'invalidPhone'
-													? 'Invalid phone'
-													: 'Required'
-											}
-											InputProps={{
-												readOnly:
-													mode === 'delete' ||
-													mode === 'info',
-												startAdornment: (
-													<InputAdornment position="start">
-														+48
-													</InputAdornment>
-												),
-											}}
-										/>
-									)}
-								</InputMask>
-							</Grid>
-							<Grid xs={6} md={7}>
-								<TextField
-									name="email"
-									margin="dense"
-									label="Email"
-									variant="outlined"
-									fullWidth
-									value={client.email}
-									onChange={handleChange}
-									onBlur={validateEmail}
-									error={validationState.email}
-									helperText={
-										validationState.email
-											? 'Invalid email'
-											: ''
-									}
-									InputProps={{
-										readOnly:
-											mode === 'delete' ||
-											mode === 'info',
-									}}
-								/>
-							</Grid>
-						</Grid>
-						<Divider />
-						<Stack direction={'row'} className={'DialogTopStack'}>
-							<HomeIcon className={'DividerIcon'} />
-							<Typography
-								variant="h6"
-								className={'MarginTopBottomAuto'}
-							>
-								Address
-							</Typography>
-						</Stack>
-						<Grid
-							container
-							spacing={2}
-							columns={{ xs: 24, sm: 12 }}
+			{/*<Scrollbars*/}
+			{/*	autoHeight={true}*/}
+			{/*	autoHeightMin={200}*/}
+			{/*	autoHeightMax={'57vh'}*/}
+			{/*	autoHide*/}
+			{/*	autoHideTimeout={750}*/}
+			{/*	autoHideDuration={500}*/}
+			{/*>*/}
+			<DialogContent>
+				<Backdrop
+					sx={{
+						color: '#fff',
+						zIndex: (theme) => theme.zIndex.drawer + 1,
+					}}
+					open={isLoading}
+				>
+					<CircularProgress />
+				</Backdrop>
+				<Stack spacing={2}>
+					<Stack direction={'row'} className={'DialogTopStack'}>
+						<PersonIcon className={'DividerIcon'} />
+						<Typography
+							variant="h6"
+							className={'MarginTopBottomAuto'}
 						>
-							<Grid xs={24} md={5}>
-								<TextField
-									name="city"
-									margin="dense"
-									label="City"
-									variant="outlined"
-									fullWidth
-									value={client.city}
-									onChange={handleChange}
-									onBlur={validateCity}
-									error={validationState.city}
-									helperText="Required"
-									InputProps={{
-										readOnly:
-											mode === 'delete' ||
-											mode === 'info',
-									}}
-								/>
-							</Grid>
-							<Grid xs={13} md={7}>
-								<TextField
-									name="street"
-									margin="dense"
-									label="Street"
-									variant="outlined"
-									fullWidth
-									value={client.street}
-									onChange={handleChange}
-									onBlur={validateStreet}
-									error={validationState.street}
-									helperText="Required"
-									InputProps={{
-										readOnly:
-											mode === 'delete' ||
-											mode === 'info',
-									}}
-								/>
-							</Grid>
-						</Grid>
+							Personal information
+						</Typography>
 					</Stack>
-				</DialogContent>
-			</Scrollbars>
+					<Grid container spacing={2}>
+						<Grid xs={6} md={5}>
+							<TextField
+								name="name"
+								margin="dense"
+								label="Name"
+								variant="outlined"
+								fullWidth
+								value={client.name}
+								onChange={handleChange}
+								onBlur={validateName}
+								error={validationState.name}
+								helperText="Required"
+								InputProps={{
+									readOnly:
+										mode === 'delete' || mode === 'info',
+								}}
+							/>
+						</Grid>
+						<Grid xs={6} md={7}>
+							<TextField
+								name="surname"
+								margin="dense"
+								label="Surname"
+								variant="outlined"
+								fullWidth
+								value={client.surname}
+								onChange={handleChange}
+								onBlur={validateSurname}
+								error={validationState.surname}
+								helperText="Required"
+								InputProps={{
+									readOnly:
+										mode === 'delete' || mode === 'info',
+								}}
+							/>
+						</Grid>
+						<Grid xs={6} md={5}>
+							<InputMask
+								mask="aaa 999999"
+								value={client.idCard}
+								disabled={false}
+								maskChar=" "
+								onChange={handleChange}
+								onBlur={validateIdCard}
+							>
+								{() => (
+									<TextField
+										name="idCard"
+										margin="dense"
+										label="ID Card"
+										variant="outlined"
+										fullWidth
+										value={client.idCard}
+										error={validationState.idCard}
+										helperText={
+											validationState.idCard
+												? 'Invalid ID card'
+												: ''
+										}
+										InputProps={{
+											readOnly:
+												mode === 'delete' ||
+												mode === 'info',
+										}}
+									/>
+								)}
+							</InputMask>
+						</Grid>
+					</Grid>
+					<Divider />
+					<Stack direction={'row'} className={'DialogTopStack'}>
+						<ContactPhoneIcon className={'DividerIcon'} />
+						<Typography
+							variant="h6"
+							className={'MarginTopBottomAuto'}
+						>
+							Contact information
+						</Typography>
+					</Stack>
+					<Grid container spacing={2} columns={{ xs: 6, sm: 12 }}>
+						<Grid xs={6} md={5}>
+							<InputMask
+								mask="999 999 999"
+								value={client.phoneNumber}
+								disabled={false}
+								maskChar=" "
+								onChange={handleChange}
+								onBlur={validatePhone}
+							>
+								{() => (
+									<TextField
+										name="phoneNumber"
+										margin="dense"
+										label="Phone number"
+										variant="outlined"
+										fullWidth
+										value={client.phoneNumber}
+										error={validationState.phone !== ''}
+										helperText={
+											validationState.phone ===
+											'invalidPhone'
+												? 'Invalid phone'
+												: 'Required'
+										}
+										InputProps={{
+											readOnly:
+												mode === 'delete' ||
+												mode === 'info',
+											startAdornment: (
+												<InputAdornment position="start">
+													+48
+												</InputAdornment>
+											),
+										}}
+									/>
+								)}
+							</InputMask>
+						</Grid>
+						<Grid xs={6} md={7}>
+							<TextField
+								name="email"
+								margin="dense"
+								label="Email"
+								variant="outlined"
+								fullWidth
+								value={client.email}
+								onChange={handleChange}
+								onBlur={validateEmail}
+								error={validationState.email}
+								helperText={
+									validationState.email ? 'Invalid email' : ''
+								}
+								InputProps={{
+									readOnly:
+										mode === 'delete' || mode === 'info',
+								}}
+							/>
+						</Grid>
+					</Grid>
+					<Divider />
+					<Stack direction={'row'} className={'DialogTopStack'}>
+						<HomeIcon className={'DividerIcon'} />
+						<Typography
+							variant="h6"
+							className={'MarginTopBottomAuto'}
+						>
+							Address
+						</Typography>
+					</Stack>
+					<Grid container spacing={2} columns={{ xs: 24, sm: 12 }}>
+						<Grid xs={24} md={5}>
+							<TextField
+								name="city"
+								margin="dense"
+								label="City"
+								variant="outlined"
+								fullWidth
+								value={client.city}
+								onChange={handleChange}
+								onBlur={validateCity}
+								error={validationState.city}
+								helperText="Required"
+								InputProps={{
+									readOnly:
+										mode === 'delete' || mode === 'info',
+								}}
+							/>
+						</Grid>
+						<Grid xs={13} md={7}>
+							<TextField
+								name="street"
+								margin="dense"
+								label="Street"
+								variant="outlined"
+								fullWidth
+								value={client.street}
+								onChange={handleChange}
+								onBlur={validateStreet}
+								error={validationState.street}
+								helperText="Required"
+								InputProps={{
+									readOnly:
+										mode === 'delete' || mode === 'info',
+								}}
+							/>
+						</Grid>
+					</Grid>
+				</Stack>
+			</DialogContent>
+			{/*</Scrollbars>*/}
 			{mode !== 'info' && showDialogButtons ? (
 				<Stack
 					direction="row"

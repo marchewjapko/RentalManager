@@ -100,18 +100,14 @@ export default function RentalAgreementDialog({
 			</AppBar>
 			<SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
 				<div className={'rentalAgreementSlide'}>
-					{mode === 'post' ? (
-						<Clients
-							isCheckable={true}
-							client={client}
-							setClient={(newClient) =>
-								setAgreementDialog({
-									...agreementDialog,
-									client: newClient,
-								})
-							}
-						/>
-					) : (
+					<Scrollbars
+						autoHeight={true}
+						autoHeightMin={0}
+						autoHeightMax={'57vh'}
+						autoHide
+						autoHideTimeout={750}
+						autoHideDuration={500}
+					>
 						<ClientsDialog
 							client={agreementDialog.client}
 							handleCancelDialog={() => null}
@@ -124,9 +120,12 @@ export default function RentalAgreementDialog({
 								})
 							}
 						/>
-					)}
+					</Scrollbars>
 				</div>
-				<div className={'rentalAgreementSlide'}>
+				<div
+					className={'rentalAgreementSlide'}
+					style={{ padding: '20px 24px' }}
+				>
 					<Scrollbars
 						autoHeight={true}
 						autoHeightMin={0}
@@ -143,11 +142,22 @@ export default function RentalAgreementDialog({
 					</Scrollbars>
 				</div>
 				<div className={'rentalAgreementSlide'}>
-					<Payments
-						agreement={agreementDialog}
-						mode={mode}
-						setAgreement={setAgreementDialog}
-					/>
+					<Scrollbars
+						autoHeight={true}
+						autoHeightMin={0}
+						autoHeightMax={'57vh'}
+						autoHide
+						autoHideTimeout={750}
+						autoHideDuration={500}
+					>
+						<Payments
+							agreement={agreementDialog}
+							mode={mode}
+							setAgreement={setAgreementDialog}
+							isLoading={isLoading}
+							setIsLoading={setIsLoading}
+						/>
+					</Scrollbars>
 				</div>
 			</SwipeableViews>
 			<Stack

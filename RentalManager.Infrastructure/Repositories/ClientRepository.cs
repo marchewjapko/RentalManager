@@ -123,11 +123,11 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 return false;
             }
-            if (client.Email != null && !Regex.IsMatch(client.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            if (client.Email != null && client.Email != "" && !Regex.IsMatch(client.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
             {
                 return false;
             }
-            if (client.IdCard != null && !Regex.IsMatch(client.IdCard, @"\b([a-zA-Z]){3}[ ]?[0-9]{6}\b"))
+            if (client.IdCard != null && client.IdCard != "" && !Regex.IsMatch(client.IdCard, @"\b([a-zA-Z]){3}[ ]?[0-9]{6}\b"))
             {
                 return false;
             }

@@ -34,7 +34,6 @@ export default function RentalEquipmentDialog({
 		name: false,
 		price: false,
 	});
-
 	const handleChangeName = (event) => {
 		setRentalEquipmentDialog({
 			...rentalEquipmentDialog,
@@ -45,7 +44,7 @@ export default function RentalEquipmentDialog({
 	const handleChangePrice = (event) => {
 		setRentalEquipmentDialog({
 			...rentalEquipmentDialog,
-			monthlyPrice: event.target.value.replace(/\D/g, ''),
+			price: event.target.value.replace(/\D/g, ''),
 		});
 	};
 
@@ -143,10 +142,10 @@ export default function RentalEquipmentDialog({
 						<Grid xs={12} md={6}>
 							<TextField
 								margin="dense"
-								label="Monthly price"
+								label="Price"
 								fullWidth
 								variant="outlined"
-								value={rentalEquipmentDialog.monthlyPrice}
+								value={rentalEquipmentDialog.price}
 								InputProps={
 									mode === 'delete' || mode === 'info'
 										? {

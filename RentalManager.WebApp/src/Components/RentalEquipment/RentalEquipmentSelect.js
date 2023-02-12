@@ -17,7 +17,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllRentalEquipment();
-			setData(result);
+			setData(result.data);
 			setIsLoading(false);
 		};
 		getData();
@@ -54,7 +54,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 				options={data}
 				disableCloseOnSelect={true}
 				getOptionLabel={(option) =>
-					option.name + ' (' + option.monthlyPrice + ' zł)'
+					option.name + ' (' + option.price + ' zł)'
 				}
 				loading={isLoading}
 				fullWidth={true}

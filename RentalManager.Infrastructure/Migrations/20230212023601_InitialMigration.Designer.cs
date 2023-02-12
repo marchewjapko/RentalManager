@@ -12,7 +12,7 @@ using RentalManager.Infrastructure.Repositories;
 namespace RentalManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230122204607_InitialMigration")]
+    [Migration("20230212023601_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,6 @@ namespace RentalManager.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
@@ -61,22 +60,15 @@ namespace RentalManager.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StreetNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -96,11 +88,9 @@ namespace RentalManager.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -122,11 +112,17 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("From")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Method")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RentalAgreementId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -161,14 +157,11 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TransportFrom")
+                    b.Property<int?>("TransportFrom")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TransportTo")
+                    b.Property<int>("TransportTo")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("ValidUntil")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -190,12 +183,11 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MonthlyPrice")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -22,11 +22,15 @@ const renderReactDom = () => {
 			<CssBaseline />
 			<HashRouter>
 				<Routes>
-					<Route exact path="/2" element={<RentalEquipment />} />
-					<Route exact path="/3" element={<Employees />} />
 					<Route
 						exact
-						path="/4"
+						path="/rental-equipment"
+						element={<RentalEquipment />}
+					/>
+					<Route exact path="/employees" element={<Employees />} />
+					<Route
+						exact
+						path="/add-rental-agreement"
 						element={<AddRentalEquipmentForm />}
 					/>
 					<Route exact path="/" element={<RentalAgreement />} />

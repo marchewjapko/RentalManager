@@ -4,18 +4,14 @@ using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var policyName = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: policyName,
-                      builder =>
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
                       {
-                          builder
-                            .WithOrigins("http://192.168.1.46:3000", "https://192.168.1.46:3000", "http://localhost:3000")
-                            .AllowAnyMethod()
-                            .AllowCredentials()
-                            .AllowAnyHeader();
+                          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                       });
 });
 
@@ -38,16 +34,10 @@ builder.Services.AddScoped<IRentalAgreementService, RentalAgreementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-if (builder.Environment.EnvironmentName == "Development")
-{
-    builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
-}
-else
-{
-    builder.Services.AddDbContext<AppDbContext>(
-        options => options.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
-    );
-}
+
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+);
 
 var app = builder.Build();
 
@@ -55,6 +45,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

@@ -1,0 +1,10 @@
+4. Docker compose
+	docker-compose build
+	docker-compose up
+	docker stack deploy --compose-file=docker-compose.yml test --with-registry-auth
+	
+5. Build docker images
+	docker build -f .\RentalManager.WebAPI\Dockerfile -t marchewjapko/rental-manager-api .
+	
+6. Deploy docker images
+	docker push marchewjapko/rental-manager-api:latest

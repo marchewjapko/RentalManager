@@ -45,7 +45,7 @@ export default function Employees({ isCheckable }) {
 	const handleSearch = async (searchName) => {
 		setIsLoading(true);
 		const result = await filterEmployees(searchName);
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		setCheckedEmployee(result[0]);
 	};
@@ -77,7 +77,7 @@ export default function Employees({ isCheckable }) {
 		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllEmployees();
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		if (mode === 'delete' && employee.id === checkedEmployee.id)
 			setCheckedEmployee(result[0]);
@@ -94,7 +94,7 @@ export default function Employees({ isCheckable }) {
 		const getData = async () => {
 			const result = await getAllEmployees();
 			setCheckedEmployee(result[0]);
-			setData(result);
+			setData(result.data);
 			setIsLoading(false);
 		};
 		getData();

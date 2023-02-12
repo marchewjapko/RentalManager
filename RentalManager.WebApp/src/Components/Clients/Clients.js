@@ -15,7 +15,6 @@ import {
 	TablePagination,
 } from '@mui/material';
 import ClientTableRow from './ClientTableRow';
-import { Scrollbars } from 'react-custom-scrollbars-2';
 import { filterClients, getAllClients } from '../../Actions/ClientActions';
 import ClientsDialog from './ClientsDialog';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -47,7 +46,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllClients();
-			setData(result);
+			setData(result.data);
 			setIsLoading(false);
 		};
 		getData();
@@ -93,7 +92,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 			id: -1,
 			name: '',
 			surname: '',
-			phone: '',
+			phoneNumber: '',
 			email: '',
 			idCard: '',
 			city: '',
@@ -112,7 +111,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllClients();
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		if (mode === 'delete' || mode === 'post') {
 			setClient(client);
@@ -146,7 +145,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 	const handleSearch = async (searchValues) => {
 		setIsLoading(true);
 		const result = await filterClients(searchValues);
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		setPage(0);
 		setClient(result[0]);
@@ -196,45 +195,33 @@ export default function Clients({ isCheckable, client, setClient }) {
 					<>
 						{dialog()}
 						<TableContainer className={'ClientsTable'}>
-							<Scrollbars
-								autoHide
-								autoHeight={true}
-								autoHeightMin={0}
-								autoHeightMax={isSmallScreen ? '30vh' : '40vh'}
-								autoHideTimeout={750}
-								autoHideDuration={500}
+							<Table
+								stickyHeader
+								size={isSmallScreen ? 'small' : 'medium'}
+								padding={isSmallScreen ? 'none' : 'normal'}
 							>
-								<Table
-									stickyHeader
-									size={isSmallScreen ? 'small' : 'medium'}
-									padding={isSmallScreen ? 'none' : 'normal'}
-								>
-									<TableBody>
-										{(rowsPerPage > 0
-											? data.slice(
-													page * rowsPerPage,
-													page * rowsPerPage +
-														rowsPerPage
-											  )
-											: data
-										).map((row) => (
-											<ClientTableRow
-												key={row.id}
-												row={row}
-												handleEditClick={
-													handleEditClick
-												}
-												handleDeleteClick={
-													handleDeleteClick
-												}
-												isCheckable={isCheckable}
-												setClient={setClient}
-												client={client}
-											/>
-										))}
-									</TableBody>
-								</Table>
-							</Scrollbars>
+								<TableBody>
+									{(rowsPerPage > 0
+										? data.slice(
+												page * rowsPerPage,
+												page * rowsPerPage + rowsPerPage
+										  )
+										: data
+									).map((row) => (
+										<ClientTableRow
+											key={row.id}
+											row={row}
+											handleEditClick={handleEditClick}
+											handleDeleteClick={
+												handleDeleteClick
+											}
+											isCheckable={isCheckable}
+											setClient={setClient}
+											client={client}
+										/>
+									))}
+								</TableBody>
+							</Table>
 						</TableContainer>
 						<TablePagination
 							rowsPerPageOptions={[

@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import {
+	Box,
 	DialogContent,
 	Divider,
 	InputAdornment,
@@ -53,7 +54,7 @@ export default function RentalAgreementAgreementDetails({
 	};
 
 	return (
-		<DialogContent sx={{ overflow: 'hidden', maxWidth: '800px' }}>
+		<Box sx={{ overflow: 'hidden', maxWidth: '800px' }}>
 			<Stack spacing={2}>
 				{mode === 'info' || mode === 'delete' ? (
 					<Grid container spacing={2} sx={{ margin: '0 !important' }}>
@@ -137,8 +138,7 @@ export default function RentalAgreementAgreementDetails({
 														{row.name}
 													</TableCell>
 													<TableCell align="right">
-														{row.monthlyPrice +
-															' zł'}
+														{row.price + ' zł'}
 													</TableCell>
 												</TableRow>
 											)
@@ -150,7 +150,7 @@ export default function RentalAgreementAgreementDetails({
 											>
 												{'Total: '}
 												{agreement.rentalEquipment
-													.map((x) => x.monthlyPrice)
+													.map((x) => x.price)
 													.reduce(
 														(partialSum, a) =>
 															partialSum + a,
@@ -323,6 +323,6 @@ export default function RentalAgreementAgreementDetails({
 					</Grid>
 				</Grid>
 			</Stack>
-		</DialogContent>
+		</Box>
 	);
 }

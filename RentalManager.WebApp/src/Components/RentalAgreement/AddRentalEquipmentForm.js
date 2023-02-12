@@ -1,7 +1,9 @@
 import {
 	Avatar,
+	Backdrop,
 	Box,
 	Button,
+	CircularProgress,
 	Stack,
 	Step,
 	StepButton,
@@ -20,6 +22,8 @@ import RentalAgreementAgreementDetails from './RentalAgreementAgreementDetails';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Payments from '../Payments/Payments';
+import { addRentalAgreement } from '../../Actions/RentalAgreementActions';
+import { useNavigate } from 'react-router-dom';
 
 function GetSteps(newRentalAgreement, setNewRentalAgreement) {
 	return [
@@ -84,6 +88,8 @@ export default function AddRentalEquipmentForm() {
 	const [completed, setCompleted] = React.useState({});
 	const theme = useTheme();
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+	const [isLoading, setIsLoading] = React.useState(false);
+	const navigate = useNavigate();
 	const [newRentalAgreement, setNewRentalAgreement] = React.useState({
 		id: 0,
 		isActive: true,
@@ -116,13 +122,26 @@ export default function AddRentalEquipmentForm() {
 	};
 	const handleNext = () => {
 		validateCurrentStep();
-		const newActiveStep =
-			isLastStep() && !allStepsCompleted()
-				? GetSteps(newRentalAgreement, setNewRentalAgreement).findIndex(
-						(step, i) => !(i in completed)
-				  )
-				: activeStep + 1;
-		setActiveStep(newActiveStep);
+		if (
+			allStepsCompleted() &&
+			ValidateRentalAgreement(newRentalAgreement).length === 0
+		) {
+			setIsLoading(true);
+			addRentalAgreement(newRentalAgreement)
+				.then(() => {
+					navigate('/');
+				})
+				.catch((err) => console.log(err));
+		} else {
+			const newActiveStep =
+				isLastStep() && !allStepsCompleted()
+					? GetSteps(
+							newRentalAgreement,
+							setNewRentalAgreement
+					  ).findIndex((step, i) => !(i in completed))
+					: activeStep + 1;
+			setActiveStep(newActiveStep);
+		}
 	};
 	const handleBack = () => {
 		validateCurrentStep();
@@ -198,6 +217,15 @@ export default function AddRentalEquipmentForm() {
 				justifyContent: 'center',
 			}}
 		>
+			<Backdrop
+				sx={{
+					color: '#fff',
+					zIndex: (theme) => theme.zIndex.drawer + 1,
+				}}
+				open={isLoading}
+			>
+				<CircularProgress />
+			</Backdrop>
 			<Stepper nonLinear activeStep={activeStep} orientation="vertical">
 				{GetSteps(newRentalAgreement, setNewRentalAgreement).map(
 					(step, index) => (
@@ -220,12 +248,10 @@ export default function AddRentalEquipmentForm() {
 								TransitionProps={{ unmountOnExit: false }}
 							>
 								<Scrollbars
-									autoHide
 									autoHeight={true}
 									autoHeightMin={0}
-									autoHeightMax={
-										isSmallScreen ? 460 : 'max-content'
-									}
+									autoHeightMax={'57vh'}
+									autoHide
 									autoHideTimeout={750}
 									autoHideDuration={500}
 								>
@@ -242,7 +268,9 @@ export default function AddRentalEquipmentForm() {
 											variant="contained"
 											onClick={handleNext}
 										>
-											{allStepsCompleted()
+											{ValidateRentalAgreement(
+												newRentalAgreement
+											).length === 0
 												? 'Finish'
 												: 'Continue'}
 										</Button>

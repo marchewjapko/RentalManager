@@ -50,7 +50,7 @@ export default function RentalEquipment({ initialIds }) {
 	const handleSearch = async (searchName) => {
 		setIsLoading(true);
 		const result = await filterRentalEquipment(searchName);
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		setPage(0);
 	};
@@ -78,7 +78,7 @@ export default function RentalEquipment({ initialIds }) {
 
 	const handleAddClick = () => {
 		setDialogMode('post');
-		setFocusedRentalEquipment({ id: 0, name: '', monthlyPrice: '' });
+		setFocusedRentalEquipment({ id: 0, name: '', price: '' });
 		setShowDialog(true);
 	};
 
@@ -91,7 +91,7 @@ export default function RentalEquipment({ initialIds }) {
 		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllRentalEquipment();
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 		if (mode === 'delete' && checkedIds.includes(rentalEquipment.id)) {
 			setCheckedIds(checkedIds.filter((x) => x !== rentalEquipment.id));
@@ -108,7 +108,7 @@ export default function RentalEquipment({ initialIds }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllRentalEquipment();
-			setData(result);
+			setData(result.data);
 			setIsLoading(false);
 		};
 		getData();
@@ -230,7 +230,7 @@ export default function RentalEquipment({ initialIds }) {
 													{row.name}
 												</TableCell>
 												<TableCell align="right">
-													{row.monthlyPrice} zł
+													{row.price} zł
 												</TableCell>
 												<TableCell align="right">
 													<Box>

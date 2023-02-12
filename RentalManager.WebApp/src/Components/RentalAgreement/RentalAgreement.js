@@ -63,12 +63,11 @@ export default function RentalAgreement() {
 
 	React.useEffect(() => {
 		const getData = async () => {
-			return await filterAgreements(searchValues);
-		};
-		getData().then((result) => {
-			setData(result);
+			const result = await filterAgreements(searchValues);
+			setData(result.data);
 			setIsLoading(false);
-		});
+		};
+		getData();
 	}, []);
 
 	const handleChangePage = (event, newPage) => {
@@ -123,7 +122,7 @@ export default function RentalAgreement() {
 	};
 
 	const handleAddClick = () => {
-		navigate('/4');
+		navigate('/add-rental-agreement');
 	};
 
 	const handleCloseDialog = () => {
@@ -144,7 +143,7 @@ export default function RentalAgreement() {
 		};
 		setSearchValues(newSearchParams);
 		const result = await filterAgreements(newSearchParams);
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 	};
 
@@ -155,7 +154,7 @@ export default function RentalAgreement() {
 	const handleSearch = async () => {
 		setIsLoading(true);
 		const result = await filterAgreements(searchValues);
-		setData(result);
+		setData(result.data);
 		setIsLoading(false);
 	};
 
@@ -253,11 +252,13 @@ export default function RentalAgreement() {
 			</Popover>
 		);
 	};
-
 	const getRowColor = (row) => {
+		const lastPayment = row.payments
+			.sort((a, b) => (dayjs(a).isAfter(dayjs(b)) ? 1 : -1))
+			.at(-1);
 		if (!row.isActive) {
 			return theme.palette.text.disabled;
-		} else if (dayjs(row.validUntil).diff(dayjs(), 'day') < 0) {
+		} else if (dayjs(lastPayment.to).diff(dayjs(), 'day') < 0) {
 			return theme.palette.error.light;
 		}
 	};

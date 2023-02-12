@@ -10,8 +10,8 @@
         public IEnumerable<PaymentDTO> Payments { get; set; }
         public string? Comment { get; set; }
         public int Deposit { get; set; }
-        public int TransportFrom { get; set; }
-        public int? TransportTo { get; set; }
+        public int? TransportFrom { get; set; }
+        public int TransportTo { get; set; }
         public DateTime DateAdded { get; set; }
     }
 }
