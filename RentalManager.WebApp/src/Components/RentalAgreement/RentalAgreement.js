@@ -22,7 +22,6 @@ import {
 } from '@mui/material';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import TempNavigation from '../Shared/TempNavigation';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -33,7 +32,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import RentalAgreementDialog from './RentalAgreementDialog';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { filterAgreements } from '../../Actions/RentalAgreementActions';
+import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import RentalAgreementSearchSelect from './RentalAgreementSearchSelect';
 import SkeletonTableRentalAgreement from '../SkeletonTables/SkeletonTableRentalAgreement';
 import { useNavigate } from 'react-router-dom';
@@ -316,30 +315,7 @@ export default function RentalAgreement() {
 								autoHideTimeout={750}
 								autoHideDuration={500}
 							>
-								<Table stickyHeader>
-									<TableHead>
-										<TableRow>
-											<TableCell
-												className={
-													'TableRentalEquipmentColumnName'
-												}
-											>
-												Client
-											</TableCell>
-											<TableCell
-												align="right"
-												className={
-													'TableRentalEquipmentColumnPrice'
-												}
-											>
-												Date added
-											</TableCell>
-											<TableCell
-												align="right"
-												sx={{ width: '10px' }}
-											/>
-										</TableRow>
-									</TableHead>
+								<Table>
 									<TableBody>
 										{(rowsPerPage > 0
 											? data.slice(
@@ -406,7 +382,6 @@ export default function RentalAgreement() {
 					</div>
 				)}
 			</Paper>
-			<TempNavigation />
 		</div>
 	);
 }

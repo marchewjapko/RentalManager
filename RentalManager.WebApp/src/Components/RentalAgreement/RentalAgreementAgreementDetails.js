@@ -195,7 +195,7 @@ export default function RentalAgreementAgreementDetails({
 					</Typography>
 				</Stack>
 				<Grid container spacing={2}>
-					<Grid xs={12} md={6}>
+					<Grid xs={12} sm={12} md={6}>
 						<TextField
 							name="transportTo"
 							margin="dense"
@@ -221,7 +221,7 @@ export default function RentalAgreementAgreementDetails({
 							}}
 						/>
 					</Grid>
-					<Grid xs={7} md={6}>
+					<Grid xs={12} sm={7} md={6}>
 						<TextField
 							name="transportFrom"
 							margin="dense"
@@ -246,7 +246,7 @@ export default function RentalAgreementAgreementDetails({
 							}}
 						/>
 					</Grid>
-					<Grid xs={5} md={6}>
+					<Grid xs={6} md={6}>
 						<TextField
 							name="deposit"
 							margin="dense"
@@ -277,7 +277,7 @@ export default function RentalAgreementAgreementDetails({
 					</Typography>
 				</Stack>
 				<Grid container spacing={2}>
-					<Grid xs={6}>
+					<Grid xs={12} sm={6}>
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DatePicker
 								name={'dateAdded'}

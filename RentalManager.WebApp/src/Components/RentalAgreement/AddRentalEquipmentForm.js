@@ -17,12 +17,11 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import dayjs from 'dayjs';
 import Clients from '../Clients/Clients';
-import ValidateRentalAgreement from '../../Actions/ValidateRentalAgreement';
+import ValidateRentalAgreement from '../../Actions/Validations/ValidateRentalAgreement';
 import RentalAgreementAgreementDetails from './RentalAgreementAgreementDetails';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Payments from '../Payments/Payments';
-import { addRentalAgreement } from '../../Actions/RentalAgreementActions';
+import { addRentalAgreement } from '../../Actions/RestAPI/RentalAgreementActions';
 import { useNavigate } from 'react-router-dom';
 
 function GetSteps(newRentalAgreement, setNewRentalAgreement) {
@@ -86,8 +85,6 @@ function GetStepIcon(index, isCompleted, isActive, isValid) {
 export default function AddRentalEquipmentForm() {
 	const [activeStep, setActiveStep] = React.useState(0);
 	const [completed, setCompleted] = React.useState({});
-	const theme = useTheme();
-	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 	const [isLoading, setIsLoading] = React.useState(false);
 	const navigate = useNavigate();
 	const [newRentalAgreement, setNewRentalAgreement] = React.useState({

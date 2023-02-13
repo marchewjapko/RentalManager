@@ -10,12 +10,21 @@ export default function ValidateClient(client) {
 	if (!idCardRegEx.test(client.idCard) && client.idCard.trim().length !== 0) {
 		result.push('invalidIdCard');
 	}
-	let phoneNumberRegEx = new RegExp(
+	let phoneNumberRegExMobile = new RegExp(
 		'^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$'
+	);
+	let phoneNumberRegExStationary = new RegExp(
+		'^([0-9]{2})?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$'
 	);
 	if (client.phoneNumber.trim().length === 0) {
 		result.push('noPhone');
-	} else if (!phoneNumberRegEx.test(client.phoneNumber)) {
+	} else if (
+		!phoneNumberRegExMobile.test(client.phoneNumber) &&
+		!phoneNumberRegExStationary.test(client.phoneNumber)
+	) {
+		console.log('0"', client.phoneNumber + '"');
+		console.log('1', phoneNumberRegExMobile.test(client.phoneNumber));
+		console.log('2', phoneNumberRegExStationary.test(client.phoneNumber));
 		result.push('invalidPhone');
 	}
 	let emailRegEx = new RegExp('^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$');

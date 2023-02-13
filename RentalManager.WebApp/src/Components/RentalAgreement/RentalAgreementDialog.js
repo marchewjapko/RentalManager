@@ -13,20 +13,22 @@ import ClientsDialog from '../Clients/ClientsDialog';
 import './RentalAgreement.js.css';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonIcon from '@mui/icons-material/Person';
-import Clients from '../Clients/Clients';
 import RentalAgreementAgreementDetails from './RentalAgreementAgreementDetails';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
-import ValidateClient from '../../Actions/ValidateClient';
+import ValidateClient from '../../Actions/Validations/ValidateClient';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import ValidateRentalAgreement from '../../Actions/ValidateRentalAgreement';
+import ValidateRentalAgreement from '../../Actions/Validations/ValidateRentalAgreement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { deleteClient, updateClient } from '../../Actions/ClientActions';
+import {
+	deleteClient,
+	updateClient,
+} from '../../Actions/RestAPI/ClientActions';
 import {
 	deleteRentalAgreement,
 	updateRentalAgreement,
-} from '../../Actions/RentalAgreementActions';
+} from '../../Actions/RestAPI/RentalAgreementActions';
 import Payments from '../Payments/Payments';
 
 export default function RentalAgreementDialog({

@@ -20,8 +20,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CheckIcon from '@mui/icons-material/Check';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { addPayment, deletePayment } from '../../Actions/PaymentActions';
-import { getAgreement } from '../../Actions/RentalAgreementActions';
+import {
+	addPayment,
+	deletePayment,
+	getPayment,
+} from '../../Actions/RestAPI/PaymentActions';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const paymentOptions = ['Card', 'Cash', 'Transfer'];
@@ -30,7 +33,6 @@ export default function Payments({
 	mode,
 	agreement,
 	setAgreement,
-	isLoading,
 	setIsLoading,
 }) {
 	const theme = useTheme();
@@ -46,6 +48,18 @@ export default function Payments({
 		from: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
 		to: dayjs().add(1, 'month').format('YYYY-MM-DDTHH:mm:ss'),
 	});
+
+	React.useEffect(() => {
+		const getData = async () => {
+			const result = await getPayment(agreement.id);
+			setAgreement({ ...agreement, payments: result.data });
+			if (typeof setIsLoading !== 'undefined') {
+				setIsLoading(false);
+			}
+		};
+		getData();
+	}, []);
+
 	const handleChangePrice = (e) => {
 		setNewPayment({
 			...newPayment,
@@ -79,7 +93,9 @@ export default function Payments({
 				id: newPayment.id + 1,
 			});
 		} else {
-			setIsLoading(true);
+			if (typeof setIsLoading !== 'undefined') {
+				setIsLoading(true);
+			}
 			console.log('AS', agreement.id, newPayment);
 			addPayment(agreement.id, newPayment)
 				.then((result) => {
@@ -93,11 +109,15 @@ export default function Payments({
 						amount: '',
 						id: newPayment.id + 1,
 					});
-					setIsLoading(false);
+					if (typeof setIsLoading !== 'undefined') {
+						setIsLoading(false);
+					}
 				})
 				.catch((err) => {
 					console.log(err);
-					setIsLoading(false);
+					if (typeof setIsLoading !== 'undefined') {
+						setIsLoading(false);
+					}
 				});
 		}
 	};
@@ -108,7 +128,9 @@ export default function Payments({
 				payments: [...agreement.payments.filter((x) => x.id !== id)],
 			});
 		} else {
-			setIsLoading(true);
+			if (typeof setIsLoading !== 'undefined') {
+				setIsLoading(true);
+			}
 			deletePayment(id)
 				.then((result) => {
 					console.log(result);
@@ -118,11 +140,15 @@ export default function Payments({
 							...agreement.payments.filter((x) => x.id !== id),
 						],
 					});
-					setIsLoading(false);
+					if (typeof setIsLoading !== 'undefined') {
+						setIsLoading(false);
+					}
 				})
 				.catch((err) => {
 					console.log(err);
-					setIsLoading(false);
+					if (typeof setIsLoading !== 'undefined') {
+						setIsLoading(false);
+					}
 				});
 		}
 	};
@@ -276,10 +302,10 @@ export default function Payments({
 										{row.amount + ' zł'}
 									</TableCell>
 									<TableCell align="right">
-										{dayjs(row.from).format('DD MMMM YYYY')}
+										{dayjs(row.from).format('DD.MM.YYYY')}
 									</TableCell>
 									<TableCell align="right">
-										{dayjs(row.to).format('DD MMMM YYYY')}
+										{dayjs(row.to).format('DD.MM.YYYY')}
 									</TableCell>
 									<TableCell align="right">
 										<IconButton

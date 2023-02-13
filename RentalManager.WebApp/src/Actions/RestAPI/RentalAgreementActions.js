@@ -1,4 +1,4 @@
-import { RentalAgreementMock } from '../Mocks/RentalAgreementMock';
+import { RentalAgreementMock } from '../../Mocks/RentalAgreementMock';
 import dayjs from 'dayjs';
 import axios from 'axios';
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ValidateRentalEquipment from '../../Actions/ValidateRentalEquipment';
+import ValidateRentalEquipment from '../../Actions/Validations/ValidateRentalEquipment';
 import {
 	addRentalEquipment,
 	deleteRentalEquipment,
 	updateRentalEquipment,
-} from '../../Actions/RentalEquipmentActions';
+} from '../../Actions/RestAPI/RentalEquipmentActions';
 import {
 	Backdrop,
 	Button,

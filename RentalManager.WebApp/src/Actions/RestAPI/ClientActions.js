@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClientsMock } from '../Mocks/ClientsMock';
+import { ClientsMock } from '../../Mocks/ClientsMock';
 
 const client = axios.create({
 	baseURL: process.env.REACT_APP_API_URL,

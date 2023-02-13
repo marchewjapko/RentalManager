@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { RentalAgreementMock } from '../../Mocks/RentalAgreementMock';
 
 const client = axios.create({
 	baseURL: process.env.REACT_APP_API_URL,
@@ -29,6 +30,29 @@ export const addPayment = (id, payment) =>
 					},
 				}
 		  );
+
+export const getPayment = (rentalAgreementId) =>
+	process.env.REACT_APP_Mock_Version === 'true'
+		? new Promise((resolve) => {
+				setTimeout(
+					() => (
+						resolve(
+							Object.values(
+								RentalAgreementMock.filter(
+									(x) => x.id === id
+								)[0].payments
+							)
+						),
+						console.log('Got all payments')
+					),
+					2500
+				);
+		  })
+		: client.get('/Payment', {
+				params: {
+					RentalAgreementId: rentalAgreementId,
+				},
+		  });
 
 export const deletePayment = (id) =>
 	process.env.REACT_APP_Mock_Version === 'true'

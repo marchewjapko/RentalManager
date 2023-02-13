@@ -26,11 +26,10 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import {
 	filterRentalEquipment,
 	getAllRentalEquipment,
-} from '../../Actions/RentalEquipmentActions';
+} from '../../Actions/RestAPI/RentalEquipmentActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SearchTextField from '../Shared/SearchTextField';
 import RentalEquipmentDialog from './RentalEquipmentDialog';
-import TempNavigation from '../Shared/TempNavigation';
 import SkeletonTableRentalEquipment from '../SkeletonTables/SkeletonTableRentalEquipment';
 
 export default function RentalEquipment({ initialIds }) {
@@ -282,7 +281,6 @@ export default function RentalEquipment({ initialIds }) {
 					</div>
 				)}
 			</Paper>
-			<TempNavigation />
 		</div>
 	);
 }

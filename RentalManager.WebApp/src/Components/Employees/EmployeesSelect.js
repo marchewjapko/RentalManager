@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import * as React from 'react';
-import { getAllEmployees } from '../../Actions/EmployeeActions';
+import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 
 export default function EmployeesSelect({ agreement, setAgreement }) {
 	const [data, setData] = React.useState([]);

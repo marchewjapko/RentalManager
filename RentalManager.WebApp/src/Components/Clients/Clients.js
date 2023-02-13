@@ -15,7 +15,10 @@ import {
 	TablePagination,
 } from '@mui/material';
 import ClientTableRow from './ClientTableRow';
-import { filterClients, getAllClients } from '../../Actions/ClientActions';
+import {
+	filterClients,
+	getAllClients,
+} from '../../Actions/RestAPI/ClientActions';
 import ClientsDialog from './ClientsDialog';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ClientsSearchSelect from './ClientsSearchSelect';

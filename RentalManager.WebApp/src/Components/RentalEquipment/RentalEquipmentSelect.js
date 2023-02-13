@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import * as React from 'react';
-import { getAllRentalEquipment } from '../../Actions/RentalEquipmentActions';
+import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
 
 export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 	const [data, setData] = React.useState([]);

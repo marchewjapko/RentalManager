@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ValidateClient from '../../Actions/ValidateClient';
+import ValidateClient from '../../Actions/Validations/ValidateClient';
 import {
 	addClient,
 	deleteClient,
 	updateClient,
-} from '../../Actions/ClientActions';
+} from '../../Actions/RestAPI/ClientActions';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import {
 	Backdrop,
@@ -24,7 +24,6 @@ import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import HomeIcon from '@mui/icons-material/Home';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
-import ValidateEmployee from '../../Actions/ValidateEmployee';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function ClientsDialog({
@@ -47,9 +46,23 @@ export default function ClientsDialog({
 	});
 
 	const handleChange = (event) => {
+		let newValue = event.target.value;
+		if (event.target.name === 'idCard') {
+			newValue = newValue.toUpperCase();
+		}
+		console.log(`new value: "${newValue}"`);
+		if (
+			event.target.name === 'phoneNumber' &&
+			newValue.length === 3 &&
+			!newValue.includes(' ')
+		) {
+			console.log(`newValue AAA: "${newValue}"`);
+			newValue = newValue + ' ';
+			console.log(`newValue BBB: "${newValue}"`);
+		}
 		const newClient = {
 			...client,
-			[event.target.name]: event.target.value,
+			[event.target.name]: newValue,
 		};
 		setClient(newClient);
 	};
@@ -165,7 +178,7 @@ export default function ClientsDialog({
 	};
 
 	const handleSave = async () => {
-		const res = ValidateEmployee(client);
+		const res = ValidateClient(client);
 		if (res.length === 0) {
 			setIsLoading(true);
 			switch (mode) {
@@ -185,16 +198,10 @@ export default function ClientsDialog({
 		}
 	};
 
+	console.log(`PHONE"${client.phoneNumber}"`);
+
 	return (
 		<div>
-			{/*<Scrollbars*/}
-			{/*	autoHeight={true}*/}
-			{/*	autoHeightMin={200}*/}
-			{/*	autoHeightMax={'57vh'}*/}
-			{/*	autoHide*/}
-			{/*	autoHideTimeout={750}*/}
-			{/*	autoHideDuration={500}*/}
-			{/*>*/}
 			<DialogContent>
 				<Backdrop
 					sx={{
@@ -298,10 +305,14 @@ export default function ClientsDialog({
 					<Grid container spacing={2} columns={{ xs: 6, sm: 12 }}>
 						<Grid xs={6} md={5}>
 							<InputMask
-								mask="999 999 999"
+								mask="99??99 9999"
+								formatChars={{
+									9: '[0-9]',
+									'?': '[0-9 ]',
+								}}
 								value={client.phoneNumber}
 								disabled={false}
-								maskChar=" "
+								maskChar={''}
 								onChange={handleChange}
 								onBlur={validatePhone}
 							>
@@ -405,7 +416,6 @@ export default function ClientsDialog({
 					</Grid>
 				</Stack>
 			</DialogContent>
-			{/*</Scrollbars>*/}
 			{mode !== 'info' && showDialogButtons ? (
 				<Stack
 					direction="row"

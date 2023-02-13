@@ -1,4 +1,4 @@
-import { RentalEquipmentMock } from '../Mocks/RentalEquipmentMock';
+import { RentalEquipmentMock } from '../../Mocks/RentalEquipmentMock';
 import axios from 'axios';
 
 const client = axios.create({

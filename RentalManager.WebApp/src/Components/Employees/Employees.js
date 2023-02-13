@@ -24,13 +24,10 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import {
 	filterEmployees,
 	getAllEmployees,
-} from '../../Actions/EmployeeActions';
+} from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SearchTextField from '../Shared/SearchTextField';
 import EmployeeDialog from './EmployeeDialog';
-import TempNavigation from '../Shared/TempNavigation';
-
-import Clients from '../Clients/Clients';
 import SkeletonTableEmployees from '../SkeletonTables/SkeletonTableEmployees';
 
 export default function Employees({ isCheckable }) {
@@ -265,7 +262,6 @@ export default function Employees({ isCheckable }) {
 					</div>
 				)}
 			</Paper>
-			<TempNavigation />
 		</div>
 	);
 }

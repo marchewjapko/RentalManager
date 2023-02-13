@@ -1,4 +1,4 @@
-import { EmployeesMock } from '../Mocks/EmployeesMock';
+import { EmployeesMock } from '../../Mocks/EmployeesMock';
 import axios from 'axios';
 
 const client = axios.create({
