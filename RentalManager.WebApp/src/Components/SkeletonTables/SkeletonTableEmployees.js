@@ -19,25 +19,7 @@ export default function SkeletonTableEmployees() {
 	return (
 		<div>
 			<TableContainer className={'EmployeesTable'}>
-				<Table stickyHeader>
-					<TableHead>
-						<TableRow>
-							<TableCell
-								className={
-									'EmployeesTableHeadNameTableHeadName'
-								}
-							>
-								Name
-							</TableCell>
-							<TableCell
-								align="right"
-								className={'EmployeesTableHeadSurname'}
-							>
-								Surname
-							</TableCell>
-							<TableCell align="right" sx={{ width: '100px' }} />
-						</TableRow>
-					</TableHead>
+				<Table>
 					<TableBody>
 						{[...Array(6).keys()].map((x) => (
 							<TableRow key={x}>
@@ -55,7 +37,10 @@ export default function SkeletonTableEmployees() {
 										height={35}
 									/>
 								</TableCell>
-								<TableCell align="right">
+								<TableCell
+									align="right"
+									sx={{ width: '100px' }}
+								>
 									<Box>
 										<IconButton
 											aria-label="delete"

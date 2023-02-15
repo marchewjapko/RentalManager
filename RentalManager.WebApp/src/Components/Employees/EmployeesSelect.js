@@ -16,7 +16,7 @@ export default function EmployeesSelect({ agreement, setAgreement }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllEmployees();
-			setData(result.data);
+			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();

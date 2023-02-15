@@ -6,7 +6,6 @@ import {
 	Button,
 	Dialog,
 	DialogTitle,
-	Paper,
 	Snackbar,
 	Stack,
 	Table,
@@ -15,18 +14,18 @@ import {
 	TablePagination,
 } from '@mui/material';
 import ClientTableRow from './ClientTableRow';
-import {
-	filterClients,
-	getAllClients,
-} from '../../Actions/RestAPI/ClientActions';
+import { filterClients, getAllClients } from '../../Actions/RestAPI/ClientActions';
 import ClientsDialog from './ClientsDialog';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ClientsSearchSelect from './ClientsSearchSelect';
 import SkeletonTableClients from '../SkeletonTables/SkeletonTableClients';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { DefaultValue, useRecoilState } from 'recoil';
+import { clientAtom } from '../Atoms/ClientAtoms';
 
-export default function Clients({ isCheckable, client, setClient }) {
+export default function Clients() {
+	const [client, setClient] = useRecoilState(clientAtom);
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 	const [isLoading, setIsLoading] = React.useState(true);
@@ -49,7 +48,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllClients();
-			setData(result.data);
+			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();
@@ -91,17 +90,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 
 	const handleAddClick = () => {
 		setDialogMode('post');
-		setClient({
-			id: -1,
-			name: '',
-			surname: '',
-			phoneNumber: '',
-			email: '',
-			idCard: '',
-			city: '',
-			street: '',
-			streetNumber: '',
-		});
+		setClient(new DefaultValue());
 		setShowDialog(true);
 	};
 
@@ -114,7 +103,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllClients();
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 		if (mode === 'delete' || mode === 'post') {
 			setClient(client);
@@ -127,18 +116,12 @@ export default function Clients({ isCheckable, client, setClient }) {
 
 	const dialog = () => {
 		return (
-			<Dialog
-				open={showDialog}
-				maxWidth={'sm'}
-				onClose={handleCloseDialog}
-			>
+			<Dialog open={showDialog} maxWidth={'sm'} onClose={handleCloseDialog}>
 				<DialogTitle>{getDialogTitle()}</DialogTitle>
 				<ClientsDialog
-					client={client}
 					handleCancelDialog={handleCloseDialog}
 					handleDialogSuccess={handleDialogSuccess}
 					mode={dialogMode}
-					setClient={setClient}
 					showDialogButtons={true}
 				/>
 			</Dialog>
@@ -148,7 +131,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 	const handleSearch = async (searchValues) => {
 		setIsLoading(true);
 		const result = await filterClients(searchValues);
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 		setPage(0);
 		setClient(result[0]);
@@ -162,11 +145,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 				onClose={closeSnackbars}
 				anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
 			>
-				<Alert
-					onClose={closeSnackbars}
-					severity="success"
-					sx={{ width: '100%' }}
-				>
+				<Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
 					{getSnackbarTitle()}
 				</Alert>
 			</Snackbar>
@@ -187,10 +166,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 					>
 						Add client
 					</Button>
-					<ClientsSearchSelect
-						isLoading={isLoading}
-						handleSearch={handleSearch}
-					/>
+					<ClientsSearchSelect isLoading={isLoading} handleSearch={handleSearch} />
 				</Stack>
 				{isLoading ? (
 					<SkeletonTableClients />
@@ -215,10 +191,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 											key={row.id}
 											row={row}
 											handleEditClick={handleEditClick}
-											handleDeleteClick={
-												handleDeleteClick
-											}
-											isCheckable={isCheckable}
+											handleDeleteClick={handleDeleteClick}
 											setClient={setClient}
 											client={client}
 										/>
@@ -227,12 +200,7 @@ export default function Clients({ isCheckable, client, setClient }) {
 							</Table>
 						</TableContainer>
 						<TablePagination
-							rowsPerPageOptions={[
-								5,
-								10,
-								25,
-								{ label: 'All', value: -1 },
-							]}
+							rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
 							sx={{ paddingLeft: 0 }}
 							component="div"
 							count={data.length}

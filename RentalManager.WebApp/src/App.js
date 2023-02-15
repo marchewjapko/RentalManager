@@ -1,18 +1,14 @@
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
-import Dashboard from './Components/Dashboard/Dashboard';
-import RentalEquipment from './Components/RentalEquipment/RentalEquipment';
-import Employees from './Components/Employees/Employees';
-import RentalAgreement from './Components/RentalAgreement/RentalAgreement';
-import AddRentalEquipmentForm from './Components/RentalAgreement/AddRentalEquipmentForm';
+import { RouterProvider } from 'react-router-dom';
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useCookies } from 'react-cookie';
-import Header from './Components/Header/Header';
 import i18next from 'i18next';
 import pl from './Tanslations/pl.json';
 import en from './Tanslations/en.json';
 import { I18nextProvider } from 'react-i18next';
+import { RecoilRoot } from 'recoil';
+import GetRouter from './Components/Router';
 
 const darkTheme = createTheme({
 	palette: {
@@ -40,68 +36,21 @@ i18next.init({
 });
 
 export default function App() {
-	const [isLightMode, setIsLightMode] = useCookies(['lightMode']);
-	const handleChangeTheme = () => {
-		if (isLightMode['lightMode'] === 'true') {
-			setIsLightMode('lightMode', false, {
-				path: '/',
-				expires: new Date(2147483647 * 1000),
-				sameSite: 'strict',
-			});
-		} else {
-			setIsLightMode('lightMode', true, {
-				path: '/',
-				expires: new Date(2147483647 * 1000),
-				sameSite: 'strict',
-			});
-		}
-	};
-
-	const AppLayout = () => (
-		<>
-			<Header handleChangeTheme={handleChangeTheme} />
-			<Outlet />
-		</>
-	);
-	function GetRouter() {
-		return new createBrowserRouter([
-			{
-				element: <AppLayout />,
-				children: [
-					{
-						path: '/',
-						element: <Dashboard />,
-					},
-					{
-						path: '/rental-agreement',
-						element: <RentalAgreement />,
-					},
-					{
-						path: '/add-rental-agreement',
-						element: <AddRentalEquipmentForm />,
-					},
-					{
-						path: '/rental-equipment',
-						element: <RentalEquipment />,
-					},
-					{
-						path: '/employees',
-						element: <Employees />,
-					},
-				],
-			},
-		]);
-	}
-
+	const [isDarkMode] = useCookies();
 	return (
 		<I18nextProvider i18n={i18next}>
 			<ThemeProvider
 				theme={
-					isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme
+					isDarkMode['isDarkMode'] === 'true' ||
+					isDarkMode['isDarkMode'] === undefined
+						? darkTheme
+						: lightTheme
 				}
 			>
 				<CssBaseline />
-				<RouterProvider router={GetRouter()} />
+				<RecoilRoot>
+					<RouterProvider router={GetRouter()} />
+				</RecoilRoot>
 			</ThemeProvider>
 		</I18nextProvider>
 	);

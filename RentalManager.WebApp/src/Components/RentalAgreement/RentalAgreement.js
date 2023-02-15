@@ -16,7 +16,6 @@ import {
 	TableBody,
 	TableCell,
 	TableContainer,
-	TableHead,
 	TablePagination,
 	TableRow,
 } from '@mui/material';
@@ -36,6 +35,8 @@ import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import RentalAgreementSearchSelect from './RentalAgreementSearchSelect';
 import SkeletonTableRentalAgreement from '../SkeletonTables/SkeletonTableRentalAgreement';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { rentalAgreementAtom } from '../Atoms/RentalAgreementAtoms';
 
 export default function RentalAgreement() {
 	const [page, setPage] = React.useState(0);
@@ -44,7 +45,7 @@ export default function RentalAgreement() {
 	const [data, setData] = React.useState();
 	const [showSnackbar, setShowSnackbar] = React.useState(false);
 	const [showDialog, setShowDialog] = React.useState(false);
-	const [focusedAgreement, setFocusedAgreement] = React.useState();
+	const [focusedAgreement, setFocusedAgreement] = useRecoilState(rentalAgreementAtom);
 	const [dialogMode, setDialogMode] = React.useState('');
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const theme = useTheme();
@@ -63,7 +64,7 @@ export default function RentalAgreement() {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await filterAgreements(searchValues);
-			setData(result.data);
+			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();
@@ -142,7 +143,7 @@ export default function RentalAgreement() {
 		};
 		setSearchValues(newSearchParams);
 		const result = await filterAgreements(newSearchParams);
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 	};
 
@@ -153,7 +154,7 @@ export default function RentalAgreement() {
 	const handleSearch = async () => {
 		setIsLoading(true);
 		const result = await filterAgreements(searchValues);
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 	};
 
@@ -178,7 +179,6 @@ export default function RentalAgreement() {
 					</Stack>
 				</DialogTitle>
 				<RentalAgreementDialog
-					agreement={focusedAgreement}
 					handleCancelDialog={handleCloseDialog}
 					handleDialogSuccess={handleDialogSuccess}
 					mode={dialogMode}
@@ -195,7 +195,13 @@ export default function RentalAgreement() {
 
 	const handleOpenPopper = (event, agreement) => {
 		setAnchorEl(event.currentTarget);
-		setFocusedAgreement(agreement);
+		const rentalAgreementDetails = Object.fromEntries(
+			Object.entries(agreement).filter((e) => e[0] !== 'client')
+		);
+		setFocusedAgreement({
+			rentalAgreementDetails: rentalAgreementDetails,
+			client: agreement.client,
+		});
 	};
 
 	const handleClosePopper = () => {
@@ -217,10 +223,7 @@ export default function RentalAgreement() {
 					horizontal: 'center',
 				}}
 			>
-				<ButtonGroup
-					variant="outlined"
-					aria-label="outlined primary button group"
-				>
+				<ButtonGroup variant="outlined">
 					<Button
 						variant="contained"
 						color="success"
@@ -253,7 +256,8 @@ export default function RentalAgreement() {
 	};
 	const getRowColor = (row) => {
 		const lastPayment = row.payments
-			.sort((a, b) => (dayjs(a).isAfter(dayjs(b)) ? 1 : -1))
+			.slice()
+			.sort((a, b) => (dayjs(a.to).isAfter(dayjs(b.to)) ? 1 : -1))
 			.at(-1);
 		if (!row.isActive) {
 			return theme.palette.text.disabled;
@@ -292,11 +296,7 @@ export default function RentalAgreement() {
 					onClose={closeSnackbars}
 					anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
 				>
-					<Alert
-						onClose={closeSnackbars}
-						severity="success"
-						sx={{ width: '100%' }}
-					>
+					<Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
 						{getSnackbarTitle()}
 					</Alert>
 				</Snackbar>
@@ -320,25 +320,18 @@ export default function RentalAgreement() {
 										{(rowsPerPage > 0
 											? data.slice(
 													page * rowsPerPage,
-													page * rowsPerPage +
-														rowsPerPage
+													page * rowsPerPage + rowsPerPage
 											  )
 											: data
 										).map((row) => (
 											<TableRow
 												key={row.id}
 												sx={{
-													backgroundColor:
-														getRowColor(row),
+													backgroundColor: getRowColor(row),
 												}}
 											>
-												<TableCell
-													component="th"
-													scope="row"
-												>
-													{row.client.name +
-														' ' +
-														row.client.surname}
+												<TableCell component="th" scope="row">
+													{row.client.name + ' ' + row.client.surname}
 												</TableCell>
 												<TableCell align="right">
 													{getDate(row.dateAdded)}
@@ -348,10 +341,7 @@ export default function RentalAgreement() {
 														<IconButton
 															color={'inherit'}
 															onClick={(event) =>
-																handleOpenPopper(
-																	event,
-																	row
-																)
+																handleOpenPopper(event, row)
 															}
 															disabled={isLoading}
 														>
@@ -366,12 +356,7 @@ export default function RentalAgreement() {
 							</Scrollbars>
 						</TableContainer>
 						<TablePagination
-							rowsPerPageOptions={[
-								5,
-								10,
-								25,
-								{ label: 'All', value: -1 },
-							]}
+							rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
 							component="div"
 							count={data.length}
 							rowsPerPage={rowsPerPage}

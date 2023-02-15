@@ -1,17 +1,15 @@
 import * as React from 'react';
-import ValidateEmployee from '../../Actions/Validations/ValidateEmployee';
-import {
-	addEmployee,
-	deleteEmployee,
-	updateEmployee,
-} from '../../Actions/RestAPI/EmployeeActions';
+import ValidateEmployee, {
+	validateEmployeeName,
+	validateEmployeeSurname,
+} from '../../Actions/Validations/ValidateEmployee';
+import { addEmployee, deleteEmployee, updateEmployee } from '../../Actions/RestAPI/EmployeeActions';
 import {
 	Backdrop,
 	Button,
 	CircularProgress,
 	DialogContent,
 	Stack,
-	TextField,
 	Typography,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -19,68 +17,25 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Unstable_Grid2';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import ValidatedTextField from '../Shared/ValidatedTextField';
 
 export default function EmployeeDialog({
 	handleCancelDialog,
 	employee,
 	handleDialogSuccess,
 	mode,
-	isResettable,
 }) {
 	const [employeeDialog, setEmployeeDialog] = React.useState(employee);
 	const [isLoading, setIsLoading] = React.useState(false);
-	const [validationState, setValidationState] = React.useState({
-		name: false,
-		surname: false,
-	});
-
-	const handleChangeName = (event) => {
-		setEmployeeDialog({
+	const handleChange = (event) => {
+		const newEmployee = {
 			...employeeDialog,
-			name: event.target.value,
-		});
+			[event.target.name]: event.target.value,
+		};
+		setEmployeeDialog(newEmployee);
 	};
-
-	const handleChangeSurname = (event) => {
-		setEmployeeDialog({
-			...employeeDialog,
-			surname: event.target.value,
-		});
-	};
-
-	const validateName = () => {
-		const res = ValidateEmployee(employeeDialog);
-		if (res.includes('noName')) {
-			setValidationState({
-				...validationState,
-				name: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				name: false,
-			});
-		}
-	};
-
-	const validateSurname = () => {
-		const res = ValidateEmployee(employeeDialog);
-		if (res.includes('noSurname')) {
-			setValidationState({
-				...validationState,
-				surname: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				surname: false,
-			});
-		}
-	};
-
 	const handleSave = async () => {
-		const res = ValidateEmployee(employeeDialog);
-		if (res.length === 0) {
+		if (ValidateEmployee(employeeDialog)) {
 			setIsLoading(true);
 			switch (mode) {
 				case 'delete':
@@ -98,14 +53,6 @@ export default function EmployeeDialog({
 		}
 	};
 
-	const handleReset = () => {
-		setEmployeeDialog(employee);
-		setValidationState({
-			name: false,
-			surname: false,
-		});
-	};
-
 	return (
 		<div>
 			<DialogContent>
@@ -121,59 +68,38 @@ export default function EmployeeDialog({
 				<Stack spacing={2}>
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<EngineeringIcon className={'DividerIcon'} />
-						<Typography
-							variant="h6"
-							className={'MarginTopBottomAuto'}
-						>
+						<Typography variant="h6" className={'MarginTopBottomAuto'}>
 							Employee information
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={12} md={6}>
-							<TextField
-								margin="dense"
+							<ValidatedTextField
+								name="name"
 								label="Name"
-								fullWidth
-								variant="outlined"
 								value={employeeDialog.name}
-								onChange={handleChangeName}
-								onBlur={validateName}
-								error={validationState.name}
-								helperText="Required"
-								InputProps={
-									mode === 'delete' || mode === 'info'
-										? { readOnly: true }
-										: null
-								}
+								onChange={handleChange}
+								validationFunction={validateEmployeeName}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 						<Grid xs={12} md={6}>
-							<TextField
-								margin="dense"
+							<ValidatedTextField
+								name="surname"
 								label="Surname"
-								fullWidth
-								variant="outlined"
 								value={employeeDialog.surname}
-								onChange={handleChangeSurname}
-								onBlur={validateSurname}
-								error={validationState.surname}
-								helperText="Required"
-								InputProps={
-									mode === 'delete' || mode === 'info'
-										? { readOnly: true }
-										: null
-								}
+								onChange={handleChange}
+								validationFunction={validateEmployeeSurname}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 					</Grid>
 				</Stack>
 			</DialogContent>
 			{mode !== 'info' ? (
-				<Stack
-					direction="row"
-					justifyContent="space-between"
-					className={'DialogStack'}
-				>
+				<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
 					{mode === 'delete' ? (
 						<Button
 							variant="contained"
@@ -193,9 +119,7 @@ export default function EmployeeDialog({
 							endIcon={<DoneIcon />}
 							onClick={handleSave}
 							className={'DialogButton'}
-							disabled={
-								ValidateEmployee(employeeDialog).length !== 0
-							}
+							disabled={!ValidateEmployee(employeeDialog)}
 						>
 							Save
 						</Button>

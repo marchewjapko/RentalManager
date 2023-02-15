@@ -1,10 +1,27 @@
+import { containsOnlyLetters, isNotNullOrEmpty } from './BasicValidation';
+
+export function validateEmployeeName(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
+	}
+	if (!containsOnlyLetters(value)) {
+		return 'invalidFormat';
+	}
+	return '';
+}
+
+export function validateEmployeeSurname(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
+	}
+	if (!containsOnlyLetters(value)) {
+		return 'invalidFormat';
+	}
+	return '';
+}
+
 export default function ValidateEmployee(employee) {
-    let result = []
-    if (employee.name.trim().length === 0) {
-        result.push("noName")
-    }
-    if (employee.surname.trim().length === 0) {
-        result.push("noSurname")
-    }
-    return (result)
+	return [validateEmployeeSurname(employee.name), validateEmployeeName(employee.surname)].every(
+		(x) => x === ''
+	);
 }

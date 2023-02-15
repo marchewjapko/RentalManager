@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-swipeable-views": "^0.14.0",
     "react-switch": "^7.0.0",
+    "recoil": "^0.7.6",
     "rimraf": "^3.0.2",
     "web-vitals": "^2.1.4"
   },

@@ -26,16 +26,16 @@ import {
 	getPayment,
 } from '../../Actions/RestAPI/PaymentActions';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useRecoilState } from 'recoil';
+import { rentalAgreementDetailsAtom } from '../Atoms/RentalAgreementDetailsAtoms';
 
 const paymentOptions = ['Card', 'Cash', 'Transfer'];
 
-export default function Payments({
-	mode,
-	agreement,
-	setAgreement,
-	setIsLoading,
-}) {
+export default function Payments({ mode, setIsLoading }) {
 	const theme = useTheme();
+	const [agreement, setAgreement] = useRecoilState(
+		rentalAgreementDetailsAtom
+	);
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 	const [newPayment, setNewPayment] = useState({
 		id:
@@ -52,7 +52,10 @@ export default function Payments({
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getPayment(agreement.id);
-			setAgreement({ ...agreement, payments: result.data });
+			setAgreement({
+				...agreement,
+				payments: result.hasOwnProperty('data') ? result.data : result,
+			});
 			if (typeof setIsLoading !== 'undefined') {
 				setIsLoading(false);
 			}
@@ -96,10 +99,8 @@ export default function Payments({
 			if (typeof setIsLoading !== 'undefined') {
 				setIsLoading(true);
 			}
-			console.log('AS', agreement.id, newPayment);
 			addPayment(agreement.id, newPayment)
 				.then((result) => {
-					console.log(result);
 					setAgreement({
 						...agreement,
 						payments: [...agreement.payments, newPayment],
@@ -133,7 +134,6 @@ export default function Payments({
 			}
 			deletePayment(id)
 				.then((result) => {
-					console.log(result);
 					setAgreement({
 						...agreement,
 						payments: [

@@ -30,17 +30,16 @@ import {
 	updateRentalAgreement,
 } from '../../Actions/RestAPI/RentalAgreementActions';
 import Payments from '../Payments/Payments';
+import { useRecoilValue } from 'recoil';
+import { rentalAgreementAtom } from '../Atoms/RentalAgreementAtoms';
 
 export default function RentalAgreementDialog({
-	agreement,
 	mode,
 	handleCancelDialog,
 	handleDialogSuccess,
 }) {
 	const [value, setValue] = React.useState(0);
-	const [agreementDialog, setAgreementDialog] = React.useState(
-		agreement ? agreement : null
-	);
+	const agreement = useRecoilValue(rentalAgreementAtom);
 	const [isLoading, setIsLoading] = React.useState(false);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -50,22 +49,22 @@ export default function RentalAgreementDialog({
 	};
 
 	const handleSave = async () => {
-		const resAgreement = ValidateRentalAgreement(agreementDialog);
-		if (agreementDialog.client) {
-			const resClient = ValidateClient(agreementDialog.client);
+		const resAgreement = ValidateRentalAgreement(agreement);
+		if (agreement.client) {
+			const resClient = ValidateClient(agreement.client);
 			if (resAgreement.length === 0 && resClient.length === 0) {
 				setIsLoading(true);
 				switch (mode) {
 					case 'delete':
 						await Promise.all([
-							deleteClient(agreementDialog.client.id),
-							deleteRentalAgreement(agreementDialog.id),
+							deleteClient(agreement.client.id),
+							deleteRentalAgreement(agreement.id),
 						]);
 						break;
 					case 'update':
 						await Promise.all([
-							updateClient(agreementDialog.client),
-							updateRentalAgreement(agreementDialog),
+							updateClient(agreement.client),
+							updateRentalAgreement(agreement),
 						]);
 						break;
 				}
@@ -111,16 +110,9 @@ export default function RentalAgreementDialog({
 						autoHideDuration={500}
 					>
 						<ClientsDialog
-							client={agreementDialog.client}
 							handleCancelDialog={() => null}
 							handleDialogSuccess={() => null}
 							mode={mode === 'delete' ? 'info' : mode}
-							setClient={(newClient) =>
-								setAgreementDialog({
-									...agreementDialog,
-									client: newClient,
-								})
-							}
 						/>
 					</Scrollbars>
 				</div>
@@ -136,11 +128,7 @@ export default function RentalAgreementDialog({
 						autoHideTimeout={750}
 						autoHideDuration={500}
 					>
-						<RentalAgreementAgreementDetails
-							mode={mode}
-							agreement={agreementDialog}
-							setAgreement={setAgreementDialog}
-						/>
+						<RentalAgreementAgreementDetails mode={mode} />
 					</Scrollbars>
 				</div>
 				<div className={'rentalAgreementSlide'}>
@@ -153,9 +141,7 @@ export default function RentalAgreementDialog({
 						autoHideDuration={500}
 					>
 						<Payments
-							agreement={agreementDialog}
 							mode={mode}
-							setAgreement={setAgreementDialog}
 							isLoading={isLoading}
 							setIsLoading={setIsLoading}
 						/>
@@ -189,11 +175,9 @@ export default function RentalAgreementDialog({
 						onClick={handleSave}
 						className={'DialogButton'}
 						disabled={
-							!agreementDialog.client ||
-							ValidateClient(agreementDialog.client).length !==
-								0 ||
-							ValidateRentalAgreement(agreementDialog).length !==
-								0
+							!agreement.client ||
+							ValidateClient(agreement.client).length !== 0 ||
+							ValidateRentalAgreement(agreement).length !== 0
 						}
 					>
 						Save

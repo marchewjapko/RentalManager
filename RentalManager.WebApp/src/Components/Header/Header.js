@@ -1,14 +1,4 @@
-import {
-	Divider,
-	Drawer,
-	IconButton,
-	List,
-	ListItem,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	Paper,
-} from '@mui/material';
+import { Divider, Drawer, IconButton, List, Paper } from '@mui/material';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -16,27 +6,40 @@ import MenuIcon from '@mui/icons-material/Menu';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightIcon from '@mui/icons-material/Nightlight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import { ReactComponent as UKIcon } from '../../Images/UK-Flag.svg';
 import { ReactComponent as PolandIcon } from '../../Images/Poland-Flag.svg';
 import Switch from 'react-switch';
 import './Header.js.css';
 import { useTranslation } from 'react-i18next';
+import HeaderListItems from './HeaderListItems';
+import { useRecoilState } from 'recoil';
+import { isHeaderOpenAtom } from '../Atoms/HeaderAtoms';
+import { useCookies } from 'react-cookie';
 
-export default function Header({ handleChangeTheme }) {
-	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+export default function Header() {
+	const [isDrawerOpen, setIsDrawerOpen] = useRecoilState(isHeaderOpenAtom);
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const { i18n } = useTranslation();
 	const [useEnglish, setUseEnglish] = useState(i18n.language === 'en');
-
-	const handleChange = () => {
-		handleChangeTheme();
-	};
-
-	const handleNavigate = (url) => {
-		setIsDrawerOpen(false);
-		navigate(url);
+	const [isDarkMode, setIsDarkMode] = useCookies();
+	const handleChangeTheme = () => {
+		if (
+			isDarkMode['isDarkMode'] === 'true' ||
+			isDarkMode['isDarkMode'] === undefined
+		) {
+			setIsDarkMode('isDarkMode', false, {
+				path: '/',
+				expires: new Date(2147483647 * 1000),
+				sameSite: 'strict',
+			});
+		} else {
+			setIsDarkMode('isDarkMode', true, {
+				path: '/',
+				expires: new Date(2147483647 * 1000),
+				sameSite: 'strict',
+			});
+		}
 	};
 
 	const languageClick = () => {
@@ -84,7 +87,7 @@ export default function Header({ handleChangeTheme }) {
 					</button>
 					<Switch
 						checked={theme.palette.mode === 'dark'}
-						onChange={handleChange}
+						onChange={handleChangeTheme}
 						handleDiameter={30}
 						onColor={theme.palette.grey['700']}
 						onHandleColor={theme.palette.grey['900']}
@@ -124,65 +127,7 @@ export default function Header({ handleChangeTheme }) {
 					</div>
 					<Divider />
 					<List>
-						<ListItem key={'mainPageButton'} disablePadding>
-							<ListItemButton onClick={() => handleNavigate('/')}>
-								<ListItemIcon>
-									<DashboardIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Dashboard'} />
-							</ListItemButton>
-						</ListItem>
-						<Divider />
-						<ListItem key={'rental-agreements'} disablePadding>
-							<ListItemButton
-								onClick={() =>
-									handleNavigate('/rental-agreement')
-								}
-							>
-								<ListItemIcon>
-									<DashboardIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Agreements'} />
-							</ListItemButton>
-						</ListItem>
-						<Divider />
-						<ListItem key={'add-rental-agreement'} disablePadding>
-							<ListItemButton
-								onClick={() =>
-									handleNavigate('/add-rental-agreement')
-								}
-							>
-								<ListItemIcon>
-									<DashboardIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Add agreement'} />
-							</ListItemButton>
-						</ListItem>
-						<Divider />
-						<ListItem key={'equipment'} disablePadding>
-							<ListItemButton
-								onClick={() =>
-									handleNavigate('/rental-equipment')
-								}
-							>
-								<ListItemIcon>
-									<DashboardIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Equipment'} />
-							</ListItemButton>
-						</ListItem>
-						<Divider />
-						<ListItem key={'employees'} disablePadding>
-							<ListItemButton
-								onClick={() => handleNavigate('/employees')}
-							>
-								<ListItemIcon>
-									<DashboardIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Employees'} />
-							</ListItemButton>
-						</ListItem>
-						<Divider />
+						<HeaderListItems />
 					</List>
 				</Paper>
 			</Drawer>

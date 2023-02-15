@@ -1,5 +1,4 @@
 import {
-	Box,
 	Checkbox,
 	IconButton,
 	Skeleton,
@@ -7,10 +6,8 @@ import {
 	TableBody,
 	TableCell,
 	TableContainer,
-	TableHead,
 	TableRow,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import * as React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,7 +16,6 @@ import SkeletonTablePagination from '../SkeletonTablePagination';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import ClientTableRow from '../Clients/ClientTableRow';
 
 export default function SkeletonTableClients() {
 	const theme = useTheme();

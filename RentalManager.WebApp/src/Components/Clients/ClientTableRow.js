@@ -21,7 +21,6 @@ export default function ClientTableRow({
 	row,
 	handleEditClick,
 	handleDeleteClick,
-	isCheckable,
 	setClient,
 	client,
 }) {
@@ -41,14 +40,10 @@ export default function ClientTableRow({
 			<TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 				<TableCell>
 					<Stack direction={'row'}>
-						{isCheckable ? (
-							<Checkbox
-								onChange={() => setClient(row)}
-								checked={
-									(client && row.id === client.id) || false
-								}
-							/>
-						) : null}
+						<Checkbox
+							onChange={() => setClient(row)}
+							checked={(client && row.id === client.id) || false}
+						/>
 						<IconButton
 							size="small"
 							onClick={handleOpenDetails}

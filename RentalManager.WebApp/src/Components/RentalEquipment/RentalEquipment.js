@@ -49,7 +49,7 @@ export default function RentalEquipment({ initialIds }) {
 	const handleSearch = async (searchName) => {
 		setIsLoading(true);
 		const result = await filterRentalEquipment(searchName);
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 		setPage(0);
 	};
@@ -90,7 +90,7 @@ export default function RentalEquipment({ initialIds }) {
 		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllRentalEquipment();
-		setData(result.data);
+		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 		if (mode === 'delete' && checkedIds.includes(rentalEquipment.id)) {
 			setCheckedIds(checkedIds.filter((x) => x !== rentalEquipment.id));
@@ -107,7 +107,7 @@ export default function RentalEquipment({ initialIds }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllRentalEquipment();
-			setData(result.data);
+			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();
@@ -220,8 +220,8 @@ export default function RentalEquipment({ initialIds }) {
 														rowsPerPage
 											  )
 											: data
-										).map((row) => (
-											<TableRow key={row.name}>
+										).map((row, index) => (
+											<TableRow key={index}>
 												<TableCell
 													component="th"
 													scope="row"

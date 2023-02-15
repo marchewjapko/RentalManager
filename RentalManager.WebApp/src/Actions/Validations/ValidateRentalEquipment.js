@@ -1,10 +1,31 @@
-export default function ValidateRentalEquipment(rentalEquipment) {
-	let result = [];
-	if (rentalEquipment.name.trim().length === 0) {
-		result.push('noName');
+import {
+	containsOnlyLettersNumbersAndWhiteSpace,
+	containsOnlyNumbers,
+	isNotNullOrEmpty,
+} from './BasicValidation';
+
+export function validateEquipmentName(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
 	}
-	if (rentalEquipment.price.length === 0) {
-		result.push('noPrice');
+	if (!containsOnlyLettersNumbersAndWhiteSpace(value)) {
+		return 'invalidFormat';
 	}
-	return result;
+	return '';
+}
+
+export function validateEquipmentPrice(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
+	}
+	if (!containsOnlyNumbers(value)) {
+		return 'invalidFormat';
+	}
+	return '';
+}
+
+export default function ValidateRentalEquipment(equipment) {
+	return [validateEquipmentName(equipment.name), validateEquipmentPrice(equipment.price)].every(
+		(x) => x === ''
+	);
 }

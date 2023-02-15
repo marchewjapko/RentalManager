@@ -2,16 +2,13 @@ import dayjs from 'dayjs';
 
 export default function ValidateRentalAgreement(rentalAgreement) {
 	let result = [];
-	if (rentalAgreement.client === null) {
+	if (rentalAgreement.client.id === -1) {
 		result.push('noClient');
 	}
 	if (rentalAgreement.deposit.length === 0) {
 		result.push('noDeposit');
 	}
-	if (
-		!rentalAgreement.transportTo ||
-		rentalAgreement.transportTo.length === 0
-	) {
+	if (rentalAgreement.transportTo === undefined || rentalAgreement.transportTo.length === 0) {
 		result.push('noTransportTo');
 	}
 	if (!rentalAgreement.dateAdded || rentalAgreement.dateAdded.length === 0) {
@@ -22,16 +19,10 @@ export default function ValidateRentalAgreement(rentalAgreement) {
 	if (!rentalAgreement.employee) {
 		result.push('noEmployee');
 	}
-	if (
-		!rentalAgreement.rentalEquipment ||
-		rentalAgreement.rentalEquipment.length === 0
-	) {
+	if (!rentalAgreement.rentalEquipment || rentalAgreement.rentalEquipment.length === 0) {
 		result.push('noRentalEquipment');
 	}
-	if (
-		rentalAgreement.payments === null ||
-		rentalAgreement.payments.length === 0
-	) {
+	if (rentalAgreement.payments === null || rentalAgreement.payments.length === 0) {
 		result.push('noPayments');
 	}
 	return result;

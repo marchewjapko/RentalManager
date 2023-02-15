@@ -17,7 +17,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const theme = useTheme();
-	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 	const [searchValues, setSearchValues] = React.useState({
 		surname: '',
 		phone: '',

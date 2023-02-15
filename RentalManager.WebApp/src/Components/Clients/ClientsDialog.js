@@ -1,11 +1,14 @@
 import * as React from 'react';
-import ValidateClient from '../../Actions/Validations/ValidateClient';
-import {
-	addClient,
-	deleteClient,
-	updateClient,
-} from '../../Actions/RestAPI/ClientActions';
-import { Scrollbars } from 'react-custom-scrollbars-2';
+import ValidateClient, {
+	validateCity,
+	validateEmail,
+	validateIdCard,
+	validateName,
+	validatePhoneNumber,
+	validateStreet,
+	validateSurname,
+} from '../../Actions/Validations/ValidateClient';
+import { addClient, deleteClient, updateClient } from '../../Actions/RestAPI/ClientActions';
 import {
 	Backdrop,
 	Button,
@@ -25,40 +28,22 @@ import HomeIcon from '@mui/icons-material/Home';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useRecoilState } from 'recoil';
+import { clientAtom } from '../Atoms/ClientAtoms';
+import ValidatedTextField from '../Shared/ValidatedTextField';
 
 export default function ClientsDialog({
 	handleCancelDialog,
-	client,
-	setClient,
 	handleDialogSuccess,
 	mode,
 	showDialogButtons,
 }) {
 	const [isLoading, setIsLoading] = React.useState(false);
-	const [validationState, setValidationState] = React.useState({
-		name: false,
-		surname: false,
-		idCard: false,
-		phone: '',
-		email: false,
-		city: false,
-		street: false,
-	});
-
+	const [client, setClient] = useRecoilState(clientAtom);
 	const handleChange = (event) => {
 		let newValue = event.target.value;
 		if (event.target.name === 'idCard') {
 			newValue = newValue.toUpperCase();
-		}
-		console.log(`new value: "${newValue}"`);
-		if (
-			event.target.name === 'phoneNumber' &&
-			newValue.length === 3 &&
-			!newValue.includes(' ')
-		) {
-			console.log(`newValue AAA: "${newValue}"`);
-			newValue = newValue + ' ';
-			console.log(`newValue BBB: "${newValue}"`);
 		}
 		const newClient = {
 			...client,
@@ -66,127 +51,14 @@ export default function ClientsDialog({
 		};
 		setClient(newClient);
 	};
-
-	const validateName = () => {
-		const res = ValidateClient(client);
-		if (res.includes('noName')) {
-			setValidationState({
-				...validationState,
-				name: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				name: false,
-			});
-		}
-	};
-
-	const validateSurname = () => {
-		const res = ValidateClient(client);
-		if (res.includes('noSurname')) {
-			setValidationState({
-				...validationState,
-				surname: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				surname: false,
-			});
-		}
-	};
-
-	const validateIdCard = () => {
-		const res = ValidateClient(client);
-		if (res.includes('invalidIdCard')) {
-			setValidationState({
-				...validationState,
-				idCard: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				idCard: false,
-			});
-		}
-	};
-
-	const validatePhone = () => {
-		const res = ValidateClient(client);
-		if (res.includes('noPhone')) {
-			setValidationState({
-				...validationState,
-				phone: 'noPhone',
-			});
-		} else if (res.includes('invalidPhone')) {
-			setValidationState({
-				...validationState,
-				phone: 'invalidPhone',
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				phone: '',
-			});
-		}
-	};
-
-	const validateEmail = () => {
-		const res = ValidateClient(client);
-		if (res.includes('invalidEmail')) {
-			setValidationState({
-				...validationState,
-				email: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				email: false,
-			});
-		}
-	};
-
-	const validateCity = () => {
-		const res = ValidateClient(client);
-		if (res.includes('noCity')) {
-			setValidationState({
-				...validationState,
-				city: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				city: false,
-			});
-		}
-	};
-
-	const validateStreet = () => {
-		const res = ValidateClient(client);
-		if (res.includes('noStreet')) {
-			setValidationState({
-				...validationState,
-				street: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				street: false,
-			});
-		}
-	};
-
 	const handleSave = async () => {
-		const res = ValidateClient(client);
-		if (res.length === 0) {
+		if (ValidateClient(client)) {
 			setIsLoading(true);
 			switch (mode) {
 				case 'delete':
 					await deleteClient(client.id);
 					break;
 				case 'update':
-					console.log('AAAA', client);
 					await updateClient(client);
 					break;
 				case 'post':
@@ -197,9 +69,6 @@ export default function ClientsDialog({
 			handleDialogSuccess(mode, client);
 		}
 	};
-
-	console.log(`PHONE"${client.phoneNumber}"`);
-
 	return (
 		<div>
 			<DialogContent>
@@ -215,213 +84,111 @@ export default function ClientsDialog({
 				<Stack spacing={2}>
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<PersonIcon className={'DividerIcon'} />
-						<Typography
-							variant="h6"
-							className={'MarginTopBottomAuto'}
-						>
+						<Typography variant="h6" className={'MarginTopBottomAuto'}>
 							Personal information
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={6} md={5}>
-							<TextField
+							<ValidatedTextField
 								name="name"
-								margin="dense"
 								label="Name"
-								variant="outlined"
-								fullWidth
 								value={client.name}
 								onChange={handleChange}
-								onBlur={validateName}
-								error={validationState.name}
-								helperText="Required"
-								InputProps={{
-									readOnly:
-										mode === 'delete' || mode === 'info',
-								}}
+								validationFunction={validateName}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 						<Grid xs={6} md={7}>
-							<TextField
+							<ValidatedTextField
 								name="surname"
-								margin="dense"
 								label="Surname"
-								variant="outlined"
-								fullWidth
 								value={client.surname}
 								onChange={handleChange}
-								onBlur={validateSurname}
-								error={validationState.surname}
-								helperText="Required"
-								InputProps={{
-									readOnly:
-										mode === 'delete' || mode === 'info',
-								}}
+								validationFunction={validateSurname}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 						<Grid xs={6} md={5}>
-							<InputMask
-								mask="aaa 999999"
+							<ValidatedTextField
+								name="idCard"
+								label="ID Card"
 								value={client.idCard}
-								disabled={false}
-								maskChar=" "
 								onChange={handleChange}
-								onBlur={validateIdCard}
-							>
-								{() => (
-									<TextField
-										name="idCard"
-										margin="dense"
-										label="ID Card"
-										variant="outlined"
-										fullWidth
-										value={client.idCard}
-										error={validationState.idCard}
-										helperText={
-											validationState.idCard
-												? 'Invalid ID card'
-												: ''
-										}
-										InputProps={{
-											readOnly:
-												mode === 'delete' ||
-												mode === 'info',
-										}}
-									/>
-								)}
-							</InputMask>
+								validationFunction={validateIdCard}
+								isReadonly={mode === 'delete' || mode === 'info'}
+								mask="aaa 999999"
+							/>
 						</Grid>
 					</Grid>
 					<Divider />
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<ContactPhoneIcon className={'DividerIcon'} />
-						<Typography
-							variant="h6"
-							className={'MarginTopBottomAuto'}
-						>
+						<Typography variant="h6" className={'MarginTopBottomAuto'}>
 							Contact information
 						</Typography>
 					</Stack>
 					<Grid container spacing={2} columns={{ xs: 6, sm: 12 }}>
 						<Grid xs={6} md={5}>
-							<InputMask
-								mask="99??99 9999"
-								formatChars={{
-									9: '[0-9]',
-									'?': '[0-9 ]',
-								}}
+							<ValidatedTextField
+								name="phoneNumber"
+								label="Phone number"
 								value={client.phoneNumber}
-								disabled={false}
-								maskChar={''}
 								onChange={handleChange}
-								onBlur={validatePhone}
-							>
-								{() => (
-									<TextField
-										name="phoneNumber"
-										margin="dense"
-										label="Phone number"
-										variant="outlined"
-										fullWidth
-										value={client.phoneNumber}
-										error={validationState.phone !== ''}
-										helperText={
-											validationState.phone ===
-											'invalidPhone'
-												? 'Invalid phone'
-												: 'Required'
-										}
-										InputProps={{
-											readOnly:
-												mode === 'delete' ||
-												mode === 'info',
-											startAdornment: (
-												<InputAdornment position="start">
-													+48
-												</InputAdornment>
-											),
-										}}
-									/>
-								)}
-							</InputMask>
+								validationFunction={validatePhoneNumber}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
+								mask="999 999 999"
+							/>
 						</Grid>
 						<Grid xs={6} md={7}>
-							<TextField
-								name="email"
-								margin="dense"
+							<ValidatedTextField
+								name={'email'}
 								label="Email"
-								variant="outlined"
-								fullWidth
 								value={client.email}
 								onChange={handleChange}
-								onBlur={validateEmail}
-								error={validationState.email}
-								helperText={
-									validationState.email ? 'Invalid email' : ''
-								}
-								InputProps={{
-									readOnly:
-										mode === 'delete' || mode === 'info',
-								}}
+								validationFunction={validateEmail}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 					</Grid>
 					<Divider />
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<HomeIcon className={'DividerIcon'} />
-						<Typography
-							variant="h6"
-							className={'MarginTopBottomAuto'}
-						>
+						<Typography variant="h6" className={'MarginTopBottomAuto'}>
 							Address
 						</Typography>
 					</Stack>
 					<Grid container spacing={2} columns={{ xs: 24, sm: 12 }}>
 						<Grid xs={24} md={5}>
-							<TextField
-								name="city"
-								margin="dense"
+							<ValidatedTextField
+								name={'city'}
 								label="City"
-								variant="outlined"
-								fullWidth
 								value={client.city}
 								onChange={handleChange}
-								onBlur={validateCity}
-								error={validationState.city}
-								helperText="Required"
-								InputProps={{
-									readOnly:
-										mode === 'delete' || mode === 'info',
-								}}
+								validationFunction={validateCity}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 						<Grid xs={13} md={7}>
-							<TextField
-								name="street"
-								margin="dense"
+							<ValidatedTextField
+								name={'street'}
 								label="Street"
-								variant="outlined"
-								fullWidth
 								value={client.street}
 								onChange={handleChange}
-								onBlur={validateStreet}
-								error={validationState.street}
-								helperText="Required"
-								InputProps={{
-									readOnly:
-										mode === 'delete' || mode === 'info',
-								}}
+								validationFunction={validateStreet}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 					</Grid>
 				</Stack>
 			</DialogContent>
 			{mode !== 'info' && showDialogButtons ? (
-				<Stack
-					direction="row"
-					justifyContent="space-between"
-					className={'DialogStack'}
-				>
+				<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
 					{mode === 'delete' ? (
 						<Button
 							variant="contained"

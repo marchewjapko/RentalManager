@@ -1,10 +1,4 @@
-import {
-	Autocomplete,
-	CircularProgress,
-	Stack,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Autocomplete, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import * as React from 'react';
 import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
@@ -17,7 +11,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllRentalEquipment();
-			setData(result.data);
+			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();
@@ -53,9 +47,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 				onClose={() => setOpen(false)}
 				options={data}
 				disableCloseOnSelect={true}
-				getOptionLabel={(option) =>
-					option.name + ' (' + option.price + ' zł)'
-				}
+				getOptionLabel={(option) => option.name + ' (' + option.price + ' zł)'}
 				loading={isLoading}
 				fullWidth={true}
 				renderInput={(params) => (
@@ -67,10 +59,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 							endAdornment: (
 								<React.Fragment>
 									{isLoading ? (
-										<CircularProgress
-											color="inherit"
-											size={20}
-										/>
+										<CircularProgress color="inherit" size={20} />
 									) : null}
 									{params.InputProps.endAdornment}
 								</React.Fragment>

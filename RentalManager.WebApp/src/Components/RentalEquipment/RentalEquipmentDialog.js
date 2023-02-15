@@ -1,5 +1,8 @@
 import * as React from 'react';
-import ValidateRentalEquipment from '../../Actions/Validations/ValidateRentalEquipment';
+import ValidateRentalEquipment, {
+	validateEquipmentName,
+	validateEquipmentPrice,
+} from '../../Actions/Validations/ValidateRentalEquipment';
 import {
 	addRentalEquipment,
 	deleteRentalEquipment,
@@ -20,6 +23,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Unstable_Grid2';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import ValidatedTextField from '../Shared/ValidatedTextField';
+import { validateEmployeeSurname } from '../../Actions/Validations/ValidateEmployee';
 
 export default function RentalEquipmentDialog({
 	handleCancelDialog,
@@ -27,30 +32,19 @@ export default function RentalEquipmentDialog({
 	handleDialogSuccess,
 	mode,
 }) {
-	const [rentalEquipmentDialog, setRentalEquipmentDialog] =
-		React.useState(rentalEquipment);
+	const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
 	const [isLoading, setIsLoading] = React.useState(false);
-	const [validationState, setValidationState] = React.useState({
-		name: false,
-		price: false,
-	});
-	const handleChangeName = (event) => {
-		setRentalEquipmentDialog({
-			...rentalEquipmentDialog,
-			name: event.target.value,
-		});
-	};
 
-	const handleChangePrice = (event) => {
-		setRentalEquipmentDialog({
+	const handleChange = (event) => {
+		const newEquipment = {
 			...rentalEquipmentDialog,
-			price: event.target.value.replace(/\D/g, ''),
-		});
+			[event.target.name]: event.target.value,
+		};
+		setRentalEquipmentDialog(newEquipment);
 	};
 
 	const handleSave = async () => {
-		const res = ValidateRentalEquipment(rentalEquipmentDialog);
-		if (res.length === 0) {
+		if (ValidateRentalEquipment(rentalEquipmentDialog)) {
 			setIsLoading(true);
 			switch (mode) {
 				case 'delete':
@@ -65,36 +59,6 @@ export default function RentalEquipmentDialog({
 			}
 			setIsLoading(false);
 			handleDialogSuccess(mode, rentalEquipmentDialog);
-		}
-	};
-
-	const validateName = () => {
-		const res = ValidateRentalEquipment(rentalEquipmentDialog);
-		if (res.includes('noName')) {
-			setValidationState({
-				...validationState,
-				name: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				name: false,
-			});
-		}
-	};
-
-	const validatePrice = () => {
-		const res = ValidateRentalEquipment(rentalEquipmentDialog);
-		if (res.includes('noPrice')) {
-			setValidationState({
-				...validationState,
-				price: true,
-			});
-		} else {
-			setValidationState({
-				...validationState,
-				price: false,
-			});
 		}
 	};
 
@@ -113,72 +77,38 @@ export default function RentalEquipmentDialog({
 				<Stack spacing={2}>
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<ConstructionIcon className={'DividerIcon'} />
-						<Typography
-							variant="h6"
-							className={'MarginTopBottomAuto'}
-						>
+						<Typography variant="h6" className={'MarginTopBottomAuto'}>
 							Equipment information
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={12} md={6}>
-							<TextField
-								margin="dense"
+							<ValidatedTextField
+								name="name"
 								label="Equipment name"
-								fullWidth
-								variant="outlined"
 								value={rentalEquipmentDialog.name}
-								onChange={handleChangeName}
-								onBlur={validateName}
-								error={validationState.name}
-								helperText="Required"
-								InputProps={
-									mode === 'delete' || mode === 'info'
-										? { readOnly: true }
-										: null
-								}
+								onChange={handleChange}
+								validationFunction={validateEquipmentName}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 						<Grid xs={12} md={6}>
-							<TextField
-								margin="dense"
+							<ValidatedTextField
+								name="price"
 								label="Price"
-								fullWidth
-								variant="outlined"
 								value={rentalEquipmentDialog.price}
-								InputProps={
-									mode === 'delete' || mode === 'info'
-										? {
-												readOnly: true,
-												endAdornment: (
-													<InputAdornment position="start">
-														zł
-													</InputAdornment>
-												),
-										  }
-										: {
-												endAdornment: (
-													<InputAdornment position="start">
-														zł
-													</InputAdornment>
-												),
-										  }
-								}
-								onChange={handleChangePrice}
-								onBlur={validatePrice}
-								error={validationState.price}
-								helperText="Required"
+								onChange={handleChange}
+								validationFunction={validateEquipmentPrice}
+								isRequired={true}
+								isReadonly={mode === 'delete' || mode === 'info'}
 							/>
 						</Grid>
 					</Grid>
 				</Stack>
 			</DialogContent>
 			{mode !== 'info' ? (
-				<Stack
-					direction="row"
-					justifyContent="space-between"
-					className={'DialogStack'}
-				>
+				<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
 					{mode === 'delete' ? (
 						<Button
 							variant="contained"
@@ -198,10 +128,7 @@ export default function RentalEquipmentDialog({
 							endIcon={<DoneIcon />}
 							onClick={handleSave}
 							className={'DialogButton'}
-							disabled={
-								ValidateRentalEquipment(rentalEquipmentDialog)
-									.length !== 0
-							}
+							disabled={!ValidateRentalEquipment(rentalEquipmentDialog)}
 						>
 							Save
 						</Button>
