@@ -80,7 +80,6 @@ export default function Clients() {
 	};
 	const handleDialogSuccess = async (mode, client) => {
 		setIsLoading(true);
-		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllClients();
 		setData(result.hasOwnProperty('data') ? result.data : result);

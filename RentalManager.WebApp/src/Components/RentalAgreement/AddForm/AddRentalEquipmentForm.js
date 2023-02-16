@@ -30,9 +30,9 @@ export default function AddRentalEquipmentForm() {
 	const [newRentalAgreement, setRentalAgreement] = useRecoilState(rentalAgreementAtom);
 	const navigate = useNavigate();
 	const [validationState, setValidationState] = React.useState({
-		'Choose client': null,
-		'Fill the details': null,
-		'Add payment': null,
+		chooseClient: null,
+		fillTheDetails: null,
+		addPayment: null,
 	});
 	React.useEffect(() => {
 		setRentalAgreement(new DefaultValue());
@@ -45,11 +45,11 @@ export default function AddRentalEquipmentForm() {
 	};
 	const handleNext = () => {
 		validateCurrentStep();
-		if (allStepsCompleted() && ValidateRentalAgreement(newRentalAgreement).length === 0) {
+		if (ValidateRentalAgreement(newRentalAgreement, true, true)) {
 			setIsLoading(true);
 			addRentalAgreement(newRentalAgreement)
 				.then(() => {
-					navigate('/');
+					navigate('/rental-agreement');
 				})
 				.catch((err) => console.log(err));
 		} else {
@@ -84,7 +84,7 @@ export default function AddRentalEquipmentForm() {
 				const validationResultClient = ValidateClient(newRentalAgreement.client);
 				setValidationState({
 					...validationState,
-					'Choose client': validationResultClient,
+					chooseClient: validationResultClient,
 				});
 				if (!validationResultClient) {
 					handleComplete();
@@ -93,10 +93,10 @@ export default function AddRentalEquipmentForm() {
 				}
 				break;
 			case 1:
-				const validationResultAgreement = ValidateClient(newRentalAgreement);
+				const validationResultAgreement = ValidateRentalAgreement(newRentalAgreement);
 				setValidationState({
 					...validationState,
-					'Fill the details': validationResultAgreement,
+					fillTheDetails: validationResultAgreement,
 				});
 				if (validationResultAgreement) {
 					handleComplete();
@@ -105,12 +105,15 @@ export default function AddRentalEquipmentForm() {
 				}
 				break;
 			case 2:
-				const validationResultPayment = newRentalAgreement
-					.map((payment) => ValidatePayment(payment))
-					.every((x) => x);
+				let validationResultPayment = newRentalAgreement.payments.length > 0;
+				if (validationResultPayment) {
+					validationResultPayment = newRentalAgreement.payments
+						.map((payment) => ValidatePayment(payment))
+						.every((x) => x);
+				}
 				setValidationState({
 					...validationState,
-					'Add payment': validationResultPayment,
+					addPayment: validationResultPayment,
 				});
 				if (validationResultPayment) {
 					handleComplete();
@@ -148,7 +151,6 @@ export default function AddRentalEquipmentForm() {
 							onClick={handleStep(index)}
 							icon={GetStepIcon(
 								index,
-								Object.keys(completed).includes(index.toString()),
 								index === activeStep,
 								validationState[step.label]
 							)}
@@ -174,7 +176,7 @@ export default function AddRentalEquipmentForm() {
 							>
 								<div>
 									<Button variant="contained" onClick={handleNext}>
-										{ValidateRentalAgreement(newRentalAgreement).length === 0
+										{ValidateRentalAgreement(newRentalAgreement, true, true)
 											? t('finish')
 											: t('continue')}
 									</Button>

@@ -45,7 +45,7 @@ export default function RentalAgreementDialog({ mode, handleCancelDialog, handle
 		console.log(agreement.client);
 		if (agreement.client) {
 			const resClient = ValidateClient(agreement.client);
-			if (resAgreement.length === 0 && resClient.length === 0) {
+			if (resAgreement && resClient) {
 				setIsLoading(true);
 				switch (mode) {
 					case 'delete':

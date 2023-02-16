@@ -2,7 +2,6 @@ import Clients from '../../Clients/Clients';
 import RentalAgreementAgreementDetails from '../RentalAgreementAgreementDetails';
 import Payments from '../../Payments/Payments';
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 
 export default function GetFormSteps() {
 	return [
@@ -15,7 +14,7 @@ export default function GetFormSteps() {
 			content: <RentalAgreementAgreementDetails mode={'post'} />,
 		},
 		{
-			label: 'paymentTranslation',
+			label: 'addPayment',
 			content: <Payments mode={'post'} />,
 		},
 	];

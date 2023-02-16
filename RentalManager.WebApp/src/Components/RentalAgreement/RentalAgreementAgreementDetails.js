@@ -2,7 +2,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import {
 	Box,
 	Divider,
-	InputAdornment,
 	Stack,
 	Table,
 	TableBody,
@@ -25,9 +24,10 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { useRecoilState } from 'recoil';
 import { rentalAgreementDetailsAtom } from '../Atoms/RentalAgreementDetailsAtoms';
 import { useTranslation } from 'react-i18next';
-import { validateEmail } from '../../Actions/Validations/ValidateClient';
 import ValidatedTextField from '../Shared/ValidatedTextField';
 import {
+	ValidateDateAdded,
+	ValidateDeposit,
 	ValidateTransportFrom,
 	ValidateTransportTo,
 } from '../../Actions/Validations/ValidateRentalAgreement';
@@ -56,7 +56,6 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 			dateAdded: event,
 		});
 	};
-
 	return (
 		<Box sx={{ overflow: 'hidden', maxWidth: '800px' }}>
 			<Stack spacing={2}>
@@ -195,7 +194,7 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 							label={t('deposit')}
 							value={agreement.deposit ?? ''}
 							onChange={handleChange}
-							validationFunction={ValidateTransportFrom}
+							validationFunction={ValidateDeposit}
 							isRequired={true}
 							isReadonly={mode === 'delete' || mode === 'info'}
 						/>
@@ -218,7 +217,12 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 								onChange={handleChangeDateAdded}
 								readOnly={mode === 'info' || mode === 'delete'}
 								renderInput={(params) => (
-									<TextField {...params} fullWidth helperText="Required" />
+									<TextField
+										{...params}
+										fullWidth
+										helperText="Required"
+										error={ValidateDateAdded(agreement.dateAdded).length !== 0}
+									/>
 								)}
 							/>
 						</LocalizationProvider>

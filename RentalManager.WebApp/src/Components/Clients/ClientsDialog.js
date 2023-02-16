@@ -25,11 +25,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { clientAtom } from '../Atoms/ClientAtoms';
 import ValidatedTextField from '../Shared/ValidatedTextField';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 
 export default function ClientsDialog({
 	handleCancelDialog,
@@ -39,7 +38,7 @@ export default function ClientsDialog({
 }) {
 	const [isLoading, setIsLoading] = React.useState(false);
 	const { t } = useTranslation(['clientTranslation']);
-	const [client, setClient] = useState(useRecoilValue(clientAtom));
+	const [client, setClient] = useRecoilState(clientAtom);
 	const handleChange = (event) => {
 		let newValue = event.target.value;
 		if (event.target.name === 'idCard') {

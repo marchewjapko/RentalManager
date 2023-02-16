@@ -5,7 +5,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Avatar } from '@mui/material';
 import * as React from 'react';
 
-export default function GetStepIcon(index, isCompleted, isActive, isValid) {
+export default function GetStepIcon(index, isActive, isValid) {
 	const theme = useTheme();
 	const icons = [
 		<PersonIcon color={'action'} />,

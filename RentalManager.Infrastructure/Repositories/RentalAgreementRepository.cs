@@ -48,12 +48,37 @@ namespace RentalManager.Infrastructure.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<RentalAgreement>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<RentalAgreement>> BrowseAllAsync(
+            int? clientId = null,
+            string? surname = null,
+            string? phoneNumber = null,
+            string? city = null,
+            string? street = null,
+            int? rentalEquipmentId = null,
+            bool onlyUnpaid = false,
+            DateTime? from = null,
+            DateTime? to = null)
         {
             var result = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).AsQueryable();
             if (clientId != null)
             {
                 result = result.Where(x => x.ClientId == clientId);
+            }
+            if(surname != null)
+            {
+                result = result.Where(x => x.Client.Surname.Contains(surname));
+            }
+            if (phoneNumber != null)
+            {
+                result = result.Where(x => x.Client.PhoneNumber.Contains(phoneNumber));
+            }
+            if (city != null)
+            {
+                result = result.Where(x => x.Client.City.Contains(city));
+            }
+            if (street != null)
+            {
+                result = result.Where(x => x.Client.Street.Contains(street));
             }
             if (rentalEquipmentId != null)
             {

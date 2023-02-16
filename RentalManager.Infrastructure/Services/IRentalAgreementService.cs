@@ -8,7 +8,16 @@ namespace RentalManager.Infrastructure.Services
     {
         Task<RentalAgreementDTO> AddAsync(CreateRentalAgreement createRentalAgreement);
         Task<RentalAgreementDTO> GetAsync(int id);
-        Task<IEnumerable<RentalAgreementDTO>> BrowseAllAsync(int? clientId = null, int? rentalEquipmentId = null, bool onlyUnpaid = false, DateTime? from = null, DateTime? to = null);
+        Task<IEnumerable<RentalAgreementDTO>> BrowseAllAsync(
+            int? clientId = null,
+            string? surname = null,
+            string? phoneNumber = null,
+            string? city = null,
+            string? street = null, 
+            int? rentalEquipmentId = null, 
+            bool onlyUnpaid = false, 
+            DateTime? from = null, 
+            DateTime? to = null);
         Task DeleteAsync(int id);
         Task<RentalAgreementDTO> UpdateAsync(UpdateRentalAgreement updateRentalAgreement, int id);
     }

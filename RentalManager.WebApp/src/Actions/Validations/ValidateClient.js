@@ -1,5 +1,6 @@
 import {
 	containsOnlyLetters,
+	containsOnlyLettersAndWhiteSpace,
 	containsOnlyLettersNumbersAndWhiteSpace,
 	isNotNullOrEmpty,
 } from './BasicValidation';
@@ -8,7 +9,7 @@ export function validateName(value) {
 	if (!isNotNullOrEmpty(value)) {
 		return 'noValue';
 	}
-	if (!containsOnlyLetters(value)) {
+	if (!containsOnlyLettersAndWhiteSpace(value)) {
 		return 'invalidFormat';
 	}
 	return '';
@@ -18,7 +19,7 @@ export function validateSurname(value) {
 	if (!isNotNullOrEmpty(value)) {
 		return 'noValue';
 	}
-	if (!containsOnlyLetters(value)) {
+	if (!containsOnlyLettersAndWhiteSpace(value)) {
 		return 'invalidFormat';
 	}
 	return '';
@@ -55,13 +56,14 @@ export function validateEmail(value) {
 	if (!regex.test(value)) {
 		return 'invalidFormat';
 	}
+	return '';
 }
 
 export function validateCity(value) {
 	if (!isNotNullOrEmpty(value)) {
 		return 'noValue';
 	}
-	if (!containsOnlyLetters(value)) {
+	if (!containsOnlyLettersAndWhiteSpace(value)) {
 		return 'invalidFormat';
 	}
 	return '';

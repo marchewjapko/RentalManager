@@ -1,4 +1,15 @@
-import { Divider, Drawer, IconButton, List, Paper } from '@mui/material';
+import {
+	AppBar,
+	Box,
+	Divider,
+	Drawer,
+	IconButton,
+	List,
+	Paper,
+	Stack,
+	Toolbar,
+	Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -59,69 +70,75 @@ export default function Header() {
 	};
 
 	return (
-		<div className={'sticky-header'}>
-			<Paper className={'header-container'} variant={'elevation'} square={true}>
-				<div>
-					<IconButton color="inherit" onClick={() => setIsDrawerOpen(true)} edge="start">
-						<MenuIcon />
-					</IconButton>
-				</div>
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						gap: '10px',
-					}}
-				>
-					<button className={'languageButton'} onClick={languageClick}>
-						{useEnglish ? (
-							<UKIcon className={'languageIcon'} />
-						) : (
-							<PolandIcon className={'languageIcon'} />
-						)}
-					</button>
-					<Switch
-						checked={theme.palette.mode === 'dark'}
-						onChange={handleChangeTheme}
-						handleDiameter={30}
-						onColor={theme.palette.grey['700']}
-						onHandleColor={theme.palette.grey['900']}
-						offColor={theme.palette.grey['400']}
-						offHandleColor={theme.palette.common.white}
-						height={38}
-						width={80}
-						boxShadow="0px 2px 2px rgba(0, 0, 0, 0.5)"
-						activeBoxShadow="0px 2px 2px rgba(0, 0, 0, 0.5)"
-						uncheckedIcon={
-							<div className={'header-unchecked-icon-container'}>
-								<WbSunnyIcon className={'header-icon'} />
-							</div>
-						}
-						checkedIcon={
-							<div className={'header-checked-icon-container'}>
-								<NightlightIcon className={'header-icon'} />
-							</div>
-						}
-					/>
-				</div>
-			</Paper>
-			<Drawer variant="persistent" anchor="left" open={isDrawerOpen}>
-				<Paper className={'drawer-paper'} variant={'elevation'} square={true}>
-					<div className={'drawer-header'}>
-						<div className={'drawer-title'}>System monitor</div>
-						<IconButton
-							className={'drawer-header-icon-container'}
-							onClick={() => setIsDrawerOpen(false)}
+		<>
+			<Box className={'sticky-header'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+				<Paper className={'header-container'} variant={'elevation'} square={true}>
+					<Stack direction={'row'} justifyContent={'flex-start'}>
+						<Box
+							sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 						>
-							<ChevronLeftIcon fontSize={'large'} />
-						</IconButton>
+							<IconButton
+								color="inherit"
+								onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+								edge="start"
+							>
+								<MenuIcon />
+							</IconButton>
+						</Box>
+						<Toolbar>
+							<Typography variant="h6" noWrap component="div">
+								Rental manager
+							</Typography>
+						</Toolbar>
+					</Stack>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							gap: '10px',
+						}}
+					>
+						<button className={'languageButton'} onClick={languageClick}>
+							{useEnglish ? (
+								<UKIcon className={'languageIcon'} />
+							) : (
+								<PolandIcon className={'languageIcon'} />
+							)}
+						</button>
+						<Switch
+							checked={theme.palette.mode === 'dark'}
+							onChange={handleChangeTheme}
+							handleDiameter={30}
+							onColor={theme.palette.grey['700']}
+							onHandleColor={theme.palette.grey['900']}
+							offColor={theme.palette.grey['400']}
+							offHandleColor={theme.palette.common.white}
+							height={38}
+							width={80}
+							boxShadow="0px 2px 2px rgba(0, 0, 0, 0.5)"
+							activeBoxShadow="0px 2px 2px rgba(0, 0, 0, 0.5)"
+							uncheckedIcon={
+								<div className={'header-unchecked-icon-container'}>
+									<WbSunnyIcon className={'header-icon'} />
+								</div>
+							}
+							checkedIcon={
+								<div className={'header-checked-icon-container'}>
+									<NightlightIcon className={'header-icon'} />
+								</div>
+							}
+						/>
 					</div>
-					<Divider />
+				</Paper>
+			</Box>
+			<Drawer variant="persistent" anchor="left" open={isDrawerOpen}>
+				<Toolbar sx={{ marginBottom: '10px' }} />
+				<div className={'drawer-paper'}>
 					<List>
 						<HeaderListItems />
 					</List>
-				</Paper>
+				</div>
 			</Drawer>
-		</div>
+		</>
 	);
 }

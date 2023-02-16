@@ -39,9 +39,6 @@ export function ValidateDeposit(value) {
 }
 
 export function ValidateDateAdded(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return 'noValue';
-	}
 	if (!dayjs(value).isValid()) {
 		return 'invalidFormat';
 	}
@@ -49,23 +46,29 @@ export function ValidateDateAdded(value) {
 }
 
 export function ValidateComment(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return '';
-	}
-	if (!containsOnlyLettersNumbersAndWhiteSpace(value)) {
-		return 'invalidFormat';
-	}
+	// if (!isNotNullOrEmpty(value)) {
+	// 	return '';
+	// }
+	// if (!containsOnlyLettersNumbersAndWhiteSpace(value)) {
+	// 	return 'invalidFormat';
+	// }
 	return '';
 }
 
-export default function ValidateRentalAgreement(rentalAgreement, validateClient) {
+export default function ValidateRentalAgreement(rentalAgreement, validateClient, validatePayments) {
 	if (validateClient && !ValidateClient(rentalAgreement.client)) {
 		return false;
 	}
 	if (!rentalAgreement.rentalEquipment.map((x) => ValidateRentalEquipment(x)).every((x) => x)) {
 		return false;
 	}
-	if (!ValidateEmployee(rentalAgreement.employee)) {
+	if (rentalAgreement.employee === null || !ValidateEmployee(rentalAgreement.employee)) {
+		return false;
+	}
+	if (
+		validatePayments &&
+		(rentalAgreement.payments === null || rentalAgreement.payments.length === 0)
+	) {
 		return false;
 	}
 	return [

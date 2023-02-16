@@ -16,6 +16,10 @@ export function containsOnlyLetters(value) {
 	return /^[\p{L}]+$/gu.test(value);
 }
 
+export function containsOnlyLettersAndWhiteSpace(value) {
+	return /^[\p{L}| ]+$/gu.test(value);
+}
+
 export function containsOnlyNumbers(value) {
 	return /^[0-9]+$/.test(value);
 }
