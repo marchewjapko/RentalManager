@@ -32,7 +32,6 @@ export default function Header() {
 	const [cookies, setCookies] = useCookies();
 	const theme = useTheme();
 	const { i18n } = useTranslation();
-	console.log('i18n', i18n);
 	const [useEnglish, setUseEnglish] = useState(i18n.language === 'en');
 	const handleChangeTheme = () => {
 		if (cookies['isDarkMode'] === 'true' || cookies['isDarkMode'] === undefined) {

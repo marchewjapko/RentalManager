@@ -36,7 +36,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+    options => options.UseSqlServer("Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
 );
 
 var app = builder.Build();

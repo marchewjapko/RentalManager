@@ -8,16 +8,22 @@ services:
         ports:
           - "8080:80"
         depends_on:
-          - system-monitor-db
+          - rental-manager-db
           
-    system-monitor-db:
+    rental-manager-db:
         environment:
           - TZ=Europe/Warsaw
         image: "mcr.microsoft.com/mssql/server:2022-latest"
+        user: root
         ports:
           - "1450:1433"
-
+        volumes:
+          - "database-vol:/var/opt/mssql"
+        deploy:
+          mode: global
         environment:
             MSSQL_SA_PASSWORD: "2620dvxje!ABC"
             ACCEPT_EULA: "Y"
             MSSQL_AGENT_ENABLED: True
+volumes:
+  database-vol:
