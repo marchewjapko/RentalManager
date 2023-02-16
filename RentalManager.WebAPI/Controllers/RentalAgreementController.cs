@@ -28,11 +28,22 @@ namespace RentalManager.WebAPI.Controllers
             string? city = null, 
             string? street = null, 
             int? rentalEquipmentId = null, 
+            int? employeeId = null,
             bool onlyUnpaid = false, 
             DateTime? from = null, 
             DateTime? to = null)
         {
-            var result = await _rentalAgreementService.BrowseAllAsync(clientId, surname, phoneNumber, city, street, rentalEquipmentId, onlyUnpaid, from, to);
+            var result = await _rentalAgreementService.BrowseAllAsync(
+                clientId, 
+                surname, 
+                phoneNumber, 
+                city, 
+                street, 
+                rentalEquipmentId, 
+                employeeId, 
+                onlyUnpaid, 
+                from, 
+                to);
             return Json(result);
         }
         [HttpDelete("{id}")]

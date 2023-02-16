@@ -15,6 +15,8 @@ import employeePL from './Tanslations/EmployeeTranslations/employeePL.json';
 import equipmentPL from './Tanslations/EquipmentTranslations/equipmentPL.json';
 import agreementPL from './Tanslations/AgreementTranslations/agreementPL.json';
 import paymentPL from './Tanslations/PaymentTranslations/paymentPL.json';
+import drawerEN from './Tanslations/DrawerTranslations/drawerEN.json';
+import drawerPL from './Tanslations/DrawerTranslations/drawerPL.json';
 
 i18n.use(XHR)
 	.use(LanguageDetector)
@@ -32,6 +34,7 @@ i18n.use(XHR)
 				equipmentTranslation: equipmentEN,
 				agreementTranslation: agreementEN,
 				paymentTranslation: paymentEN,
+				drawerTranslation: drawerEN,
 			},
 			pl: {
 				generalTranslation: generalPL,
@@ -40,6 +43,7 @@ i18n.use(XHR)
 				equipmentTranslation: equipmentPL,
 				agreementTranslation: agreementPL,
 				paymentTranslation: paymentPL,
+				drawerTranslation: drawerPL,
 			},
 		},
 		debug: false,

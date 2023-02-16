@@ -38,11 +38,12 @@ namespace RentalManager.Infrastructure.Services
             string? city = null,
             string? street = null,
             int? rentalEquipmentId = null,
+            int? employeeId = null,
             bool onlyUnpaid = false,
             DateTime? from = null,
             DateTime? to = null)
         {
-            var result = await _rentalAgreementRepository.BrowseAllAsync(clientId, surname, phoneNumber, city, street, rentalEquipmentId, onlyUnpaid, from, to);
+            var result = await _rentalAgreementRepository.BrowseAllAsync(clientId, surname, phoneNumber, city, street, rentalEquipmentId, employeeId, onlyUnpaid, from, to);
             return await Task.FromResult(result.Select(x => x.ToDTO()));
         }
 

@@ -7,5 +7,6 @@
   "deleteEmployee": "Usuń pracownika",
   "selectEmployee": "Wybierz pracownika",
   "employee": "Pracownik",
-  "nameAndSurname": "Imię i nazwisko"
+  "nameAndSurname": "Imię i nazwisko",
+  "employees": "Pracownicy"
 }

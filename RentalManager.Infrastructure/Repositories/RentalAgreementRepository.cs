@@ -55,11 +55,12 @@ namespace RentalManager.Infrastructure.Repositories
             string? city = null,
             string? street = null,
             int? rentalEquipmentId = null,
+            int? employeeId = null,
             bool onlyUnpaid = false,
             DateTime? from = null,
             DateTime? to = null)
         {
-            var result = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).AsQueryable();
+            var result = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).AsSingleQuery().AsQueryable();
             if (clientId != null)
             {
                 result = result.Where(x => x.ClientId == clientId);
@@ -83,6 +84,10 @@ namespace RentalManager.Infrastructure.Repositories
             if (rentalEquipmentId != null)
             {
                 result = result.Where(x => x.RentalEquipment.Any(a => a.Id == rentalEquipmentId));
+            }
+            if (employeeId != null)
+            {
+                result = result.Where(x => x.EmployeeId == employeeId);
             }
             if (onlyUnpaid)
             {

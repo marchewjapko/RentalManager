@@ -1,7 +1,4 @@
-import { useTranslation } from 'react-i18next';
-
+import * as React from 'react';
 export default function Dashboard() {
-	const { t } = useTranslation(['translation']);
-
-	return <div>{t('dashboard-title')}</div>;
+	return <div>ALA MA KOTA</div>;
 }

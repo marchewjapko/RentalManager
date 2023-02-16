@@ -139,7 +139,7 @@ export default function ClientsDialog({
 								validationFunction={validatePhoneNumber}
 								isRequired={true}
 								isReadonly={mode === 'delete' || mode === 'info'}
-								mask="999 999 999"
+								// mask="999 999 999"
 							/>
 						</Grid>
 						<Grid xs={6} md={7}>

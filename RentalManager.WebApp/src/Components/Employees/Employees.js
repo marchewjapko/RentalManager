@@ -1,166 +1,115 @@
 import * as React from 'react';
 import './Employees.js.css';
-import {
-	Box,
-	Button,
-	Dialog,
-	DialogTitle,
-	IconButton,
-	Paper,
-	Stack,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableRow,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Scrollbars } from 'react-custom-scrollbars-2';
-import { filterEmployees, getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
+import { Button, Fade, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import SearchTextField from '../Shared/SearchTextField';
-import EmployeeDialog from './EmployeeDialog';
-import SkeletonTableEmployees from '../SkeletonTables/SkeletonTableEmployees';
 import { useTranslation } from 'react-i18next';
+import { TransitionGroup } from 'react-transition-group';
+import EmployeeCard from './EmployeeCard';
+import ConfirmEmployeeDelete from './ConfirmEmployeeDelete';
+import {
+	employeeShowDeleteConfirmation,
+	employeeShowEditDialog,
+	forceEmployeeRefresh,
+} from '../Atoms/EmployeeAtoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useCallback } from 'react';
+
+const initialCards = [
+	{
+		type: 'skeleton',
+	},
+	{
+		type: 'skeleton',
+	},
+	{
+		type: 'skeleton',
+	},
+	{
+		type: 'skeleton',
+	},
+	{
+		type: 'skeleton',
+	},
+];
+
+function getTimeoutIn(index) {
+	return 250 + 100 * index;
+}
+
+function getCardsFromResponse(response) {
+	return response.map((record) => {
+		return {
+			type: 'data',
+			content: record,
+		};
+	});
+}
+function renderCard(type, content) {
+	if (type === 'skeleton') {
+		return (
+			<Paper elevation={0}>
+				<Skeleton variant="rounded" sx={{ width: '17em', height: '5em' }} />
+			</Paper>
+		);
+	}
+	return (
+		<Paper elevation={5}>
+			<EmployeeCard employee={content} />
+		</Paper>
+	);
+}
 
 export default function Employees() {
-	const [showDialog, setShowDialog] = React.useState(false);
-	const [focusedEmployee, setFocusedEmployee] = React.useState();
-	const [data, setData] = React.useState();
+	const [employeeCards, setEmployeeCards] = React.useState(initialCards);
 	const [isLoading, setIsLoading] = React.useState(true);
-	const [dialogMode, setDialogMode] = React.useState('');
+	const refreshFunction = useRecoilValue(forceEmployeeRefresh);
 	const { t } = useTranslation(['generalTranslation', 'employeeTranslation']);
 
-	const handleSearch = async (searchName) => {
-		setIsLoading(true);
-		const result = await filterEmployees(searchName);
-		setData(result.hasOwnProperty('data') ? result.data : result);
-		setIsLoading(false);
-	};
 	React.useEffect(() => {
-		const getData = async () => {
-			const result = await getAllEmployees();
-			setData(result.hasOwnProperty('data') ? result.data : result);
-			setIsLoading(false);
-		};
-		getData();
-	}, []);
-	const handleAddClick = () => {
-		setDialogMode('post');
-		setFocusedEmployee({ id: 0, name: '', surname: '' });
-		setShowDialog(true);
-	};
-	const handleEditClick = (employee) => {
-		setDialogMode('update');
-		setFocusedEmployee(employee);
-		setShowDialog(true);
-	};
-	const handleDeleteClick = (employee) => {
-		setDialogMode('delete');
-		setFocusedEmployee(employee);
-		setShowDialog(true);
-	};
-	const handleDialogSuccess = async () => {
 		setIsLoading(true);
-		setShowDialog(false);
-		const result = await getAllEmployees();
-		setData(result.hasOwnProperty('data') ? result.data : result);
-		setIsLoading(false);
-	};
-	const getDialogTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return t('addEmployee', { ns: 'employeeTranslation' });
-			case 'update':
-				return t('editEmployee', { ns: 'employeeTranslation' });
-			case 'delete':
-				return t('deleteEmployee', { ns: 'employeeTranslation' });
-		}
-	};
-	const dialog = () => {
-		return (
-			<Dialog open={showDialog} maxWidth={'sm'} onClose={() => setShowDialog(false)}>
-				<DialogTitle>{getDialogTitle()}</DialogTitle>
-				<EmployeeDialog
-					employee={focusedEmployee}
-					handleCancelDialog={() => setShowDialog(false)}
-					handleDialogSuccess={handleDialogSuccess}
-					mode={dialogMode}
-				/>
-			</Dialog>
-		);
-	};
+		getAllEmployees().then((result) => {
+			setEmployeeCards([]);
+			if (result.hasOwnProperty('data')) {
+				setTimeout(() => setEmployeeCards(getCardsFromResponse(result.data)), 255);
+			} else {
+				setTimeout(() => setEmployeeCards(getCardsFromResponse(result)), 255);
+			}
+			setIsLoading(false);
+		});
+	}, [refreshFunction]);
 
 	return (
-		<div>
-			<Paper className={'ComponentContainer'}>
-				<Stack
-					direction={'row'}
-					justifyContent="space-between"
-					alignItems="center"
-					className={'ComponentHeadStack'}
+		<>
+			<ConfirmEmployeeDelete />
+			<Stack
+				direction={'column'}
+				alignItems={'flex-start'}
+				justifyContent={'flex-start'}
+				gap={'10px'}
+				padding={2}
+			>
+				<Typography variant={'h3'}>
+					{t('employees', { ns: 'employeeTranslation' })}
+				</Typography>
+				<Button
+					startIcon={<AddCircleRoundedIcon />}
+					variant={'contained'}
+					onClick={() => console.log('Added!')}
+					disabled={isLoading}
 				>
-					<Button
-						startIcon={<AddCircleRoundedIcon />}
-						variant={'contained'}
-						onClick={handleAddClick}
-						disabled={isLoading}
-					>
-						{t('add')}
-					</Button>
-					<SearchTextField isLoading={isLoading} handleSearch={handleSearch} />
-				</Stack>
-				{isLoading ? (
-					<SkeletonTableEmployees />
-				) : (
-					<div>
-						{dialog()}
-						<TableContainer className={'EmployeesTable'}>
-							<Scrollbars
-								autoHeight={true}
-								autoHeightMin={0}
-								autoHeightMax={460}
-								autoHide
-								autoHideTimeout={750}
-								autoHideDuration={500}
-							>
-								<Table stickyHeader>
-									<TableBody>
-										{data.map((row) => (
-											<TableRow key={row.name}>
-												<TableCell component="th" scope="row">
-													{row.name}
-												</TableCell>
-												<TableCell align="right">{row.surname}</TableCell>
-												<TableCell align="right">
-													<Box>
-														<IconButton
-															aria-label="delete"
-															size="small"
-															onClick={() => handleEditClick(row)}
-														>
-															<EditIcon fontSize="small" />
-														</IconButton>
-														<IconButton
-															aria-label="delete"
-															size="small"
-															color={'error'}
-															onClick={() => handleDeleteClick(row)}
-														>
-															<DeleteIcon fontSize="small" />
-														</IconButton>
-													</Box>
-												</TableCell>
-											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							</Scrollbars>
-						</TableContainer>
-					</div>
-				)}
-			</Paper>
-		</div>
+					{t('add')}
+				</Button>
+				<TransitionGroup
+					style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}
+				>
+					{employeeCards.map((x, index) => (
+						<Fade key={index} timeout={{ enter: getTimeoutIn(index), exit: 250 }}>
+							{renderCard(x.type, x.content)}
+						</Fade>
+					))}
+				</TransitionGroup>
+			</Stack>
+		</>
 	);
 }

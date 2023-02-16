@@ -15,6 +15,7 @@ namespace RentalManager.Core.Repositories
             string? city = null,
             string? street = null,
             int? rentalEquipmentId = null,
+            int? employeeId = null,
             bool onlyUnpaid = false,
             DateTime? from = null,
             DateTime? to = null);
