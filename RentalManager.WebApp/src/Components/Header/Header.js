@@ -1,22 +1,9 @@
-import {
-	AppBar,
-	Box,
-	Divider,
-	Drawer,
-	IconButton,
-	List,
-	Paper,
-	Stack,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Box, Drawer, IconButton, List, Paper, Stack, Toolbar, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightIcon from '@mui/icons-material/Nightlight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { ReactComponent as UKIcon } from '../../Images/UK-Flag.svg';
 import { ReactComponent as PolandIcon } from '../../Images/Poland-Flag.svg';
 import Switch from 'react-switch';

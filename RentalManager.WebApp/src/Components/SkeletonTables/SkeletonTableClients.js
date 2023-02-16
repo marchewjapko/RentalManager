@@ -45,26 +45,13 @@ export default function SkeletonTableClients() {
 									</IconButton>
 								</TableCell>
 								<TableCell
-									className={
-										'SkeletonTableRow ClientTableNameCell'
-									}
+									className={'SkeletonTableRow ClientTableNameCell'}
 									sx={{ width: '49%' }}
 								>
-									<Skeleton
-										variant="rounded"
-										width={'100%'}
-										height={35}
-									/>
+									<Skeleton variant="rounded" width={'100%'} height={35} />
 								</TableCell>
-								<TableCell
-									className={'SkeletonTableRow'}
-									sx={{ width: '49%' }}
-								>
-									<Skeleton
-										variant="rounded"
-										width={'100%'}
-										height={35}
-									/>
+								<TableCell className={'SkeletonTableRow'} sx={{ width: '49%' }}>
+									<Skeleton variant="rounded" width={'100%'} height={35} />
 								</TableCell>
 								<TableCell
 									align="right"
@@ -73,18 +60,10 @@ export default function SkeletonTableClients() {
 										whiteSpace: 'nowrap',
 									}}
 								>
-									<IconButton
-										aria-label="delete"
-										size="small"
-										disabled
-									>
+									<IconButton aria-label="delete" size="small" disabled>
 										<EditIcon fontSize="small" />
 									</IconButton>
-									<IconButton
-										aria-label="delete"
-										size="small"
-										disabled
-									>
+									<IconButton aria-label="delete" size="small" disabled>
 										<DeleteIcon fontSize="small" />
 									</IconButton>
 								</TableCell>

@@ -109,6 +109,7 @@ export default function Clients() {
 		setPage(0);
 		setClient(result[0]);
 	};
+
 	function defaultLabelDisplayedRows({ from, to, count }) {
 		if (i18n.language === 'en') {
 			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;

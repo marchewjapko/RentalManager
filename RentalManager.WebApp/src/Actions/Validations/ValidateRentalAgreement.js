@@ -1,11 +1,7 @@
 import ValidateClient from './ValidateClient';
 import ValidateRentalEquipment from './ValidateRentalEquipment';
 import ValidateEmployee from './ValidateEmployee';
-import {
-	containsOnlyLettersNumbersAndWhiteSpace,
-	containsOnlyNumbers,
-	isNotNullOrEmpty,
-} from './BasicValidation';
+import { containsOnlyNumbers, isNotNullOrEmpty } from './BasicValidation';
 import dayjs from 'dayjs';
 
 export function ValidateTransportTo(value) {

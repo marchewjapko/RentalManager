@@ -9,10 +9,7 @@ export const addPayment = (id, payment) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Payment added!'),
-						console.log('Added payment:', payment)
-					),
+					() => (resolve('Payment added!'), console.log('Added payment:', payment)),
 					2500
 				);
 		  })
@@ -38,9 +35,7 @@ export const getPayment = (rentalAgreementId) =>
 					() => (
 						resolve(
 							Object.values(
-								RentalAgreementMock.filter(
-									(x) => x.id === id
-								)[0].payments
+								RentalAgreementMock.filter((x) => x.id === id)[0].payments
 							)
 						),
 						console.log('Got all payments')
@@ -58,10 +53,7 @@ export const deletePayment = (id) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Payment deleted!'),
-						console.log('Deleted payment:', id)
-					),
+					() => (resolve('Payment deleted!'), console.log('Deleted payment:', id)),
 					2500
 				);
 		  })

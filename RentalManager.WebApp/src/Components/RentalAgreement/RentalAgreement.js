@@ -231,6 +231,7 @@ export default function RentalAgreement() {
 			return theme.palette.error.light;
 		}
 	};
+
 	function defaultLabelDisplayedRows({ from, to, count }) {
 		if (i18n.language === 'en') {
 			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;

@@ -9,10 +9,7 @@ export const getAllClients = () =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve(Object.values(ClientsMock)),
-						console.log('Got all clients')
-					),
+					() => (resolve(Object.values(ClientsMock)), console.log('Got all clients')),
 					2500
 				);
 		  })
@@ -22,10 +19,7 @@ export const addClient = (newClient) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve(Object.values(ClientsMock)),
-						console.log('Got all clients')
-					),
+					() => (resolve(Object.values(ClientsMock)), console.log('Got all clients')),
 					2500
 				);
 		  })
@@ -43,10 +37,7 @@ export const updateClient = (newClient) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Client updated!'),
-						console.log('Updated client:', client)
-					),
+					() => (resolve('Client updated!'), console.log('Updated client:', client)),
 					2500
 				);
 		  })
@@ -64,10 +55,7 @@ export const deleteClient = (id) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Client deleted!'),
-						console.log('Deleted client:', id)
-					),
+					() => (resolve('Client deleted!'), console.log('Deleted client:', id)),
 					2500
 				);
 		  })
@@ -84,24 +72,16 @@ export const filterClients = (searchParams) =>
 									(x) =>
 										x.surname
 											.toLowerCase()
-											.includes(
-												searchParams.surname.toLowerCase()
-											) &&
+											.includes(searchParams.surname.toLowerCase()) &&
 										x.phone
 											.toLowerCase()
-											.includes(
-												searchParams.phone.toLowerCase()
-											) &&
+											.includes(searchParams.phone.toLowerCase()) &&
 										x.city
 											.toLowerCase()
-											.includes(
-												searchParams.city.toLowerCase()
-											) &&
+											.includes(searchParams.city.toLowerCase()) &&
 										x.street
 											.toLowerCase()
-											.includes(
-												searchParams.street.toLowerCase()
-											)
+											.includes(searchParams.street.toLowerCase())
 								)
 							)
 						),

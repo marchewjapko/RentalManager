@@ -9,10 +9,7 @@ export const getAllEmployees = () =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve(Object.values(EmployeesMock)),
-						console.log('Got all employees')
-					),
+					() => (resolve(Object.values(EmployeesMock)), console.log('Got all employees')),
 					2500
 				);
 		  })
@@ -22,10 +19,7 @@ export const addEmployee = (employee) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Employee added!'),
-						console.log('Added employee:', employee)
-					),
+					() => (resolve('Employee added!'), console.log('Added employee:', employee)),
 					2500
 				);
 		  })
@@ -42,9 +36,7 @@ export const filterEmployees = (name) =>
 						resolve(
 							Object.values(
 								EmployeesMock.filter((x) =>
-									x.surname
-										.toLowerCase()
-										.includes(name.toLowerCase())
+									x.surname.toLowerCase().includes(name.toLowerCase())
 								)
 							)
 						),
@@ -64,8 +56,7 @@ export const updateEmployee = (employee) =>
 		? new Promise((resolve) => {
 				setTimeout(
 					() => (
-						resolve('Employee updated!'),
-						console.log('Updated employee:', employee)
+						resolve('Employee updated!'), console.log('Updated employee:', employee)
 					),
 					2500
 				);
@@ -79,10 +70,7 @@ export const deleteEmployee = (id) =>
 	process.env.REACT_APP_Mock_Version === 'true'
 		? new Promise((resolve) => {
 				setTimeout(
-					() => (
-						resolve('Employee deleted!'),
-						console.log('Deleted employee:', id)
-					),
+					() => (resolve('Employee deleted!'), console.log('Deleted employee:', id)),
 					2500
 				);
 		  })

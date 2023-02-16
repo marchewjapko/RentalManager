@@ -16,6 +16,7 @@ export default function ValidatedTextField({
 }) {
 	const [isError, setIsError] = useState(false);
 	const { t } = useTranslation(['generalTranslation']);
+
 	function getHelperText() {
 		if (validationFunction(value) === 'invalidFormat' && isError) {
 			return t('invalidFormat');
@@ -24,6 +25,7 @@ export default function ValidatedTextField({
 			return t('required');
 		}
 	}
+
 	const handleOnBlur = () => {
 		if (validationFunction(value) !== '') {
 			setIsError(true);

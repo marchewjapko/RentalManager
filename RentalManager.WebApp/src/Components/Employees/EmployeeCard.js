@@ -1,9 +1,10 @@
-import { Avatar, Button, Card, Chip, Fade, Stack, Typography } from '@mui/material';
+import { Avatar, Card, Chip, Fade, Stack, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { employeeAtom, employeeShowDeleteConfirmation } from '../Atoms/EmployeeAtoms';
+
 export default function ({ employee }) {
 	const [isMouseOver, setIsMouseOver] = useState(false);
 	const [, setShowDeleteDialog] = useRecoilState(employeeShowDeleteConfirmation);

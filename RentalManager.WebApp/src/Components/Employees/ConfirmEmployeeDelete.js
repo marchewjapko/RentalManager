@@ -6,8 +6,8 @@ import {
 } from '../Atoms/EmployeeAtoms';
 import { DefaultValue, useRecoilState, useSetRecoilState } from 'recoil';
 import * as React from 'react';
-import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import { useState } from 'react';
+import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import {
 	Button,
 	Dialog,
@@ -83,6 +83,7 @@ export default function ConfirmEmployeeDelete() {
 				});
 		}
 	};
+
 	function getDialogContent() {
 		if (numberOfAgreements > 0) {
 			return (

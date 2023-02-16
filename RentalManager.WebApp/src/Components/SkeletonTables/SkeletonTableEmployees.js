@@ -1,14 +1,11 @@
 import {
 	Box,
-	Checkbox,
 	IconButton,
 	Skeleton,
-	Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
-	TableHead,
 	TableRow,
 } from '@mui/material';
 import * as React from 'react';
@@ -24,36 +21,17 @@ export default function SkeletonTableEmployees() {
 						{[...Array(6).keys()].map((x) => (
 							<TableRow key={x}>
 								<TableCell className={'SkeletonTableRow'}>
-									<Skeleton
-										variant="rounded"
-										width={'100%'}
-										height={35}
-									/>
+									<Skeleton variant="rounded" width={'100%'} height={35} />
 								</TableCell>
 								<TableCell className={'SkeletonTableRow'}>
-									<Skeleton
-										variant="rounded"
-										width={'100%'}
-										height={35}
-									/>
+									<Skeleton variant="rounded" width={'100%'} height={35} />
 								</TableCell>
-								<TableCell
-									align="right"
-									sx={{ width: '100px' }}
-								>
+								<TableCell align="right" sx={{ width: '100px' }}>
 									<Box>
-										<IconButton
-											aria-label="delete"
-											size="small"
-											disabled
-										>
+										<IconButton aria-label="delete" size="small" disabled>
 											<EditIcon fontSize="small" />
 										</IconButton>
-										<IconButton
-											aria-label="delete"
-											size="small"
-											disabled
-										>
+										<IconButton aria-label="delete" size="small" disabled>
 											<DeleteIcon fontSize="small" />
 										</IconButton>
 									</Box>

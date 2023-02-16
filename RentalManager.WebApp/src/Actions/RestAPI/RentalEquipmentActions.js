@@ -42,9 +42,7 @@ export const filterRentalEquipment = (name) =>
 						resolve(
 							Object.values(
 								RentalEquipmentMock.filter((x) =>
-									x.name
-										.toLowerCase()
-										.includes(name.toLowerCase())
+									x.name.toLowerCase().includes(name.toLowerCase())
 								)
 							)
 						),
@@ -65,10 +63,7 @@ export const updateRentalEquipment = (rentalEquipment) =>
 				setTimeout(
 					() => (
 						resolve('Rental equipment updated!'),
-						console.log(
-							'Updated rental equipment:',
-							rentalEquipment
-						)
+						console.log('Updated rental equipment:', rentalEquipment)
 					),
 					2500
 				);

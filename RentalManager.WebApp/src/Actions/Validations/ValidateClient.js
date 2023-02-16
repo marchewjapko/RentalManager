@@ -1,5 +1,4 @@
 import {
-	containsOnlyLetters,
 	containsOnlyLettersAndWhiteSpace,
 	containsOnlyLettersNumbersAndWhiteSpace,
 	isNotNullOrEmpty,

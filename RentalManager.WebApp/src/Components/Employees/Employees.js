@@ -7,13 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { TransitionGroup } from 'react-transition-group';
 import EmployeeCard from './EmployeeCard';
 import ConfirmEmployeeDelete from './ConfirmEmployeeDelete';
-import {
-	employeeShowDeleteConfirmation,
-	employeeShowEditDialog,
-	forceEmployeeRefresh,
-} from '../Atoms/EmployeeAtoms';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useCallback } from 'react';
+import { forceEmployeeRefresh } from '../Atoms/EmployeeAtoms';
+import { useRecoilValue } from 'recoil';
 
 const initialCards = [
 	{
@@ -45,6 +40,7 @@ function getCardsFromResponse(response) {
 		};
 	});
 }
+
 function renderCard(type, content) {
 	if (type === 'skeleton') {
 		return (

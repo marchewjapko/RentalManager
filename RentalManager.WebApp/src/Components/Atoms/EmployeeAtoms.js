@@ -1,6 +1,4 @@
 import { atom } from 'recoil';
-import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
-import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 
 export const employeeAtom = atom({
 	key: 'employeeAtom',

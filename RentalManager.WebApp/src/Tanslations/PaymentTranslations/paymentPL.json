@@ -1,15 +1,15 @@
 {
-	"paymentMethod": "Metoda płatności",
-	"amount": "Zapłacono",
-	"paidFrom": "Płatność od",
-	"paidTo": "Płatność do",
-	"method": "Metoda",
-	"from": "Od",
-	"to": "Do",
-	"total": "W sumie",
-	"noPayments": "Brak płatności",
-	"Card": "Karta",
-	"Cash": "Gotówka",
-	"Transfer": "Przelew",
-	"payments": "Płatności"
+  "paymentMethod": "Metoda płatności",
+  "amount": "Zapłacono",
+  "paidFrom": "Płatność od",
+  "paidTo": "Płatność do",
+  "method": "Metoda",
+  "from": "Od",
+  "to": "Do",
+  "total": "W sumie",
+  "noPayments": "Brak płatności",
+  "Card": "Karta",
+  "Cash": "Gotówka",
+  "Transfer": "Przelew",
+  "payments": "Płatności"
 }

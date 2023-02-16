@@ -54,6 +54,7 @@ export default function EmployeeDialog({
 			handleDialogSuccess();
 		}
 	};
+
 	function GetFooter() {
 		if (mode === 'delete') {
 			return (

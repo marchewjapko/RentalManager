@@ -1,5 +1,5 @@
 import { RouterProvider } from 'react-router-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import { createTheme, Snackbar, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useCookies } from 'react-cookie';

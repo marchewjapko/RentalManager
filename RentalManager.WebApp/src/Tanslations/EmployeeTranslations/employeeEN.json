@@ -2,7 +2,7 @@
   "name": "Name",
   "surname": "Surname",
   "employeeInformation": "Employee information",
-  "addEmployee" : "Add employee",
+  "addEmployee": "Add employee",
   "editEmployee": "Edit employee",
   "deleteEmployee": "Delete employee",
   "selectEmployee": "Select employee",

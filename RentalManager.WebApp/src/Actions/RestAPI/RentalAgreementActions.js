@@ -11,11 +11,7 @@ export const getAgreement = (id) =>
 		? new Promise((resolve) => {
 				setTimeout(
 					() => (
-						resolve(
-							Object.values(
-								RentalAgreementMock.filter((x) => x.id === id)
-							)
-						),
+						resolve(Object.values(RentalAgreementMock.filter((x) => x.id === id))),
 						console.log('Got all agreements')
 					),
 					2500
@@ -42,10 +38,7 @@ export const updateRentalAgreement = (rentalAgreement) =>
 				setTimeout(
 					() => (
 						resolve('Rental agreement updated!'),
-						console.log(
-							'Updated agreement equipment:',
-							rentalAgreement
-						)
+						console.log('Updated agreement equipment:', rentalAgreement)
 					),
 					2500
 				);
@@ -54,9 +47,7 @@ export const updateRentalAgreement = (rentalAgreement) =>
 				employeeId: rentalAgreement.employee.id,
 				isActive: true,
 				clientId: rentalAgreement.client.id,
-				rentalEquipmentIds: rentalAgreement.rentalEquipment.map(
-					(x) => x.id
-				),
+				rentalEquipmentIds: rentalAgreement.rentalEquipment.map((x) => x.id),
 				comment: rentalAgreement.comment,
 				deposit: rentalAgreement.deposit,
 				transportFrom: rentalAgreement.transportFrom,
@@ -92,9 +83,7 @@ export const addRentalAgreement = (rentalAgreement) =>
 				employeeId: rentalAgreement.employee.id,
 				isActive: true,
 				clientId: rentalAgreement.client.id,
-				rentalEquipmentIds: rentalAgreement.rentalEquipment.map(
-					(x) => x.id
-				),
+				rentalEquipmentIds: rentalAgreement.rentalEquipment.map((x) => x.id),
 				comment: rentalAgreement.comment,
 				deposit: rentalAgreement.deposit,
 				transportFrom: rentalAgreement.transportFrom,
@@ -114,40 +103,25 @@ export const filterAgreements = (searchParams) =>
 									(x) =>
 										x.client.surname
 											.toLowerCase()
-											.includes(
-												searchParams.surname.toLowerCase()
-											) &&
+											.includes(searchParams.surname.toLowerCase()) &&
 										x.client.phone
 											.toLowerCase()
-											.includes(
-												searchParams.phone.toLowerCase()
-											) &&
+											.includes(searchParams.phone.toLowerCase()) &&
 										x.client.city
 											.toLowerCase()
-											.includes(
-												searchParams.city.toLowerCase()
-											) &&
+											.includes(searchParams.city.toLowerCase()) &&
 										x.client.street
 											.toLowerCase()
-											.includes(
-												searchParams.street.toLowerCase()
-											) &&
+											.includes(searchParams.street.toLowerCase()) &&
 										((searchParams.onlyUnpaid &&
-											dayjs(x.validUntil).diff(
-												dayjs(),
-												'day'
-											) < 0) ||
+											dayjs(x.validUntil).diff(dayjs(), 'day') < 0) ||
 											!searchParams.onlyUnpaid) &&
-										(x.isActive ===
-											searchParams.onlyActive ||
+										(x.isActive === searchParams.onlyActive ||
 											!searchParams.onlyActive)
 								)
 							)
 						),
-						console.log(
-							'Filtered agreements, params:',
-							searchParams
-						)
+						console.log('Filtered agreements, params:', searchParams)
 					),
 					2500
 				);
