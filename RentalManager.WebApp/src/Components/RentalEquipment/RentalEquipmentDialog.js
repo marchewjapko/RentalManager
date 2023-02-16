@@ -13,9 +13,7 @@ import {
 	Button,
 	CircularProgress,
 	DialogContent,
-	InputAdornment,
 	Stack,
-	TextField,
 	Typography,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -24,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Unstable_Grid2';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import ValidatedTextField from '../Shared/ValidatedTextField';
-import { validateEmployeeSurname } from '../../Actions/Validations/ValidateEmployee';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalEquipmentDialog({
 	handleCancelDialog,
@@ -34,6 +32,7 @@ export default function RentalEquipmentDialog({
 }) {
 	const [rentalEquipmentDialog, setRentalEquipmentDialog] = React.useState(rentalEquipment);
 	const [isLoading, setIsLoading] = React.useState(false);
+	const { t } = useTranslation(['equipmentTranslation', 'generalTranslation']);
 
 	const handleChange = (event) => {
 		const newEquipment = {
@@ -78,14 +77,14 @@ export default function RentalEquipmentDialog({
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<ConstructionIcon className={'DividerIcon'} />
 						<Typography variant="h6" className={'MarginTopBottomAuto'}>
-							Equipment information
+							{t('equipmentInformation')}
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={12} md={6}>
 							<ValidatedTextField
 								name="name"
-								label="Equipment name"
+								label={t('equipmentName')}
 								value={rentalEquipmentDialog.name}
 								onChange={handleChange}
 								validationFunction={validateEquipmentName}
@@ -96,7 +95,7 @@ export default function RentalEquipmentDialog({
 						<Grid xs={12} md={6}>
 							<ValidatedTextField
 								name="price"
-								label="Price"
+								label={t('price')}
 								value={rentalEquipmentDialog.price}
 								onChange={handleChange}
 								validationFunction={validateEquipmentPrice}
@@ -118,7 +117,7 @@ export default function RentalEquipmentDialog({
 							onClick={handleSave}
 							className={'DialogButton'}
 						>
-							Delete
+							{t('delete', { ns: 'generalTranslation' })}
 						</Button>
 					) : (
 						<Button
@@ -130,7 +129,7 @@ export default function RentalEquipmentDialog({
 							className={'DialogButton'}
 							disabled={!ValidateRentalEquipment(rentalEquipmentDialog)}
 						>
-							Save
+							{t('save', { ns: 'generalTranslation' })}
 						</Button>
 					)}
 					<Button
@@ -141,7 +140,7 @@ export default function RentalEquipmentDialog({
 						onClick={() => handleCancelDialog(false)}
 						className={'DialogButton'}
 					>
-						Cancel
+						{t('cancel', { ns: 'generalTranslation' })}
 					</Button>
 				</Stack>
 			) : null}

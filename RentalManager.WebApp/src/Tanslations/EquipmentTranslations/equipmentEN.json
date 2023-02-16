@@ -1,0 +1,11 @@
+{
+  "equipmentName": "Equipment name",
+  "price": "Price",
+  "equipmentInformation": "Equipment information",
+  "editRentalEquipment": "Edit rental equipment",
+  "addRentalEquipment": "Add rental equipment",
+  "deleteRentalEquipment": "Delete rental equipment",
+  "selectEquipment": "Select equipment",
+  "equipment": "Equipment",
+  "total": "Total"
+}

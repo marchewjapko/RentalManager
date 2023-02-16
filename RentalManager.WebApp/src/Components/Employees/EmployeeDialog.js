@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Unstable_Grid2';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import ValidatedTextField from '../Shared/ValidatedTextField';
+import { useTranslation } from 'react-i18next';
 
 export default function EmployeeDialog({
 	handleCancelDialog,
@@ -27,6 +28,7 @@ export default function EmployeeDialog({
 }) {
 	const [employeeDialog, setEmployeeDialog] = React.useState(employee);
 	const [isLoading, setIsLoading] = React.useState(false);
+	const { t } = useTranslation(['employeeTranslation', 'generalTranslation']);
 	const handleChange = (event) => {
 		const newEmployee = {
 			...employeeDialog,
@@ -49,12 +51,65 @@ export default function EmployeeDialog({
 					break;
 			}
 			setIsLoading(false);
-			handleDialogSuccess(mode, employeeDialog);
+			handleDialogSuccess();
 		}
 	};
+	function GetFooter() {
+		if (mode === 'delete') {
+			return (
+				<>
+					<Button
+						variant="contained"
+						color={'error'}
+						size="large"
+						endIcon={<DeleteIcon />}
+						onClick={handleSave}
+						className={'DialogButton'}
+					>
+						{t('delete', { ns: 'generalTranslation' })}
+					</Button>
+					<Button
+						variant="outlined"
+						color={'primary'}
+						size="large"
+						endIcon={<CancelIcon />}
+						onClick={() => handleCancelDialog()}
+						className={'DialogButton'}
+					>
+						{t('cancel', { ns: 'generalTranslation' })}
+					</Button>
+				</>
+			);
+		}
+		return (
+			<>
+				<Button
+					variant="contained"
+					color={'success'}
+					size="large"
+					endIcon={<DoneIcon />}
+					onClick={handleSave}
+					className={'DialogButton'}
+					disabled={!ValidateEmployee(employeeDialog)}
+				>
+					{t('save', { ns: 'generalTranslation' })}
+				</Button>
+				<Button
+					variant="outlined"
+					color={'primary'}
+					size="large"
+					endIcon={<CancelIcon />}
+					onClick={() => handleCancelDialog()}
+					className={'DialogButton'}
+				>
+					{t('cancel', { ns: 'generalTranslation' })}
+				</Button>
+			</>
+		);
+	}
 
 	return (
-		<div>
+		<>
 			<DialogContent>
 				<Backdrop
 					sx={{
@@ -69,14 +124,14 @@ export default function EmployeeDialog({
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<EngineeringIcon className={'DividerIcon'} />
 						<Typography variant="h6" className={'MarginTopBottomAuto'}>
-							Employee information
+							{t('employeeInformation')}
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={12} md={6}>
 							<ValidatedTextField
 								name="name"
-								label="Name"
+								label={t('name')}
 								value={employeeDialog.name}
 								onChange={handleChange}
 								validationFunction={validateEmployeeName}
@@ -87,7 +142,7 @@ export default function EmployeeDialog({
 						<Grid xs={12} md={6}>
 							<ValidatedTextField
 								name="surname"
-								label="Surname"
+								label={t('surname')}
 								value={employeeDialog.surname}
 								onChange={handleChange}
 								validationFunction={validateEmployeeSurname}
@@ -98,44 +153,9 @@ export default function EmployeeDialog({
 					</Grid>
 				</Stack>
 			</DialogContent>
-			{mode !== 'info' ? (
-				<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
-					{mode === 'delete' ? (
-						<Button
-							variant="contained"
-							color={'error'}
-							size="large"
-							endIcon={<DeleteIcon />}
-							onClick={handleSave}
-							className={'DialogButton'}
-						>
-							Delete
-						</Button>
-					) : (
-						<Button
-							variant="contained"
-							color={'success'}
-							size="large"
-							endIcon={<DoneIcon />}
-							onClick={handleSave}
-							className={'DialogButton'}
-							disabled={!ValidateEmployee(employeeDialog)}
-						>
-							Save
-						</Button>
-					)}
-					<Button
-						variant="outlined"
-						color={'primary'}
-						size="large"
-						endIcon={<CancelIcon />}
-						onClick={() => handleCancelDialog()}
-						className={'DialogButton'}
-					>
-						Cancel
-					</Button>
-				</Stack>
-			) : null}
-		</div>
+			<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
+				<GetFooter />
+			</Stack>
+		</>
 	);
 }

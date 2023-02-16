@@ -1,22 +1,17 @@
 import * as React from 'react';
 import './RentalEquipment.js.css';
-import { RentalEquipmentMock } from '../../Mocks/RentalEquipmentMock';
 import {
-	Alert,
 	Box,
 	Button,
-	Checkbox,
 	Dialog,
 	DialogTitle,
 	IconButton,
 	Paper,
-	Snackbar,
 	Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
-	TableHead,
 	TablePagination,
 	TableRow,
 } from '@mui/material';
@@ -31,20 +26,18 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SearchTextField from '../Shared/SearchTextField';
 import RentalEquipmentDialog from './RentalEquipmentDialog';
 import SkeletonTableRentalEquipment from '../SkeletonTables/SkeletonTableRentalEquipment';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalEquipment({ initialIds }) {
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 	const [showDialog, setShowDialog] = React.useState(false);
-	const [focusedRentalEquipment, setFocusedRentalEquipment] =
-		React.useState();
+	const [focusedRentalEquipment, setFocusedRentalEquipment] = React.useState();
 	const [data, setData] = React.useState();
 	const [isLoading, setIsLoading] = React.useState(true);
-	const [showSnackbar, setShowSnackbar] = React.useState(false);
 	const [dialogMode, setDialogMode] = React.useState('');
-	const [checkedIds, setCheckedIds] = React.useState(
-		initialIds ? initialIds : [0]
-	);
+	const [checkedIds, setCheckedIds] = React.useState(initialIds ? initialIds : [0]);
+	const { t, i18n } = useTranslation(['generalTranslation', 'equipmentTranslation']);
 
 	const handleSearch = async (searchName) => {
 		setIsLoading(true);
@@ -87,7 +80,6 @@ export default function RentalEquipment({ initialIds }) {
 
 	const handleDialogSuccess = async (mode, rentalEquipment) => {
 		setIsLoading(true);
-		setShowSnackbar(true);
 		handleCloseDialog();
 		const result = await getAllRentalEquipment();
 		setData(result.hasOwnProperty('data') ? result.data : result);
@@ -98,10 +90,6 @@ export default function RentalEquipment({ initialIds }) {
 		if (mode === 'post') {
 			setCheckedIds((x) => [...x, rentalEquipment.id]);
 		}
-	};
-
-	const closeSnackbars = () => {
-		setShowSnackbar(false);
 	};
 
 	React.useEffect(() => {
@@ -116,32 +104,17 @@ export default function RentalEquipment({ initialIds }) {
 	const getDialogTitle = () => {
 		switch (dialogMode) {
 			case 'post':
-				return 'Add rental equipment';
+				return t('addRentalEquipment', { ns: 'equipmentTranslation' });
 			case 'update':
-				return 'Edit rental equipment';
+				return t('editRentalEquipment', { ns: 'equipmentTranslation' });
 			case 'delete':
-				return 'Delete rental equipment';
-		}
-	};
-
-	const getSnackbarTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return 'Equipment added successfully';
-			case 'update':
-				return 'Equipment updated successfully';
-			case 'delete':
-				return 'Equipment deleted successfully';
+				return t('deleteRentalEquipment', { ns: 'equipmentTranslation' });
 		}
 	};
 
 	const dialog = () => {
 		return (
-			<Dialog
-				open={showDialog}
-				maxWidth={'sm'}
-				onClose={() => handleCloseDialog()}
-			>
+			<Dialog open={showDialog} maxWidth={'sm'} onClose={() => handleCloseDialog()}>
 				<DialogTitle>{getDialogTitle()}</DialogTitle>
 				<RentalEquipmentDialog
 					rentalEquipment={focusedRentalEquipment}
@@ -153,13 +126,12 @@ export default function RentalEquipment({ initialIds }) {
 		);
 	};
 
-	const handleCheckboxChange = (equipment) => {
-		if (checkedIds.includes(equipment.id)) {
-			setCheckedIds(checkedIds.filter((x) => x !== equipment.id));
-		} else {
-			setCheckedIds((x) => [...x, equipment.id]);
+	function defaultLabelDisplayedRows({ from, to, count }) {
+		if (i18n.language === 'en') {
+			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
 		}
-	};
+		return `${from}–${to} z ${count !== -1 ? count : `more than ${to}`}`;
+	}
 
 	return (
 		<div>
@@ -176,27 +148,10 @@ export default function RentalEquipment({ initialIds }) {
 						onClick={handleAddClick}
 						disabled={isLoading}
 					>
-						Add equipment
+						{t('add')}
 					</Button>
-					<SearchTextField
-						isLoading={isLoading}
-						handleSearch={handleSearch}
-					/>
+					<SearchTextField isLoading={isLoading} handleSearch={handleSearch} />
 				</Stack>
-				<Snackbar
-					open={showSnackbar}
-					autoHideDuration={6000}
-					onClose={closeSnackbars}
-					anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-				>
-					<Alert
-						onClose={closeSnackbars}
-						severity="success"
-						sx={{ width: '100%' }}
-					>
-						{getSnackbarTitle()}
-					</Alert>
-				</Snackbar>
 				{isLoading ? (
 					<SkeletonTableRentalEquipment />
 				) : (
@@ -216,31 +171,21 @@ export default function RentalEquipment({ initialIds }) {
 										{(rowsPerPage > 0
 											? data.slice(
 													page * rowsPerPage,
-													page * rowsPerPage +
-														rowsPerPage
+													page * rowsPerPage + rowsPerPage
 											  )
 											: data
 										).map((row, index) => (
 											<TableRow key={index}>
-												<TableCell
-													component="th"
-													scope="row"
-												>
+												<TableCell component="th" scope="row">
 													{row.name}
 												</TableCell>
-												<TableCell align="right">
-													{row.price} zł
-												</TableCell>
+												<TableCell align="right">{row.price} zł</TableCell>
 												<TableCell align="right">
 													<Box>
 														<IconButton
 															aria-label="delete"
 															size="small"
-															onClick={() =>
-																handleEditClick(
-																	row
-																)
-															}
+															onClick={() => handleEditClick(row)}
 														>
 															<EditIcon fontSize="small" />
 														</IconButton>
@@ -248,11 +193,7 @@ export default function RentalEquipment({ initialIds }) {
 															aria-label="delete"
 															size="small"
 															color={'error'}
-															onClick={() =>
-																handleDeleteClick(
-																	row
-																)
-															}
+															onClick={() => handleDeleteClick(row)}
 														>
 															<DeleteIcon fontSize="small" />
 														</IconButton>
@@ -265,18 +206,15 @@ export default function RentalEquipment({ initialIds }) {
 							</Scrollbars>
 						</TableContainer>
 						<TablePagination
-							rowsPerPageOptions={[
-								5,
-								10,
-								25,
-								{ label: 'All', value: -1 },
-							]}
+							rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
 							component="div"
 							count={data.length}
 							rowsPerPage={rowsPerPage}
 							page={page}
 							onPageChange={handleChangePage}
 							onRowsPerPageChange={handleChangeRowsPerPage}
+							labelRowsPerPage={t('labelRowsPerPage')}
+							labelDisplayedRows={defaultLabelDisplayedRows}
 						/>
 					</div>
 				)}

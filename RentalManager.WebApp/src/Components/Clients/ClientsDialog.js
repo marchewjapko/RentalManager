@@ -15,22 +15,21 @@ import {
 	CircularProgress,
 	DialogContent,
 	Divider,
-	InputAdornment,
 	Stack,
-	TextField,
 	Typography,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import Grid from '@mui/material/Unstable_Grid2';
-import InputMask from 'react-input-mask';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import HomeIcon from '@mui/icons-material/Home';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { clientAtom } from '../Atoms/ClientAtoms';
 import ValidatedTextField from '../Shared/ValidatedTextField';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 export default function ClientsDialog({
 	handleCancelDialog,
@@ -39,7 +38,8 @@ export default function ClientsDialog({
 	showDialogButtons,
 }) {
 	const [isLoading, setIsLoading] = React.useState(false);
-	const [client, setClient] = useRecoilState(clientAtom);
+	const { t } = useTranslation(['clientTranslation']);
+	const [client, setClient] = useState(useRecoilValue(clientAtom));
 	const handleChange = (event) => {
 		let newValue = event.target.value;
 		if (event.target.name === 'idCard') {
@@ -85,14 +85,14 @@ export default function ClientsDialog({
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<PersonIcon className={'DividerIcon'} />
 						<Typography variant="h6" className={'MarginTopBottomAuto'}>
-							Personal information
+							{t('personalInformation')}
 						</Typography>
 					</Stack>
 					<Grid container spacing={2}>
 						<Grid xs={6} md={5}>
 							<ValidatedTextField
 								name="name"
-								label="Name"
+								label={t('name')}
 								value={client.name}
 								onChange={handleChange}
 								validationFunction={validateName}
@@ -103,7 +103,7 @@ export default function ClientsDialog({
 						<Grid xs={6} md={7}>
 							<ValidatedTextField
 								name="surname"
-								label="Surname"
+								label={t('surname')}
 								value={client.surname}
 								onChange={handleChange}
 								validationFunction={validateSurname}
@@ -114,7 +114,7 @@ export default function ClientsDialog({
 						<Grid xs={6} md={5}>
 							<ValidatedTextField
 								name="idCard"
-								label="ID Card"
+								label={t('idCard')}
 								value={client.idCard}
 								onChange={handleChange}
 								validationFunction={validateIdCard}
@@ -127,14 +127,14 @@ export default function ClientsDialog({
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<ContactPhoneIcon className={'DividerIcon'} />
 						<Typography variant="h6" className={'MarginTopBottomAuto'}>
-							Contact information
+							{t('contactInformation')}
 						</Typography>
 					</Stack>
 					<Grid container spacing={2} columns={{ xs: 6, sm: 12 }}>
 						<Grid xs={6} md={5}>
 							<ValidatedTextField
 								name="phoneNumber"
-								label="Phone number"
+								label={t('phoneNumber')}
 								value={client.phoneNumber}
 								onChange={handleChange}
 								validationFunction={validatePhoneNumber}
@@ -146,7 +146,7 @@ export default function ClientsDialog({
 						<Grid xs={6} md={7}>
 							<ValidatedTextField
 								name={'email'}
-								label="Email"
+								label={t('email')}
 								value={client.email}
 								onChange={handleChange}
 								validationFunction={validateEmail}
@@ -158,14 +158,14 @@ export default function ClientsDialog({
 					<Stack direction={'row'} className={'DialogTopStack'}>
 						<HomeIcon className={'DividerIcon'} />
 						<Typography variant="h6" className={'MarginTopBottomAuto'}>
-							Address
+							{t('address')}
 						</Typography>
 					</Stack>
 					<Grid container spacing={2} columns={{ xs: 24, sm: 12 }}>
 						<Grid xs={24} md={5}>
 							<ValidatedTextField
 								name={'city'}
-								label="City"
+								label={t('city')}
 								value={client.city}
 								onChange={handleChange}
 								validationFunction={validateCity}
@@ -176,7 +176,7 @@ export default function ClientsDialog({
 						<Grid xs={13} md={7}>
 							<ValidatedTextField
 								name={'street'}
-								label="Street"
+								label={t('street')}
 								value={client.street}
 								onChange={handleChange}
 								validationFunction={validateStreet}
@@ -208,7 +208,7 @@ export default function ClientsDialog({
 							endIcon={<DoneIcon />}
 							onClick={handleSave}
 							className={'DialogButton'}
-							disabled={ValidateClient(client).length !== 0}
+							disabled={!ValidateClient(client)}
 						>
 							Save
 						</Button>

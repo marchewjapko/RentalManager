@@ -1,29 +1,78 @@
+import ValidateClient from './ValidateClient';
+import ValidateRentalEquipment from './ValidateRentalEquipment';
+import ValidateEmployee from './ValidateEmployee';
+import {
+	containsOnlyLettersNumbersAndWhiteSpace,
+	containsOnlyNumbers,
+	isNotNullOrEmpty,
+} from './BasicValidation';
 import dayjs from 'dayjs';
 
-export default function ValidateRentalAgreement(rentalAgreement) {
-	let result = [];
-	if (rentalAgreement.client.id === -1) {
-		result.push('noClient');
+export function ValidateTransportTo(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
 	}
-	if (rentalAgreement.deposit.length === 0) {
-		result.push('noDeposit');
+	if (!containsOnlyNumbers(value)) {
+		return 'invalidFormat';
 	}
-	if (rentalAgreement.transportTo === undefined || rentalAgreement.transportTo.length === 0) {
-		result.push('noTransportTo');
+	return '';
+}
+
+export function ValidateTransportFrom(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return '';
 	}
-	if (!rentalAgreement.dateAdded || rentalAgreement.dateAdded.length === 0) {
-		result.push('noDateAdded');
-	} else if (!dayjs(rentalAgreement.dateAdded).isValid()) {
-		result.push('invalidDateAdded');
+	if (!containsOnlyNumbers(value)) {
+		return 'invalidFormat';
 	}
-	if (!rentalAgreement.employee) {
-		result.push('noEmployee');
+	return '';
+}
+
+export function ValidateDeposit(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
 	}
-	if (!rentalAgreement.rentalEquipment || rentalAgreement.rentalEquipment.length === 0) {
-		result.push('noRentalEquipment');
+	if (!containsOnlyNumbers(value)) {
+		return 'invalidFormat';
 	}
-	if (rentalAgreement.payments === null || rentalAgreement.payments.length === 0) {
-		result.push('noPayments');
+	return '';
+}
+
+export function ValidateDateAdded(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return 'noValue';
 	}
-	return result;
+	if (!dayjs(value).isValid()) {
+		return 'invalidFormat';
+	}
+	return '';
+}
+
+export function ValidateComment(value) {
+	if (!isNotNullOrEmpty(value)) {
+		return '';
+	}
+	if (!containsOnlyLettersNumbersAndWhiteSpace(value)) {
+		return 'invalidFormat';
+	}
+	return '';
+}
+
+export default function ValidateRentalAgreement(rentalAgreement, validateClient) {
+	if (validateClient && !ValidateClient(rentalAgreement.client)) {
+		return false;
+	}
+	if (!rentalAgreement.rentalEquipment.map((x) => ValidateRentalEquipment(x)).every((x) => x)) {
+		return false;
+	}
+	if (!ValidateEmployee(rentalAgreement.employee)) {
+		return false;
+	}
+	return [
+		ValidateTransportTo(rentalAgreement.transportTo),
+		ValidateTransportFrom(rentalAgreement.transportFrom),
+		ValidateDeposit(rentalAgreement.deposit),
+		ValidateDateAdded(rentalAgreement.dateAdded),
+		ValidateComment(rentalAgreement.comment),
+	].every((x) => x === '');
 }

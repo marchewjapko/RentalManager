@@ -2,19 +2,20 @@ import Clients from '../../Clients/Clients';
 import RentalAgreementAgreementDetails from '../RentalAgreementAgreementDetails';
 import Payments from '../../Payments/Payments';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function GetFormSteps() {
 	return [
 		{
-			label: 'Choose client',
+			label: 'chooseClient',
 			content: <Clients isCheckable={true} />,
 		},
 		{
-			label: 'Fill the details',
+			label: 'fillTheDetails',
 			content: <RentalAgreementAgreementDetails mode={'post'} />,
 		},
 		{
-			label: 'Add payment',
+			label: 'paymentTranslation',
 			content: <Payments mode={'post'} />,
 		},
 	];

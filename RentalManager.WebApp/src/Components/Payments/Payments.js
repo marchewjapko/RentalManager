@@ -20,28 +20,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CheckIcon from '@mui/icons-material/Check';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import {
-	addPayment,
-	deletePayment,
-	getPayment,
-} from '../../Actions/RestAPI/PaymentActions';
+import { addPayment, deletePayment, getPayment } from '../../Actions/RestAPI/PaymentActions';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRecoilState } from 'recoil';
 import { rentalAgreementDetailsAtom } from '../Atoms/RentalAgreementDetailsAtoms';
+import { useTranslation } from 'react-i18next';
+import { ValidatePayment } from '../../Actions/Validations/ValidatePayment';
 
 const paymentOptions = ['Card', 'Cash', 'Transfer'];
 
 export default function Payments({ mode, setIsLoading }) {
 	const theme = useTheme();
-	const [agreement, setAgreement] = useRecoilState(
-		rentalAgreementDetailsAtom
-	);
+	const [agreement, setAgreement] = useRecoilState(rentalAgreementDetailsAtom);
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+	const { t } = useTranslation(['paymentTranslation', 'generalTranslation']);
 	const [newPayment, setNewPayment] = useState({
 		id:
 			agreement.payments.length > 0
-				? agreement.payments.map((x) => x.id).sort((a, b) => b - a)[0] +
-				  1
+				? agreement.payments.map((x) => x.id).sort((a, b) => b - a)[0] + 1
 				: 0,
 		amount: '',
 		method: paymentOptions[0],
@@ -136,9 +132,7 @@ export default function Payments({ mode, setIsLoading }) {
 				.then((result) => {
 					setAgreement({
 						...agreement,
-						payments: [
-							...agreement.payments.filter((x) => x.id !== id),
-						],
+						payments: [...agreement.payments.filter((x) => x.id !== id)],
 					});
 					if (typeof setIsLoading !== 'undefined') {
 						setIsLoading(false);
@@ -152,27 +146,6 @@ export default function Payments({ mode, setIsLoading }) {
 				});
 		}
 	};
-	function validateNewPayment() {
-		if (newPayment.amount === '' || newPayment.amount == 0) {
-			return true;
-		}
-		if (newPayment.method === '') {
-			return true;
-		}
-		if (newPayment.from === null || newPayment.to === null) {
-			return true;
-		}
-		if (
-			!dayjs(newPayment.from).isValid() ||
-			!dayjs(newPayment.to).isValid()
-		) {
-			return true;
-		}
-		if (dayjs(newPayment.to).isBefore(dayjs(newPayment.from))) {
-			return true;
-		}
-		return false;
-	}
 	return (
 		<Stack direction={'column'} sx={{ padding: '15px' }}>
 			{mode === 'update' || mode === 'post' ? (
@@ -195,28 +168,26 @@ export default function Payments({ mode, setIsLoading }) {
 							onChange={handleChangeMethod}
 							value={newPayment.method}
 							fullWidth
+							getOptionLabel={(option) => {
+								return t(option.toString());
+							}}
 							renderInput={(params) => (
 								<TextField
 									{...params}
-									label="Payment option"
+									label={t('paymentMethod')}
 									size={isSmallScreen ? 'small' : 'medium'}
 								/>
 							)}
 						/>
 						<TextField
 							margin="dense"
-							label="Amount"
+							label={t('amount')}
 							variant="outlined"
 							fullWidth
 							value={newPayment.amount}
 							size={isSmallScreen ? 'small' : 'medium'}
 							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										zł
-									</InputAdornment>
-								),
-								inputMode: 'numeric',
+								endAdornment: <InputAdornment position="end">zł</InputAdornment>,
 							}}
 							onChange={handleChangePrice}
 						/>
@@ -231,7 +202,7 @@ export default function Payments({ mode, setIsLoading }) {
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DatePicker
 								name={'dateAdded'}
-								label="Paid from"
+								label={t('paidFrom')}
 								value={newPayment.from}
 								fullWidth
 								onChange={handleChangeFrom}
@@ -239,15 +210,13 @@ export default function Payments({ mode, setIsLoading }) {
 									<TextField
 										{...params}
 										fullWidth
-										size={
-											isSmallScreen ? 'small' : 'medium'
-										}
+										size={isSmallScreen ? 'small' : 'medium'}
 									/>
 								)}
 							/>
 							<DatePicker
 								name={'dateAdded'}
-								label="Paid to"
+								label={t('paidTo')}
 								value={newPayment.to}
 								fullWidth
 								onChange={handleChangeTo}
@@ -255,9 +224,7 @@ export default function Payments({ mode, setIsLoading }) {
 									<TextField
 										{...params}
 										fullWidth
-										size={
-											isSmallScreen ? 'small' : 'medium'
-										}
+										size={isSmallScreen ? 'small' : 'medium'}
 									/>
 								)}
 							/>
@@ -266,10 +233,10 @@ export default function Payments({ mode, setIsLoading }) {
 					<Button
 						variant="contained"
 						endIcon={<CheckIcon />}
-						disabled={validateNewPayment()}
+						disabled={!ValidatePayment(newPayment)}
 						onClick={handleAddPayment}
 					>
-						Add payment
+						{t('add', { ns: 'generalTranslation' })}
 					</Button>
 				</Stack>
 			) : null}
@@ -277,15 +244,15 @@ export default function Payments({ mode, setIsLoading }) {
 				<Table size={isSmallScreen ? 'small' : 'medium'}>
 					<TableHead>
 						<TableRow>
-							<TableCell>Method</TableCell>
-							<TableCell align="right">Amount</TableCell>
-							<TableCell align="right">From</TableCell>
-							<TableCell align="right">To</TableCell>
-							<TableCell />
+							<TableCell>{t('method')}</TableCell>
+							<TableCell align="right">{t('amount')}</TableCell>
+							<TableCell align="right">{t('from')}</TableCell>
+							<TableCell align="right">{t('to')}</TableCell>
+							{mode === 'update' || mode === 'post' ? <TableCell /> : <></>}
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{agreement !== null && agreement.payments.length > 0 ? (
+						{agreement.payments.length > 0 ? (
 							agreement.payments.map((row) => (
 								<TableRow
 									key={row.id}
@@ -296,40 +263,35 @@ export default function Payments({ mode, setIsLoading }) {
 									}}
 								>
 									<TableCell component="th" scope="row">
-										{row.method}
+										{t(row.method)}
 									</TableCell>
-									<TableCell align="right">
-										{row.amount + ' zł'}
-									</TableCell>
+									<TableCell align="right">{row.amount + ' zł'}</TableCell>
 									<TableCell align="right">
 										{dayjs(row.from).format('DD.MM.YYYY')}
 									</TableCell>
 									<TableCell align="right">
 										{dayjs(row.to).format('DD.MM.YYYY')}
 									</TableCell>
-									<TableCell align="right">
-										<IconButton
-											aria-label="delete"
-											size="small"
-											color={'error'}
-											onClick={() =>
-												handleDeletePayment(row.id)
-											}
-										>
-											<DeleteIcon fontSize="small" />
-										</IconButton>
-									</TableCell>
+									{mode === 'update' || mode === 'post' ? (
+										<TableCell align="right">
+											<IconButton
+												aria-label="delete"
+												size="small"
+												color={'error'}
+												onClick={() => handleDeletePayment(row.id)}
+											>
+												<DeleteIcon fontSize="small" />
+											</IconButton>
+										</TableCell>
+									) : (
+										<></>
+									)}
 								</TableRow>
 							))
 						) : (
 							<TableRow>
-								<TableCell
-									component="th"
-									scope="row"
-									colSpan={5}
-									align={'center'}
-								>
-									<b>No payments</b>
+								<TableCell component="th" scope="row" colSpan={4} align={'center'}>
+									<b>{t('noPayments')}</b>
 								</TableCell>
 							</TableRow>
 						)}
@@ -337,14 +299,10 @@ export default function Payments({ mode, setIsLoading }) {
 						<TableRow>
 							<TableCell rowSpan={1} />
 							<TableCell colSpan={1} align="right">
-								{'Total: '}
+								{t('total') + ': '}
 								{agreement.payments
 									.map((x) => x.amount)
-									.reduce(
-										(partialSum, a) =>
-											partialSum + Number(a),
-										0
-									) + ' zł'}
+									.reduce((partialSum, a) => partialSum + Number(a), 0) + ' zł'}
 							</TableCell>
 						</TableRow>
 					</TableBody>

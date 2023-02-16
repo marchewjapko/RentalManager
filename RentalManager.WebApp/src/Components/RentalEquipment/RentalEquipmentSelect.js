@@ -2,11 +2,13 @@ import { Autocomplete, CircularProgress, Stack, TextField, Typography } from '@m
 import ConstructionIcon from '@mui/icons-material/Construction';
 import * as React from 'react';
 import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 	const [data, setData] = React.useState([]);
 	const [open, setOpen] = React.useState(false);
 	const [isLoading, setIsLoading] = React.useState(true);
+	const { t } = useTranslation(['equipmentTranslation']);
 
 	React.useEffect(() => {
 		const getData = async () => {
@@ -33,7 +35,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 			>
 				<ConstructionIcon className={'DividerIcon'} />
 				<Typography variant="h6" className={'MarginTopBottomAuto'}>
-					Equipment
+					{t('equipment')}
 				</Typography>
 			</Stack>
 			<Autocomplete
@@ -53,7 +55,7 @@ export default function RentalEquipmentSelect({ agreement, setAgreement }) {
 				renderInput={(params) => (
 					<TextField
 						{...params}
-						label="Select equipment"
+						label={t('selectEquipment')}
 						InputProps={{
 							...params.InputProps,
 							endAdornment: (

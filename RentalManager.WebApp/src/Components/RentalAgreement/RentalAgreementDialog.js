@@ -1,12 +1,4 @@
-import {
-	AppBar,
-	Backdrop,
-	Button,
-	CircularProgress,
-	Stack,
-	Tab,
-	Tabs,
-} from '@mui/material';
+import { AppBar, Backdrop, Button, CircularProgress, Stack, Tab, Tabs } from '@mui/material';
 import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import ClientsDialog from '../Clients/ClientsDialog';
@@ -21,10 +13,7 @@ import ValidateClient from '../../Actions/Validations/ValidateClient';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import ValidateRentalAgreement from '../../Actions/Validations/ValidateRentalAgreement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import {
-	deleteClient,
-	updateClient,
-} from '../../Actions/RestAPI/ClientActions';
+import { deleteClient, updateClient } from '../../Actions/RestAPI/ClientActions';
 import {
 	deleteRentalAgreement,
 	updateRentalAgreement,
@@ -32,15 +21,18 @@ import {
 import Payments from '../Payments/Payments';
 import { useRecoilValue } from 'recoil';
 import { rentalAgreementAtom } from '../Atoms/RentalAgreementAtoms';
+import { useTranslation } from 'react-i18next';
 
-export default function RentalAgreementDialog({
-	mode,
-	handleCancelDialog,
-	handleDialogSuccess,
-}) {
+export default function RentalAgreementDialog({ mode, handleCancelDialog, handleDialogSuccess }) {
 	const [value, setValue] = React.useState(0);
 	const agreement = useRecoilValue(rentalAgreementAtom);
 	const [isLoading, setIsLoading] = React.useState(false);
+	const { t } = useTranslation([
+		'generalTranslation',
+		'clientTranslation',
+		'agreementTranslation',
+		'paymentTranslation',
+	]);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
@@ -50,6 +42,7 @@ export default function RentalAgreementDialog({
 
 	const handleSave = async () => {
 		const resAgreement = ValidateRentalAgreement(agreement);
+		console.log(agreement.client);
 		if (agreement.client) {
 			const resClient = ValidateClient(agreement.client);
 			if (resAgreement.length === 0 && resClient.length === 0) {
@@ -94,9 +87,15 @@ export default function RentalAgreementDialog({
 					variant="fullWidth"
 					centered={true}
 				>
-					<Tab icon={<PersonIcon />} label="Client" />
-					<Tab icon={<DescriptionIcon />} label="Agreement" />
-					<Tab icon={<AttachMoneyIcon />} label="Payments" />
+					<Tab icon={<PersonIcon />} label={t('client', { ns: 'clientTranslation' })} />
+					<Tab
+						icon={<DescriptionIcon />}
+						label={t('agreement', { ns: 'agreementTranslation' })}
+					/>
+					<Tab
+						icon={<AttachMoneyIcon />}
+						label={t('payments', { ns: 'paymentTranslation' })}
+					/>
 				</Tabs>
 			</AppBar>
 			<SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
@@ -116,10 +115,7 @@ export default function RentalAgreementDialog({
 						/>
 					</Scrollbars>
 				</div>
-				<div
-					className={'rentalAgreementSlide'}
-					style={{ padding: '20px 24px' }}
-				>
+				<div className={'rentalAgreementSlide'} style={{ padding: '20px 24px' }}>
 					<Scrollbars
 						autoHeight={true}
 						autoHeightMin={0}
@@ -140,19 +136,11 @@ export default function RentalAgreementDialog({
 						autoHideTimeout={750}
 						autoHideDuration={500}
 					>
-						<Payments
-							mode={mode}
-							isLoading={isLoading}
-							setIsLoading={setIsLoading}
-						/>
+						<Payments mode={mode} isLoading={isLoading} setIsLoading={setIsLoading} />
 					</Scrollbars>
 				</div>
 			</SwipeableViews>
-			<Stack
-				direction="row"
-				justifyContent="space-between"
-				className={'DialogStack'}
-			>
+			<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
 				{mode === 'delete' && (
 					<Button
 						variant="contained"
@@ -162,7 +150,7 @@ export default function RentalAgreementDialog({
 						onClick={handleSave}
 						className={'DialogButton'}
 					>
-						Delete
+						{t('delete')}
 					</Button>
 				)}
 
@@ -174,13 +162,9 @@ export default function RentalAgreementDialog({
 						endIcon={<DoneIcon />}
 						onClick={handleSave}
 						className={'DialogButton'}
-						disabled={
-							!agreement.client ||
-							ValidateClient(agreement.client).length !== 0 ||
-							ValidateRentalAgreement(agreement).length !== 0
-						}
+						disabled={!ValidateRentalAgreement(agreement)}
 					>
-						Save
+						{t('save')}
 					</Button>
 				)}
 				<Button
@@ -191,7 +175,7 @@ export default function RentalAgreementDialog({
 					onClick={() => handleCancelDialog(false)}
 					className={'DialogButton'}
 				>
-					Cancel
+					{t('cancel')}
 				</Button>
 			</Stack>
 		</div>

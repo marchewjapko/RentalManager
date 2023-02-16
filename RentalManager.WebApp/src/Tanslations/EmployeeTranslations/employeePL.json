@@ -1,0 +1,11 @@
+{
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "employeeInformation": "Informacje o pracowniku",
+  "addEmployee" : "Dodaj pracownika",
+  "editEmployee": "Edytuj pracownika",
+  "deleteEmployee": "Usuń pracownika",
+  "selectEmployee": "Wybierz pracownika",
+  "employee": "Pracownik",
+  "nameAndSurname": "Imię i nazwisko"
+}

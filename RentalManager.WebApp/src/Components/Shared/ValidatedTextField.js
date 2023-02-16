@@ -2,6 +2,7 @@ import { InputAdornment, TextField } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
 import InputMask from 'react-input-mask';
+import { useTranslation } from 'react-i18next';
 
 export default function ValidatedTextField({
 	name,
@@ -14,12 +15,13 @@ export default function ValidatedTextField({
 	mask,
 }) {
 	const [isError, setIsError] = useState(false);
+	const { t } = useTranslation(['generalTranslation']);
 	function getHelperText() {
 		if (validationFunction(value) === 'invalidFormat' && isError) {
-			return 'Invalid format';
+			return t('invalidFormat');
 		}
 		if (isRequired) {
-			return 'Required';
+			return t('required');
 		}
 	}
 	const handleOnBlur = () => {
@@ -76,6 +78,10 @@ export default function ValidatedTextField({
 				startAdornment:
 					name === 'phoneNumber' ? (
 						<InputAdornment position="start">+48</InputAdornment>
+					) : null,
+				endAdornment:
+					name === 'transportTo' || name === 'transportFrom' || name === 'deposit' ? (
+						<InputAdornment position="end">zł</InputAdornment>
 					) : null,
 			}}
 		/>

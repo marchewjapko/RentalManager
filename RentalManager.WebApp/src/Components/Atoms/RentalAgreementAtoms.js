@@ -1,4 +1,4 @@
-import { atom, DefaultValue, selector } from 'recoil';
+import { DefaultValue, selector } from 'recoil';
 import { rentalAgreementDetailsAtom } from './RentalAgreementDetailsAtoms';
 import { clientAtom } from './ClientAtoms';
 

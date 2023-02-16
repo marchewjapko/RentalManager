@@ -18,23 +18,20 @@ import { useCookies } from 'react-cookie';
 
 export default function Header() {
 	const [isDrawerOpen, setIsDrawerOpen] = useRecoilState(isHeaderOpenAtom);
+	const [cookies, setCookies] = useCookies();
 	const theme = useTheme();
-	const navigate = useNavigate();
 	const { i18n } = useTranslation();
+	console.log('i18n', i18n);
 	const [useEnglish, setUseEnglish] = useState(i18n.language === 'en');
-	const [isDarkMode, setIsDarkMode] = useCookies();
 	const handleChangeTheme = () => {
-		if (
-			isDarkMode['isDarkMode'] === 'true' ||
-			isDarkMode['isDarkMode'] === undefined
-		) {
-			setIsDarkMode('isDarkMode', false, {
+		if (cookies['isDarkMode'] === 'true' || cookies['isDarkMode'] === undefined) {
+			setCookies('isDarkMode', false, {
 				path: '/',
 				expires: new Date(2147483647 * 1000),
 				sameSite: 'strict',
 			});
 		} else {
-			setIsDarkMode('isDarkMode', true, {
+			setCookies('isDarkMode', true, {
 				path: '/',
 				expires: new Date(2147483647 * 1000),
 				sameSite: 'strict',
@@ -46,24 +43,26 @@ export default function Header() {
 		setUseEnglish(!useEnglish);
 		if (useEnglish) {
 			i18n.changeLanguage('pl');
+			setCookies('language', 'pl', {
+				path: '/',
+				expires: new Date(2147483647 * 1000),
+				sameSite: 'strict',
+			});
 		} else {
 			i18n.changeLanguage('en');
+			setCookies('language', 'en', {
+				path: '/',
+				expires: new Date(2147483647 * 1000),
+				sameSite: 'strict',
+			});
 		}
 	};
 
 	return (
 		<div className={'sticky-header'}>
-			<Paper
-				className={'header-container'}
-				variant={'elevation'}
-				square={true}
-			>
+			<Paper className={'header-container'} variant={'elevation'} square={true}>
 				<div>
-					<IconButton
-						color="inherit"
-						onClick={() => setIsDrawerOpen(true)}
-						edge="start"
-					>
+					<IconButton color="inherit" onClick={() => setIsDrawerOpen(true)} edge="start">
 						<MenuIcon />
 					</IconButton>
 				</div>
@@ -74,14 +73,10 @@ export default function Header() {
 						gap: '10px',
 					}}
 				>
-					<button
-						className={'languageButton'}
-						onClick={languageClick}
-					>
-						{useEnglish === true && (
+					<button className={'languageButton'} onClick={languageClick}>
+						{useEnglish ? (
 							<UKIcon className={'languageIcon'} />
-						)}
-						{useEnglish === false && (
+						) : (
 							<PolandIcon className={'languageIcon'} />
 						)}
 					</button>
@@ -111,11 +106,7 @@ export default function Header() {
 				</div>
 			</Paper>
 			<Drawer variant="persistent" anchor="left" open={isDrawerOpen}>
-				<Paper
-					className={'drawer-paper'}
-					variant={'elevation'}
-					square={true}
-				>
+				<Paper className={'drawer-paper'} variant={'elevation'} square={true}>
 					<div className={'drawer-header'}>
 						<div className={'drawer-title'}>System monitor</div>
 						<IconButton

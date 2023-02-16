@@ -24,9 +24,21 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import CommentIcon from '@mui/icons-material/Comment';
 import { useRecoilState } from 'recoil';
 import { rentalAgreementDetailsAtom } from '../Atoms/RentalAgreementDetailsAtoms';
+import { useTranslation } from 'react-i18next';
+import { validateEmail } from '../../Actions/Validations/ValidateClient';
+import ValidatedTextField from '../Shared/ValidatedTextField';
+import {
+	ValidateTransportFrom,
+	ValidateTransportTo,
+} from '../../Actions/Validations/ValidateRentalAgreement';
 
 export default function RentalAgreementAgreementDetails({ mode }) {
 	const [agreement, setAgreement] = useRecoilState(rentalAgreementDetailsAtom);
+	const { t } = useTranslation([
+		'agreementTranslation',
+		'equipmentTranslation',
+		'employeeTranslation',
+	]);
 	const handleChange = (event) => {
 		let newValue = event.target.value;
 		if (['transportTo', 'transportFrom', 'deposit'].includes(event.target.name)) {
@@ -61,12 +73,12 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 								>
 									<EngineeringIcon className={'DividerIcon'} />
 									<Typography variant="h6" className={'MarginTopBottomAuto'}>
-										Employee
+										{t('employee', { ns: 'employeeTranslation' })}
 									</Typography>
 								</Stack>
 								<TextField
 									margin="dense"
-									label="Name & surname"
+									label={t('nameAndSurname', { ns: 'employeeTranslation' })}
 									fullWidth
 									variant="outlined"
 									value={
@@ -90,7 +102,7 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 							>
 								<ConstructionIcon className={'DividerIcon'} />
 								<Typography variant="h6" className={'MarginTopBottomAuto'}>
-									Rental Equipment
+									{t('equipment', { ns: 'equipmentTranslation' })}
 								</Typography>
 							</Stack>
 							<TableContainer sx={{ width: '100%' }}>
@@ -115,7 +127,8 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 										))}
 										<TableRow>
 											<TableCell colSpan={2} align="right">
-												{'Total: '}
+												{t('total', { ns: 'equipmentTranslation' })}
+												{': '}
 												{agreement.rentalEquipment
 													.map((x) => x.price)
 													.reduce((partialSum, a) => partialSum + a, 0) +
@@ -151,65 +164,40 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 				<Stack direction={'row'} className={'DialogTopStack'}>
 					<AttachMoneyIcon className={'DividerIcon'} />
 					<Typography variant="h6" className={'MarginTopBottomAuto'}>
-						Costs
+						{t('costs')}
 					</Typography>
 				</Stack>
 				<Grid container spacing={2}>
 					<Grid xs={12} sm={12} md={6}>
-						<TextField
-							name="transportTo"
-							margin="dense"
-							label="Transport to"
-							variant="outlined"
-							fullWidth
-							value={
-								agreement.transportTo !== undefined
-									? agreement.transportTo.toString()
-									: ''
-							}
+						<ValidatedTextField
+							name={'transportTo'}
+							label={t('transportTo')}
+							value={agreement.transportTo}
 							onChange={handleChange}
-							// onBlur={validateName}
-							// error={validationState.name}
-							helperText="Required"
-							InputProps={{
-								readOnly: mode === 'delete' || mode === 'info',
-								endAdornment: <InputAdornment position="start">zł</InputAdornment>,
-							}}
+							validationFunction={ValidateTransportTo}
+							isRequired={true}
+							isReadonly={mode === 'delete' || mode === 'info'}
 						/>
 					</Grid>
 					<Grid xs={12} sm={7} md={6}>
-						<TextField
-							name="transportFrom"
-							margin="dense"
-							label="Transport from"
-							variant="outlined"
-							fullWidth
-							value={agreement.transportFrom ? agreement.transportFrom : ''}
+						<ValidatedTextField
+							name={'transportFrom'}
+							label={t('transportFrom')}
+							value={agreement.transportFrom ?? ''}
 							onChange={handleChange}
-							// onBlur={validateName}
-							// error={validationState.name}
-							InputProps={{
-								readOnly: mode === 'delete' || mode === 'info',
-								endAdornment: <InputAdornment position="start">zł</InputAdornment>,
-							}}
+							validationFunction={ValidateTransportFrom}
+							isReadonly={mode === 'delete' || mode === 'info'}
 						/>
 					</Grid>
 					<Grid xs={6} md={6}>
-						<TextField
-							name="deposit"
-							margin="dense"
-							label="Deposit"
-							variant="outlined"
-							fullWidth
-							value={agreement.deposit ? agreement.deposit : ''}
+						<ValidatedTextField
+							name={'deposit'}
+							label={t('deposit')}
+							value={agreement.deposit ?? ''}
 							onChange={handleChange}
-							// onBlur={validateName}
-							// error={validationState.name}
-							helperText="Required"
-							InputProps={{
-								readOnly: mode === 'delete' || mode === 'info',
-								endAdornment: <InputAdornment position="start">zł</InputAdornment>,
-							}}
+							validationFunction={ValidateTransportFrom}
+							isRequired={true}
+							isReadonly={mode === 'delete' || mode === 'info'}
 						/>
 					</Grid>
 				</Grid>
@@ -217,7 +205,7 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 				<Stack direction={'row'} className={'DialogTopStack'}>
 					<CalendarMonthIcon className={'DividerIcon'} />
 					<Typography variant="h6" className={'MarginTopBottomAuto'}>
-						Dates
+						{t('dates')}
 					</Typography>
 				</Stack>
 				<Grid container spacing={2}>
@@ -225,7 +213,7 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DatePicker
 								name={'dateAdded'}
-								label="Date added"
+								label={t('dateAdded')}
 								value={agreement.dateAdded}
 								onChange={handleChangeDateAdded}
 								readOnly={mode === 'info' || mode === 'delete'}
@@ -240,25 +228,18 @@ export default function RentalAgreementAgreementDetails({ mode }) {
 				<Stack direction={'row'} className={'DialogTopStack'}>
 					<CommentIcon className={'DividerIcon'} />
 					<Typography variant="h6" className={'MarginTopBottomAuto'}>
-						Comment
+						{t('comment')}
 					</Typography>
 				</Stack>
 				<Grid container spacing={2}>
 					<Grid xs={12}>
-						<TextField
-							name="comment"
-							margin="dense"
-							label="Comment"
-							variant="outlined"
-							multiline
-							fullWidth
-							value={agreement.comment ? agreement.comment : ''}
+						<ValidatedTextField
+							name={'comment'}
+							label={t('comment')}
+							value={agreement.comment ?? ''}
 							onChange={handleChange}
-							// onBlur={validateName}
-							// error={validationState.name}
-							InputProps={{
-								readOnly: mode === 'delete' || mode === 'info',
-							}}
+							validationFunction={ValidateTransportFrom}
+							isReadonly={mode === 'delete' || mode === 'info'}
 						/>
 					</Grid>
 				</Grid>

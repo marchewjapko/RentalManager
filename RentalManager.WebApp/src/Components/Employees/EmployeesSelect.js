@@ -1,18 +1,14 @@
-import {
-	Autocomplete,
-	CircularProgress,
-	Stack,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Autocomplete, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import * as React from 'react';
 import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
+import { useTranslation } from 'react-i18next';
 
 export default function EmployeesSelect({ agreement, setAgreement }) {
 	const [data, setData] = React.useState([]);
 	const [open, setOpen] = React.useState(false);
 	const [isLoading, setIsLoading] = React.useState(true);
+	const { t } = useTranslation(['employeeTranslation']);
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllEmployees();
@@ -38,7 +34,7 @@ export default function EmployeesSelect({ agreement, setAgreement }) {
 			>
 				<EngineeringIcon className={'DividerIcon'} />
 				<Typography variant="h6" className={'MarginTopBottomAuto'}>
-					Employee
+					{t('employee')}
 				</Typography>
 			</Stack>
 			<Autocomplete
@@ -56,16 +52,13 @@ export default function EmployeesSelect({ agreement, setAgreement }) {
 				renderInput={(params) => (
 					<TextField
 						{...params}
-						label="Select employee"
+						label={t('selectEmployee')}
 						InputProps={{
 							...params.InputProps,
 							endAdornment: (
 								<React.Fragment>
 									{isLoading ? (
-										<CircularProgress
-											color="inherit"
-											size={20}
-										/>
+										<CircularProgress color="inherit" size={20} />
 									) : null}
 									{params.InputProps.endAdornment}
 								</React.Fragment>

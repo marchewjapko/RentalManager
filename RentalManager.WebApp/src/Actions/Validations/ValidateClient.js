@@ -1,6 +1,5 @@
 import {
 	containsOnlyLetters,
-	containsOnlyLettersAndNumbers,
 	containsOnlyLettersNumbersAndWhiteSpace,
 	isNotNullOrEmpty,
 } from './BasicValidation';

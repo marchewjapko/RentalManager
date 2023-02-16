@@ -1,0 +1,11 @@
+{
+  "equipmentName": "Nazwa sprzętu",
+  "price": "Cena",
+  "equipmentInformation": "Informacje o sprzęcie",
+  "editRentalEquipment": "Edytuj sprzęt",
+  "addRentalEquipment": "Dodaj sprzęt",
+  "deleteRentalEquipment": "Usuń sprzęt",
+  "selectEquipment": "Wybierz sprzęt",
+  "equipment": "Sprzęt",
+  "total": "W sumie"
+}

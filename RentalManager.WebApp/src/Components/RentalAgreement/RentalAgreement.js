@@ -1,7 +1,6 @@
 import * as React from 'react';
 import '../SharedStyles.css';
 import {
-	Alert,
 	Box,
 	Button,
 	ButtonGroup,
@@ -10,7 +9,6 @@ import {
 	IconButton,
 	Paper,
 	Popover,
-	Snackbar,
 	Stack,
 	Table,
 	TableBody,
@@ -35,15 +33,15 @@ import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import RentalAgreementSearchSelect from './RentalAgreementSearchSelect';
 import SkeletonTableRentalAgreement from '../SkeletonTables/SkeletonTableRentalAgreement';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { DefaultValue, useRecoilState } from 'recoil';
 import { rentalAgreementAtom } from '../Atoms/RentalAgreementAtoms';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalAgreement() {
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [data, setData] = React.useState();
-	const [showSnackbar, setShowSnackbar] = React.useState(false);
 	const [showDialog, setShowDialog] = React.useState(false);
 	const [focusedAgreement, setFocusedAgreement] = useRecoilState(rentalAgreementAtom);
 	const [dialogMode, setDialogMode] = React.useState('');
@@ -51,6 +49,7 @@ export default function RentalAgreement() {
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const dialogFullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+	const { t, i18n } = useTranslation(['generalTranslation', 'agreementTranslation']);
 	const [searchValues, setSearchValues] = React.useState({
 		surname: '',
 		phone: '',
@@ -59,8 +58,7 @@ export default function RentalAgreement() {
 		onlyActive: true,
 		onlyUnpaid: false,
 	});
-	dayjs.locale('pl');
-
+	dayjs.locale(i18n.language);
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await filterAgreements(searchValues);
@@ -68,70 +66,48 @@ export default function RentalAgreement() {
 			setIsLoading(false);
 		};
 		getData();
+		setFocusedAgreement(new DefaultValue());
 	}, []);
-
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
-
 	const handleChangeRowsPerPage = (event) => {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};
-
 	const getDialogTitle = () => {
 		switch (dialogMode) {
-			case 'post':
-				return 'Add agreement';
 			case 'update':
-				return 'Edit agreement';
+				return t('editAgreement', { ns: 'agreementTranslation' });
 			case 'delete':
-				return 'Delete agreement';
+				return t('deleteAgreement', { ns: 'agreementTranslation' });
 			case 'info':
-				return 'Agreement details';
+				return t('agreementDetails', { ns: 'agreementTranslation' });
 		}
 	};
-
-	const getSnackbarTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return 'Agreement added successfully';
-			case 'update':
-				return 'Agreement updated successfully';
-			case 'delete':
-				return 'Agreement deleted successfully';
-		}
-	};
-
 	const handleEditClick = () => {
 		setAnchorEl(null);
 		setDialogMode('update');
 		setShowDialog(true);
 	};
-
 	const handleDeleteClick = () => {
 		setAnchorEl(null);
 		setDialogMode('delete');
 		setShowDialog(true);
 	};
-
 	const handleDetailsClick = () => {
 		setAnchorEl(null);
 		setDialogMode('info');
 		setShowDialog(true);
 	};
-
 	const handleAddClick = () => {
 		navigate('/add-rental-agreement');
 	};
-
 	const handleCloseDialog = () => {
 		setShowDialog(false);
 	};
-
 	const handleDialogSuccess = async () => {
 		setIsLoading(true);
-		setShowSnackbar(true);
 		handleCloseDialog();
 		const newSearchParams = {
 			surname: '',
@@ -146,18 +122,12 @@ export default function RentalAgreement() {
 		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 	};
-
-	const closeSnackbars = () => {
-		setShowSnackbar(false);
-	};
-
 	const handleSearch = async () => {
 		setIsLoading(true);
 		const result = await filterAgreements(searchValues);
 		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
 	};
-
 	const dialog = () => {
 		return (
 			<Dialog
@@ -186,13 +156,11 @@ export default function RentalAgreement() {
 			</Dialog>
 		);
 	};
-
 	const getDate = (date) => {
 		return dayjs(date)
 			.format('dddd, DD MMMM YYYY')
 			.replace(/(^|\s)\S/g, (l) => l.toUpperCase());
 	};
-
 	const handleOpenPopper = (event, agreement) => {
 		setAnchorEl(event.currentTarget);
 		const rentalAgreementDetails = Object.fromEntries(
@@ -203,11 +171,9 @@ export default function RentalAgreement() {
 			client: agreement.client,
 		});
 	};
-
 	const handleClosePopper = () => {
 		setAnchorEl(null);
 	};
-
 	const tablePopper = () => {
 		return (
 			<Popover
@@ -265,6 +231,12 @@ export default function RentalAgreement() {
 			return theme.palette.error.light;
 		}
 	};
+	function defaultLabelDisplayedRows({ from, to, count }) {
+		if (i18n.language === 'en') {
+			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+		}
+		return `${from}–${to} z ${count !== -1 ? count : `more than ${to}`}`;
+	}
 
 	return (
 		<div>
@@ -281,7 +253,7 @@ export default function RentalAgreement() {
 						onClick={handleAddClick}
 						disabled={isLoading}
 					>
-						Add agreement
+						{t('add')}
 					</Button>
 					<RentalAgreementSearchSelect
 						isLoading={isLoading}
@@ -290,16 +262,6 @@ export default function RentalAgreement() {
 						setSearchValues={setSearchValues}
 					/>
 				</Stack>
-				<Snackbar
-					open={showSnackbar}
-					autoHideDuration={6000}
-					onClose={closeSnackbars}
-					anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-				>
-					<Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
-						{getSnackbarTitle()}
-					</Alert>
-				</Snackbar>
 				{isLoading ? (
 					<SkeletonTableRentalAgreement />
 				) : (
@@ -363,6 +325,8 @@ export default function RentalAgreement() {
 							page={page}
 							onPageChange={handleChangePage}
 							onRowsPerPageChange={handleChangeRowsPerPage}
+							labelRowsPerPage={t('labelRowsPerPage')}
+							labelDisplayedRows={defaultLabelDisplayedRows}
 						/>
 					</div>
 				)}

@@ -1,0 +1,13 @@
+{
+ "search": "Search",
+ "add": "Add",
+ "labelRowsPerPage": "Rows per page:",
+ "save": "Save",
+ "cancel": "Cancel",
+ "delete": "Delete",
+ "required": "Required",
+ "invalidFormat": "Invalid format",
+ "continue": "Continue",
+ "back": "Back",
+ "finish": "Finish"
+}

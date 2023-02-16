@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pl';
+import { useTranslation } from 'react-i18next';
 
 export default function ClientTableRow({
 	row,
@@ -25,6 +26,8 @@ export default function ClientTableRow({
 	client,
 }) {
 	const [openDetails, setOpenDetails] = React.useState(false);
+	const { t, i18n } = useTranslation(['clientTranslation']);
+	dayjs.locale(i18n.language);
 	const handleOpenDetails = () => {
 		setOpenDetails(!openDetails);
 	};
@@ -62,11 +65,7 @@ export default function ClientTableRow({
 						</IconButton>
 					</Stack>
 				</TableCell>
-				<TableCell
-					component="th"
-					scope="row"
-					className={'ClientTableNameCell'}
-				>
+				<TableCell component="th" scope="row" className={'ClientTableNameCell'}>
 					{row.name + ' ' + row.surname}
 				</TableCell>
 				<TableCell align="right">
@@ -90,58 +89,47 @@ export default function ClientTableRow({
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell
-					style={{ paddingBottom: 0, paddingTop: 0 }}
-					colSpan={4}
-				>
+				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
 					<Collapse in={openDetails} timeout="auto" unmountOnExit>
 						<Box sx={{ margin: 1 }}>
 							<TextField
 								margin="dense"
-								label="Phone number"
+								label={t('phoneNumber')}
 								fullWidth
 								variant="outlined"
 								value={row.phoneNumber}
 								InputProps={{
 									readOnly: true,
 									startAdornment: (
-										<InputAdornment position="start">
-											+48
-										</InputAdornment>
+										<InputAdornment position="start">+48</InputAdornment>
 									),
 								}}
 							/>
 							<TextField
 								margin="dense"
-								label="Email"
+								label={t('email')}
 								fullWidth
 								variant="outlined"
 								value={row.email}
 								InputProps={{
 									readOnly: true,
 								}}
-								disabled={
-									row.email === null ||
-									row.email.trim().length === 0
-								}
+								disabled={row.email === null || row.email.trim().length === 0}
 							/>
 							<TextField
 								margin="dense"
-								label="ID card"
+								label={t('idCard')}
 								fullWidth
 								variant="outlined"
 								value={row.idCard}
 								InputProps={{
 									readOnly: true,
 								}}
-								disabled={
-									row.idCard === null ||
-									row.idCard.trim().length === 0
-								}
+								disabled={row.idCard === null || row.idCard.trim().length === 0}
 							/>
 							<TextField
 								margin="dense"
-								label="Address"
+								label={t('address')}
 								fullWidth
 								variant="outlined"
 								value={row.city + ' ' + row.street}
@@ -151,7 +139,7 @@ export default function ClientTableRow({
 							/>
 							<TextField
 								margin="dense"
-								label="Date added"
+								label={t('dateAdded')}
 								fullWidth
 								variant="outlined"
 								value={getDate(row.dateAdded)}

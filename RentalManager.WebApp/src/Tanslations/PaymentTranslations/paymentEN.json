@@ -1,0 +1,15 @@
+{
+  "paymentMethod": "Payment method",
+  "amount": "Amount",
+  "paidFrom": "Paid from",
+  "paidTo": "Paid to",
+  "method": "Method",
+  "from": "From",
+  "to": "To",
+  "total": "Total",
+  "noPayments": "No payments",
+  "Card": "Card",
+  "Cash": "Cash",
+  "Transfer": "Transfer",
+  "payments": "Payments"
+}

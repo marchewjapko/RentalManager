@@ -13,6 +13,7 @@ import * as React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import InputMask from 'react-input-mask';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalAgreementSearchSelect({
 	isLoading,
@@ -21,14 +22,17 @@ export default function RentalAgreementSearchSelect({
 	setSearchValues,
 }) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
-
+	const { t } = useTranslation([
+		'clientTranslation',
+		'generalTranslation',
+		'agreementTranslation',
+	]);
 	const handleKeyDown = (event) => {
 		if (event.key === 'Enter') {
 			setAnchorEl(null);
 			handleSearch(searchValues);
 		}
 	};
-
 	const handleSearchChange = (event) => {
 		if (event.target.type === 'checkbox') {
 			setSearchValues({
@@ -42,17 +46,13 @@ export default function RentalAgreementSearchSelect({
 			});
 		}
 	};
-
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
-
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
 	const open = Boolean(anchorEl);
-
 	return (
 		<div>
 			<Button
@@ -63,7 +63,7 @@ export default function RentalAgreementSearchSelect({
 				disabled={isLoading}
 				sx={{ height: '40px' }}
 			>
-				Search
+				{t('search', { ns: 'generalTranslation' })}
 			</Button>
 			<Popover
 				open={open}
@@ -92,7 +92,7 @@ export default function RentalAgreementSearchSelect({
 					<TextField
 						margin="dense"
 						name={'surname'}
-						label="Surname"
+						label={t('surname')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.surname}
@@ -102,8 +102,7 @@ export default function RentalAgreementSearchSelect({
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
-									{searchValues.surname.trim().length !==
-									0 ? (
+									{searchValues.surname.trim().length !== 0 ? (
 										<IconButton
 											color="default"
 											onClick={() =>
@@ -118,10 +117,7 @@ export default function RentalAgreementSearchSelect({
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
@@ -139,15 +135,14 @@ export default function RentalAgreementSearchSelect({
 							<TextField
 								margin="dense"
 								name={'phone'}
-								label="Phone"
+								label={t('phoneNumber')}
 								variant="outlined"
 								fullWidth
 								size="small"
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
-											{searchValues.phone.trim()
-												.length !== 0 ? (
+											{searchValues.phone.trim().length !== 0 ? (
 												<IconButton
 													color="default"
 													onClick={() =>
@@ -164,17 +159,13 @@ export default function RentalAgreementSearchSelect({
 											) : (
 												<Box
 													component="span"
-													className={
-														'ClientSearchBox'
-													}
+													className={'ClientSearchBox'}
 												/>
 											)}
 										</InputAdornment>
 									),
 									startAdornment: (
-										<InputAdornment position="start">
-											+48
-										</InputAdornment>
+										<InputAdornment position="start">+48</InputAdornment>
 									),
 								}}
 							/>
@@ -183,7 +174,7 @@ export default function RentalAgreementSearchSelect({
 					<TextField
 						margin="dense"
 						name={'city'}
-						label="City"
+						label={t('city')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.city}
@@ -208,10 +199,7 @@ export default function RentalAgreementSearchSelect({
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
@@ -220,7 +208,7 @@ export default function RentalAgreementSearchSelect({
 					<TextField
 						margin="dense"
 						name={'street'}
-						label="Street"
+						label={t('street')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.street}
@@ -245,17 +233,14 @@ export default function RentalAgreementSearchSelect({
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
 						}}
 					/>
 					<FormControlLabel
-						label="Only active"
+						label={t('onlyActive', { ns: 'agreementTranslation' })}
 						name={'onlyActive'}
 						control={
 							<Checkbox
@@ -270,7 +255,7 @@ export default function RentalAgreementSearchSelect({
 						}
 					/>
 					<FormControlLabel
-						label="Only unpaid"
+						label={t('onlyUnpaid', { ns: 'agreementTranslation' })}
 						name={'onlyUnpaid'}
 						control={
 							<Checkbox
@@ -294,7 +279,7 @@ export default function RentalAgreementSearchSelect({
 							setAnchorEl(null);
 						}}
 					>
-						Search
+						{t('search', { ns: 'generalTranslation' })}
 					</Button>
 				</Stack>
 			</Popover>

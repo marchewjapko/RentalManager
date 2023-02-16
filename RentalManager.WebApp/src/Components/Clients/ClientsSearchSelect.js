@@ -1,22 +1,14 @@
-import {
-	Box,
-	Button,
-	IconButton,
-	InputAdornment,
-	Popover,
-	Stack,
-	TextField,
-} from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, Popover, Stack, TextField } from '@mui/material';
 import * as React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import InputMask from 'react-input-mask';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 
 export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const theme = useTheme();
+	const { t } = useTranslation(['clientTranslation', 'generalTranslation']);
+
 	const [searchValues, setSearchValues] = React.useState({
 		surname: '',
 		phone: '',
@@ -70,7 +62,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 				onClick={handleClick}
 				disabled={isLoading}
 			>
-				Search
+				{t('search', { ns: 'generalTranslation' })}
 			</Button>
 			<Popover
 				open={open}
@@ -98,7 +90,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 				>
 					<TextField
 						margin="dense"
-						label="Surname"
+						label={t('surname')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.surname}
@@ -108,8 +100,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
-									{searchValues.surname.trim().length !==
-									0 ? (
+									{searchValues.surname.trim().length !== 0 ? (
 										<IconButton
 											color="default"
 											onClick={() =>
@@ -124,10 +115,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
@@ -144,15 +132,14 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 						{() => (
 							<TextField
 								margin="dense"
-								label="Phone"
+								label={t('phoneNumber')}
 								variant="outlined"
 								fullWidth
 								size="small"
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
-											{searchValues.phone.trim()
-												.length !== 0 ? (
+											{searchValues.phone.trim().length !== 0 ? (
 												<IconButton
 													color="default"
 													onClick={() =>
@@ -169,17 +156,13 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 											) : (
 												<Box
 													component="span"
-													className={
-														'ClientSearchBox'
-													}
+													className={'ClientSearchBox'}
 												/>
 											)}
 										</InputAdornment>
 									),
 									startAdornment: (
-										<InputAdornment position="start">
-											+48
-										</InputAdornment>
+										<InputAdornment position="start">+48</InputAdornment>
 									),
 								}}
 							/>
@@ -187,7 +170,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 					</InputMask>
 					<TextField
 						margin="dense"
-						label="City"
+						label={t('city')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.city}
@@ -212,10 +195,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
@@ -223,7 +203,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 					/>
 					<TextField
 						margin="dense"
-						label="Street"
+						label={t('street')}
 						variant="outlined"
 						fullWidth
 						value={searchValues.street}
@@ -248,10 +228,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 											<CloseIcon />
 										</IconButton>
 									) : (
-										<Box
-											component="span"
-											className={'ClientSearchBox'}
-										/>
+										<Box component="span" className={'ClientSearchBox'} />
 									)}
 								</InputAdornment>
 							),
@@ -267,7 +244,7 @@ export default function ClientsSearchSelect({ isLoading, handleSearch }) {
 							setAnchorEl(null);
 						}}
 					>
-						Search
+						{t('search', { ns: 'generalTranslation' })}
 					</Button>
 				</Stack>
 			</Popover>

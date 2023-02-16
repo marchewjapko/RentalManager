@@ -2,11 +2,9 @@ import * as React from 'react';
 import './Clients.js.css';
 import '../SharedStyles.css';
 import {
-	Alert,
 	Button,
 	Dialog,
 	DialogTitle,
-	Snackbar,
 	Stack,
 	Table,
 	TableBody,
@@ -23,6 +21,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { DefaultValue, useRecoilState } from 'recoil';
 import { clientAtom } from '../Atoms/ClientAtoms';
+import { useTranslation } from 'react-i18next';
 
 export default function Clients() {
 	const [client, setClient] = useRecoilState(clientAtom);
@@ -30,21 +29,19 @@ export default function Clients() {
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [data, setData] = React.useState();
-	const [showSnackbar, setShowSnackbar] = React.useState(false);
 	const [showDialog, setShowDialog] = React.useState(false);
 	const [dialogMode, setDialogMode] = React.useState('');
 	const theme = useTheme();
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+	const { t, i18n } = useTranslation(['generalTranslation', 'clientTranslation']);
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
-
 	const handleChangeRowsPerPage = (event) => {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};
-
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllClients();
@@ -53,51 +50,34 @@ export default function Clients() {
 		};
 		getData();
 	}, []);
-
 	const getDialogTitle = () => {
 		switch (dialogMode) {
 			case 'post':
-				return 'Add client';
+				return t('addClient', { ns: 'clientTranslation' });
 			case 'update':
-				return 'Edit client';
+				return t('editClient', { ns: 'clientTranslation' });
 			case 'delete':
-				return 'Delete client';
+				return t('deleteClient', { ns: 'clientTranslation' });
 		}
 	};
-
-	const getSnackbarTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return 'Client added successfully';
-			case 'update':
-				return 'Client updated successfully';
-			case 'delete':
-				return 'Client deleted successfully';
-		}
-	};
-
 	const handleEditClick = (client) => {
 		setClient(client);
 		setDialogMode('update');
 		setShowDialog(true);
 	};
-
 	const handleDeleteClick = (client) => {
 		setClient(client);
 		setDialogMode('delete');
 		setShowDialog(true);
 	};
-
 	const handleAddClick = () => {
 		setDialogMode('post');
 		setClient(new DefaultValue());
 		setShowDialog(true);
 	};
-
 	const handleCloseDialog = () => {
 		setShowDialog(false);
 	};
-
 	const handleDialogSuccess = async (mode, client) => {
 		setIsLoading(true);
 		setShowSnackbar(true);
@@ -109,11 +89,6 @@ export default function Clients() {
 			setClient(client);
 		}
 	};
-
-	const closeSnackbars = () => {
-		setShowSnackbar(false);
-	};
-
 	const dialog = () => {
 		return (
 			<Dialog open={showDialog} maxWidth={'sm'} onClose={handleCloseDialog}>
@@ -127,7 +102,6 @@ export default function Clients() {
 			</Dialog>
 		);
 	};
-
 	const handleSearch = async (searchValues) => {
 		setIsLoading(true);
 		const result = await filterClients(searchValues);
@@ -136,19 +110,15 @@ export default function Clients() {
 		setPage(0);
 		setClient(result[0]);
 	};
+	function defaultLabelDisplayedRows({ from, to, count }) {
+		if (i18n.language === 'en') {
+			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+		}
+		return `${from}–${to} z ${count !== -1 ? count : `more than ${to}`}`;
+	}
 
 	return (
 		<div>
-			<Snackbar
-				open={showSnackbar}
-				autoHideDuration={6000}
-				onClose={closeSnackbars}
-				anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-			>
-				<Alert onClose={closeSnackbars} severity="success" sx={{ width: '100%' }}>
-					{getSnackbarTitle()}
-				</Alert>
-			</Snackbar>
 			<div className={'ComponentContainer'}>
 				<Stack
 					direction={'row'}
@@ -164,7 +134,7 @@ export default function Clients() {
 						onClick={handleAddClick}
 						disabled={isLoading}
 					>
-						Add client
+						{t('add')}
 					</Button>
 					<ClientsSearchSelect isLoading={isLoading} handleSearch={handleSearch} />
 				</Stack>
@@ -208,6 +178,8 @@ export default function Clients() {
 							page={page}
 							onPageChange={handleChangePage}
 							onRowsPerPageChange={handleChangeRowsPerPage}
+							labelRowsPerPage={t('labelRowsPerPage')}
+							labelDisplayedRows={defaultLabelDisplayedRows}
 						/>
 					</>
 				)}

@@ -1,5 +1,4 @@
 import {
-	Avatar,
 	Backdrop,
 	Box,
 	Button,
@@ -13,22 +12,22 @@ import {
 import * as React from 'react';
 import ValidateRentalAgreement from '../../../Actions/Validations/ValidateRentalAgreement';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import {
-	addRentalAgreement,
-	filterAgreements,
-} from '../../../Actions/RestAPI/RentalAgreementActions';
+import { addRentalAgreement } from '../../../Actions/RestAPI/RentalAgreementActions';
 import { useNavigate } from 'react-router-dom';
-import { DefaultValue, useRecoilState, useRecoilValue } from 'recoil';
+import { DefaultValue, useRecoilState } from 'recoil';
 import { rentalAgreementAtom } from '../../Atoms/RentalAgreementAtoms';
 import GetFormSteps from './GetFromSteps';
 import GetStepIcon from './GetStepIcon';
+import { useTranslation } from 'react-i18next';
+import ValidateClient from '../../../Actions/Validations/ValidateClient';
+import { ValidatePayment } from '../../../Actions/Validations/ValidatePayment';
 
 export default function AddRentalEquipmentForm() {
 	const [activeStep, setActiveStep] = React.useState(0);
 	const [completed, setCompleted] = React.useState({});
 	const [isLoading, setIsLoading] = React.useState(false);
-	const [newRentalAgreement, setRentalAgreement] =
-		useRecoilState(rentalAgreementAtom);
+	const { t } = useTranslation(['generalTranslation', 'agreementTranslation']);
+	const [newRentalAgreement, setRentalAgreement] = useRecoilState(rentalAgreementAtom);
 	const navigate = useNavigate();
 	const [validationState, setValidationState] = React.useState({
 		'Choose client': null,
@@ -46,10 +45,7 @@ export default function AddRentalEquipmentForm() {
 	};
 	const handleNext = () => {
 		validateCurrentStep();
-		if (
-			allStepsCompleted() &&
-			ValidateRentalAgreement(newRentalAgreement).length === 0
-		) {
+		if (allStepsCompleted() && ValidateRentalAgreement(newRentalAgreement).length === 0) {
 			setIsLoading(true);
 			addRentalAgreement(newRentalAgreement)
 				.then(() => {
@@ -83,43 +79,40 @@ export default function AddRentalEquipmentForm() {
 		setCompleted(newCompleted);
 	};
 	const validateCurrentStep = () => {
-		const validationResult = ValidateRentalAgreement(newRentalAgreement);
 		switch (activeStep) {
 			case 0:
+				const validationResultClient = ValidateClient(newRentalAgreement.client);
 				setValidationState({
 					...validationState,
-					'Choose client': !validationResult.includes('noClient'),
+					'Choose client': validationResultClient,
 				});
-				if (!validationResult.includes('noClient')) {
+				if (!validationResultClient) {
 					handleComplete();
 				} else {
 					removeFromCompleted();
 				}
 				break;
 			case 1:
+				const validationResultAgreement = ValidateClient(newRentalAgreement);
 				setValidationState({
 					...validationState,
-					'Fill the details':
-						!validationResult.filter(
-							(x) => x !== 'noClient' && x !== 'noPayments'
-						).length > 0,
+					'Fill the details': validationResultAgreement,
 				});
-				if (
-					!validationResult.filter(
-						(x) => x !== 'noClient' && x !== 'noPayments'
-					).length > 0
-				) {
+				if (validationResultAgreement) {
 					handleComplete();
 				} else {
 					removeFromCompleted();
 				}
 				break;
 			case 2:
+				const validationResultPayment = newRentalAgreement
+					.map((payment) => ValidatePayment(payment))
+					.every((x) => x);
 				setValidationState({
 					...validationState,
-					'Add payment': !validationResult.includes('noPayments'),
+					'Add payment': validationResultPayment,
 				});
-				if (!validationResult.includes('noPayments')) {
+				if (validationResultPayment) {
 					handleComplete();
 				} else {
 					removeFromCompleted();
@@ -155,14 +148,12 @@ export default function AddRentalEquipmentForm() {
 							onClick={handleStep(index)}
 							icon={GetStepIcon(
 								index,
-								Object.keys(completed).includes(
-									index.toString()
-								),
+								Object.keys(completed).includes(index.toString()),
 								index === activeStep,
 								validationState[step.label]
 							)}
 						>
-							{step.label}
+							{t(step.label, { ns: 'agreementTranslation' })}
 						</StepButton>
 						<StepContent TransitionProps={{ unmountOnExit: false }}>
 							<Scrollbars
@@ -182,15 +173,10 @@ export default function AddRentalEquipmentForm() {
 								alignItems={'center'}
 							>
 								<div>
-									<Button
-										variant="contained"
-										onClick={handleNext}
-									>
-										{ValidateRentalAgreement(
-											newRentalAgreement
-										).length === 0
-											? 'Finish'
-											: 'Continue'}
+									<Button variant="contained" onClick={handleNext}>
+										{ValidateRentalAgreement(newRentalAgreement).length === 0
+											? t('finish')
+											: t('continue')}
 									</Button>
 								</div>
 								<div>
@@ -199,7 +185,7 @@ export default function AddRentalEquipmentForm() {
 										onClick={handleBack}
 										disabled={activeStep === 0}
 									>
-										Back
+										{t('back')}
 									</Button>
 								</div>
 							</Stack>

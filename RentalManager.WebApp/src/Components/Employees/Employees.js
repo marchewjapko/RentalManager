@@ -1,144 +1,95 @@
 import * as React from 'react';
 import './Employees.js.css';
 import {
-	Alert,
 	Box,
 	Button,
-	Checkbox,
 	Dialog,
 	DialogTitle,
 	IconButton,
 	Paper,
-	Snackbar,
 	Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
-	TableHead,
 	TableRow,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import {
-	filterEmployees,
-	getAllEmployees,
-} from '../../Actions/RestAPI/EmployeeActions';
+import { filterEmployees, getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SearchTextField from '../Shared/SearchTextField';
 import EmployeeDialog from './EmployeeDialog';
 import SkeletonTableEmployees from '../SkeletonTables/SkeletonTableEmployees';
+import { useTranslation } from 'react-i18next';
 
-export default function Employees({ isCheckable }) {
+export default function Employees() {
 	const [showDialog, setShowDialog] = React.useState(false);
 	const [focusedEmployee, setFocusedEmployee] = React.useState();
 	const [data, setData] = React.useState();
 	const [isLoading, setIsLoading] = React.useState(true);
-	const [showSnackbar, setShowSnackbar] = React.useState(false);
 	const [dialogMode, setDialogMode] = React.useState('');
-	const [checkedEmployee, setCheckedEmployee] = React.useState();
+	const { t } = useTranslation(['generalTranslation', 'employeeTranslation']);
 
 	const handleSearch = async (searchName) => {
 		setIsLoading(true);
 		const result = await filterEmployees(searchName);
 		setData(result.hasOwnProperty('data') ? result.data : result);
 		setIsLoading(false);
-		setCheckedEmployee(result[0]);
 	};
-
-	const handleAddClick = () => {
-		setDialogMode('post');
-		setFocusedEmployee({ id: 0, name: '', surname: '' });
-		setShowDialog(true);
-	};
-
-	const handleEditClick = (employee) => {
-		setDialogMode('update');
-		setFocusedEmployee(employee);
-		setShowDialog(true);
-	};
-
-	const handleDeleteClick = (employee) => {
-		setDialogMode('delete');
-		setFocusedEmployee(employee);
-		setShowDialog(true);
-	};
-
-	const handleCloseDialog = () => {
-		setShowDialog(false);
-	};
-
-	const handleDialogSuccess = async (mode, employee) => {
-		setIsLoading(true);
-		setShowSnackbar(true);
-		handleCloseDialog();
-		const result = await getAllEmployees();
-		setData(result.hasOwnProperty('data') ? result.data : result);
-		setIsLoading(false);
-		if (mode === 'delete' && employee.id === checkedEmployee.id)
-			setCheckedEmployee(result[0]);
-		if (mode === 'post') {
-			setCheckedEmployee(employee);
-		}
-	};
-
-	const closeSnackbars = () => {
-		setShowSnackbar(false);
-	};
-
 	React.useEffect(() => {
 		const getData = async () => {
 			const result = await getAllEmployees();
-			setCheckedEmployee(result[0]);
 			setData(result.hasOwnProperty('data') ? result.data : result);
 			setIsLoading(false);
 		};
 		getData();
 	}, []);
-
+	const handleAddClick = () => {
+		setDialogMode('post');
+		setFocusedEmployee({ id: 0, name: '', surname: '' });
+		setShowDialog(true);
+	};
+	const handleEditClick = (employee) => {
+		setDialogMode('update');
+		setFocusedEmployee(employee);
+		setShowDialog(true);
+	};
+	const handleDeleteClick = (employee) => {
+		setDialogMode('delete');
+		setFocusedEmployee(employee);
+		setShowDialog(true);
+	};
+	const handleDialogSuccess = async () => {
+		setIsLoading(true);
+		setShowDialog(false);
+		const result = await getAllEmployees();
+		setData(result.hasOwnProperty('data') ? result.data : result);
+		setIsLoading(false);
+	};
 	const getDialogTitle = () => {
 		switch (dialogMode) {
 			case 'post':
-				return 'Add employee';
+				return t('addEmployee', { ns: 'employeeTranslation' });
 			case 'update':
-				return 'Edit employee';
+				return t('editEmployee', { ns: 'employeeTranslation' });
 			case 'delete':
-				return 'Delete employee';
+				return t('deleteEmployee', { ns: 'employeeTranslation' });
 		}
 	};
-
-	const getSnackbarTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return 'Employee added successfully';
-			case 'update':
-				return 'Employee updated successfully';
-			case 'delete':
-				return 'Employee deleted successfully';
-		}
-	};
-
 	const dialog = () => {
 		return (
-			<Dialog
-				open={showDialog}
-				maxWidth={'sm'}
-				onClose={() => handleCloseDialog()}
-			>
+			<Dialog open={showDialog} maxWidth={'sm'} onClose={() => setShowDialog(false)}>
 				<DialogTitle>{getDialogTitle()}</DialogTitle>
 				<EmployeeDialog
 					employee={focusedEmployee}
-					handleCancelDialog={handleCloseDialog}
+					handleCancelDialog={() => setShowDialog(false)}
 					handleDialogSuccess={handleDialogSuccess}
 					mode={dialogMode}
 				/>
 			</Dialog>
 		);
-	};
-
-	const handleCheckboxChange = (row) => {
-		setCheckedEmployee(row);
 	};
 
 	return (
@@ -156,29 +107,12 @@ export default function Employees({ isCheckable }) {
 						onClick={handleAddClick}
 						disabled={isLoading}
 					>
-						Add employee
+						{t('add')}
 					</Button>
-					<SearchTextField
-						isLoading={isLoading}
-						handleSearch={handleSearch}
-					/>
+					<SearchTextField isLoading={isLoading} handleSearch={handleSearch} />
 				</Stack>
-				<Snackbar
-					open={showSnackbar}
-					autoHideDuration={6000}
-					onClose={closeSnackbars}
-					anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-				>
-					<Alert
-						onClose={closeSnackbars}
-						severity="success"
-						sx={{ width: '100%' }}
-					>
-						{getSnackbarTitle()}
-					</Alert>
-				</Snackbar>
 				{isLoading ? (
-					<SkeletonTableEmployees isCheckable={isCheckable} />
+					<SkeletonTableEmployees />
 				) : (
 					<div>
 						{dialog()}
@@ -195,47 +129,16 @@ export default function Employees({ isCheckable }) {
 									<TableBody>
 										{data.map((row) => (
 											<TableRow key={row.name}>
-												{isCheckable ? (
-													<TableCell
-														component="th"
-														scope="row"
-													>
-														<Checkbox
-															onChange={() =>
-																handleCheckboxChange(
-																	row
-																)
-															}
-															checked={
-																checkedEmployee.id ===
-																row.id
-															}
-															sx={{
-																height: '30px',
-																width: '30px',
-															}}
-														/>
-													</TableCell>
-												) : null}
-												<TableCell
-													component="th"
-													scope="row"
-												>
+												<TableCell component="th" scope="row">
 													{row.name}
 												</TableCell>
-												<TableCell align="right">
-													{row.surname}
-												</TableCell>
+												<TableCell align="right">{row.surname}</TableCell>
 												<TableCell align="right">
 													<Box>
 														<IconButton
 															aria-label="delete"
 															size="small"
-															onClick={() =>
-																handleEditClick(
-																	row
-																)
-															}
+															onClick={() => handleEditClick(row)}
 														>
 															<EditIcon fontSize="small" />
 														</IconButton>
@@ -243,11 +146,7 @@ export default function Employees({ isCheckable }) {
 															aria-label="delete"
 															size="small"
 															color={'error'}
-															onClick={() =>
-																handleDeleteClick(
-																	row
-																)
-															}
+															onClick={() => handleDeleteClick(row)}
 														>
 															<DeleteIcon fontSize="small" />
 														</IconButton>

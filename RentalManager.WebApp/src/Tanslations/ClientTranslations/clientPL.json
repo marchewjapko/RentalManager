@@ -1,0 +1,17 @@
+{
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "idCard": "Dowód osobisty",
+  "phoneNumber": "Numer telefonu",
+  "email": "Email",
+  "city": "Miejscowość",
+  "street": "Ulica",
+  "dateAdded": "Data dodania",
+  "address": "Adres",
+  "personalInformation" : "Dane osobowe",
+  "contactInformation" : "Dane kontaktowe",
+  "client": "Klient",
+  "addClient": "Dodaj klienta",
+  "editClient": "Zmień klienta",
+  "deleteClient": "Usuń klienta"
+}
