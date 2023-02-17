@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Employees.js.css';
-import { Button, Fade, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Button, Fade, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTranslation } from 'react-i18next';
@@ -44,15 +44,17 @@ function getCardsFromResponse(response) {
 function renderCard(type, content) {
 	if (type === 'skeleton') {
 		return (
-			<Paper elevation={0}>
-				<Skeleton variant="rounded" sx={{ width: '17em', height: '5em' }} />
-			</Paper>
+			<Box>
+				<Skeleton
+					sx={{ width: '17em', height: 'calc(20px + 6em)', borderRadius: '10px' }}
+				/>
+			</Box>
 		);
 	}
 	return (
-		<Paper elevation={5}>
+		<Box>
 			<EmployeeCard employee={content} />
-		</Paper>
+		</Box>
 	);
 }
 
