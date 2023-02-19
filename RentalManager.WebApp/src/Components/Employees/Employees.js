@@ -1,113 +1,134 @@
 import * as React from 'react';
-import './Employees.js.css';
-import { Box, Button, Fade, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Button, Skeleton, Typography } from '@mui/material';
 import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTranslation } from 'react-i18next';
-import { TransitionGroup } from 'react-transition-group';
 import EmployeeCard from './EmployeeCard';
-import ConfirmEmployeeDelete from './ConfirmEmployeeDelete';
-import { forceEmployeeRefresh } from '../Atoms/EmployeeAtoms';
-import { useRecoilValue } from 'recoil';
+import ConfirmDeleteEmployeeDialog from './ConfirmDeleteEmployeeDialog';
+import {
+	employeeAtom,
+	employeeShowDeleteConfirmation,
+	employeeShowEditDialog,
+	forceEmployeeRefresh,
+} from '../Atoms/EmployeeAtoms';
+import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import './Employee.css';
+import EmployeeForm from './EmployeeForm';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const initialCards = [
-	{
-		type: 'skeleton',
-	},
-	{
-		type: 'skeleton',
-	},
-	{
-		type: 'skeleton',
-	},
-	{
-		type: 'skeleton',
-	},
-	{
-		type: 'skeleton',
-	},
-];
-
-function getTimeoutIn(index) {
-	return 250 + 100 * index;
-}
-
-function getCardsFromResponse(response) {
-	return response.map((record) => {
-		return {
-			type: 'data',
-			content: record,
-		};
-	});
-}
-
-function renderCard(type, content) {
-	if (type === 'skeleton') {
-		return (
-			<Box>
-				<Skeleton
-					sx={{ width: '17em', height: 'calc(20px + 6em)', borderRadius: '10px' }}
-				/>
-			</Box>
-		);
-	}
+function GetSkeletonCards() {
+	const skeletonArray = Array(5).fill(0);
 	return (
-		<Box>
-			<EmployeeCard employee={content} />
-		</Box>
+		<>
+			{skeletonArray.map((x, index) => (
+				<motion.div
+					key={index}
+					variants={item}
+					custom={[index, skeletonArray.length]}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+				>
+					<Skeleton className={'employee-card-skeleton'} />
+				</motion.div>
+			))}
+		</>
 	);
 }
 
+function GetNormalCards({ data }) {
+	return (
+		<>
+			{data.map((employee, index) => (
+				<motion.div
+					key={index}
+					variants={item}
+					custom={[index, data.length]}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+				>
+					<EmployeeCard employee={employee} />
+				</motion.div>
+			))}
+		</>
+	);
+}
+
+function getChildDelay(index, size) {
+	if (size <= 31) {
+		return index * 0.05;
+	} else {
+		return index * (1.5 / (size - 1));
+	}
+}
+
+const item = {
+	exit: { opacity: 0 },
+	initial: {
+		opacity: 0,
+	},
+	animate: (i) => ({
+		opacity: 1,
+		transition: {
+			delay: getChildDelay(i[0], i[1]),
+		},
+	}),
+};
+
 export default function Employees() {
-	const [employeeCards, setEmployeeCards] = React.useState(initialCards);
-	const [isLoading, setIsLoading] = React.useState(true);
+	const [data, setData] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 	const refreshFunction = useRecoilValue(forceEmployeeRefresh);
+	const [showEditDialog, setShowEditDialog] = useRecoilState(employeeShowEditDialog);
+	const showDeleteDialog = useRecoilValue(employeeShowDeleteConfirmation);
+	const setEmployee = useSetRecoilState(employeeAtom);
 	const { t } = useTranslation(['generalTranslation', 'employeeTranslation']);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setIsLoading(true);
 		getAllEmployees().then((result) => {
-			setEmployeeCards([]);
 			if (result.hasOwnProperty('data')) {
-				setTimeout(() => setEmployeeCards(getCardsFromResponse(result.data)), 255);
+				setData(result.data);
 			} else {
-				setTimeout(() => setEmployeeCards(getCardsFromResponse(result)), 255);
+				setData(result);
 			}
 			setIsLoading(false);
 		});
 	}, [refreshFunction]);
 
+	const handleAddClick = () => {
+		setEmployee(new DefaultValue());
+		setShowEditDialog(true);
+	};
+
 	return (
 		<>
-			<ConfirmEmployeeDelete />
-			<Stack
-				direction={'column'}
-				alignItems={'flex-start'}
-				justifyContent={'flex-start'}
-				gap={'10px'}
-				padding={2}
-			>
+			{showDeleteDialog && <ConfirmDeleteEmployeeDialog />}
+			{showEditDialog && <EmployeeForm />}
+			<div className={'employee-container'}>
 				<Typography variant={'h3'}>
 					{t('employees', { ns: 'employeeTranslation' })}
 				</Typography>
 				<Button
 					startIcon={<AddCircleRoundedIcon />}
 					variant={'contained'}
-					onClick={() => console.log('Added!')}
+					onClick={handleAddClick}
 					disabled={isLoading}
 				>
 					{t('add')}
 				</Button>
-				<TransitionGroup
-					style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}
-				>
-					{employeeCards.map((x, index) => (
-						<Fade key={index} timeout={{ enter: getTimeoutIn(index), exit: 250 }}>
-							{renderCard(x.type, x.content)}
-						</Fade>
-					))}
-				</TransitionGroup>
-			</Stack>
+				<div className="employee-card-container">
+					<AnimatePresence mode="wait">
+						{isLoading ? (
+							<GetSkeletonCards key={1} />
+						) : (
+							<GetNormalCards data={data} key={2} />
+						)}
+					</AnimatePresence>
+				</div>
+			</div>
 		</>
 	);
 }

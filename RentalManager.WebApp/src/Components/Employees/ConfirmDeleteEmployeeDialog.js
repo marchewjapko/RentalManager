@@ -11,6 +11,7 @@ import { filterAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 import {
 	Button,
 	Dialog,
+	DialogActions,
 	DialogContent,
 	DialogTitle,
 	Skeleton,
@@ -21,45 +22,48 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteEmployee } from '../../Actions/RestAPI/EmployeeActions';
+import { useTheme } from '@mui/material/styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
 });
 
-export default function ConfirmEmployeeDelete() {
+export default function ConfirmDeleteEmployeeDialog() {
 	const [employee, setEmployee] = useRecoilState(employeeAtom);
-	const [showDialog, setShowDialog] = useRecoilState(employeeShowDeleteConfirmation);
+	const [showDialog, setShowDialog] = useState(true);
+	const setShowDialogAtom = useSetRecoilState(employeeShowDeleteConfirmation);
 	const setSnackbar = useSetRecoilState(employeeSnackbar);
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceEmployeeRefresh);
 	const [numberOfAgreements, setNumberOfAgreements] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
+	const theme = useTheme();
 
 	React.useEffect(() => {
-		if (employee.id !== -1) {
-			const searchParams = { employeeId: employee.id };
-			filterAgreements(searchParams)
-				.then((result) => {
-					if (result.hasOwnProperty('data')) {
-						setNumberOfAgreements(result.data.length);
-					} else {
-						setNumberOfAgreements(result.length);
-					}
-					setIsLoading(false);
-				})
-				.catch(() => {
-					setSnackbar({
-						show: true,
-						title: 'An error has occurred',
-						severity: 'error',
-					});
+		const searchParams = { employeeId: employee.id };
+		filterAgreements(searchParams)
+			.then((result) => {
+				if (result.hasOwnProperty('data')) {
+					setNumberOfAgreements(result.data.length);
+				} else {
+					setNumberOfAgreements(result.length);
+				}
+				setIsLoading(false);
+			})
+			.catch(() => {
+				setSnackbar({
+					show: true,
+					title: 'An error has occurred',
+					severity: 'error',
 				});
-		}
-	}, [employee]);
+			});
+	}, []);
+
 	const handleCloseDialog = () => {
 		setShowDialog(false);
 		setTimeout(() => {
 			setEmployee(new DefaultValue());
-		}, 250);
+			setShowDialogAtom(false);
+		}, 300);
 	};
 	const handleDeleteClick = () => {
 		if (numberOfAgreements === 0) {
@@ -71,7 +75,7 @@ export default function ConfirmEmployeeDelete() {
 						severity: 'success',
 					});
 					setEmployee(new DefaultValue());
-					setShowDialog(new DefaultValue());
+					handleCloseDialog();
 					setForceRefresh(!forceRefresh);
 				})
 				.catch(() => {
@@ -85,7 +89,14 @@ export default function ConfirmEmployeeDelete() {
 	};
 
 	function getDialogContent() {
-		if (numberOfAgreements > 0) {
+		if (isLoading) {
+			return (
+				<Stack direction={'column'}>
+					<Skeleton variant="text" sx={{ fontSize: '1em' }} />
+					<Skeleton variant="text" sx={{ fontSize: '1em' }} />
+				</Stack>
+			);
+		} else if (numberOfAgreements > 0) {
 			return (
 				<>
 					<Typography>
@@ -94,13 +105,6 @@ export default function ConfirmEmployeeDelete() {
 					</Typography>
 					<Typography>Delete these agreements to proceed.</Typography>
 				</>
-			);
-		} else if (isLoading) {
-			return (
-				<Stack direction={'column'}>
-					<Skeleton variant="text" sx={{ fontSize: '1em' }} />
-					<Skeleton variant="text" sx={{ fontSize: '1em' }} />
-				</Stack>
 			);
 		}
 		return <Typography>Are you sure you want to delete {employee.name}?</Typography>;
@@ -112,36 +116,37 @@ export default function ConfirmEmployeeDelete() {
 			open={showDialog}
 			TransitionComponent={Transition}
 			maxWidth={'xs'}
+			PaperProps={{
+				sx: `border: 2px solid ${theme.palette.primary.main}`,
+			}}
+			slotProps={{
+				backdrop: {
+					timeout: 250,
+					sx: 'background-color: rgba(0,0,0,0); backdrop-filter: blur(5px);',
+				},
+			}}
 		>
 			<DialogTitle>Delete employee</DialogTitle>
-			<DialogContent>{getDialogContent()}</DialogContent>
-			<Stack
-				direction={'row'}
-				alignItems={'center'}
-				justifyContent={'space-around'}
-				sx={{ paddingLeft: '10px', paddingRight: '10px', paddingBottom: '10px' }}
-				gap={'10px'}
-			>
+			<DialogContent dividers>{getDialogContent()}</DialogContent>
+			<DialogActions>
+				<Button
+					autoFocus
+					endIcon={<CancelIcon />}
+					variant={'text'}
+					onClick={handleCloseDialog}
+				>
+					Cancel
+				</Button>
 				<Button
 					onClick={handleDeleteClick}
 					startIcon={<DeleteIcon />}
-					sx={{ flex: 1 }}
 					variant={'contained'}
 					color={'error'}
 					disabled={numberOfAgreements !== 0 || isLoading}
 				>
 					Delete
 				</Button>
-				<Button
-					autoFocus
-					sx={{ flex: 1 }}
-					endIcon={<CancelIcon />}
-					variant={'outlined'}
-					onClick={handleCloseDialog}
-				>
-					Cancel
-				</Button>
-			</Stack>
+			</DialogActions>
 		</Dialog>
 	);
 }

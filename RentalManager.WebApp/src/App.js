@@ -13,11 +13,17 @@ const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 	},
+	shape: {
+		borderRadius: 10,
+	},
 });
 
 const lightTheme = createTheme({
 	palette: {
 		mode: 'light',
+	},
+	shape: {
+		borderRadius: 10,
 	},
 });
 

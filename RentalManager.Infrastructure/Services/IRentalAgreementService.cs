@@ -15,6 +15,7 @@ namespace RentalManager.Infrastructure.Services
             string? city = null,
             string? street = null, 
             int? rentalEquipmentId = null,
+            string? rentalEquipmentName = null,
             int? employeeId = null,
             bool onlyUnpaid = false, 
             DateTime? from = null, 

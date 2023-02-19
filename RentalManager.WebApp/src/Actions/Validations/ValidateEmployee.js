@@ -1,27 +1,14 @@
-import { containsOnlyLetters, isNotNullOrEmpty } from './BasicValidation';
+import * as yup from 'yup';
 
-export function validateEmployeeName(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return 'noValue';
-	}
-	if (!containsOnlyLetters(value)) {
-		return 'invalidFormat';
-	}
-	return '';
-}
-
-export function validateEmployeeSurname(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return 'noValue';
-	}
-	if (!containsOnlyLetters(value)) {
-		return 'invalidFormat';
-	}
-	return '';
-}
-
-export default function ValidateEmployee(employee) {
-	return [validateEmployeeSurname(employee.name), validateEmployeeName(employee.surname)].every(
-		(x) => x === ''
-	);
-}
+export const employeeValidationSchema = yup.object({
+	name: yup
+		.string()
+		.trim()
+		.required('Required')
+		.matches(/^[\p{L}| ]+$/gu, 'Only letters allowed'),
+	surname: yup
+		.string()
+		.trim()
+		.required('Required')
+		.matches(/^[\p{L}| ]+$/gu, 'Only letters allowed'),
+});

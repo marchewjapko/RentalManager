@@ -1,6 +1,5 @@
 import { AppBar, Backdrop, Button, CircularProgress, Stack, Tab, Tabs } from '@mui/material';
 import * as React from 'react';
-import SwipeableViews from 'react-swipeable-views';
 import ClientsDialog from '../Clients/ClientsDialog';
 import './RentalAgreement.js.css';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -98,7 +97,7 @@ export default function RentalAgreementDialog({ mode, handleCancelDialog, handle
 					/>
 				</Tabs>
 			</AppBar>
-			<SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+			<div>
 				<div className={'rentalAgreementSlide'}>
 					<Scrollbars
 						autoHeight={true}
@@ -139,7 +138,7 @@ export default function RentalAgreementDialog({ mode, handleCancelDialog, handle
 						<Payments mode={mode} isLoading={isLoading} setIsLoading={setIsLoading} />
 					</Scrollbars>
 				</div>
-			</SwipeableViews>
+			</div>
 			<Stack direction="row" justifyContent="space-between" className={'DialogStack'}>
 				{mode === 'delete' && (
 					<Button

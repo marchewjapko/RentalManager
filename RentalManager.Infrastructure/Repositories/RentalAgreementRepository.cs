@@ -55,6 +55,7 @@ namespace RentalManager.Infrastructure.Repositories
             string? city = null,
             string? street = null,
             int? rentalEquipmentId = null,
+            string? rentalEquipmentName = null,
             int? employeeId = null,
             bool onlyUnpaid = false,
             DateTime? from = null,
@@ -65,7 +66,7 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 result = result.Where(x => x.ClientId == clientId);
             }
-            if(surname != null)
+            if (surname != null)
             {
                 result = result.Where(x => x.Client.Surname.Contains(surname));
             }
@@ -84,6 +85,10 @@ namespace RentalManager.Infrastructure.Repositories
             if (rentalEquipmentId != null)
             {
                 result = result.Where(x => x.RentalEquipment.Any(a => a.Id == rentalEquipmentId));
+            }
+            if (rentalEquipmentName != null)
+            {
+                result = result.Where(x => x.RentalEquipment.Any(a => a.Name.ToLower().Contains(rentalEquipmentName.ToLower())));
             }
             if (employeeId != null)
             {

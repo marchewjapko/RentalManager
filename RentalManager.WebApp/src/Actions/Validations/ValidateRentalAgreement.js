@@ -58,7 +58,7 @@ export default function ValidateRentalAgreement(rentalAgreement, validateClient,
 	if (!rentalAgreement.rentalEquipment.map((x) => ValidateRentalEquipment(x)).every((x) => x)) {
 		return false;
 	}
-	if (rentalAgreement.employee === null || !ValidateEmployee(rentalAgreement.employee)) {
+	if (rentalAgreement.employee === null) {
 		return false;
 	}
 	if (

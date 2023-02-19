@@ -103,16 +103,33 @@ export const filterAgreements = (searchParams) =>
 									(x) =>
 										x.client.surname
 											.toLowerCase()
-											.includes(searchParams.surname.toLowerCase()) &&
+											.includes(
+												searchParams.surname
+													? searchParams.surname.toLowerCase()
+													: ''
+											) &&
 										x.client.phone
 											.toLowerCase()
-											.includes(searchParams.phone.toLowerCase()) &&
+											.includes(
+												searchParams.phone
+													? searchParams.phone.toLowerCase()
+													: ''
+											) &&
 										x.client.city
 											.toLowerCase()
-											.includes(searchParams.city.toLowerCase()) &&
+											.includes(
+												searchParams.city
+													? searchParams.city.toLowerCase()
+													: ''
+											) &&
 										x.client.street
 											.toLowerCase()
-											.includes(searchParams.street.toLowerCase()) &&
+											.includes(
+												searchParams.street
+													? searchParams.street.toLowerCase()
+													: ''
+											) &&
+										x.employee.id === searchParams.employeeId &&
 										((searchParams.onlyUnpaid &&
 											dayjs(x.validUntil).diff(dayjs(), 'day') < 0) ||
 											!searchParams.onlyUnpaid) &&
