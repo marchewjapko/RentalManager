@@ -1,224 +1,138 @@
 import * as React from 'react';
-import './RentalEquipment.js.css';
-import {
-	Box,
-	Button,
-	Dialog,
-	DialogTitle,
-	IconButton,
-	Paper,
-	Stack,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TablePagination,
-	TableRow,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Scrollbars } from 'react-custom-scrollbars-2';
-import {
-	filterRentalEquipment,
-	getAllRentalEquipment,
-} from '../../Actions/RestAPI/RentalEquipmentActions';
+import { Button, Skeleton, Typography } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import SearchTextField from '../Shared/SearchTextField';
-import RentalEquipmentDialog from './RentalEquipmentDialog';
-import SkeletonTableRentalEquipment from '../SkeletonTables/SkeletonTableRentalEquipment';
 import { useTranslation } from 'react-i18next';
+import DeleteRentalEquipmentDialog from './DeleteRentalEquipmentDialog';
+import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import RentalEquipmentForm from './RentalEquipmentForm';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+	forceRentalEquipmentRefresh,
+	rentalEquipmentAtom,
+	rentalEquipmentShowDeleteConfirmation,
+	rentalEquipmentShowEditDialog,
+} from '../Atoms/RentaLEquipmentAtoms';
+import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
+import RentalEquipmentCard from './RentalEquipmentCard';
+import './RentalEquipment.css';
 
-export default function RentalEquipment({ initialIds }) {
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(5);
-	const [showDialog, setShowDialog] = React.useState(false);
-	const [focusedRentalEquipment, setFocusedRentalEquipment] = React.useState();
-	const [data, setData] = React.useState();
-	const [isLoading, setIsLoading] = React.useState(true);
-	const [dialogMode, setDialogMode] = React.useState('');
-	const [checkedIds, setCheckedIds] = React.useState(initialIds ? initialIds : [0]);
-	const { t, i18n } = useTranslation(['generalTranslation', 'equipmentTranslation']);
+function GetSkeletonCards() {
+	const skeletonArray = Array(5).fill(0);
+	return (
+		<>
+			{skeletonArray.map((x, index) => (
+				<motion.div
+					key={index}
+					variants={item}
+					custom={[index, skeletonArray.length]}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+				>
+					<Skeleton className={'rental-equipment-card-skeleton'} />
+				</motion.div>
+			))}
+		</>
+	);
+}
 
-	const handleSearch = async (searchName) => {
+function GetNormalCards({ data }) {
+	return (
+		<>
+			{data.map((rentalEquipment, index) => (
+				<motion.div
+					key={index}
+					variants={item}
+					custom={[index, data.length]}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+				>
+					<RentalEquipmentCard rentalEquipment={rentalEquipment} />
+				</motion.div>
+			))}
+		</>
+	);
+}
+
+function getChildDelay(index, size) {
+	if (size <= 31) {
+		return index * 0.05;
+	} else {
+		return index * (1.5 / (size - 1));
+	}
+}
+
+const item = {
+	exit: { opacity: 0 },
+	initial: {
+		opacity: 0,
+	},
+	animate: (i) => ({
+		opacity: 1,
+		transition: {
+			delay: getChildDelay(i[0], i[1]),
+		},
+	}),
+};
+
+export default function RentalEquipment() {
+	const [data, setData] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const refreshFunction = useRecoilValue(forceRentalEquipmentRefresh);
+	const [showEditDialog, setShowEditDialog] = useRecoilState(rentalEquipmentShowEditDialog);
+	const showDeleteDialog = useRecoilValue(rentalEquipmentShowDeleteConfirmation);
+	const setRentalEquipment = useSetRecoilState(rentalEquipmentAtom);
+	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
+
+	useEffect(() => {
 		setIsLoading(true);
-		const result = await filterRentalEquipment(searchName);
-		setData(result.hasOwnProperty('data') ? result.data : result);
-		setIsLoading(false);
-		setPage(0);
-	};
-
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-
-	const handleChangeRowsPerPage = (event) => {
-		setRowsPerPage(parseInt(event.target.value, 10));
-		setPage(0);
-	};
-
-	const handleEditClick = (rentalEquipment) => {
-		setFocusedRentalEquipment(rentalEquipment);
-		setDialogMode('update');
-		setShowDialog(true);
-	};
-
-	const handleDeleteClick = (rentalEquipment) => {
-		setFocusedRentalEquipment(rentalEquipment);
-		setDialogMode('delete');
-		setShowDialog(true);
-	};
+		getAllRentalEquipment()
+			.then((result) => {
+				if (result.hasOwnProperty('data')) {
+					setData(result.data);
+				} else {
+					setData(result);
+				}
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}, [refreshFunction]);
 
 	const handleAddClick = () => {
-		setDialogMode('post');
-		setFocusedRentalEquipment({ id: 0, name: '', price: '' });
-		setShowDialog(true);
+		setRentalEquipment(new DefaultValue());
+		setShowEditDialog(true);
 	};
-
-	const handleCloseDialog = () => {
-		setShowDialog(false);
-	};
-
-	const handleDialogSuccess = async (mode, rentalEquipment) => {
-		setIsLoading(true);
-		handleCloseDialog();
-		const result = await getAllRentalEquipment();
-		setData(result.hasOwnProperty('data') ? result.data : result);
-		setIsLoading(false);
-		if (mode === 'delete' && checkedIds.includes(rentalEquipment.id)) {
-			setCheckedIds(checkedIds.filter((x) => x !== rentalEquipment.id));
-		}
-		if (mode === 'post') {
-			setCheckedIds((x) => [...x, rentalEquipment.id]);
-		}
-	};
-
-	React.useEffect(() => {
-		const getData = async () => {
-			const result = await getAllRentalEquipment();
-			setData(result.hasOwnProperty('data') ? result.data : result);
-			setIsLoading(false);
-		};
-		getData();
-	}, []);
-
-	const getDialogTitle = () => {
-		switch (dialogMode) {
-			case 'post':
-				return t('addRentalEquipment', { ns: 'equipmentTranslation' });
-			case 'update':
-				return t('editRentalEquipment', { ns: 'equipmentTranslation' });
-			case 'delete':
-				return t('deleteRentalEquipment', { ns: 'equipmentTranslation' });
-		}
-	};
-
-	const dialog = () => {
-		return (
-			<Dialog open={showDialog} maxWidth={'sm'} onClose={() => handleCloseDialog()}>
-				<DialogTitle>{getDialogTitle()}</DialogTitle>
-				<RentalEquipmentDialog
-					rentalEquipment={focusedRentalEquipment}
-					handleCancelDialog={handleCloseDialog}
-					handleDialogSuccess={handleDialogSuccess}
-					mode={dialogMode}
-				/>
-			</Dialog>
-		);
-	};
-
-	function defaultLabelDisplayedRows({ from, to, count }) {
-		if (i18n.language === 'en') {
-			return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-		}
-		return `${from}–${to} z ${count !== -1 ? count : `more than ${to}`}`;
-	}
 
 	return (
-		<div>
-			<Paper className={'ComponentContainer'}>
-				<Stack
-					direction={'row'}
-					justifyContent="space-between"
-					alignItems="center"
-					className={'ComponentHeadStack'}
+		<>
+			{showDeleteDialog && <DeleteRentalEquipmentDialog />}
+			{showEditDialog && <RentalEquipmentForm />}
+			<div className={'rental-equipment-container'}>
+				<Typography variant={'h3'}>
+					{t('equipment', { ns: 'equipmentTranslation' })}
+				</Typography>
+				<Button
+					startIcon={<AddCircleRoundedIcon />}
+					variant={'contained'}
+					onClick={handleAddClick}
+					disabled={isLoading}
 				>
-					<Button
-						startIcon={<AddCircleRoundedIcon />}
-						variant={'contained'}
-						onClick={handleAddClick}
-						disabled={isLoading}
-					>
-						{t('add')}
-					</Button>
-					<SearchTextField isLoading={isLoading} handleSearch={handleSearch} />
-				</Stack>
-				{isLoading ? (
-					<SkeletonTableRentalEquipment />
-				) : (
-					<div>
-						{dialog()}
-						<TableContainer className={'RentalEquipmentTable'}>
-							<Scrollbars
-								autoHeight={true}
-								autoHeightMin={0}
-								autoHeightMax={460}
-								autoHide
-								autoHideTimeout={750}
-								autoHideDuration={500}
-							>
-								<Table stickyHeader>
-									<TableBody>
-										{(rowsPerPage > 0
-											? data.slice(
-													page * rowsPerPage,
-													page * rowsPerPage + rowsPerPage
-											  )
-											: data
-										).map((row, index) => (
-											<TableRow key={index}>
-												<TableCell component="th" scope="row">
-													{row.name}
-												</TableCell>
-												<TableCell align="right">{row.price} zł</TableCell>
-												<TableCell align="right">
-													<Box>
-														<IconButton
-															aria-label="delete"
-															size="small"
-															onClick={() => handleEditClick(row)}
-														>
-															<EditIcon fontSize="small" />
-														</IconButton>
-														<IconButton
-															aria-label="delete"
-															size="small"
-															color={'error'}
-															onClick={() => handleDeleteClick(row)}
-														>
-															<DeleteIcon fontSize="small" />
-														</IconButton>
-													</Box>
-												</TableCell>
-											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							</Scrollbars>
-						</TableContainer>
-						<TablePagination
-							rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-							component="div"
-							count={data.length}
-							rowsPerPage={rowsPerPage}
-							page={page}
-							onPageChange={handleChangePage}
-							onRowsPerPageChange={handleChangeRowsPerPage}
-							labelRowsPerPage={t('labelRowsPerPage')}
-							labelDisplayedRows={defaultLabelDisplayedRows}
-						/>
-					</div>
-				)}
-			</Paper>
-		</div>
+					{t('add')}
+				</Button>
+				<div className="rental-equipment-card-container">
+					<AnimatePresence mode="wait">
+						{isLoading ? (
+							<GetSkeletonCards key={1} />
+						) : (
+							<GetNormalCards data={data} key={2} />
+						)}
+					</AnimatePresence>
+				</div>
+			</div>
+		</>
 	);
 }

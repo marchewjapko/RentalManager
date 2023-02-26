@@ -1,13 +1,7 @@
 {
-  "search": "Search",
-  "add": "Add",
-  "labelRowsPerPage": "Rows per page:",
-  "save": "Save",
   "cancel": "Cancel",
+  "edit": "Edit",
   "delete": "Delete",
-  "required": "Required",
-  "invalidFormat": "Invalid format",
-  "continue": "Continue",
-  "back": "Back",
-  "finish": "Finish"
+  "add": "Add",
+  "errorHasOccurred": "An error has occurred"
 }

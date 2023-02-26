@@ -1,11 +1,19 @@
 {
   "name": "Name",
   "surname": "Surname",
-  "employeeInformation": "Employee information",
+  "employeeInformation": "Employee Information",
+  "employeeAdded": "Employee added successfully",
+  "employeeEdited": "Employee updated successfully",
+  "employeeDeleted": "Employee deleted successfully",
   "addEmployee": "Add employee",
   "editEmployee": "Edit employee",
-  "deleteEmployee": "Delete employee",
-  "selectEmployee": "Select employee",
-  "employee": "Employee",
-  "nameAndSurname": "Name and surname"
+  "deleteEmployee": "Edit employee",
+  "onlyLettersAllowed": "Only letters allowed",
+  "required": "Required",
+  "employees": "Employees",
+  "employee": "Pracownik",
+  "has": "has",
+  "agreement(s) assigned to them": "agreement(s) assigned to them.",
+  "delete these agreements to proceed": "Delete these agreements to proceed.",
+  "are you sure you want to delete employee": "Are you sure you want to delete employee"
 }

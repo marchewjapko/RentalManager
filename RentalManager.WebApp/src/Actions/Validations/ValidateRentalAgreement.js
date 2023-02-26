@@ -1,6 +1,4 @@
 import ValidateClient from './ValidateClient';
-import ValidateRentalEquipment from './ValidateRentalEquipment';
-import ValidateEmployee from './ValidateEmployee';
 import { containsOnlyNumbers, isNotNullOrEmpty } from './BasicValidation';
 import dayjs from 'dayjs';
 
@@ -55,7 +53,7 @@ export default function ValidateRentalAgreement(rentalAgreement, validateClient,
 	if (validateClient && !ValidateClient(rentalAgreement.client)) {
 		return false;
 	}
-	if (!rentalAgreement.rentalEquipment.map((x) => ValidateRentalEquipment(x)).every((x) => x)) {
+	if (rentalAgreement.rentalEquipment === null || rentalAgreement.rentalEquipment.length === 0) {
 		return false;
 	}
 	if (rentalAgreement.employee === null) {

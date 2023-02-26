@@ -106,7 +106,7 @@ namespace RentalManager.Infrastructure.Repositories
             {
                 result = result.Where(x => x.DateAdded.Date < to.Value.Date);
             }
-            return await Task.FromResult(result.AsEnumerable());
+            return await Task.FromResult(result.OrderByDescending(x => x.DateAdded).AsEnumerable());
         }
 
         public async Task<RentalAgreement> UpdateAsync(RentalAgreement rentalAgreement, int id)

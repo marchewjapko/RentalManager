@@ -1,11 +1,19 @@
 {
-  "equipmentName": "Equipment name",
+  "name": "Name",
   "price": "Price",
-  "equipmentInformation": "Equipment information",
-  "editRentalEquipment": "Edit rental equipment",
-  "addRentalEquipment": "Add rental equipment",
-  "deleteRentalEquipment": "Delete rental equipment",
-  "selectEquipment": "Select equipment",
+  "rentalEquipmentInformation": "Equipment Information",
+  "rentalEquipmentAdded": "Equipment added successfully",
+  "rentalEquipmentEdited": "Equipment updated successfully",
+  "rentalEquipmentDeleted": "Equipment deleted successfully",
+  "addRentalEquipment": "Add equipment",
+  "editRentalEquipment": "Edit equipment",
+  "deleteRentalEquipment": "Edit equipment",
+  "onlyLettersAllowed": "Only letters allowed",
+  "onlyNumbersAllowed": "Only numbers allowed",
+  "required": "Required",
   "equipment": "Equipment",
-  "total": "Total"
+  "isAssignedTo": "is assigned to",
+  "agreement(s)": "agreement(s).",
+  "delete these agreements to proceed": "Delete these agreements to proceed.",
+  "are you sure you want to delete equipment": "Are you sure you want to delete sprzęt"
 }

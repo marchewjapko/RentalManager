@@ -4,11 +4,11 @@ export const employeeValidationSchema = yup.object({
 	name: yup
 		.string()
 		.trim()
-		.required('Required')
-		.matches(/^[\p{L}| ]+$/gu, 'Only letters allowed'),
+		.required('required')
+		.matches(/^[\p{L}| ]+$/gu, 'onlyLettersAllowed'),
 	surname: yup
 		.string()
 		.trim()
-		.required('Required')
-		.matches(/^[\p{L}| ]+$/gu, 'Only letters allowed'),
+		.required('required')
+		.matches(/^[\p{L}| ]+$/gu, 'onlyLettersAllowed'),
 });

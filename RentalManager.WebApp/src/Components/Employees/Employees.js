@@ -4,7 +4,7 @@ import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTranslation } from 'react-i18next';
 import EmployeeCard from './EmployeeCard';
-import ConfirmDeleteEmployeeDialog from './ConfirmDeleteEmployeeDialog';
+import DeleteEmployeeDialog from './DeleteEmployeeDialog';
 import {
 	employeeAtom,
 	employeeShowDeleteConfirmation,
@@ -16,6 +16,7 @@ import './Employee.css';
 import EmployeeForm from './EmployeeForm';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Masonry } from '@mui/lab';
 
 function GetSkeletonCards() {
 	const skeletonArray = Array(5).fill(0);
@@ -88,14 +89,18 @@ export default function Employees() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		getAllEmployees().then((result) => {
-			if (result.hasOwnProperty('data')) {
-				setData(result.data);
-			} else {
-				setData(result);
-			}
-			setIsLoading(false);
-		});
+		getAllEmployees()
+			.then((result) => {
+				if (result.hasOwnProperty('data')) {
+					setData(result.data);
+				} else {
+					setData(result);
+				}
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}, [refreshFunction]);
 
 	const handleAddClick = () => {
@@ -105,7 +110,7 @@ export default function Employees() {
 
 	return (
 		<>
-			{showDeleteDialog && <ConfirmDeleteEmployeeDialog />}
+			{showDeleteDialog && <DeleteEmployeeDialog />}
 			{showEditDialog && <EmployeeForm />}
 			<div className={'employee-container'}>
 				<Typography variant={'h3'}>

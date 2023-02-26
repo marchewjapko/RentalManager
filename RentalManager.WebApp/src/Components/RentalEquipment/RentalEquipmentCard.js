@@ -1,29 +1,29 @@
-import { Avatar, Button, Card, Fade, Typography } from '@mui/material';
+import { Button, Card, Fade, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import {
-	employeeAtom,
-	employeeShowDeleteConfirmation,
-	employeeShowEditDialog,
-} from '../Atoms/EmployeeAtoms';
 import { RandomGradients } from '../Shared/RandomGradients';
 import * as React from 'react';
+import {
+	rentalEquipmentAtom,
+	rentalEquipmentShowDeleteConfirmation,
+	rentalEquipmentShowEditDialog,
+} from '../Atoms/RentaLEquipmentAtoms';
 
-export default function ({ employee }) {
+export default function RentalEquipmentCard({ rentalEquipment }) {
 	const [isMouseOver, setIsMouseOver] = useState(false);
-	const setShowDeleteDialog = useSetRecoilState(employeeShowDeleteConfirmation);
-	const setShowEditDialog = useSetRecoilState(employeeShowEditDialog);
-	const setDialogEmployee = useSetRecoilState(employeeAtom);
+	const setShowDeleteDialog = useSetRecoilState(rentalEquipmentShowDeleteConfirmation);
+	const setShowEditDialog = useSetRecoilState(rentalEquipmentShowEditDialog);
+	const setDialogEmployee = useSetRecoilState(rentalEquipmentAtom);
 	const randomIndex = useRef(Math.floor(Math.random() * 20));
 
 	const handleDeleteClick = () => {
-		setDialogEmployee(employee);
+		setDialogEmployee(rentalEquipment);
 		setShowDeleteDialog(true);
 	};
 	const handleEditClick = () => {
-		setDialogEmployee(employee);
+		setDialogEmployee(rentalEquipment);
 		setShowEditDialog(true);
 	};
 	const backdropStyle = {
@@ -31,9 +31,9 @@ export default function ({ employee }) {
 	};
 
 	return (
-		<div className={'employee-card'}>
+		<div className={'rental-equipment-card'}>
 			<div
-				className={'employee-backdrop'}
+				className={'rental-equipment-backdrop'}
 				style={backdropStyle}
 				onMouseLeave={() => setIsMouseOver(false)}
 				onMouseEnter={() => setIsMouseOver(true)}
@@ -59,14 +59,20 @@ export default function ({ employee }) {
 					</Button>
 				</Fade>
 			</div>
-			<Card className={'employee-content'}>
-				<Avatar
-					variant="rounded"
-					src="https://mui.com/static/images/avatar/1.jpg"
-					sx={{ width: 70, height: 70, borderRadius: '5px' }}
-				/>
-				<Typography fontWeight={700} variant={'h6'} className={'employee-name-typography'}>
-					{employee.name + ' ' + employee.surname}
+			<Card className={'rental-equipment-content'}>
+				<Typography
+					fontWeight={700}
+					variant={'h6'}
+					className={'rental-equipment-name-typography'}
+				>
+					{rentalEquipment.name}
+				</Typography>
+				<Typography
+					fontWeight={350}
+					variant={'body1'}
+					className={'rental-equipment-name-typography'}
+				>
+					{rentalEquipment.price + ' zł'}
 				</Typography>
 			</Card>
 		</div>

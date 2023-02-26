@@ -4,7 +4,7 @@ import { createTheme, Snackbar, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useCookies } from 'react-cookie';
 import { DefaultValue, RecoilRoot, useRecoilState } from 'recoil';
-import GetRouter from './Components/Router';
+import GetRouter from './Router';
 import './i18n';
 import { employeeSnackbar } from './Components/Atoms/EmployeeAtoms';
 import MuiAlert from '@mui/material/Alert';

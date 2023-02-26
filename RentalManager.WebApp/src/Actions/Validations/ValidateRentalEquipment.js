@@ -1,31 +1,14 @@
-import {
-	containsOnlyLettersNumbersAndWhiteSpace,
-	containsOnlyNumbers,
-	isNotNullOrEmpty,
-} from './BasicValidation';
+import * as yup from 'yup';
 
-export function validateEquipmentName(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return 'noValue';
-	}
-	if (!containsOnlyLettersNumbersAndWhiteSpace(value)) {
-		return 'invalidFormat';
-	}
-	return '';
-}
-
-export function validateEquipmentPrice(value) {
-	if (!isNotNullOrEmpty(value)) {
-		return 'noValue';
-	}
-	if (!containsOnlyNumbers(value)) {
-		return 'invalidFormat';
-	}
-	return '';
-}
-
-export default function ValidateRentalEquipment(equipment) {
-	return [validateEquipmentName(equipment.name), validateEquipmentPrice(equipment.price)].every(
-		(x) => x === ''
-	);
-}
+export const rentalEquipmentValidationSchema = yup.object({
+	name: yup
+		.string()
+		.trim()
+		.required('required')
+		.matches(/^[\p{L}| ]+$/gu, 'onlyLettersAllowed'),
+	price: yup
+		.string()
+		.trim()
+		.required('required')
+		.matches(/^[0-9]+$/, 'onlyNumbersAllowed'),
+});

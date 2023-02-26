@@ -23,12 +23,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteEmployee } from '../../Actions/RestAPI/EmployeeActions';
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
 });
 
-export default function ConfirmDeleteEmployeeDialog() {
+export default function DeleteEmployeeDialog() {
 	const [employee, setEmployee] = useRecoilState(employeeAtom);
 	const [showDialog, setShowDialog] = useState(true);
 	const setShowDialogAtom = useSetRecoilState(employeeShowDeleteConfirmation);
@@ -36,6 +37,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceEmployeeRefresh);
 	const [numberOfAgreements, setNumberOfAgreements] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
+	const { t } = useTranslation(['employeeTranslation', 'generalTranslation']);
 	const theme = useTheme();
 
 	React.useEffect(() => {
@@ -71,7 +73,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 				.then(() => {
 					setSnackbar({
 						show: true,
-						title: 'Employee deleted successfully',
+						title: t('employeeDeleted'),
 						severity: 'success',
 					});
 					setEmployee(new DefaultValue());
@@ -81,7 +83,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 				.catch(() => {
 					setSnackbar({
 						show: true,
-						title: 'An error has occurred',
+						title: t('errorHasOccurred', { ns: 'generalTranslation' }),
 						severity: 'error',
 					});
 				});
@@ -100,14 +102,25 @@ export default function ConfirmDeleteEmployeeDialog() {
 			return (
 				<>
 					<Typography>
-						Employee {employee.name} has <b>{numberOfAgreements}</b> agreement(s)
-						assigned to them.
+						{t('employee')}{' '}
+						<i>
+							<b> {employee.name} </b>
+						</i>
+						{t('has')} <b>{numberOfAgreements}</b> {t('agreement(s) assigned to them')}
 					</Typography>
-					<Typography>Delete these agreements to proceed.</Typography>
+					<Typography>{t('delete these agreements to proceed')}</Typography>
 				</>
 			);
 		}
-		return <Typography>Are you sure you want to delete {employee.name}?</Typography>;
+		return (
+			<Typography>
+				{t('are you sure you want to delete employee')}
+				<i>
+					<b> {employee.name} </b>
+				</i>
+				?
+			</Typography>
+		);
 	}
 
 	return (
@@ -126,7 +139,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 				},
 			}}
 		>
-			<DialogTitle>Delete employee</DialogTitle>
+			<DialogTitle>{t('deleteEmployee')}</DialogTitle>
 			<DialogContent dividers>{getDialogContent()}</DialogContent>
 			<DialogActions>
 				<Button
@@ -135,7 +148,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 					variant={'text'}
 					onClick={handleCloseDialog}
 				>
-					Cancel
+					{t('cancel', { ns: 'generalTranslation' })}
 				</Button>
 				<Button
 					onClick={handleDeleteClick}
@@ -144,7 +157,7 @@ export default function ConfirmDeleteEmployeeDialog() {
 					color={'error'}
 					disabled={numberOfAgreements !== 0 || isLoading}
 				>
-					Delete
+					{t('delete', { ns: 'generalTranslation' })}
 				</Button>
 			</DialogActions>
 		</Dialog>

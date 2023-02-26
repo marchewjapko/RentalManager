@@ -5,6 +5,7 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	InputAdornment,
 	Slide,
 	Stack,
 	TextField,
@@ -12,12 +13,7 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { DefaultValue, useRecoilState, useSetRecoilState } from 'recoil';
-import {
-	employeeAtom,
-	employeeShowEditDialog,
-	employeeSnackbar,
-	forceEmployeeRefresh,
-} from '../Atoms/EmployeeAtoms';
+import { employeeSnackbar } from '../Atoms/EmployeeAtoms';
 import { useTheme } from '@mui/material/styles';
 import DoneIcon from '@mui/icons-material/Done';
 import { useFormik } from 'formik';
@@ -25,9 +21,17 @@ import { useState } from 'react';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import Grid from '@mui/material/Unstable_Grid2';
 import { motion } from 'framer-motion';
-import { employeeValidationSchema } from '../../Actions/Validations/ValidateEmployee';
-import { addEmployee, updateEmployee } from '../../Actions/RestAPI/EmployeeActions';
 import { useTranslation } from 'react-i18next';
+import {
+	forceRentalEquipmentRefresh,
+	rentalEquipmentAtom,
+	rentalEquipmentShowEditDialog,
+} from '../Atoms/RentaLEquipmentAtoms';
+import {
+	addRentalEquipment,
+	updateRentalEquipment,
+} from '../../Actions/RestAPI/RentalEquipmentActions';
+import { rentalEquipmentValidationSchema } from '../../Actions/Validations/ValidateRentalEquipment';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -61,39 +65,39 @@ function animateInputError(employeeId, isTouched, isError) {
 	return isError;
 }
 
-export default function EmployeeForm() {
+export default function RentalEquipmentForm() {
 	const [showDialog, setShowDialog] = useState(true);
-	const setShowDialogAtom = useSetRecoilState(employeeShowEditDialog);
-	const [employee, setEmployee] = useRecoilState(employeeAtom);
+	const setShowDialogAtom = useSetRecoilState(rentalEquipmentShowEditDialog);
+	const [rentalEquipment, setRentalEquipment] = useRecoilState(rentalEquipmentAtom);
 	const setSnackbar = useSetRecoilState(employeeSnackbar);
-	const [forceRefresh, setForceRefresh] = useRecoilState(forceEmployeeRefresh);
-	const { t } = useTranslation(['employeeTranslation', 'generalTranslation']);
+	const [forceRefresh, setForceRefresh] = useRecoilState(forceRentalEquipmentRefresh);
+	const { t } = useTranslation(['equipmentTranslation', 'generalTranslation']);
 	const theme = useTheme();
 	const handleCloseDialog = () => {
 		setShowDialog(false);
 		setTimeout(() => {
-			setEmployee(new DefaultValue());
+			setRentalEquipment(new DefaultValue());
 			setShowDialogAtom(false);
 		}, 300);
 	};
 
 	const formik = useFormik({
 		initialValues: {
-			id: employee.id,
-			name: employee.name,
-			surname: employee.surname,
+			id: rentalEquipment.id,
+			name: rentalEquipment.name,
+			price: rentalEquipment.price,
 		},
 		validateOnChange: true,
 		enableReinitialize: true,
-		validationSchema: employeeValidationSchema,
-		initialErrors: employee.id === -1 ? [' '] : [],
+		validationSchema: rentalEquipmentValidationSchema,
+		initialErrors: rentalEquipment.id === -1 ? [' '] : [],
 		onSubmit: (values) => {
-			if (employee.id === -1) {
-				addEmployee(values)
+			if (rentalEquipment.id === -1) {
+				addRentalEquipment(values)
 					.then(() => {
 						setSnackbar({
 							show: true,
-							title: t('employeeAdded'),
+							title: t('rentalEquipmentAdded'),
 							severity: 'success',
 						});
 						handleCloseDialog();
@@ -107,11 +111,11 @@ export default function EmployeeForm() {
 						});
 					});
 			} else {
-				updateEmployee(values)
+				updateRentalEquipment(values)
 					.then(() => {
 						setSnackbar({
 							show: true,
-							title: t('employeeEdited'),
+							title: t('rentalEquipmentEdited'),
 							severity: 'success',
 						});
 						handleCloseDialog();
@@ -146,16 +150,16 @@ export default function EmployeeForm() {
 		>
 			<form onSubmit={formik.handleSubmit}>
 				<DialogTitle>
-					{employee.id === -1 ? t('addEmployee') : t('editEmployee')}
+					{rentalEquipment.id === -1 ? t('addRentalEquipment') : t('editRentalEquipment')}
 				</DialogTitle>
 				<DialogContent dividers className={'employee-form'}>
 					<Stack spacing={2}>
 						<Stack direction={'row'} spacing={1} sx={{ paddingLeft: '8px' }}>
 							<EngineeringIcon />
-							<Typography variant="h6">{t('employeeInformation')}</Typography>
+							<Typography variant="h6">{t('rentalEquipmentInformation')}</Typography>
 						</Stack>
 						<Grid container spacing={2}>
-							<Grid xs={12} md={6}>
+							<Grid xs={12} md={7}>
 								<TextField
 									fullWidth
 									id="name"
@@ -165,7 +169,7 @@ export default function EmployeeForm() {
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									error={
-										employee.id === -1
+										rentalEquipment.id === -1
 											? formik.touched.name && Boolean(formik.errors.name)
 											: Boolean(formik.errors.name)
 									}
@@ -178,7 +182,7 @@ export default function EmployeeForm() {
 									initial={false}
 									animate={
 										animateInputError(
-											employee.id,
+											rentalEquipment.id,
 											formik.touched.name,
 											formik.errors.name
 										)
@@ -187,36 +191,38 @@ export default function EmployeeForm() {
 									}
 								/>
 							</Grid>
-							<Grid xs={12} md={6}>
+							<Grid xs={6} md={5}>
 								<TextField
 									fullWidth
-									id="surname"
-									name="surname"
-									label={t('surname')}
-									type="surname"
-									value={formik.values.surname}
+									id="price"
+									name="price"
+									label={t('price')}
+									type="price"
+									value={formik.values.price}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									error={
-										employee.id === -1
-											? formik.touched.surname &&
-											  Boolean(formik.errors.surname)
-											: Boolean(formik.errors.surname)
+										rentalEquipment.id === -1
+											? formik.touched.price && Boolean(formik.errors.price)
+											: Boolean(formik.errors.price)
 									}
 									helperText={
-										formik.errors.surname
-											? t(formik.errors.surname)
-											: t('required')
+										formik.errors.price ? t(formik.errors.price) : t('required')
 									}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment position="end">zł</InputAdornment>
+										),
+									}}
 									autoComplete="off"
 									component={motion.div}
 									variants={variants}
 									initial={false}
 									animate={
 										animateInputError(
-											employee.id,
-											formik.touched.surname,
-											formik.errors.surname
+											rentalEquipment.id,
+											formik.touched.price,
+											formik.errors.price
 										)
 											? 'animateError'
 											: 'initial'
@@ -246,7 +252,7 @@ export default function EmployeeForm() {
 						initial={false}
 						animate={formik.isValid ? 'animateSuccess' : 'animateError'}
 					>
-						{employee.id === -1
+						{rentalEquipment.id === -1
 							? t('add', { ns: 'generalTranslation' })
 							: t('edit', { ns: 'generalTranslation' })}
 					</Button>
