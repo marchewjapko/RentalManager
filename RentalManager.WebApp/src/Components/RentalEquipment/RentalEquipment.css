@@ -19,6 +19,12 @@
     margin-left: auto;
     margin-right: auto;
 }
+.rental-equipment-actions-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 .rental-equipment-card-container {
     display: flex;
     flex-direction: row;
@@ -50,15 +56,23 @@
     height: 100%;
     border-radius: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
     padding: 10px 10px 10px 15px;
 }
 .rental-equipment-name-typography {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-grow: 1;
-    text-align: center;
-    justify-content: center;
+    text-align: left;
+    height: 100%;
+    justify-content: flex-start;
+}
+
+.rental-equipment-price-typography {
+    white-space: nowrap;
+    align-items: flex-end;
+    text-align: right;
+    justify-content: flex-end;
 }

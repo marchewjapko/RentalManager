@@ -12,12 +12,7 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { DefaultValue, useRecoilState, useSetRecoilState } from 'recoil';
-import {
-	employeeAtom,
-	employeeShowEditDialog,
-	employeeSnackbar,
-	forceEmployeeRefresh,
-} from '../Atoms/EmployeeAtoms';
+import { employeeAtom, employeeShowEditDialog, forceEmployeeRefresh } from '../Atoms/EmployeeAtoms';
 import { useTheme } from '@mui/material/styles';
 import DoneIcon from '@mui/icons-material/Done';
 import { useFormik } from 'formik';
@@ -28,6 +23,7 @@ import { motion } from 'framer-motion';
 import { employeeValidationSchema } from '../../Actions/Validations/ValidateEmployee';
 import { addEmployee, updateEmployee } from '../../Actions/RestAPI/EmployeeActions';
 import { useTranslation } from 'react-i18next';
+import { globalSnackbar } from '../Atoms/GeneralAtoms';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -65,7 +61,7 @@ export default function EmployeeForm() {
 	const [showDialog, setShowDialog] = useState(true);
 	const setShowDialogAtom = useSetRecoilState(employeeShowEditDialog);
 	const [employee, setEmployee] = useRecoilState(employeeAtom);
-	const setSnackbar = useSetRecoilState(employeeSnackbar);
+	const setSnackbar = useSetRecoilState(globalSnackbar);
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceEmployeeRefresh);
 	const { t } = useTranslation(['employeeTranslation', 'generalTranslation']);
 	const theme = useTheme();

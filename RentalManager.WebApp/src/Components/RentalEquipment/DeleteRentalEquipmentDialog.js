@@ -24,6 +24,7 @@ import {
 	rentalEquipmentShowDeleteConfirmation,
 } from '../Atoms/RentaLEquipmentAtoms';
 import { deleteRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
+import { globalSnackbar } from '../Atoms/GeneralAtoms';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -33,7 +34,7 @@ export default function DeleteRentalEquipmentDialog() {
 	const [rentalEquipment, setRentalEquipment] = useRecoilState(rentalEquipmentAtom);
 	const [showDialog, setShowDialog] = useState(true);
 	const setShowDialogAtom = useSetRecoilState(rentalEquipmentShowDeleteConfirmation);
-	const setSnackbar = useSetRecoilState(employeeSnackbar);
+	const setSnackbar = useSetRecoilState(globalSnackbar);
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceRentalEquipmentRefresh);
 	const [numberOfAgreements, setNumberOfAgreements] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);

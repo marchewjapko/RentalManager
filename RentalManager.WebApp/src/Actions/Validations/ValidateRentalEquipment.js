@@ -5,7 +5,7 @@ export const rentalEquipmentValidationSchema = yup.object({
 		.string()
 		.trim()
 		.required('required')
-		.matches(/^[\p{L}| ]+$/gu, 'onlyLettersAllowed'),
+		.matches(/^[\p{L} [0-9]+$/gu, 'onlyLettersAndNumbersAllowed'),
 	price: yup
 		.string()
 		.trim()

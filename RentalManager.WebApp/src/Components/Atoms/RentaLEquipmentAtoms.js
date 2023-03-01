@@ -20,15 +20,6 @@ export const rentalEquipmentShowEditDialog = atom({
 	default: false,
 });
 
-// export const rentalEquipmentSnackbar = atom({
-// 	key: 'employeeSnackbar',
-// 	default: {
-// 		show: false,
-// 		title: 'ups',
-// 		severity: 'success',
-// 	},
-// });
-
 export const forceRentalEquipmentRefresh = atom({
 	key: 'forceRentalEquipmentRefresh',
 	default: false,

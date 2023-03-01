@@ -13,12 +13,11 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { DefaultValue, useRecoilState, useSetRecoilState } from 'recoil';
-import { employeeSnackbar } from '../Atoms/EmployeeAtoms';
 import { useTheme } from '@mui/material/styles';
 import DoneIcon from '@mui/icons-material/Done';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import EngineeringIcon from '@mui/icons-material/Engineering';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import Grid from '@mui/material/Unstable_Grid2';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +31,7 @@ import {
 	updateRentalEquipment,
 } from '../../Actions/RestAPI/RentalEquipmentActions';
 import { rentalEquipmentValidationSchema } from '../../Actions/Validations/ValidateRentalEquipment';
+import { globalSnackbar } from '../Atoms/GeneralAtoms';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -69,7 +69,7 @@ export default function RentalEquipmentForm() {
 	const [showDialog, setShowDialog] = useState(true);
 	const setShowDialogAtom = useSetRecoilState(rentalEquipmentShowEditDialog);
 	const [rentalEquipment, setRentalEquipment] = useRecoilState(rentalEquipmentAtom);
-	const setSnackbar = useSetRecoilState(employeeSnackbar);
+	const setSnackbar = useSetRecoilState(globalSnackbar);
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceRentalEquipmentRefresh);
 	const { t } = useTranslation(['equipmentTranslation', 'generalTranslation']);
 	const theme = useTheme();
@@ -155,7 +155,7 @@ export default function RentalEquipmentForm() {
 				<DialogContent dividers className={'employee-form'}>
 					<Stack spacing={2}>
 						<Stack direction={'row'} spacing={1} sx={{ paddingLeft: '8px' }}>
-							<EngineeringIcon />
+							<ConstructionIcon />
 							<Typography variant="h6">{t('rentalEquipmentInformation')}</Typography>
 						</Stack>
 						<Grid container spacing={2}>
@@ -177,6 +177,7 @@ export default function RentalEquipmentForm() {
 										formik.errors.name ? t(formik.errors.name) : t('required')
 									}
 									autoComplete="off"
+									multiline
 									component={motion.div}
 									variants={variants}
 									initial={false}

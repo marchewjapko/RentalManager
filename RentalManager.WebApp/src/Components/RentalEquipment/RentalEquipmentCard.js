@@ -10,6 +10,7 @@ import {
 	rentalEquipmentShowDeleteConfirmation,
 	rentalEquipmentShowEditDialog,
 } from '../Atoms/RentaLEquipmentAtoms';
+import { useTranslation } from 'react-i18next';
 
 export default function RentalEquipmentCard({ rentalEquipment }) {
 	const [isMouseOver, setIsMouseOver] = useState(false);
@@ -17,6 +18,7 @@ export default function RentalEquipmentCard({ rentalEquipment }) {
 	const setShowEditDialog = useSetRecoilState(rentalEquipmentShowEditDialog);
 	const setDialogEmployee = useSetRecoilState(rentalEquipmentAtom);
 	const randomIndex = useRef(Math.floor(Math.random() * 20));
+	const { t } = useTranslation(['generalTranslation']);
 
 	const handleDeleteClick = () => {
 		setDialogEmployee(rentalEquipment);
@@ -45,7 +47,7 @@ export default function RentalEquipmentCard({ rentalEquipment }) {
 						variant={'contained'}
 						color={'success'}
 					>
-						Edit
+						{t('edit')}
 					</Button>
 				</Fade>
 				<Fade in={isMouseOver} style={{ transitionDelay: '50ms' }} timeout={400}>
@@ -55,22 +57,22 @@ export default function RentalEquipmentCard({ rentalEquipment }) {
 						variant={'contained'}
 						color={'error'}
 					>
-						Delete
+						{t('delete')}
 					</Button>
 				</Fade>
 			</div>
 			<Card className={'rental-equipment-content'}>
 				<Typography
-					fontWeight={700}
+					fontWeight={'bold'}
 					variant={'h6'}
 					className={'rental-equipment-name-typography'}
 				>
 					{rentalEquipment.name}
 				</Typography>
 				<Typography
-					fontWeight={350}
+					fontWeight={'normal'}
 					variant={'body1'}
-					className={'rental-equipment-name-typography'}
+					className={'rental-equipment-name-typography rental-equipment-price-typography'}
 				>
 					{rentalEquipment.price + ' zł'}
 				</Typography>

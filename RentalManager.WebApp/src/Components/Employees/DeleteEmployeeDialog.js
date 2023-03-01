@@ -24,6 +24,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteEmployee } from '../../Actions/RestAPI/EmployeeActions';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { globalSnackbar } from '../Atoms/GeneralAtoms';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -33,7 +34,7 @@ export default function DeleteEmployeeDialog() {
 	const [employee, setEmployee] = useRecoilState(employeeAtom);
 	const [showDialog, setShowDialog] = useState(true);
 	const setShowDialogAtom = useSetRecoilState(employeeShowDeleteConfirmation);
-	const setSnackbar = useSetRecoilState(employeeSnackbar);
+	const setSnackbar = useSetRecoilState(globalSnackbar);
 	const [forceRefresh, setForceRefresh] = useRecoilState(forceEmployeeRefresh);
 	const [numberOfAgreements, setNumberOfAgreements] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);

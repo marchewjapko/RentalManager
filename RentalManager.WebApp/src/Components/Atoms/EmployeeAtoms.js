@@ -20,15 +20,6 @@ export const employeeShowEditDialog = atom({
 	default: false,
 });
 
-export const employeeSnackbar = atom({
-	key: 'employeeSnackbar',
-	default: {
-		show: false,
-		title: 'ups',
-		severity: 'success',
-	},
-});
-
 export const forceEmployeeRefresh = atom({
 	key: 'forceEmployeeRefresh',
 	default: false,

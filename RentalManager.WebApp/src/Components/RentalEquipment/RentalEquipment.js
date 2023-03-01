@@ -1,6 +1,19 @@
 import * as React from 'react';
-import { Button, Skeleton, Typography } from '@mui/material';
+import {
+	Button,
+	ButtonGroup,
+	ClickAwayListener,
+	Grow,
+	MenuItem,
+	MenuList,
+	Paper,
+	Popper,
+	Skeleton,
+	Typography,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useTranslation } from 'react-i18next';
 import DeleteRentalEquipmentDialog from './DeleteRentalEquipmentDialog';
 import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -77,6 +90,8 @@ const item = {
 	}),
 };
 
+const options = ['name', 'dateAdded', 'price'];
+
 export default function RentalEquipment() {
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -84,16 +99,22 @@ export default function RentalEquipment() {
 	const [showEditDialog, setShowEditDialog] = useRecoilState(rentalEquipmentShowEditDialog);
 	const showDeleteDialog = useRecoilValue(rentalEquipmentShowDeleteConfirmation);
 	const setRentalEquipment = useSetRecoilState(rentalEquipmentAtom);
+	const [sortOpen, setSortOpen] = React.useState(false);
+	const [selectedIndex, setSelectedIndex] = React.useState(0);
+	const [sortDesc, setSortDesc] = React.useState(true);
 	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
+	const anchorRef = React.useRef(null);
 
 	useEffect(() => {
 		setIsLoading(true);
 		getAllRentalEquipment()
 			.then((result) => {
 				if (result.hasOwnProperty('data')) {
-					setData(result.data);
+					sortData(selectedIndex, sortDesc, result.data)
+					// setData(result.data);
 				} else {
-					setData(result);
+					sortData(selectedIndex, sortDesc, result)
+					// setData(result);
 				}
 				setIsLoading(false);
 			})
@@ -107,6 +128,39 @@ export default function RentalEquipment() {
 		setShowEditDialog(true);
 	};
 
+	const handleSortButtonClick = () => {
+		setSortDesc(!sortDesc)
+		sortData(selectedIndex, !sortDesc, data)
+	}
+
+	const handleMenuItemClick = (event, index) => {
+		setSelectedIndex(index);
+		setSortOpen(false);
+		sortData(index, sortDesc, data)
+	};
+
+	function sortData(index, shouldSortDesc, dataToSort) {
+		setData([])
+		setTimeout(() => {
+			if(shouldSortDesc) {
+				dataToSort.sort((a, b) => {
+					if(a[options[index]] < b[options[index]]) {
+						return 1
+					}
+					return -1
+				})
+			} else {
+				dataToSort.sort((a, b) => {
+					if(a[options[index]] > b[options[index]]) {
+						return 1
+					}
+					return -1
+				})
+			}
+			setData(dataToSort)
+		}, 100)
+	}
+
 	return (
 		<>
 			{showDeleteDialog && <DeleteRentalEquipmentDialog />}
@@ -115,14 +169,72 @@ export default function RentalEquipment() {
 				<Typography variant={'h3'}>
 					{t('equipment', { ns: 'equipmentTranslation' })}
 				</Typography>
-				<Button
-					startIcon={<AddCircleRoundedIcon />}
-					variant={'contained'}
-					onClick={handleAddClick}
-					disabled={isLoading}
-				>
-					{t('add')}
-				</Button>
+				<div className={'rental-equipment-actions-container'}>
+					<Button
+						startIcon={<AddCircleRoundedIcon />}
+						variant={'contained'}
+						onClick={handleAddClick}
+						disabled={isLoading}
+					>
+						{t('add')}
+					</Button>
+					<ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+						<Button
+							onClick={handleSortButtonClick}
+							endIcon={<ArrowDownwardIcon sx={{ transform: sortDesc ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'all 0.2s ease-out' }} />}
+						>
+							{t('sortBy', { ns: 'equipmentTranslation' })} {t(options[selectedIndex], { ns: 'equipmentTranslation' })}
+						</Button>
+						<Button
+							size="small"
+							aria-controls={sortOpen ? 'split-button-menu' : undefined}
+							aria-expanded={sortOpen ? 'true' : undefined}
+							aria-label="select merge strategy"
+							aria-haspopup="menu"
+							onClick={() => setSortOpen(true)}
+						>
+							<ArrowDropDownIcon />
+						</Button>
+						<Popper
+							sx={{
+								zIndex: 2,
+							}}
+							open={sortOpen}
+							anchorEl={anchorRef.current}
+							role={undefined}
+							transition
+							disablePortal
+						>
+							{({ TransitionProps, placement }) => (
+								<Grow
+									{...TransitionProps}
+									style={{
+										transformOrigin:
+											placement === 'bottom' ? 'center top' : 'center bottom',
+									}}
+								>
+									<Paper>
+										<ClickAwayListener onClickAway={() => setSortOpen(false)}>
+											<MenuList autoFocusItem>
+												{options.map((option, index) => (
+													<MenuItem
+														key={option}
+														selected={index === selectedIndex}
+														onClick={(event) =>
+															handleMenuItemClick(event, index)
+														}
+													>
+														{t(option, { ns: 'equipmentTranslation' })}
+													</MenuItem>
+												))}
+											</MenuList>
+										</ClickAwayListener>
+									</Paper>
+								</Grow>
+							)}
+						</Popper>
+					</ButtonGroup>
+				</div>
 				<div className="rental-equipment-card-container">
 					<AnimatePresence mode="wait">
 						{isLoading ? (

@@ -6,8 +6,8 @@ import { useCookies } from 'react-cookie';
 import { DefaultValue, RecoilRoot, useRecoilState } from 'recoil';
 import GetRouter from './Router';
 import './i18n';
-import { employeeSnackbar } from './Components/Atoms/EmployeeAtoms';
 import MuiAlert from '@mui/material/Alert';
+import { globalSnackbar } from './Components/Atoms/GeneralAtoms';
 
 const darkTheme = createTheme({
 	palette: {
@@ -32,7 +32,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 function GetSnackbar() {
-	const [snackbar, setSnackbar] = useRecoilState(employeeSnackbar);
+	const [snackbar, setSnackbar] = useRecoilState(globalSnackbar);
 	const handleClose = () => {
 		setSnackbar({ ...snackbar, show: false });
 		setTimeout(() => setSnackbar(new DefaultValue()), 250);
