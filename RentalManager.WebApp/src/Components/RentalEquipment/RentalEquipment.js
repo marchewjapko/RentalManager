@@ -9,16 +9,18 @@ import {
 	Paper,
 	Popper,
 	Skeleton,
+	Stack,
 	Typography,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import SortIcon from '@mui/icons-material/Sort';
 import { useTranslation } from 'react-i18next';
 import DeleteRentalEquipmentDialog from './DeleteRentalEquipmentDialog';
 import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import RentalEquipmentForm from './RentalEquipmentForm';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
 	forceRentalEquipmentRefresh,
@@ -29,6 +31,7 @@ import {
 import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
 import RentalEquipmentCard from './RentalEquipmentCard';
 import './RentalEquipment.css';
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 function GetSkeletonCards() {
 	const skeletonArray = Array(5).fill(0);
@@ -50,12 +53,12 @@ function GetSkeletonCards() {
 	);
 }
 
-function GetNormalCards({ data }) {
+function GetNormalCards({ data, indexOffset }) {
 	return (
 		<>
 			{data.map((rentalEquipment, index) => (
 				<motion.div
-					key={index}
+					key={index + indexOffset}
 					variants={item}
 					custom={[index, data.length]}
 					initial="initial"
@@ -73,24 +76,56 @@ function getChildDelay(index, size) {
 	if (size <= 31) {
 		return index * 0.05;
 	} else {
-		return index * (1.5 / (size - 1));
+		return index * (1 / (size - 1));
 	}
 }
 
 const item = {
-	exit: { opacity: 0 },
+	exit: {
+		opacity: 0,
+		transition: {
+			duration: 0.2,
+		},
+	},
 	initial: {
 		opacity: 0,
 	},
 	animate: (i) => ({
 		opacity: 1,
 		transition: {
+			duration: 0.2,
 			delay: getChildDelay(i[0], i[1]),
 		},
 	}),
 };
 
 const options = ['name', 'dateAdded', 'price'];
+
+function sortData(sortDesc, option, data) {
+	let result = data;
+	if (sortDesc) {
+		result.sort((a, b) => {
+			if (option === 'name') {
+				return a['name'].toString().localeCompare(b['name']);
+			}
+			if (a[option] > b[option]) {
+				return 1;
+			}
+			return -1;
+		});
+	} else {
+		result.sort((a, b) => {
+			if (option === 'name') {
+				return b['name'].toString().localeCompare(a['name']);
+			}
+			if (a[option] < b[option]) {
+				return 1;
+			}
+			return -1;
+		});
+	}
+	return result;
+}
 
 export default function RentalEquipment() {
 	const [data, setData] = useState([]);
@@ -103,18 +138,18 @@ export default function RentalEquipment() {
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
 	const [sortDesc, setSortDesc] = React.useState(true);
 	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
-	const anchorRef = React.useRef(null);
+	const anchorRef = useRef(null);
+
+	const indexOffset = useRef(0);
 
 	useEffect(() => {
 		setIsLoading(true);
 		getAllRentalEquipment()
 			.then((result) => {
 				if (result.hasOwnProperty('data')) {
-					sortData(selectedIndex, sortDesc, result.data)
-					// setData(result.data);
+					setData(sortData(sortDesc, options[selectedIndex], result.data));
 				} else {
-					sortData(selectedIndex, sortDesc, result)
-					// setData(result);
+					setData(sortData(sortDesc, options[selectedIndex], result));
 				}
 				setIsLoading(false);
 			})
@@ -129,36 +164,25 @@ export default function RentalEquipment() {
 	};
 
 	const handleSortButtonClick = () => {
-		setSortDesc(!sortDesc)
-		sortData(selectedIndex, !sortDesc, data)
-	}
+		setSortDesc(!sortDesc);
+		handleSortChange(selectedIndex, !sortDesc);
+	};
 
 	const handleMenuItemClick = (event, index) => {
 		setSelectedIndex(index);
 		setSortOpen(false);
-		sortData(index, sortDesc, data)
+		handleSortChange(index, sortDesc);
 	};
 
-	function sortData(index, shouldSortDesc, dataToSort) {
-		setData([])
-		setTimeout(() => {
-			if(shouldSortDesc) {
-				dataToSort.sort((a, b) => {
-					if(a[options[index]] < b[options[index]]) {
-						return 1
-					}
-					return -1
-				})
-			} else {
-				dataToSort.sort((a, b) => {
-					if(a[options[index]] > b[options[index]]) {
-						return 1
-					}
-					return -1
-				})
-			}
-			setData(dataToSort)
-		}, 100)
+	function handleSortChange(index, sortDesc) {
+		let dataToSort = data;
+		setData([]);
+		if (indexOffset.current === 0) {
+			indexOffset.current = dataToSort.length;
+		} else {
+			indexOffset.current = 0;
+		}
+		setData(sortData(sortDesc, options[index], dataToSort));
 	}
 
 	return (
@@ -166,32 +190,56 @@ export default function RentalEquipment() {
 			{showDeleteDialog && <DeleteRentalEquipmentDialog />}
 			{showEditDialog && <RentalEquipmentForm />}
 			<div className={'rental-equipment-container'}>
-				<Typography variant={'h3'}>
-					{t('equipment', { ns: 'equipmentTranslation' })}
-				</Typography>
+				<Stack direction={'row'} alignItems={'center'} gap={'10px'}>
+					<ConstructionIcon sx={{ height: '3rem', width: '3rem' }} />
+					<Typography variant={'h3'}>
+						{t('equipment', { ns: 'equipmentTranslation' })}
+					</Typography>
+				</Stack>
 				<div className={'rental-equipment-actions-container'}>
 					<Button
 						startIcon={<AddCircleRoundedIcon />}
-						variant={'contained'}
+						variant={'outlined'}
 						onClick={handleAddClick}
 						disabled={isLoading}
 					>
 						{t('add')}
 					</Button>
-					<ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+					<ButtonGroup
+						variant="contained"
+						ref={anchorRef}
+						sx={{
+							borderColor: isLoading
+								? 'rgba(255, 255, 255, 0.12) !important'
+								: 'rgba(144, 202, 249, 0.5) !important',
+						}}
+						disabled={isLoading}
+					>
 						<Button
 							onClick={handleSortButtonClick}
-							endIcon={<ArrowDownwardIcon sx={{ transform: sortDesc ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'all 0.2s ease-out' }} />}
+							variant={'outlined'}
+							startIcon={<SortIcon />}
+							endIcon={
+								<ArrowUpwardIcon
+									sx={{
+										transform: sortDesc ? 'rotate(180deg)' : 'rotate(0deg)',
+										transition: 'all 0.2s ease-out',
+									}}
+								/>
+							}
+							sx={{
+								borderColor: isLoading
+									? 'rgba(255, 255, 255, 0.12) !important'
+									: 'rgba(144, 202, 249, 0.5) !important',
+							}}
 						>
-							{t('sortBy', { ns: 'equipmentTranslation' })} {t(options[selectedIndex], { ns: 'equipmentTranslation' })}
+							{t(options[selectedIndex], { ns: 'equipmentTranslation' })}
 						</Button>
 						<Button
 							size="small"
-							aria-controls={sortOpen ? 'split-button-menu' : undefined}
-							aria-expanded={sortOpen ? 'true' : undefined}
-							aria-label="select merge strategy"
-							aria-haspopup="menu"
+							variant={'outlined'}
 							onClick={() => setSortOpen(true)}
+							sx={{ borderColor: 'rgba(144, 202, 249, 0.5)' }}
 						>
 							<ArrowDropDownIcon />
 						</Button>
@@ -204,6 +252,7 @@ export default function RentalEquipment() {
 							role={undefined}
 							transition
 							disablePortal
+							placement={'bottom-end'}
 						>
 							{({ TransitionProps, placement }) => (
 								<Grow
@@ -213,9 +262,16 @@ export default function RentalEquipment() {
 											placement === 'bottom' ? 'center top' : 'center bottom',
 									}}
 								>
-									<Paper>
+									<Paper
+										sx={{
+											borderColor: 'rgba(144, 202, 249, 0.5) !important',
+											border: '1px solid',
+											borderRadius: '10px',
+											marginTop: '5px',
+										}}
+									>
 										<ClickAwayListener onClickAway={() => setSortOpen(false)}>
-											<MenuList autoFocusItem>
+											<MenuList autoFocusItem sx={{ padding: 0 }}>
 												{options.map((option, index) => (
 													<MenuItem
 														key={option}
@@ -237,10 +293,10 @@ export default function RentalEquipment() {
 				</div>
 				<div className="rental-equipment-card-container">
 					<AnimatePresence mode="wait">
-						{isLoading ? (
+						{isLoading || data.length === 0 ? (
 							<GetSkeletonCards key={1} />
 						) : (
-							<GetNormalCards data={data} key={2} />
+							<GetNormalCards data={data} key={2} indexOffset={indexOffset.current} />
 						)}
 					</AnimatePresence>
 				</div>

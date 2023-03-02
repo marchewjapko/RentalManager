@@ -154,7 +154,7 @@ export default function RentalEquipmentForm() {
 				</DialogTitle>
 				<DialogContent dividers className={'employee-form'}>
 					<Stack spacing={2}>
-						<Stack direction={'row'} spacing={1} sx={{ paddingLeft: '8px' }}>
+						<Stack direction={'row'} spacing={1} sx={{ paddingLeft: '8px' }} alignItems={'center'}>
 							<ConstructionIcon />
 							<Typography variant="h6">{t('rentalEquipmentInformation')}</Typography>
 						</Stack>

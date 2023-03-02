@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Skeleton, Typography } from '@mui/material';
+import { Button, Skeleton, Stack, Typography } from '@mui/material';
 import { getAllEmployees } from '../../Actions/RestAPI/EmployeeActions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,7 @@ import './Employee.css';
 import EmployeeForm from './EmployeeForm';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Masonry } from '@mui/lab';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 function GetSkeletonCards() {
 	const skeletonArray = Array(5).fill(0);
@@ -113,12 +113,20 @@ export default function Employees() {
 			{showDeleteDialog && <DeleteEmployeeDialog />}
 			{showEditDialog && <EmployeeForm />}
 			<div className={'employee-container'}>
-				<Typography variant={'h3'}>
-					{t('employees', { ns: 'employeeTranslation' })}
-				</Typography>
+				<Stack
+					direction={'row'}
+					spacing={1}
+					sx={{ paddingLeft: '8px' }}
+					alignItems={'center'}
+				>
+					<EngineeringIcon sx={{ height: '3rem', width: '3rem' }} />
+					<Typography variant={'h3'}>
+						{t('employees', { ns: 'employeeTranslation' })}
+					</Typography>
+				</Stack>
 				<Button
 					startIcon={<AddCircleRoundedIcon />}
-					variant={'contained'}
+					variant={'outlined'}
 					onClick={handleAddClick}
 					disabled={isLoading}
 				>

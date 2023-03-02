@@ -2,6 +2,7 @@
   "name": "Name",
   "price": "Price",
   "dateAdded": "Date added",
+  "sortBy": "Sort by",
   "rentalEquipmentInformation": "Equipment Information",
   "rentalEquipmentAdded": "Equipment added successfully",
   "rentalEquipmentEdited": "Equipment updated successfully",
