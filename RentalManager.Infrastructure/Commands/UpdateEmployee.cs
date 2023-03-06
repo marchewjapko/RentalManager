@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace RentalManager.Infrastructure.Commands;
 
-namespace RentalManager.Infrastructure.Commands
+public class UpdateEmployee
 {
-    public class UpdateEmployee
-    {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-    }
+    public string Name { get; set; } = null!;
+    public string Surname { get; set; } = null!;
 }

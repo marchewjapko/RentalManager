@@ -4,11 +4,11 @@ using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+const string allowSpecificOrigins = "allowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddPolicy(name: allowSpecificOrigins,
                       policy =>
                       {
                           policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
@@ -34,10 +34,16 @@ builder.Services.AddScoped<IRentalAgreementService, RentalAgreementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-
-builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer("Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
-);
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Data Source=localhost, 1450;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(
+        options => options.UseSqlServer("Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+    );
+}
 
 var app = builder.Build();
 
@@ -46,20 +52,18 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(allowSpecificOrigins);
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<AppDbContext>();
+if (context.Database.GetPendingMigrations().Any())
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory" && context.Database.GetPendingMigrations().Any())
-    {
-        context.Database.Migrate();
-    }
+    context.Database.Migrate();
 }
 
 app.Run();

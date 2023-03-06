@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace RentalManager.Infrastructure.Commands;
 
-namespace RentalManager.Infrastructure.Commands
+public class CreateRentalEquipment
 {
-    public class CreateRentalEquipment
-    {
-        public string Name { get; set; }
-        public int Price { get; set; }
-    }
+    public string Name { get; set; } = null!;
+    public int Price { get; set; }
 }

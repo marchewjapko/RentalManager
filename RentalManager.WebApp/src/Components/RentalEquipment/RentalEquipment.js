@@ -34,7 +34,7 @@ import './RentalEquipment.css';
 import ConstructionIcon from '@mui/icons-material/Construction';
 
 function GetSkeletonCards() {
-	const skeletonArray = Array(5).fill(0);
+	const skeletonArray = Array(7).fill(0);
 	return (
 		<>
 			{skeletonArray.map((x, index) => (
@@ -58,7 +58,7 @@ function GetNormalCards({ data, indexOffset }) {
 		<>
 			{data.map((rentalEquipment, index) => (
 				<motion.div
-					key={index + indexOffset}
+					key={index + indexOffset + 7}
 					variants={item}
 					custom={[index, data.length]}
 					initial="initial"
@@ -106,9 +106,9 @@ function sortData(sortDesc, option, data) {
 	if (sortDesc) {
 		result.sort((a, b) => {
 			if (option === 'name') {
-				return a['name'].toString().localeCompare(b['name']);
+				return b['name'].toString().localeCompare(a['name']);
 			}
-			if (a[option] > b[option]) {
+			if (a[option] < b[option]) {
 				return 1;
 			}
 			return -1;
@@ -116,9 +116,9 @@ function sortData(sortDesc, option, data) {
 	} else {
 		result.sort((a, b) => {
 			if (option === 'name') {
-				return b['name'].toString().localeCompare(a['name']);
+				return a['name'].toString().localeCompare(b['name']);
 			}
-			if (a[option] < b[option]) {
+			if (a[option] > b[option]) {
 				return 1;
 			}
 			return -1;
@@ -136,7 +136,7 @@ export default function RentalEquipment() {
 	const setRentalEquipment = useSetRecoilState(rentalEquipmentAtom);
 	const [sortOpen, setSortOpen] = React.useState(false);
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
-	const [sortDesc, setSortDesc] = React.useState(true);
+	const [sortDesc, setSortDesc] = React.useState(false);
 	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
 	const anchorRef = useRef(null);
 
@@ -205,16 +205,7 @@ export default function RentalEquipment() {
 					>
 						{t('add')}
 					</Button>
-					<ButtonGroup
-						variant="contained"
-						ref={anchorRef}
-						sx={{
-							borderColor: isLoading
-								? 'rgba(255, 255, 255, 0.12) !important'
-								: 'rgba(144, 202, 249, 0.5) !important',
-						}}
-						disabled={isLoading}
-					>
+					<ButtonGroup ref={anchorRef} disabled={isLoading}>
 						<Button
 							onClick={handleSortButtonClick}
 							variant={'outlined'}
@@ -227,20 +218,10 @@ export default function RentalEquipment() {
 									}}
 								/>
 							}
-							sx={{
-								borderColor: isLoading
-									? 'rgba(255, 255, 255, 0.12) !important'
-									: 'rgba(144, 202, 249, 0.5) !important',
-							}}
 						>
 							{t(options[selectedIndex], { ns: 'equipmentTranslation' })}
 						</Button>
-						<Button
-							size="small"
-							variant={'outlined'}
-							onClick={() => setSortOpen(true)}
-							sx={{ borderColor: 'rgba(144, 202, 249, 0.5)' }}
-						>
+						<Button size="small" variant={'outlined'} onClick={() => setSortOpen(true)}>
 							<ArrowDropDownIcon />
 						</Button>
 						<Popper

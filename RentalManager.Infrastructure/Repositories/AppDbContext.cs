@@ -1,25 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 
-namespace RentalManager.Infrastructure.Repositories
+namespace RentalManager.Infrastructure.Repositories;
+
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
+    }
 
-        }
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<RentalAgreement> RentalAgreements { get; set; }
-        public DbSet<RentalEquipment> RentalEquipment { get; set; }
+    public DbSet<Client> Clients { get; set; } = null!;
+    public DbSet<Employee> Employees { get; set; } = null!;
+    public DbSet<Payment> Payments { get; set; } = null!;
+    public DbSet<RentalAgreement> RentalAgreements { get; set; } = null!;
+    public DbSet<RentalEquipment> RentalEquipment { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<RentalEquipment>()
-                .HasIndex(c => c.Id)
-                .IsUnique();
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RentalEquipment>()
+            .HasIndex(c => c.Id)
+            .IsUnique();
     }
 }

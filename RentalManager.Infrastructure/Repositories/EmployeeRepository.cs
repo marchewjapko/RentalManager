@@ -2,82 +2,88 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 
-namespace RentalManager.Infrastructure.Repositories
-{
-    public class EmployeeRepository : IEmployeeRepository
-    {
-        private readonly AppDbContext _appDbContext;
-        public EmployeeRepository(AppDbContext appDbContext)
-        {
-            _appDbContext = appDbContext;
-        }
-        public async Task<Employee> AddAsync(Employee employee)
-        {
-            try
-            {
-                _appDbContext.Employees.Add(employee);
-                await _appDbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Unable to add employee\n" + ex.Message);
-            }
-            return await Task.FromResult(employee);
-        }
+namespace RentalManager.Infrastructure.Repositories;
 
-        public async Task DeleteAsync(int id)
+public class EmployeeRepository : IEmployeeRepository
+{
+    private readonly AppDbContext _appDbContext;
+
+    public EmployeeRepository(AppDbContext appDbContext)
+    {
+        _appDbContext = appDbContext;
+    }
+
+    public async Task<Employee> AddAsync(Employee employee)
+    {
+        try
         {
-            var result = await _appDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
-            if (result == null)
-            {
-                throw new Exception("Unable to find employee");
-            }
-            _appDbContext.Employees.Remove(result);
+            _appDbContext.Employees.Add(employee);
             await _appDbContext.SaveChangesAsync();
         }
-
-        public async Task<Employee> GetAsync(int id)
+        catch (Exception ex)
         {
-            var result = await Task.FromResult(_appDbContext.Employees.FirstOrDefault(x => x.Id == id));
-            if (result == null)
-            {
-                throw new Exception("Unable to find employee");
-            }
-            return result;
+            throw new Exception("Unable to add employee\n" + ex.Message);
         }
 
-        public async Task<IEnumerable<Employee>> BrowseAllAsync(string? name = null, DateTime? from = null, DateTime? to = null)
+        return await Task.FromResult(employee);
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var result = await _appDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+        if (result == null)
         {
-            var result = _appDbContext.Employees.AsQueryable();
-            if (name != null)
-            {
-                result = result.Where(x => x.Name.Contains(name));
-            }
-            if (from != null)
-            {
-                result = result.Where(x => x.DateAdded.Date > from.Value.Date);
-            }
-            if (to != null)
-            {
-                result = result.Where(x => x.DateAdded.Date < to.Value.Date);
-            }
-            return await Task.FromResult(result.AsEnumerable());
+            throw new Exception("Unable to find employee");
         }
 
-        public async Task<Employee> UpdateAsync(Employee employee, int id)
+        _appDbContext.Employees.Remove(result);
+        await _appDbContext.SaveChangesAsync();
+    }
+
+    public async Task<Employee> GetAsync(int id)
+    {
+        var result = await Task.FromResult(_appDbContext.Employees.FirstOrDefault(x => x.Id == id));
+        if (result == null)
         {
-            try
-            {
-                var x = _appDbContext.Employees.FirstOrDefault(x => x.Id == id);
-                x.Name = employee.Name;
-                x.Surname = employee.Surname;
-                _appDbContext.SaveChanges();
-                return await Task.FromResult(x);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Unable to update employee");
-            }
+            throw new Exception("Unable to find employee");
         }
+
+        return result;
+    }
+
+    public async Task<IEnumerable<Employee>> BrowseAllAsync(string? name = null, DateTime? from = null,
+        DateTime? to = null)
+    {
+        var result = _appDbContext.Employees.AsQueryable();
+        if (name != null)
+        {
+            result = result.Where(x => x.Name.Contains(name));
+        }
+
+        if (from != null)
+        {
+            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+        }
+
+        if (to != null)
+        {
+            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+        }
+
+        return await Task.FromResult(result.AsEnumerable());
+    }
+
+    public async Task<Employee> UpdateAsync(Employee employee, int id)
+    {
+        var x = _appDbContext.Employees.FirstOrDefault(x => x.Id == id);
+        if (x == null)
+        {
+            throw new Exception("Unable to update employee");
+        }
+
+        x.Name = employee.Name;
+        x.Surname = employee.Surname;
+        await _appDbContext.SaveChangesAsync();
+        return await Task.FromResult(x);
     }
 }

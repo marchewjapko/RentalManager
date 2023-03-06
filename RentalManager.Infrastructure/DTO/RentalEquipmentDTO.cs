@@ -1,10 +1,9 @@
-﻿namespace RentalManager.Infrastructure.DTO
+﻿namespace RentalManager.Infrastructure.DTO;
+
+public class RentalEquipmentDto
 {
-    public class RentalEquipmentDTO
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Price { get; set; }
-        public DateTime DateAdded { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+    public int Price { get; set; }
+    public DateTime DateAdded { get; set; }
 }
