@@ -3,19 +3,25 @@ import {
 	Button,
 	ButtonGroup,
 	ClickAwayListener,
+	Divider,
 	Grow,
+	IconButton,
+	InputAdornment,
 	MenuItem,
 	MenuList,
 	Paper,
 	Popper,
 	Skeleton,
 	Stack,
+	TextField,
 	Typography,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import SortIcon from '@mui/icons-material/Sort';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useTranslation } from 'react-i18next';
 import DeleteRentalEquipmentDialog from './DeleteRentalEquipmentDialog';
 import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -28,7 +34,10 @@ import {
 	rentalEquipmentShowDeleteConfirmation,
 	rentalEquipmentShowEditDialog,
 } from '../Atoms/RentaLEquipmentAtoms';
-import { getAllRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
+import {
+	filterRentalEquipment,
+	getAllRentalEquipment,
+} from '../../Actions/RestAPI/RentalEquipmentActions';
 import RentalEquipmentCard from './RentalEquipmentCard';
 import './RentalEquipment.css';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -137,6 +146,7 @@ export default function RentalEquipment() {
 	const [sortOpen, setSortOpen] = React.useState(false);
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
 	const [sortDesc, setSortDesc] = React.useState(false);
+	const [searchName, setSearchName] = React.useState('');
 	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
 	const anchorRef = useRef(null);
 
@@ -184,6 +194,22 @@ export default function RentalEquipment() {
 		}
 		setData(sortData(sortDesc, options[index], dataToSort));
 	}
+
+	const handleSearch = () => {
+		setIsLoading(true);
+		filterRentalEquipment(searchName)
+			.then((result) => {
+				if (result.hasOwnProperty('data')) {
+					setData(sortData(sortDesc, options[selectedIndex], result.data));
+				} else {
+					setData(sortData(sortDesc, options[selectedIndex], result));
+				}
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 
 	return (
 		<>
@@ -271,6 +297,36 @@ export default function RentalEquipment() {
 							)}
 						</Popper>
 					</ButtonGroup>
+					<TextField
+						size={'small'}
+						label={t('name', { ns: 'equipmentTranslation' })}
+						variant="outlined"
+						onChange={(event) => setSearchName(event.target.value)}
+						value={searchName}
+						disabled={isLoading}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									{searchName.length > 0 && (
+										<IconButton
+											edge="end"
+											onClick={() => setSearchName('')}
+											disabled={isLoading}
+										>
+											<ClearIcon />
+										</IconButton>
+									)}
+									<IconButton
+										edge="end"
+										onClick={handleSearch}
+										disabled={isLoading}
+									>
+										<SearchIcon />
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
+					/>
 				</div>
 				<div className="rental-equipment-card-container">
 					<AnimatePresence mode="wait">

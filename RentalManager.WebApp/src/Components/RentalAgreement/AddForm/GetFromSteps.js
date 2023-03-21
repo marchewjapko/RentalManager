@@ -1,4 +1,4 @@
-import Clients from '../../Clients/Clients';
+import ClientsOLD from '../../Clients/ClientsOLD';
 import RentalAgreementAgreementDetails from '../RentalAgreementAgreementDetails';
 import Payments from '../../Payments/Payments';
 import * as React from 'react';
@@ -7,7 +7,7 @@ export default function GetFormSteps() {
 	return [
 		{
 			label: 'chooseClient',
-			content: <Clients isCheckable={true} />,
+			content: <ClientsOLD isCheckable={true} />,
 		},
 		{
 			label: 'fillTheDetails',

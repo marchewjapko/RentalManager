@@ -23,7 +23,7 @@ import { DefaultValue, useRecoilState } from 'recoil';
 import { clientAtom } from '../Atoms/ClientAtoms';
 import { useTranslation } from 'react-i18next';
 
-export default function Clients() {
+export default function ClientsOLD() {
 	const [client, setClient] = useRecoilState(clientAtom);
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);

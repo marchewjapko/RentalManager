@@ -34,7 +34,7 @@ import { rentalEquipmentValidationSchema } from '../../Actions/Validations/Valid
 import { globalSnackbar } from '../Atoms/GeneralAtoms';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="down" ref={ref} {...props} />;
+	return <Slide unmountOnExit direction="down" ref={ref} {...props} />;
 });
 
 const variants = {
@@ -154,7 +154,12 @@ export default function RentalEquipmentForm() {
 				</DialogTitle>
 				<DialogContent dividers className={'employee-form'}>
 					<Stack spacing={2}>
-						<Stack direction={'row'} spacing={1} sx={{ paddingLeft: '8px' }} alignItems={'center'}>
+						<Stack
+							direction={'row'}
+							spacing={1}
+							sx={{ paddingLeft: '8px' }}
+							alignItems={'center'}
+						>
 							<ConstructionIcon />
 							<Typography variant="h6">{t('rentalEquipmentInformation')}</Typography>
 						</Stack>
@@ -192,7 +197,7 @@ export default function RentalEquipmentForm() {
 									}
 								/>
 							</Grid>
-							<Grid xs={6} md={5}>
+							<Grid xs={12} md={5}>
 								<TextField
 									fullWidth
 									id="price"
