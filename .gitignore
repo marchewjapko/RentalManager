@@ -2,6 +2,7 @@
 */bin/*
 /.vs/*
 /.vscode/*
+/packages/*
 
 */node_modules/
 */.expo/

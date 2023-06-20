@@ -1,11 +1,10 @@
 import Header from './Components/Header/Header';
 import { createBrowserRouter, createHashRouter, Outlet } from 'react-router-dom';
 import Dashboard from './Components/Dashboard/Dashboard';
-import RentalAgreement from './Components/RentalAgreement/RentalAgreement';
-import AddRentalEquipmentForm from './Components/RentalAgreement/AddForm/AddRentalEquipmentForm';
 import RentalEquipment from './Components/RentalEquipment/RentalEquipment';
 import Employees from './Components/Employees/Employees';
 import React from 'react';
+import RentalAgreement from './Components/RentalAgreement/RentalAgreement';
 
 const AppLayout = () => (
 	<>
@@ -27,10 +26,6 @@ export default function GetRouter() {
 					{
 						path: '/rental-agreement',
 						element: <RentalAgreement />,
-					},
-					{
-						path: '/add-rental-agreement',
-						element: <AddRentalEquipmentForm />,
 					},
 					{
 						path: '/rental-equipment',
@@ -55,10 +50,6 @@ export default function GetRouter() {
 					{
 						path: '/rental-agreement',
 						element: <RentalAgreement />,
-					},
-					{
-						path: '/add-rental-agreement',
-						element: <AddRentalEquipmentForm />,
 					},
 					{
 						path: '/rental-equipment',

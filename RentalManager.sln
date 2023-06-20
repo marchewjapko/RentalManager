@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentalManager.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentalManager.WebAPI", "RentalManager.WebAPI\RentalManager.WebAPI.csproj", "{7CAE7EB9-2B3E-4E5A-B3C9-669F55A3B196}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalManager.Tests", "RentalManager.Tests\RentalManager.Tests.csproj", "{4DB290C7-0333-44F3-B548-F1AFDC303363}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7CAE7EB9-2B3E-4E5A-B3C9-669F55A3B196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CAE7EB9-2B3E-4E5A-B3C9-669F55A3B196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CAE7EB9-2B3E-4E5A-B3C9-669F55A3B196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB290C7-0333-44F3-B548-F1AFDC303363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB290C7-0333-44F3-B548-F1AFDC303363}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB290C7-0333-44F3-B548-F1AFDC303363}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB290C7-0333-44F3-B548-F1AFDC303363}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

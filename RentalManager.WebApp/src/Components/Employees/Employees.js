@@ -86,7 +86,7 @@ export default function Employees() {
 	const showDeleteDialog = useRecoilValue(employeeShowDeleteConfirmation);
 	const setEmployee = useSetRecoilState(employeeAtom);
 	const { t } = useTranslation(['generalTranslation', 'employeeTranslation']);
-
+	console.log('aaaaaa', isLoading);
 	useEffect(() => {
 		setIsLoading(true);
 		getAllEmployees()

@@ -1,0 +1,74 @@
+.rental-agreement-card {
+    width: 22em;
+    height: 100%;
+    position: relative;
+}
+.rental-agreement-card-skeleton {
+    width: 22em;
+    height: calc(20px + 13em) !important;
+    position: relative;
+}
+.rental-agreement-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px;
+    flex-direction: column;
+    max-width: 100em;
+    margin-left: auto;
+    margin-right: auto;
+}
+.rental-agreement-actions-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+.rental-agreement-card-container {
+    width: 100%;
+    justify-content: center;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, 22em);
+}
+.rental-agreement-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.35s ease;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 10px;
+}
+.rental-agreement-backdrop:hover {
+    backdrop-filter: blur(2px);
+    opacity: 1;
+}
+.rental-agreement-content {
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px 10px 10px 15px;
+}
+.rental-agreement-client-typography {
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    justify-content: flex-start;
+}
+.rental-agreement-date-typography {
+    text-align: right;
+    width: 100%;
+}

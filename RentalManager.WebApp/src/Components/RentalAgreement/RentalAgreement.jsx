@@ -3,7 +3,6 @@ import {
 	Button,
 	ButtonGroup,
 	ClickAwayListener,
-	Divider,
 	Grow,
 	IconButton,
 	InputAdornment,
@@ -23,9 +22,8 @@ import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useTranslation } from 'react-i18next';
-import DeleteRentalEquipmentDialog from './DeleteRentalEquipmentDialog';
 import { DefaultValue, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import RentalEquipmentForm from './RentalEquipmentForm';
+import RentalAgreementForm from './RentalAgreementForm';
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -34,13 +32,11 @@ import {
 	rentalEquipmentShowDeleteConfirmation,
 	rentalEquipmentShowEditDialog,
 } from '../Atoms/RentaLEquipmentAtoms';
-import {
-	filterRentalEquipment,
-	getAllRentalEquipment,
-} from '../../Actions/RestAPI/RentalEquipmentActions';
-import RentalEquipmentCard from './RentalEquipmentCard';
-import './RentalEquipment.css';
+import { filterRentalEquipment } from '../../Actions/RestAPI/RentalEquipmentActions';
+import RentalAgreementCard from './RentalAgreementCard';
+import './RentalAgreement.css';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import { getAllAgreements } from '../../Actions/RestAPI/RentalAgreementActions';
 
 function GetSkeletonCards() {
 	const skeletonArray = Array(7).fill(0);
@@ -55,7 +51,7 @@ function GetSkeletonCards() {
 					animate="animate"
 					exit="exit"
 				>
-					<Skeleton className={'rental-equipment-card-skeleton'} />
+					<Skeleton className={'rental-agreement-card-skeleton'} />
 				</motion.div>
 			))}
 		</>
@@ -65,7 +61,7 @@ function GetSkeletonCards() {
 function GetNormalCards({ data, indexOffset }) {
 	return (
 		<>
-			{data.map((rentalEquipment, index) => (
+			{data.map((rentalAgreement, index) => (
 				<motion.div
 					key={index + indexOffset + 7}
 					variants={item}
@@ -74,7 +70,7 @@ function GetNormalCards({ data, indexOffset }) {
 					animate="animate"
 					exit="exit"
 				>
-					<RentalEquipmentCard rentalEquipment={rentalEquipment} />
+					<RentalAgreementCard rentalAgreement={rentalAgreement} />
 				</motion.div>
 			))}
 		</>
@@ -108,14 +104,14 @@ const item = {
 	}),
 };
 
-const options = ['name', 'dateAdded', 'price'];
+const options = ['dateAdded', 'clientSurname'];
 
 function sortData(sortDesc, option, data) {
 	let result = data;
 	if (sortDesc) {
 		result.sort((a, b) => {
-			if (option === 'name') {
-				return b['name'].toString().localeCompare(a['name']);
+			if (option === 'clientSurname') {
+				return b.client.surname.toString().localeCompare(a.client.surname);
 			}
 			if (a[option] < b[option]) {
 				return 1;
@@ -124,8 +120,8 @@ function sortData(sortDesc, option, data) {
 		});
 	} else {
 		result.sort((a, b) => {
-			if (option === 'name') {
-				return a['name'].toString().localeCompare(b['name']);
+			if (option === 'clientSurname') {
+				return a.client.surname.toString().localeCompare(b.client.surname);
 			}
 			if (a[option] > b[option]) {
 				return 1;
@@ -136,7 +132,7 @@ function sortData(sortDesc, option, data) {
 	return result;
 }
 
-export default function RentalEquipment() {
+export default function RentalAgreement() {
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const refreshFunction = useRecoilValue(forceRentalEquipmentRefresh);
@@ -145,7 +141,7 @@ export default function RentalEquipment() {
 	const setRentalEquipment = useSetRecoilState(rentalEquipmentAtom);
 	const [sortOpen, setSortOpen] = React.useState(false);
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
-	const [sortDesc, setSortDesc] = React.useState(false);
+	const [sortDesc, setSortDesc] = React.useState(true);
 	const [searchName, setSearchName] = React.useState('');
 	const { t } = useTranslation(['generalTranslation', 'equipmentTranslation']);
 	const anchorRef = useRef(null);
@@ -154,7 +150,7 @@ export default function RentalEquipment() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		getAllRentalEquipment()
+		getAllAgreements()
 			.then((result) => {
 				if (result.hasOwnProperty('data')) {
 					setData(sortData(sortDesc, options[selectedIndex], result.data));
@@ -213,16 +209,16 @@ export default function RentalEquipment() {
 
 	return (
 		<>
-			{showDeleteDialog && <DeleteRentalEquipmentDialog />}
-			{showEditDialog && <RentalEquipmentForm />}
-			<div className={'rental-equipment-container'}>
+			{showDeleteDialog && <DeleteRentalEquipmentDialogOLD />}
+			{showEditDialog && <RentalAgreementForm />}
+			<div className={'rental-agreement-container'}>
 				<Stack direction={'row'} alignItems={'center'} gap={'10px'}>
 					<ConstructionIcon sx={{ height: '3rem', width: '3rem' }} />
 					<Typography variant={'h3'}>
 						{t('equipment', { ns: 'equipmentTranslation' })}
 					</Typography>
 				</Stack>
-				<div className={'rental-equipment-actions-container'}>
+				<div className={'rental-agreement-actions-container'}>
 					<Button
 						startIcon={<AddCircleRoundedIcon />}
 						variant={'outlined'}
@@ -328,9 +324,9 @@ export default function RentalEquipment() {
 						}}
 					/>
 				</div>
-				<div className="rental-equipment-card-container">
+				<div className="rental-agreement-card-container">
 					<AnimatePresence mode="wait">
-						{isLoading ? (
+						{isLoading || data.length === 0 ? (
 							<GetSkeletonCards key={1} />
 						) : (
 							<GetNormalCards data={data} key={2} indexOffset={indexOffset.current} />
