@@ -17,8 +17,20 @@ public class RentalAgreementRepository : IRentalAgreementRepository
     {
         try
         {
-            rentalAgreement.Client = _appDbContext.Clients.FirstOrDefault(x => x.Id == rentalAgreement.ClientId);
-            rentalAgreement.Employee = _appDbContext.Employees.FirstOrDefault(x => x.Id == rentalAgreement.EmployeeId);
+            var client = _appDbContext.Clients.FirstOrDefault(x => x.Id == rentalAgreement.ClientId);
+            if (client == null)
+            {
+                throw new Exception("Unable to find client");
+            }
+
+            rentalAgreement.Client = client;
+            var employee = _appDbContext.Employees.FirstOrDefault(x => x.Id == rentalAgreement.EmployeeId);
+            if (employee == null)
+            {
+                throw new Exception("Unable to find client");
+            }
+
+            rentalAgreement.Employee = employee;
             _appDbContext.RentalAgreements.Add(rentalAgreement);
             await _appDbContext.SaveChangesAsync();
         }
@@ -144,9 +156,9 @@ public class RentalAgreementRepository : IRentalAgreementRepository
 
         x.IsActive = rentalAgreement.IsActive;
         x.EmployeeId = rentalAgreement.EmployeeId;
-        x.Employee = _appDbContext.Employees.FirstOrDefault(employee => employee.Id == rentalAgreement.EmployeeId);
+        x.Employee = rentalAgreement.Employee;
         x.ClientId = rentalAgreement.ClientId;
-        x.Client = _appDbContext.Clients.FirstOrDefault(client => client.Id == rentalAgreement.ClientId);
+        x.Client = rentalAgreement.Client;
         x.Comment = rentalAgreement.Comment;
         x.Deposit = rentalAgreement.Deposit;
         x.RentalEquipment = rentalAgreement.RentalEquipment;

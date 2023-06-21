@@ -8,11 +8,8 @@ const string allowSpecificOrigins = "allowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: allowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-                      });
+    options.AddPolicy(allowSpecificOrigins,
+        policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
 });
 
 builder.Services.AddControllers();
@@ -36,12 +33,13 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 if (builder.Environment.EnvironmentName == "Development")
 {
-    builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Data Source=localhost, 1450;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
+    builder.Services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase("TestingDatabase"));
 }
 else
 {
     builder.Services.AddDbContext<AppDbContext>(
-        options => options.UseSqlServer("Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+        options => options.UseSqlServer(
+            "Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
     );
 }
 
@@ -58,12 +56,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-var context = services.GetRequiredService<AppDbContext>();
-if (context.Database.GetPendingMigrations().Any())
+if (builder.Environment.EnvironmentName != "Development")
 {
-    context.Database.Migrate();
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
 }
 
 app.Run();

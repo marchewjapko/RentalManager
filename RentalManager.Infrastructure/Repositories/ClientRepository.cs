@@ -16,22 +16,9 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client> AddAsync(Client client)
     {
-        if (!CheckClient(client))
-        {
-            throw new Exception("Invalid client");
-        }
-
-        try
-        {
-            client.PhoneNumber = Regex.Replace(client.PhoneNumber, @"\s+", "");
-            _appDbContext.Clients.Add(client);
-            await _appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to add client\n" + ex.Message);
-        }
-
+        client.PhoneNumber = Regex.Replace(client.PhoneNumber, @"\s+", "");
+        _appDbContext.Clients.Add(client);
+        await _appDbContext.SaveChangesAsync();
         return await Task.FromResult(client);
     }
 
@@ -85,7 +72,7 @@ public class ClientRepository : IClientRepository
 
         if (idCard != null)
         {
-            result = result.Where(x => x.IdCard.Contains(idCard));
+            result = result.Where(x => x.IdCard != null && x.IdCard.Contains(idCard));
         }
 
         if (city != null)
@@ -128,22 +115,5 @@ public class ClientRepository : IClientRepository
         z.Street = client.Street;
         await _appDbContext.SaveChangesAsync();
         return await Task.FromResult(z);
-    }
-
-    private static bool CheckClient(Client client)
-    {
-        if (!Regex.IsMatch(client.PhoneNumber, @"^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$"))
-        {
-            return false;
-        }
-
-        if (!string.IsNullOrEmpty(client.Email) &&
-            !Regex.IsMatch(client.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-        {
-            return false;
-        }
-
-        return string.IsNullOrEmpty(client.IdCard) ||
-               Regex.IsMatch(client.IdCard, @"\b([a-zA-Z]){3}[ ]?[0-9]{6}\b");
     }
 }

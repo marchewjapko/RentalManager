@@ -1,6 +1,7 @@
 ﻿using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.DTO;
+using RentalManager.Infrastructure.DTO.ObjectConversions;
 
 namespace RentalManager.Infrastructure.Services;
 
@@ -15,6 +16,11 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeDto> AddAsync(CreateEmployee createEmployee)
     {
+        if (!ValidateEmployee(createEmployee.ToDto()))
+        {
+            throw new Exception("Invalid employee");
+        }
+
         var result = await _employeeRepository.AddAsync(createEmployee.ToDomain());
         return result.ToDto();
     }
@@ -39,7 +45,27 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeDto> UpdateAsync(UpdateEmployee updateEmployee, int id)
     {
+        if (!ValidateEmployee(updateEmployee.ToDto()))
+        {
+            throw new Exception("Invalid employee");
+        }
+
         var result = await _employeeRepository.UpdateAsync(updateEmployee.ToDomain(), id);
         return await Task.FromResult(result.ToDto());
+    }
+
+    private static bool ValidateEmployee(EmployeeDto employeeDto)
+    {
+        if (!employeeDto.Name.All(x => char.IsLetter(x) || char.IsWhiteSpace(x)))
+        {
+            return false;
+        }
+
+        if (!employeeDto.Surname.All(x => char.IsLetter(x) || char.IsWhiteSpace(x)))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

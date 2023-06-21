@@ -1,6 +1,7 @@
 ﻿using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.DTO;
+using RentalManager.Infrastructure.DTO.ObjectConversions;
 
 namespace RentalManager.Infrastructure.Services;
 
@@ -15,6 +16,11 @@ public class RentalEquipmentService : IRentalEquipmentService
 
     public async Task<RentalEquipmentDto> AddAsync(CreateRentalEquipment createRentalEquipment)
     {
+        if (!ValidateRentalEquipment(createRentalEquipment.ToDto()))
+        {
+            throw new Exception("Invalid rental equipment");
+        }
+
         var result = await _rentalEquipmentRepository.AddAsync(createRentalEquipment.ToDomain());
         return result.ToDto();
     }
@@ -39,7 +45,22 @@ public class RentalEquipmentService : IRentalEquipmentService
 
     public async Task<RentalEquipmentDto> UpdateAsync(UpdateRentalEquipment updateRentalEquipment, int id)
     {
+        if (!ValidateRentalEquipment(updateRentalEquipment.ToDto()))
+        {
+            throw new Exception("Invalid rental equipment");
+        }
+
         var result = await _rentalEquipmentRepository.UpdateAsync(updateRentalEquipment.ToDomain(), id);
         return await Task.FromResult(result.ToDto());
+    }
+
+    private static bool ValidateRentalEquipment(RentalEquipmentDto rentalEquipmentDto)
+    {
+        if (rentalEquipmentDto.Price < 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -6,8 +6,8 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class ClientRepositoryTests
 {
-    private AppDbContext _appDbContext;
-    private ClientRepository _clientRepository;
+    private AppDbContext _appDbContext = null!;
+    private ClientRepository _clientRepository = null!;
 
     [SetUp]
     public void Setup()
@@ -15,6 +15,8 @@ public class ClientRepositoryTests
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
         _appDbContext = new AppDbContext(optionsBuilder.Options);
         _clientRepository = new ClientRepository(_appDbContext);
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(0));
     }
 
     [TearDown]
@@ -25,7 +27,7 @@ public class ClientRepositoryTests
     }
 
     [Test]
-    public async Task ShouldAddClient()
+    public async Task ShouldAdd()
     {
         var newClient = new Client
         {
@@ -45,56 +47,7 @@ public class ClientRepositoryTests
     }
 
     [Test]
-    public void ShouldNotGetClient_wrongPhone()
-    {
-        var invalidClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789 WRONG"
-        };
-        var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.AddAsync(invalidClient));
-        Assert.That(ex.Message, Is.EqualTo("Invalid client"));
-    }
-
-    [Test]
-    public void ShouldNotGetClient_wrongId()
-    {
-        var invalidClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC WRONG 123456",
-            PhoneNumber = "123 456 789"
-        };
-        var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.AddAsync(invalidClient));
-        Assert.That(ex.Message, Is.EqualTo("Invalid client"));
-    }
-
-    [Test]
-    public void ShouldNotGetClient_wrongEmail()
-    {
-        var invalidClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789",
-            Email = "WRONG EMAIL"
-        };
-        var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.AddAsync(invalidClient));
-        Assert.That(ex.Message, Is.EqualTo("Invalid client"));
-    }
-
-    [Test]
-    public async Task ShouldDeleteClient()
+    public async Task ShouldDelete()
     {
         var newClient = new Client
         {
@@ -107,19 +60,20 @@ public class ClientRepositoryTests
         };
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
+        Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
         await _clientRepository.DeleteAsync(1);
-        Assert.Pass();
+        Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(0));
     }
 
     [Test]
-    public void ShouldNotDeleteClient()
+    public void ShouldNotDelete()
     {
         var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.DeleteAsync(1));
         Assert.That(ex.Message, Is.EqualTo("Unable to find client"));
     }
 
     [Test]
-    public async Task ShouldGetClient()
+    public async Task ShouldGet()
     {
         var newClient = new Client
         {

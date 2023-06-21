@@ -1,6 +1,8 @@
-﻿using RentalManager.Core.Repositories;
+﻿using System.Text.RegularExpressions;
+using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.DTO;
+using RentalManager.Infrastructure.DTO.ObjectConversions;
 
 namespace RentalManager.Infrastructure.Services;
 
@@ -15,6 +17,11 @@ public class ClientService : IClientService
 
     public async Task<ClientDto> AddAsync(CreateClient createClient)
     {
+        if (!ValidateClient(createClient.ToDto()))
+        {
+            throw new Exception("Invalid client");
+        }
+
         var result = await _clientRepository.AddAsync(createClient.ToDomain());
         return result.ToDto();
     }
@@ -41,7 +48,48 @@ public class ClientService : IClientService
 
     public async Task<ClientDto> UpdateAsync(UpdateClient updateClient, int id)
     {
+        if (!ValidateClient(updateClient.ToDto()))
+        {
+            throw new Exception("Invalid client");
+        }
+
         var result = await _clientRepository.UpdateAsync(updateClient.ToDomain(), id);
         return await Task.FromResult(result.ToDto());
+    }
+
+    private static bool ValidateClient(ClientDto client)
+    {
+        if (!client.Name.All(x => char.IsLetter(x) || char.IsWhiteSpace(x)))
+        {
+            return false;
+        }
+
+        if (!client.Surname.All(x => char.IsLetter(x) || char.IsWhiteSpace(x)))
+        {
+            return false;
+        }
+
+        if (!Regex.IsMatch(client.PhoneNumber, @"^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$"))
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(client.Email) &&
+            !Regex.IsMatch(client.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+        {
+            return false;
+        }
+
+        if (!client.City.All(x => char.IsLetter(x) || char.IsWhiteSpace(x)))
+        {
+            return false;
+        }
+
+        if (client.IdCard != null && !Regex.IsMatch(client.IdCard, @"^([a-zA-Z]){3}[ ]?[0-9]{6}$"))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
