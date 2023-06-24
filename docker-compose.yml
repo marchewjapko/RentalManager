@@ -9,6 +9,13 @@ services:
           - "8080:80"
         depends_on:
           - rental-manager-db
+
+    rental-manager-document-service:
+        environment:
+          - TZ=Europe/Warsaw
+        image: "marchewjapko/rental-manager-document-service:latest"
+        ports:
+          - "8081:80"
           
     rental-manager-db:
         environment:

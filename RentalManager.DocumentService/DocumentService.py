@@ -1,12 +1,15 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from starlette.responses import FileResponse
 from CreatePDF import generate_pdf
 from fastapi.middleware.cors import CORSMiddleware
 from Models import Agreement
+import os
 import json
 
 app = FastAPI()
+load_dotenv()
 
 origins = ["*"]
 app.add_middleware(
@@ -25,11 +28,14 @@ async def generate_document(arg: Agreement):
     response.headers["Content-Disposition"] = 'attachment; filename=Agreement.pdf'
     return response
 
-with open('../RentalManager.WebApp/src/references/openapi.json', 'w') as f:
-    json.dump(get_openapi(
-        title=app.title,
-        version=app.version,
-        openapi_version=app.openapi_version,
-        description=app.description,
-        routes=app.routes
-    ), f)
+print(os.getenv('ENVIRONMENT'))
+
+if os.getenv('ENVIRONMENT') == 'Development':
+    with open('../RentalManager.WebApp/src/references/openapi.json', 'w') as f:
+        json.dump(get_openapi(
+            title=app.title,
+            version=app.version,
+            openapi_version=app.openapi_version,
+            description=app.description,
+            routes=app.routes
+        ), f)
