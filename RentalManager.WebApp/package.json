@@ -30,7 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "npx openapi-typescript-codegen --input src/references/swagger.json --output src/references/codegen --client axios exportServices --useOptions --useUnionTypes"
+    "codegen": "npx openapi-typescript-codegen --input src/references/swagger.json --output src/references/codegen/API --client axios exportServices --useOptions --useUnionTypes && npx openapi-typescript-codegen --input src/references/openapi.json --output src/references/codegen/Documents --client axios exportServices --useOptions --useUnionTypes"
   },
   "eslintConfig": {
     "extends": [

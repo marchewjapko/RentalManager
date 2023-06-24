@@ -1,11 +1,10 @@
 from fastapi import FastAPI
-from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 from starlette.responses import FileResponse
-
 from CreatePDF import generate_pdf
 from fastapi.middleware.cors import CORSMiddleware
-
 from Models import Agreement
+import json
 
 app = FastAPI()
 
@@ -26,7 +25,11 @@ async def generate_document(arg: Agreement):
     response.headers["Content-Disposition"] = 'attachment; filename=Agreement.pdf'
     return response
 
-
-@app.get("/")
-def read_docs():
-    return get_swagger_ui_html(openapi_url="/openapi.json", title='test')
+with open('../RentalManager.WebApp/src/references/openapi.json', 'w') as f:
+    json.dump(get_openapi(
+        title=app.title,
+        version=app.version,
+        openapi_version=app.openapi_version,
+        description=app.description,
+        routes=app.routes
+    ), f)
