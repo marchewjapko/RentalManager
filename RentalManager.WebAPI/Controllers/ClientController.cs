@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
 
 namespace RentalManager.WebAPI.Controllers;
@@ -15,6 +16,7 @@ public class ClientController : Controller
         _clientService = clientService;
     }
 
+    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
@@ -22,6 +24,7 @@ public class ClientController : Controller
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllClients(string? name = null, string? surname = null,
         string? phoneNumber = null, string? email = null, string? idCard = null, string? city = null,
@@ -39,6 +42,7 @@ public class ClientController : Controller
         return NoContent();
     }
 
+    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetClient(int id)
     {
@@ -46,6 +50,7 @@ public class ClientController : Controller
         return Json(clientDto);
     }
 
+    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
     {

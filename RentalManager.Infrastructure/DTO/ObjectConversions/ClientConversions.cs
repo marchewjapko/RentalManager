@@ -14,7 +14,7 @@ public static class ClientConversions
             Surname = createClient.Surname,
             PhoneNumber = createClient.PhoneNumber,
             Email = createClient.Email,
-            IdCard = ToUpperCheckForNull(createClient.IdCard),
+            IdCard = createClient.IdCard?.ToUpper(),
             City = createClient.City,
             Street = createClient.Street,
             DateAdded = DateTime.Now
@@ -30,7 +30,7 @@ public static class ClientConversions
             Surname = client.Surname,
             PhoneNumber = Regex.Replace(Regex.Replace(client.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
             Email = client.Email,
-            IdCard = ToUpperCheckForNull(client.IdCard),
+            IdCard = client.IdCard?.ToUpper(),
             City = client.City,
             Street = client.Street,
             DateAdded = client.DateAdded
@@ -47,7 +47,7 @@ public static class ClientConversions
             PhoneNumber =
                 Regex.Replace(Regex.Replace(createClient.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
             Email = createClient.Email,
-            IdCard = ToUpperCheckForNull(createClient.IdCard),
+            IdCard = createClient.IdCard?.ToUpper(),
             City = createClient.City,
             Street = createClient.Street
         };
@@ -63,7 +63,7 @@ public static class ClientConversions
             PhoneNumber =
                 Regex.Replace(Regex.Replace(updateClient.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
             Email = updateClient.Email,
-            IdCard = ToUpperCheckForNull(updateClient.IdCard),
+            IdCard = updateClient.IdCard?.ToUpper(),
             City = updateClient.City,
             Street = updateClient.Street
         };
@@ -78,7 +78,7 @@ public static class ClientConversions
             Surname = updateClient.Surname,
             PhoneNumber = Regex.Replace(updateClient.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
             Email = updateClient.Email,
-            IdCard = ToUpperCheckForNull(updateClient.IdCard),
+            IdCard = updateClient.IdCard?.ToUpper(),
             City = updateClient.City,
             Street = updateClient.Street
         };
@@ -94,16 +94,11 @@ public static class ClientConversions
             Surname = clientDto.Surname,
             PhoneNumber = Regex.Replace(clientDto.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
             Email = clientDto.Email,
-            IdCard = ToUpperCheckForNull(clientDto.IdCard),
+            IdCard = clientDto.IdCard?.ToUpper(),
             City = clientDto.City,
             Street = clientDto.Street,
             DateAdded = clientDto.DateAdded
         };
         return result;
-    }
-
-    private static string ToUpperCheckForNull(this string str)
-    {
-        return string.IsNullOrEmpty(str) ? str : str.ToUpper();
     }
 }

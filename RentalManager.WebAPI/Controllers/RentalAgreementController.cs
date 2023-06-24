@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
 
 namespace RentalManager.WebAPI.Controllers;
@@ -15,6 +16,7 @@ public class RentalAgreementController : Controller
         _rentalAgreementService = rentalAgreementService;
     }
 
+    [ProducesResponseType(typeof(RentalAgreementDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddRentalAgreement([FromBody] CreateRentalAgreement createRentalAgreement)
     {
@@ -22,6 +24,7 @@ public class RentalAgreementController : Controller
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<RentalAgreementDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllRentalAgreements(
         int? clientId = null,
@@ -58,6 +61,7 @@ public class RentalAgreementController : Controller
         return NoContent();
     }
 
+    [ProducesResponseType(typeof(RentalAgreementDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetRentalAgreement(int id)
     {
@@ -65,6 +69,7 @@ public class RentalAgreementController : Controller
         return Json(rentalAgreementDto);
     }
 
+    [ProducesResponseType(typeof(RentalAgreementDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateRentalAgreement([FromBody] UpdateRentalAgreement updateRentalAgreement,
         int id)

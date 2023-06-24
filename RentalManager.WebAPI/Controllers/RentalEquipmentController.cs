@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
 
 namespace RentalManager.WebAPI.Controllers;
@@ -15,6 +16,7 @@ public class RentalEquipmentController : Controller
         _rentalEquipmentService = rentalEquipmentService;
     }
 
+    [ProducesResponseType(typeof(RentalEquipmentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddRentalEquipment([FromBody] CreateRentalEquipment createRentalEquipment)
     {
@@ -22,6 +24,7 @@ public class RentalEquipmentController : Controller
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<RentalEquipmentDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllRentalEquipment(string? name = null, DateTime? from = null,
         DateTime? to = null)
@@ -37,6 +40,7 @@ public class RentalEquipmentController : Controller
         return NoContent();
     }
 
+    [ProducesResponseType(typeof(RentalEquipmentDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetRentalEquipment(int id)
     {
@@ -44,6 +48,7 @@ public class RentalEquipmentController : Controller
         return Json(clientDto);
     }
 
+    [ProducesResponseType(typeof(RentalEquipmentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateRentalEquipment([FromBody] UpdateRentalEquipment updateRentalEquipment,
         int id)

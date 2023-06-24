@@ -48,6 +48,12 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RentalManager API V1");
+    c.RoutePrefix = "";
+});
+
 app.UseHttpsRedirection();
 
 app.UseCors(allowSpecificOrigins);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
 
 namespace RentalManager.WebAPI.Controllers;
@@ -15,6 +16,7 @@ public class EmployeeController : Controller
         _employeeService = employeeService;
     }
 
+    [ProducesResponseType(typeof(EmployeeDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddEmployee([FromBody] CreateEmployee createEmployee)
     {
@@ -22,6 +24,7 @@ public class EmployeeController : Controller
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<EmployeeDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllEmployees(string? name = null, DateTime? from = null, DateTime? to = null)
     {
@@ -36,6 +39,7 @@ public class EmployeeController : Controller
         return NoContent();
     }
 
+    [ProducesResponseType(typeof(EmployeeDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetEmployee(int id)
     {
@@ -43,6 +47,7 @@ public class EmployeeController : Controller
         return Json(clientDto);
     }
 
+    [ProducesResponseType(typeof(EmployeeDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployee updateEmployee, int id)
     {
