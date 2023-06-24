@@ -9,8 +9,8 @@ public class RentalAgreementRepositoryTests
     private readonly Client _mockClient;
     private readonly Employee _mockEmployee;
     private readonly RentalEquipment _mockRentalEquipment;
-    private AppDbContext _appDbContext;
-    private RentalAgreementRepository _rentalAgreementRepository;
+    private AppDbContext _appDbContext = null!;
+    private RentalAgreementRepository _rentalAgreementRepository = null!;
 
     public RentalAgreementRepositoryTests()
     {
@@ -142,6 +142,120 @@ public class RentalAgreementRepositoryTests
     {
         var ex = Assert.ThrowsAsync<Exception>(async () => await _rentalAgreementRepository.DeleteAsync(1));
         Assert.That(ex.Message, Is.EqualTo("Unable to find rental agreement"));
+    }
+
+    [Test]
+    public async Task ShouldBrowseAll()
+    {
+        var (client, employee, rentalEquipment) = GetMocks();
+        var newAgreement = new RentalAgreement
+        {
+            EmployeeId = employee.Id,
+            IsActive = true,
+            ClientId = client.Id,
+            Deposit = 100,
+            TransportTo = 200,
+            RentalEquipment = new List<RentalEquipment> { rentalEquipment }
+        };
+        var newAgreement2 = new RentalAgreement
+        {
+            EmployeeId = employee.Id,
+            IsActive = true,
+            ClientId = client.Id,
+            Deposit = 200,
+            TransportTo = 300,
+            RentalEquipment = new List<RentalEquipment> { rentalEquipment }
+        };
+        _appDbContext.RentalAgreements.Add(newAgreement);
+        _appDbContext.RentalAgreements.Add(newAgreement2);
+        await _appDbContext.SaveChangesAsync();
+        Assert.That(_appDbContext.RentalAgreements.Count(), Is.EqualTo(2));
+        var result = await _rentalAgreementRepository.BrowseAllAsync();
+        Assert.That(result.Count(), Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task ShouldFilter()
+    {
+        var (client, employee, rentalEquipment) = GetMocks();
+        var newAgreement = new RentalAgreement
+        {
+            EmployeeId = employee.Id,
+            IsActive = true,
+            ClientId = client.Id,
+            Deposit = 100,
+            TransportTo = 200,
+            RentalEquipment = new List<RentalEquipment> { rentalEquipment }
+        };
+        _appDbContext.RentalAgreements.Add(newAgreement);
+
+        var newClient = new Client
+        {
+            Name = "Test Name 2",
+            Surname = "Test Surname 2",
+            City = "Test City 1",
+            Street = "Test street 2",
+            IdCard = "ABC 123456",
+            PhoneNumber = "111 111 111"
+        };
+        var newEmployee = new Employee
+        {
+            Name = "Test Name 2",
+            Surname = "Test Surname 2"
+        };
+        var newRentalEquipment = new RentalEquipment
+        {
+            Name = "Test Name 2",
+            Price = 200
+        };
+        var clientEntry = _appDbContext.Clients.Add(newClient);
+        var employeeEntry = _appDbContext.Employees.Add(newEmployee);
+        var rentalEquipmentEntry = _appDbContext.RentalEquipment.Add(newRentalEquipment);
+        var newAgreement2 = new RentalAgreement
+        {
+            EmployeeId = employeeEntry.Entity.Id,
+            IsActive = true,
+            ClientId = clientEntry.Entity.Id,
+            Deposit = 100,
+            TransportTo = 200,
+            RentalEquipment = new List<RentalEquipment> { rentalEquipmentEntry.Entity }
+        };
+        _appDbContext.RentalAgreements.Add(newAgreement);
+        _appDbContext.RentalAgreements.Add(newAgreement2);
+        await _appDbContext.SaveChangesAsync();
+        Assert.That(_appDbContext.RentalAgreements.Count(), Is.EqualTo(2));
+
+        var result1 = await _rentalAgreementRepository.BrowseAllAsync(null, "Test Surname 2");
+        Assert.That(result1.Count(), Is.EqualTo(1));
+        var result2 = await _rentalAgreementRepository.BrowseAllAsync(null, null, null, "Test City 1");
+        Assert.That(result2.Count(), Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task ShouldUpdate()
+    {
+        var (client, employee, rentalEquipment) = GetMocks();
+        var newAgreement = new RentalAgreement
+        {
+            EmployeeId = employee.Id,
+            IsActive = true,
+            ClientId = client.Id,
+            Deposit = 100,
+            TransportTo = 200,
+            RentalEquipment = new List<RentalEquipment> { rentalEquipment }
+        };
+        var id = _appDbContext.RentalAgreements.Add(newAgreement).Entity.Id;
+        await _appDbContext.SaveChangesAsync();
+        Assert.That(_appDbContext.RentalAgreements.Count(), Is.EqualTo(1));
+        newAgreement.IsActive = false;
+        newAgreement.Deposit = 250;
+        var result = await _rentalAgreementRepository.UpdateAsync(newAgreement, id);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.IsActive, Is.False);
+            Assert.That(result.RentalEquipment, Has.Count.EqualTo(1));
+            Assert.That(result.Deposit, Is.EqualTo(250));
+        });
     }
 
     private Tuple<Client, Employee, RentalEquipment> GetMocks()

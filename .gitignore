@@ -1,7 +1,7 @@
 */obj/*
 */bin/*
 /.vs/*
-/.vscode/*
+*/.vscode/*
 /packages/*
 
 */node_modules/
@@ -27,3 +27,5 @@
 */.idea/
 */package-lock.json
 /.fleet/*
+
+*/__pycache__/*
