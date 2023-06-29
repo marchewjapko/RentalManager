@@ -5,6 +5,7 @@ from starlette.responses import FileResponse
 from CreatePDF import generate_pdf
 from fastapi.middleware.cors import CORSMiddleware
 from Models import Agreement
+from urllib.parse import quote
 import os
 import json
 
@@ -25,10 +26,10 @@ app.add_middleware(
 async def generate_document(arg: Agreement):
     file_path = generate_pdf(arg)
     response = FileResponse(file_path, 200)
-    response.headers["Content-Disposition"] = 'attachment; filename=Agreement.pdf'
+    response.headers["Content-Disposition"] = "attachment; filename*=utf-8''{}.pdf".format(
+        quote('Umowa wypożyczenia - ' + arg.client.name + ' ' + arg.client.surname))
     return response
 
-print(os.getenv('ENVIRONMENT'))
 
 if os.getenv('ENVIRONMENT') == 'Development':
     with open('../RentalManager.WebApp/src/references/openapi.json', 'w') as f:
