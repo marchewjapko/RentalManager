@@ -1,5 +1,5 @@
 ﻿using RentalManager.Core.Repositories;
-using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.Commands.RentalEquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
 

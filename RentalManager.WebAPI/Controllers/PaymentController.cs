@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
 

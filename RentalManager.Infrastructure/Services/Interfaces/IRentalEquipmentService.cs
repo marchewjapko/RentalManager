@@ -1,4 +1,4 @@
-﻿using RentalManager.Infrastructure.Commands;
+﻿using RentalManager.Infrastructure.Commands.RentalEquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 
 namespace RentalManager.Infrastructure.Services;

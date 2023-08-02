@@ -1,5 +1,5 @@
 ﻿using RentalManager.Core.Domain;
-using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.Commands.RentalEquipmentCommands;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 
