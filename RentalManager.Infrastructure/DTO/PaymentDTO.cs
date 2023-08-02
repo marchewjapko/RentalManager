@@ -2,10 +2,10 @@
 
 public class PaymentDto
 {
-    public int Id { get; set; }
-    public string? Method { get; set; }
-    public int Amount { get; set; }
-    public DateTime DateAdded { get; set; }
-    public DateTime From { get; set; }
-    public DateTime To { get; set; }
+    public int Id { get; init; }
+    public string? Method { get; init; }
+    public int Amount { get; init; }
+    public DateTime DateAdded { get; init; }
+    public DateTime From { get; init; }
+    public DateTime To { get; init; }
 }

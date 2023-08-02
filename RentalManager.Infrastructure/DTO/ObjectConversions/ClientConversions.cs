@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands;
+using RentalManager.Infrastructure.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 

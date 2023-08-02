@@ -53,4 +53,16 @@ public static class EmployeeConversions
         };
         return result;
     }
+
+    public static Employee ToDomain(this EmployeeDto employeeDto)
+    {
+        var result = new Employee
+        {
+            Id = employeeDto.Id,
+            Name = employeeDto.Name,
+            Surname = employeeDto.Surname,
+            DateAdded = employeeDto.DateAdded
+        };
+        return result;
+    }
 }

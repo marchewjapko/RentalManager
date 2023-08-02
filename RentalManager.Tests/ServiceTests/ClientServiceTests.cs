@@ -1,4 +1,4 @@
-﻿using RentalManager.Infrastructure.Commands;
+﻿using RentalManager.Infrastructure.Commands.ClientCommands;
 using RentalManager.Infrastructure.Services;
 using RentalManager.Tests.ServiceTests.MockRepositories;
 

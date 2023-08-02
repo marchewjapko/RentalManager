@@ -2,15 +2,15 @@
 
 public class RentalAgreementDto
 {
-    public int Id { get; set; }
-    public EmployeeDto Employee { get; set; } = null!;
-    public bool IsActive { get; set; }
-    public ClientDto Client { get; set; } = null!;
-    public IEnumerable<RentalEquipmentDto> RentalEquipment { get; set; } = null!;
-    public IEnumerable<PaymentDto> Payments { get; set; } = null!;
-    public string? Comment { get; set; }
-    public int Deposit { get; set; }
-    public int? TransportFrom { get; set; }
-    public int TransportTo { get; set; }
-    public DateTime DateAdded { get; set; }
+    public int Id { get; init; }
+    public EmployeeDto Employee { get; init; } = null!;
+    public bool IsActive { get; init; }
+    public ClientDto Client { get; init; } = null!;
+    public IEnumerable<RentalEquipmentDto> RentalEquipment { get; init; } = null!;
+    public IEnumerable<PaymentDto> Payments { get; init; } = null!;
+    public string? Comment { get; init; }
+    public int Deposit { get; init; }
+    public int? TransportFrom { get; init; }
+    public int TransportTo { get; init; }
+    public DateTime DateAdded { get; init; }
 }

@@ -2,8 +2,8 @@
 
 public class EmployeeDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Surname { get; set; } = null!;
-    public DateTime DateAdded { get; set; }
+    public int Id { get; init; }
+    public string Name { get; init; } = null!;
+    public string Surname { get; init; } = null!;
+    public DateTime DateAdded { get; init; }
 }

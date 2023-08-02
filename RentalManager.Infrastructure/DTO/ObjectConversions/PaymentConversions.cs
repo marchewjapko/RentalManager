@@ -1,16 +1,10 @@
 ﻿using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands;
 
-namespace RentalManager.Infrastructure.DTO;
+namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 
-public static class ObjectConversion
+public static class PaymentConversions
 {
-    #region RentalAgreement Conversions
-
-    #endregion
-
-    #region Payment Conversions
-
     public static Payment ToDomain(this CreatePayment createPayment)
     {
         return new Payment
@@ -46,6 +40,4 @@ public static class ObjectConversion
             To = updatePayment.To
         };
     }
-
-    #endregion
 }
