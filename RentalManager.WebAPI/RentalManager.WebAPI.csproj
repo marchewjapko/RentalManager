@@ -29,6 +29,6 @@
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
         <Exec Command="dotnet tool restore"/>
-        <Exec Command="dotnet swagger tofile --output ../RentalManager.WebApp/src/references/swagger.json $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=InMemory"/>
+        <Exec Command="dotnet swagger tofile --output ../RentalManager.WebApp/src/references/rentalManagerAPI.json $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=InMemory"/>
     </Target>
 </Project>

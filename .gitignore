@@ -31,4 +31,4 @@
 */__pycache__/*
 /.idea/*
 RentalManager.sln.DotSettings.user
-RentalManager.WebApp/src/references/swagger.json
+RentalManager.WebApp/src/references/*

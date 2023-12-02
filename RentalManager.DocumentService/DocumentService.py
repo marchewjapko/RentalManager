@@ -32,7 +32,7 @@ async def generate_document(arg: Agreement):
 
 
 if os.getenv('ENVIRONMENT') == 'Development':
-    with open('../RentalManager.WebApp/src/references/openapi.json', 'w') as f:
+    with open('../RentalManager.WebApp/src/references/documentServiceAPI.json', 'w') as f:
         json.dump(get_openapi(
             title=app.title,
             version=app.version,
