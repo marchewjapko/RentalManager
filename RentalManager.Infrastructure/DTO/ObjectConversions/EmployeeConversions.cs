@@ -1,5 +1,4 @@
 ﻿using RentalManager.Core.Domain;
-using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
@@ -52,6 +51,7 @@ public static class EmployeeConversions
             Name = updateEmployee.Name,
             Surname = updateEmployee.Surname
         };
+
         return result;
     }
 
@@ -64,6 +64,7 @@ public static class EmployeeConversions
             Surname = employeeDto.Surname,
             DateAdded = employeeDto.DateAdded
         };
+
         return result;
     }
 }

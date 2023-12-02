@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
@@ -22,6 +21,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> AddEmployee([FromBody] CreateEmployee createEmployee)
     {
         var result = await _employeeService.AddAsync(createEmployee);
+
         return Json(result);
     }
 
@@ -30,6 +30,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> BrowseAllEmployees(string? name = null, DateTime? from = null, DateTime? to = null)
     {
         var result = await _employeeService.BrowseAllAsync(name, from, to);
+
         return Json(result);
     }
 
@@ -37,6 +38,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> DeleteEmployee(int id)
     {
         await _employeeService.DeleteAsync(id);
+
         return NoContent();
     }
 
@@ -45,6 +47,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> GetEmployee(int id)
     {
         var clientDto = await _employeeService.GetAsync(id);
+
         return Json(clientDto);
     }
 
@@ -53,6 +56,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployee updateEmployee, int id)
     {
         var result = await _employeeService.UpdateAsync(updateEmployee, id);
+
         return Json(result);
     }
 }

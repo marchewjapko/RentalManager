@@ -14,8 +14,8 @@ public static class RentalAgreementConversions
             ClientId = createRentalAgreement.ClientId,
             Comment = createRentalAgreement.Comment,
             Deposit = createRentalAgreement.Deposit,
-            TransportFrom = createRentalAgreement.TransportFrom,
-            TransportTo = createRentalAgreement.TransportTo,
+            TransportFromPrice = createRentalAgreement.TransportFrom,
+            TransportToPrice = createRentalAgreement.TransportTo,
             Payments = createRentalAgreement.Payments.Select(x => x.ToDomain()).ToList(),
             DateAdded = createRentalAgreement.DateAdded
         };
@@ -32,15 +32,18 @@ public static class RentalAgreementConversions
             RentalEquipment = rentalAgreement.RentalEquipment.Select(x => x.ToDto()),
             Comment = rentalAgreement.Comment,
             Deposit = rentalAgreement.Deposit,
-            TransportFrom = rentalAgreement.TransportFrom,
-            TransportTo = rentalAgreement.TransportTo,
+            TransportFrom = rentalAgreement.TransportFromPrice,
+            TransportTo = rentalAgreement.TransportToPrice,
             Payments = rentalAgreement.Payments.Select(x => x.ToDto()),
             DateAdded = rentalAgreement.DateAdded
         };
     }
 
-    public static RentalAgreementDto ToDto(this CreateRentalAgreement createRentalAgreement, EmployeeDto employeeDto,
-        ClientDto clientDto, IEnumerable<RentalEquipmentDto> rentalEquipmentDtos, IEnumerable<PaymentDto> paymentDtos)
+    public static RentalAgreementDto ToDto(this CreateRentalAgreement createRentalAgreement,
+        EmployeeDto employeeDto,
+        ClientDto clientDto,
+        IEnumerable<RentalEquipmentDto> rentalEquipmentDtos,
+        IEnumerable<PaymentDto> paymentDtos)
     {
         return new RentalAgreementDto
         {
@@ -56,8 +59,11 @@ public static class RentalAgreementConversions
         };
     }
 
-    public static RentalAgreementDto ToDto(this UpdateRentalAgreement updateRentalAgreement, EmployeeDto employeeDto,
-        ClientDto clientDto, IEnumerable<RentalEquipmentDto> rentalEquipmentDtos, IEnumerable<PaymentDto> paymentDtos)
+    public static RentalAgreementDto ToDto(this UpdateRentalAgreement updateRentalAgreement,
+        EmployeeDto employeeDto,
+        ClientDto clientDto,
+        IEnumerable<RentalEquipmentDto> rentalEquipmentDtos,
+        IEnumerable<PaymentDto> paymentDtos)
     {
         return new RentalAgreementDto
         {
@@ -82,10 +88,11 @@ public static class RentalAgreementConversions
             ClientId = updateRentalAgreement.ClientId,
             Comment = updateRentalAgreement.Comment,
             Deposit = updateRentalAgreement.Deposit,
-            TransportFrom = updateRentalAgreement.TransportFrom,
-            TransportTo = updateRentalAgreement.TransportTo,
+            TransportFromPrice = updateRentalAgreement.TransportFrom,
+            TransportToPrice = updateRentalAgreement.TransportTo,
             DateAdded = updateRentalAgreement.DateAdded
         };
+
         return result;
     }
 }

@@ -35,8 +35,7 @@ public class EmployeeRepositoryTests
             Surname = "Test Surname"
         };
         var result = await _employeeRepository.AddAsync(newEmployee);
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
         });
@@ -122,8 +121,7 @@ public class EmployeeRepositoryTests
         _appDbContext.Add(newEmployee2);
         await _appDbContext.SaveChangesAsync();
         var result = (await _employeeRepository.BrowseAllAsync("Test Name 1")).ToList();
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
         });

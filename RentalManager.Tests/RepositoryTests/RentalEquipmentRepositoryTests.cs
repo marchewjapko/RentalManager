@@ -118,8 +118,7 @@ public class RentalEquipmentRepositoryTests
         _appDbContext.Add(newRentalEquipment2);
         await _appDbContext.SaveChangesAsync();
         var result = (await _rentalEquipmentRepository.BrowseAllAsync("Test Name 1")).ToList();
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
         });

@@ -15,5 +15,6 @@ public class CreatePayment
     public int Amount { get; set; }
 
     public DateTime From { get; set; }
+
     public DateTime To { get; set; }
 }

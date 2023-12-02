@@ -9,6 +9,8 @@ public interface IPaymentRepository
     Task DeleteAsync(int id);
     Task<Payment> UpdateAsync(Payment rentalPayment, int id);
 
-    Task<IEnumerable<Payment>> BrowseAllAsync(int? rentalAgreementId = null, string? method = null,
-        DateTime? from = null, DateTime? to = null);
+    Task<IEnumerable<Payment>> BrowseAllAsync(int? rentalAgreementId = null,
+        string? method = null,
+        DateTime? from = null,
+        DateTime? to = null);
 }

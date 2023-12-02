@@ -18,8 +18,6 @@ services:
           - "8081:80"
           
     rental-manager-db:
-        environment:
-          - TZ=Europe/Warsaw
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         user: root
         ports:
@@ -29,6 +27,7 @@ services:
         deploy:
           mode: global
         environment:
+            TZ: "Europe/Warsaw"
             MSSQL_SA_PASSWORD: "2620dvxje!ABC"
             ACCEPT_EULA: "Y"
             MSSQL_AGENT_ENABLED: True

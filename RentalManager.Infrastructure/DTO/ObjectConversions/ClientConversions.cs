@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using RentalManager.Core.Domain;
-using RentalManager.Infrastructure.Commands;
 using RentalManager.Infrastructure.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
@@ -29,13 +28,14 @@ public static class ClientConversions
             Id = client.Id,
             Name = client.Name,
             Surname = client.Surname,
-            PhoneNumber = Regex.Replace(Regex.Replace(client.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
+            PhoneNumber = client.PhoneNumber,
             Email = client.Email,
             IdCard = client.IdCard?.ToUpper(),
             City = client.City,
             Street = client.Street,
-            DateAdded = client.DateAdded
+            DateAdded = client.DateAdded,
         };
+
         return clientDto;
     }
 
@@ -45,13 +45,13 @@ public static class ClientConversions
         {
             Name = createClient.Name,
             Surname = createClient.Surname,
-            PhoneNumber =
-                Regex.Replace(Regex.Replace(createClient.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
+            PhoneNumber = createClient.PhoneNumber,
             Email = createClient.Email,
             IdCard = createClient.IdCard?.ToUpper(),
             City = createClient.City,
             Street = createClient.Street
         };
+
         return clientDto;
     }
 
@@ -61,13 +61,13 @@ public static class ClientConversions
         {
             Name = updateClient.Name,
             Surname = updateClient.Surname,
-            PhoneNumber =
-                Regex.Replace(Regex.Replace(updateClient.PhoneNumber, @"\s+", ""), ".{3}", "$0 ").TrimEnd(' '),
+            PhoneNumber = updateClient.PhoneNumber,
             Email = updateClient.Email,
             IdCard = updateClient.IdCard?.ToUpper(),
             City = updateClient.City,
             Street = updateClient.Street
         };
+
         return clientDto;
     }
 
@@ -77,12 +77,13 @@ public static class ClientConversions
         {
             Name = updateClient.Name,
             Surname = updateClient.Surname,
-            PhoneNumber = Regex.Replace(updateClient.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
+            PhoneNumber = updateClient.PhoneNumber,
             Email = updateClient.Email,
             IdCard = updateClient.IdCard?.ToUpper(),
             City = updateClient.City,
             Street = updateClient.Street
         };
+
         return result;
     }
 
@@ -93,13 +94,14 @@ public static class ClientConversions
             Id = clientDto.Id,
             Name = clientDto.Name,
             Surname = clientDto.Surname,
-            PhoneNumber = Regex.Replace(clientDto.PhoneNumber, ".{3}", "$0 ").TrimEnd(' '),
+            PhoneNumber = clientDto.PhoneNumber,
             Email = clientDto.Email,
             IdCard = clientDto.IdCard?.ToUpper(),
             City = clientDto.City,
             Street = clientDto.Street,
             DateAdded = clientDto.DateAdded
         };
+
         return result;
     }
 }

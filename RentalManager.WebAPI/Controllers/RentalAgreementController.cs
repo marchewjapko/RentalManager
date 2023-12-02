@@ -21,6 +21,7 @@ public class RentalAgreementController : Controller
     public async Task<IActionResult> AddRentalAgreement([FromBody] CreateRentalAgreement createRentalAgreement)
     {
         var result = await _rentalAgreementService.AddAsync(createRentalAgreement);
+
         return Json(result);
     }
 
@@ -51,13 +52,15 @@ public class RentalAgreementController : Controller
             onlyUnpaid,
             from,
             to);
-        return Json(result);
+        
+            return Json(result);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteRentalAgreement(int id)
     {
         await _rentalAgreementService.DeleteAsync(id);
+
         return NoContent();
     }
 
@@ -66,6 +69,7 @@ public class RentalAgreementController : Controller
     public async Task<IActionResult> GetRentalAgreement(int id)
     {
         var rentalAgreementDto = await _rentalAgreementService.GetAsync(id);
+
         return Json(rentalAgreementDto);
     }
 
@@ -75,6 +79,7 @@ public class RentalAgreementController : Controller
         int id)
     {
         var result = await _rentalAgreementService.UpdateAsync(updateRentalAgreement, id);
+
         return Json(result);
     }
 }

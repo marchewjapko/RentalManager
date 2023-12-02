@@ -10,9 +10,13 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Client> Clients { get; set; } = null!;
+
     public DbSet<Employee> Employees { get; set; } = null!;
+
     public DbSet<Payment> Payments { get; set; } = null!;
+
     public DbSet<RentalAgreement> RentalAgreements { get; set; } = null!;
+
     public DbSet<RentalEquipment> RentalEquipment { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

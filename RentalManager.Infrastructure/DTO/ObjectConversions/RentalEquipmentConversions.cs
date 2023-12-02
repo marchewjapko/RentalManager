@@ -51,6 +51,7 @@ public static class RentalEquipmentConversions
             Name = updateRentalEquipment.Name,
             Price = updateRentalEquipment.Price
         };
+
         return result;
     }
 
@@ -63,6 +64,7 @@ public static class RentalEquipmentConversions
             Price = rentalEquipmentDto.Price,
             DateAdded = rentalEquipmentDto.DateAdded
         };
+
         return result;
     }
 }

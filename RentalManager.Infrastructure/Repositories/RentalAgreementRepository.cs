@@ -18,17 +18,13 @@ public class RentalAgreementRepository : IRentalAgreementRepository
         try
         {
             var client = _appDbContext.Clients.FirstOrDefault(x => x.Id == rentalAgreement.ClientId);
-            if (client == null)
-            {
-                throw new Exception("Unable to find client");
-            }
+
+            if (client == null) throw new Exception("Unable to find client");
 
             rentalAgreement.Client = client;
             var employee = _appDbContext.Employees.FirstOrDefault(x => x.Id == rentalAgreement.EmployeeId);
-            if (employee == null)
-            {
-                throw new Exception("Unable to find client");
-            }
+
+            if (employee == null) throw new Exception("Unable to find client");
 
             rentalAgreement.Employee = employee;
             _appDbContext.RentalAgreements.Add(rentalAgreement);
@@ -45,10 +41,8 @@ public class RentalAgreementRepository : IRentalAgreementRepository
     public async Task DeleteAsync(int id)
     {
         var result = await _appDbContext.RentalAgreements.FirstOrDefaultAsync(x => x.Id == id);
-        if (result == null)
-        {
-            throw new Exception("Unable to find rental agreement");
-        }
+
+        if (result == null) throw new Exception("Unable to find rental agreement");
 
         _appDbContext.RentalAgreements.Remove(result);
         await _appDbContext.SaveChangesAsync();
@@ -58,10 +52,8 @@ public class RentalAgreementRepository : IRentalAgreementRepository
     {
         var result = await Task.FromResult(_appDbContext.RentalAgreements.Include(x => x.RentalEquipment)
             .Include(x => x.Client).Include(x => x.Employee).Include(x => x.Payments).FirstOrDefault(x => x.Id == id));
-        if (result == null)
-        {
-            throw new Exception("Unable to find rental agreement");
-        }
+
+        if (result == null) throw new Exception("Unable to find rental agreement");
 
         return result;
     }
@@ -81,62 +73,32 @@ public class RentalAgreementRepository : IRentalAgreementRepository
     {
         var result = _appDbContext.RentalAgreements.Include(x => x.RentalEquipment).Include(x => x.Client)
             .Include(x => x.Employee).Include(x => x.Payments).AsSingleQuery().AsQueryable();
-        if (clientId != null)
-        {
-            result = result.Where(x => x.ClientId == clientId);
-        }
+        if (clientId != null) result = result.Where(x => x.ClientId == clientId);
 
-        if (surname != null)
-        {
-            result = result.Where(x => x.Client.Surname.Contains(surname));
-        }
+        if (surname != null) result = result.Where(x => x.Client.Surname.Contains(surname));
 
-        if (phoneNumber != null)
-        {
-            result = result.Where(x => x.Client.PhoneNumber.Contains(phoneNumber));
-        }
+        if (phoneNumber != null) result = result.Where(x => x.Client.PhoneNumber.Contains(phoneNumber));
 
-        if (city != null)
-        {
-            result = result.Where(x => x.Client.City.Contains(city));
-        }
+        if (city != null) result = result.Where(x => x.Client.City.Contains(city));
 
-        if (street != null)
-        {
-            result = result.Where(x => x.Client.Street.Contains(street));
-        }
+        if (street != null) result = result.Where(x => x.Client.Street.Contains(street));
 
         if (rentalEquipmentId != null)
-        {
             result = result.Where(x => x.RentalEquipment.Any(a => a.Id == rentalEquipmentId));
-        }
 
         if (rentalEquipmentName != null)
-        {
             result = result.Where(x =>
                 x.RentalEquipment.Any(a => a.Name.ToLower().Contains(rentalEquipmentName.ToLower())));
-        }
 
-        if (employeeId != null)
-        {
-            result = result.Where(x => x.EmployeeId == employeeId);
-        }
+        if (employeeId != null) result = result.Where(x => x.EmployeeId == employeeId);
 
         if (onlyUnpaid)
-        {
             result = result.Where(x =>
-                x.Payments.OrderByDescending(payment => payment.To).First().To < DateTime.Now.Date);
-        }
+                x.Payments.OrderByDescending(payment => payment.DateTo).First().DateTo < DateTime.Now.Date);
 
-        if (from != null)
-        {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
-        }
+        if (from != null) result = result.Where(x => x.DateAdded.Date > from.Value.Date);
 
-        if (to != null)
-        {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
-        }
+        if (to != null) result = result.Where(x => x.DateAdded.Date < to.Value.Date);
 
         return await Task.FromResult(result.OrderByDescending(x => x.DateAdded).AsEnumerable());
     }
@@ -149,10 +111,8 @@ public class RentalAgreementRepository : IRentalAgreementRepository
             .Include(x => x.Employee)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id);
-        if (x == null)
-        {
-            throw new Exception("Unable to update agreement");
-        }
+
+        if (x == null) throw new Exception("Unable to update agreement");
 
         x.IsActive = rentalAgreement.IsActive;
         x.EmployeeId = rentalAgreement.EmployeeId;
@@ -162,10 +122,11 @@ public class RentalAgreementRepository : IRentalAgreementRepository
         x.Comment = rentalAgreement.Comment;
         x.Deposit = rentalAgreement.Deposit;
         x.RentalEquipment = rentalAgreement.RentalEquipment;
-        x.TransportFrom = rentalAgreement.TransportFrom;
-        x.TransportTo = rentalAgreement.TransportTo;
+        x.TransportFromPrice = rentalAgreement.TransportFromPrice;
+        x.TransportToPrice = rentalAgreement.TransportToPrice;
         x.DateAdded = rentalAgreement.DateAdded;
         await _appDbContext.SaveChangesAsync();
+
         return await Task.FromResult(x);
     }
 }

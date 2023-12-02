@@ -6,11 +6,11 @@ using RentalManager.Infrastructure.Services;
 var builder = WebApplication.CreateBuilder(args);
 const string allowSpecificOrigins = "allowSpecificOrigins";
 
-builder.Services.AddCors(options =>
-{
+builder.Services.AddCors(options => {
     options.AddPolicy(allowSpecificOrigins,
         policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
 });
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +31,7 @@ builder.Services.AddScoped<IRentalAgreementService, RentalAgreementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-if (builder.Environment.EnvironmentName == "Development")
+if (builder.Environment.EnvironmentName == "InMemory")
 {
     builder.Services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase("TestingDatabase"));
 }
@@ -39,7 +39,7 @@ else
 {
     builder.Services.AddDbContext<AppDbContext>(
         options => options.UseSqlServer(
-            "Server=rental-manager-db;Initial Catalog=rentalManager;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True")
+            builder.Configuration.GetConnectionString("DbConnectionString"))
     );
 }
 
@@ -48,8 +48,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseSwaggerUI(c =>
-{
+app.UseSwaggerUI(c => {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "RentalManager API V1");
     c.RoutePrefix = "";
 });
@@ -62,15 +61,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (builder.Environment.EnvironmentName != "Development")
+if (builder.Environment.EnvironmentName != "InMemory")
 {
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    if (context.Database.GetPendingMigrations().Any())
-    {
-        context.Database.Migrate();
-    }
+    if (context.Database.GetPendingMigrations().Any()) context.Database.Migrate();
 }
 
 app.Run();

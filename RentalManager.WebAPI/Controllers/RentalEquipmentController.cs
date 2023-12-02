@@ -21,15 +21,18 @@ public class RentalEquipmentController : Controller
     public async Task<IActionResult> AddRentalEquipment([FromBody] CreateRentalEquipment createRentalEquipment)
     {
         var result = await _rentalEquipmentService.AddAsync(createRentalEquipment);
+
         return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<RentalEquipmentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllRentalEquipment(string? name = null, DateTime? from = null,
+    public async Task<IActionResult> BrowseAllRentalEquipment(string? name = null,
+        DateTime? from = null,
         DateTime? to = null)
     {
         var result = await _rentalEquipmentService.BrowseAllAsync(name, from, to);
+
         return Json(result);
     }
 
@@ -37,6 +40,7 @@ public class RentalEquipmentController : Controller
     public async Task<IActionResult> DeleteRentalEquipment(int id)
     {
         await _rentalEquipmentService.DeleteAsync(id);
+
         return NoContent();
     }
 
@@ -45,6 +49,7 @@ public class RentalEquipmentController : Controller
     public async Task<IActionResult> GetRentalEquipment(int id)
     {
         var clientDto = await _rentalEquipmentService.GetAsync(id);
+
         return Json(clientDto);
     }
 
@@ -54,6 +59,7 @@ public class RentalEquipmentController : Controller
         int id)
     {
         var result = await _rentalEquipmentService.UpdateAsync(updateRentalEquipment, id);
+
         return Json(result);
     }
 }

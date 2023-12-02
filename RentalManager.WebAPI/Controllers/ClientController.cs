@@ -21,17 +21,25 @@ public class ClientController : Controller
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
         var result = await _clientService.AddAsync(createClient);
+
         return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllClients(string? name = null, string? surname = null,
-        string? phoneNumber = null, string? email = null, string? idCard = null, string? city = null,
-        string? street = null, DateTime? from = null, DateTime? to = null)
+    public async Task<IActionResult> BrowseAllClients(string? name = null,
+        string? surname = null,
+        string? phoneNumber = null,
+        string? email = null,
+        string? idCard = null,
+        string? city = null,
+        string? street = null,
+        DateTime? from = null,
+        DateTime? to = null)
     {
         var result =
             await _clientService.BrowseAllAsync(name, surname, phoneNumber, email, idCard, city, street, from, to);
+
         return Json(result);
     }
 
@@ -39,6 +47,7 @@ public class ClientController : Controller
     public async Task<IActionResult> DeleteClient(int id)
     {
         await _clientService.DeleteAsync(id);
+
         return NoContent();
     }
 
@@ -47,6 +56,7 @@ public class ClientController : Controller
     public async Task<IActionResult> GetClient(int id)
     {
         var clientDto = await _clientService.GetAsync(id);
+
         return Json(clientDto);
     }
 
@@ -55,6 +65,7 @@ public class ClientController : Controller
     public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
     {
         var result = await _clientService.UpdateAsync(updateClient, id);
+
         return Json(result);
     }
 }

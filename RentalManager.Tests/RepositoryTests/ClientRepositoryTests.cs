@@ -39,8 +39,7 @@ public class ClientRepositoryTests
             PhoneNumber = "123 456 789"
         };
         var result = await _clientRepository.AddAsync(newClient);
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
         });
@@ -150,8 +149,7 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
         var result = (await _clientRepository.BrowseAllAsync("Test Name 1")).ToList();
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
         });
@@ -182,8 +180,7 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
         var result = (await _clientRepository.BrowseAllAsync(null, "Test Surname 1")).ToList();
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
         });
@@ -214,8 +211,7 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
         var result = (await _clientRepository.BrowseAllAsync(null, null, "111 111 111")).ToList();
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
         });

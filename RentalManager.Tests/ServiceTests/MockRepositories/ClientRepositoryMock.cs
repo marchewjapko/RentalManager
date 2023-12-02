@@ -22,6 +22,7 @@ public class ClientRepositoryMock : IClientRepository
             IdCard = "ABC 123456",
             PhoneNumber = "123 456 789"
         };
+
         return Task.FromResult(newClient);
     }
 
@@ -42,12 +43,19 @@ public class ClientRepositoryMock : IClientRepository
             IdCard = "ABC 123456",
             PhoneNumber = "123 456 789"
         };
+
         return Task.FromResult(newClient);
     }
 
-    public Task<IEnumerable<Client>> BrowseAllAsync(string? name = null, string? surname = null,
-        string? phoneNumber = null, string? email = null,
-        string? idCard = null, string? city = null, string? street = null, DateTime? from = null, DateTime? to = null)
+    public Task<IEnumerable<Client>> BrowseAllAsync(string? name = null,
+        string? surname = null,
+        string? phoneNumber = null,
+        string? email = null,
+        string? idCard = null,
+        string? city = null,
+        string? street = null,
+        DateTime? from = null,
+        DateTime? to = null)
     {
         var newClient1 = new Client
         {
@@ -70,6 +78,7 @@ public class ClientRepositoryMock : IClientRepository
             PhoneNumber = "123 456 789"
         };
         IEnumerable<Client> result = new List<Client> { newClient1, newClient2 };
+
         return Task.FromResult(result);
     }
 }

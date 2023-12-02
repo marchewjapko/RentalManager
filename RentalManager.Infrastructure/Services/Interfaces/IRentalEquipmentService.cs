@@ -8,7 +8,8 @@ public interface IRentalEquipmentService
     Task<RentalEquipmentDto> AddAsync(CreateRentalEquipment createRentalEquipment);
     Task<RentalEquipmentDto> GetAsync(int id);
 
-    Task<IEnumerable<RentalEquipmentDto>> BrowseAllAsync(string? name = null, DateTime? from = null,
+    Task<IEnumerable<RentalEquipmentDto>> BrowseAllAsync(string? name = null,
+        DateTime? from = null,
         DateTime? to = null);
 
     Task DeleteAsync(int id);

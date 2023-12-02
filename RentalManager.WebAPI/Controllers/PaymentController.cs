@@ -21,15 +21,19 @@ public class PaymentController : Controller
     public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment, int rentalAgreementId)
     {
         var result = await _paymentService.AddAsync(createPayment, rentalAgreementId);
+
         return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllPayments(int? rentalAgreementId = null, string? method = null,
-        DateTime? from = null, DateTime? to = null)
+    public async Task<IActionResult> BrowseAllPayments(int? rentalAgreementId = null,
+        string? method = null,
+        DateTime? from = null,
+        DateTime? to = null)
     {
         var result = await _paymentService.BrowseAllAsync(rentalAgreementId, method, from, to);
+
         return Json(result);
     }
 
@@ -37,6 +41,7 @@ public class PaymentController : Controller
     public async Task<IActionResult> DeletePayment(int id)
     {
         await _paymentService.DeleteAsync(id);
+
         return NoContent();
     }
 
@@ -45,6 +50,7 @@ public class PaymentController : Controller
     public async Task<IActionResult> GetPayment(int id)
     {
         var result = await _paymentService.GetAsync(id);
+
         return Json(result);
     }
 
@@ -53,6 +59,7 @@ public class PaymentController : Controller
     public async Task<IActionResult> UpdatePayment([FromBody] UpdatePayment updatePayment, int id)
     {
         var result = await _paymentService.UpdateAsync(updatePayment, id);
+
         return Json(result);
     }
 }

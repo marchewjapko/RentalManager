@@ -37,5 +37,6 @@ public class CreateRentalAgreement
     public int TransportTo { get; set; }
 
     public DateTime DateAdded { get; set; }
+
     public List<CreatePayment> Payments { get; set; } = null!;
 }

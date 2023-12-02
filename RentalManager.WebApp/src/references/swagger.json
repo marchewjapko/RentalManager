@@ -1306,49 +1306,82 @@
         "additionalProperties": false
       },
       "CreateClient": {
+        "required": [
+          "city",
+          "name",
+          "phoneNumber",
+          "street",
+          "surname"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "default": "John"
           },
           "surname": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "default": "Kowalski"
           },
           "phoneNumber": {
+            "minLength": 1,
+            "pattern": "^((\\+[0-9]{1,4})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})[-. ]?([0-9]{3}))$|^(\\(?[0-9]{2}\\)?[-. ]?[0-9]{2}[-. ]?[0-9]{3}[-. ]?[0-9]{2})$",
             "type": "string",
-            "nullable": true
+            "default": "+48 123 123 123"
           },
           "email": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-Z]*\\@[a-zA-Z]{3,}\\.[a-zA-Z]{2,5}$",
             "type": "string",
+            "default": "JohnKowalski@email.com",
             "nullable": true
           },
           "idCard": {
+            "pattern": "^([a-zA-Z]){3}[ ]?[0-9]{6}$",
             "type": "string",
+            "default": "ABC 123456",
             "nullable": true
           },
           "city": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "Warsaw"
           },
           "street": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.]*$",
             "type": "string",
-            "nullable": true
+            "default": "Wiejska 4/6/8"
           }
         },
         "additionalProperties": false
       },
       "CreateEmployee": {
+        "required": [
+          "name",
+          "surname"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "John"
           },
           "surname": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "Kowalski"
           }
         },
         "additionalProperties": false
@@ -1357,12 +1390,19 @@
         "type": "object",
         "properties": {
           "method": {
+            "maxLength": 10,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
+            "default": "Cash",
             "nullable": true
           },
           "amount": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 100
           },
           "from": {
             "type": "string",
@@ -1379,40 +1419,63 @@
         "type": "object",
         "properties": {
           "employeeId": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 1
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": true
           },
           "clientId": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 1
           },
           "rentalEquipmentIds": {
+            "minItems": 1,
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             },
+            "default": [
+              1
+            ],
             "nullable": true
           },
           "comment": {
+            "maxLength": 500,
+            "minLength": 0,
             "type": "string",
+            "default": "Fun comment",
             "nullable": true
           },
           "deposit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "transportFrom": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
+            "default": 100
+          },
+          "transportFrom": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "default": 100,
             "nullable": true
           },
           "transportTo": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 100
           },
           "dateAdded": {
             "type": "string",
@@ -1429,15 +1492,25 @@
         "additionalProperties": false
       },
       "CreateRentalEquipment": {
+        "required": [
+          "name",
+          "price"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.\\-\\+]*$",
             "type": "string",
-            "nullable": true
+            "default": "Fun equipment mk III"
           },
           "price": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 100
           }
         },
         "additionalProperties": false
@@ -1571,49 +1644,82 @@
         "additionalProperties": false
       },
       "UpdateClient": {
+        "required": [
+          "city",
+          "name",
+          "phoneNumber",
+          "street",
+          "surname"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "default": "John"
           },
           "surname": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "default": "Kowalski"
           },
           "phoneNumber": {
+            "minLength": 1,
+            "pattern": "^((\\+[0-9]{1,4})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})[-. ]?([0-9]{3}))$|^(\\(?[0-9]{2}\\)?[-. ]?[0-9]{2}[-. ]?[0-9]{3}[-. ]?[0-9]{2})$",
             "type": "string",
-            "nullable": true
+            "default": "+48 123 123 123"
           },
           "email": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-Z]*\\@[a-zA-Z]{3,}\\.[a-zA-Z]{2,5}$",
             "type": "string",
+            "default": "JohnKowalski@email.com",
             "nullable": true
           },
           "idCard": {
+            "pattern": "^([a-zA-Z]){3}[ ]?[0-9]{6}$",
             "type": "string",
+            "default": "ABC 123456",
             "nullable": true
           },
           "city": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "Warsaw"
           },
           "street": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.]*$",
             "type": "string",
-            "nullable": true
+            "default": "Wiejska 4/6/8"
           }
         },
         "additionalProperties": false
       },
       "UpdateEmployee": {
+        "required": [
+          "name",
+          "surname"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "John"
           },
           "surname": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
-            "nullable": true
+            "default": "Kowalski"
           }
         },
         "additionalProperties": false
@@ -1622,12 +1728,19 @@
         "type": "object",
         "properties": {
           "method": {
+            "maxLength": 10,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
+            "default": "Cash",
             "nullable": true
           },
           "amount": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 100
           },
           "from": {
             "type": "string",
@@ -1644,40 +1757,63 @@
         "type": "object",
         "properties": {
           "employeeId": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 1
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": true
           },
           "clientId": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 1
           },
           "rentalEquipmentIds": {
+            "minItems": 1,
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             },
+            "default": [
+              1
+            ],
             "nullable": true
           },
           "comment": {
+            "maxLength": 500,
+            "minLength": 0,
             "type": "string",
+            "default": "Fun comment",
             "nullable": true
           },
           "deposit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "transportFrom": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
+            "default": 100
+          },
+          "transportFrom": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "default": 100,
             "nullable": true
           },
           "transportTo": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 10
           },
           "dateAdded": {
             "type": "string",
@@ -1687,15 +1823,25 @@
         "additionalProperties": false
       },
       "UpdateRentalEquipment": {
+        "required": [
+          "name",
+          "price"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.\\-\\+]*$",
             "type": "string",
-            "nullable": true
+            "default": "Fun equipment mk III"
           },
           "price": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 100
           }
         },
         "additionalProperties": false

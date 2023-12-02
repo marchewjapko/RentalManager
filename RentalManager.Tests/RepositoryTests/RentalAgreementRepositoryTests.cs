@@ -68,18 +68,17 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         var result = await _rentalAgreementRepository.AddAsync(newAgreement);
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.Employee, Is.Not.Null);
             Assert.That(result.Client, Is.Not.Null);
             Assert.That(result.RentalEquipment, Has.Count.EqualTo(1));
             Assert.That(result.Deposit, Is.EqualTo(100));
-            Assert.That(result.TransportTo, Is.EqualTo(200));
+            Assert.That(result.TransportToPrice, Is.EqualTo(200));
         });
     }
 
@@ -93,20 +92,19 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         _appDbContext.RentalAgreements.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
         var result = await _rentalAgreementRepository.GetAsync(1);
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.Employee, Is.Not.Null);
             Assert.That(result.Client, Is.Not.Null);
             Assert.That(result.RentalEquipment, Has.Count.EqualTo(1));
             Assert.That(result.Deposit, Is.EqualTo(100));
-            Assert.That(result.TransportTo, Is.EqualTo(200));
+            Assert.That(result.TransportToPrice, Is.EqualTo(200));
         });
     }
 
@@ -127,7 +125,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         _appDbContext.RentalAgreements.Add(newAgreement);
@@ -154,7 +152,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         var newAgreement2 = new RentalAgreement
@@ -163,7 +161,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 200,
-            TransportTo = 300,
+            TransportToPrice = 300,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         _appDbContext.RentalAgreements.Add(newAgreement);
@@ -184,7 +182,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         _appDbContext.RentalAgreements.Add(newAgreement);
@@ -217,7 +215,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = clientEntry.Entity.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipmentEntry.Entity }
         };
         _appDbContext.RentalAgreements.Add(newAgreement);
@@ -241,7 +239,7 @@ public class RentalAgreementRepositoryTests
             IsActive = true,
             ClientId = client.Id,
             Deposit = 100,
-            TransportTo = 200,
+            TransportToPrice = 200,
             RentalEquipment = new List<RentalEquipment> { rentalEquipment }
         };
         var id = _appDbContext.RentalAgreements.Add(newAgreement).Entity.Id;
@@ -250,8 +248,7 @@ public class RentalAgreementRepositoryTests
         newAgreement.IsActive = false;
         newAgreement.Deposit = 250;
         var result = await _rentalAgreementRepository.UpdateAsync(newAgreement, id);
-        Assert.Multiple(() =>
-        {
+        Assert.Multiple(() => {
             Assert.That(result.IsActive, Is.False);
             Assert.That(result.RentalEquipment, Has.Count.EqualTo(1));
             Assert.That(result.Deposit, Is.EqualTo(250));
@@ -263,10 +260,8 @@ public class RentalAgreementRepositoryTests
         var client = _appDbContext.Clients.First();
         var employee = _appDbContext.Employees.First();
         var rentalEquipment = _appDbContext.RentalEquipment.First();
-        if (client == null || employee == null || rentalEquipment == null)
-        {
-            throw new Exception("No mocks in database");
-        }
+
+        if (client == null || employee == null || rentalEquipment == null) throw new Exception("No mocks in database");
 
         return Tuple.Create(client, employee, rentalEquipment);
     }

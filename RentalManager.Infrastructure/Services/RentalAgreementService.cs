@@ -14,8 +14,10 @@ public class RentalAgreementService : IRentalAgreementService
     private readonly IRentalEquipmentRepository _rentalEquipmentRepository;
 
     public RentalAgreementService(IRentalAgreementRepository rentalAgreementRepository,
-        IRentalEquipmentRepository rentalEquipmentRepository, IClientRepository clientRepository,
-        IEmployeeRepository employeeRepository, IPaymentRepository paymentRepository)
+        IRentalEquipmentRepository rentalEquipmentRepository,
+        IClientRepository clientRepository,
+        IEmployeeRepository employeeRepository,
+        IPaymentRepository paymentRepository)
     {
         _rentalAgreementRepository = rentalAgreementRepository;
         _rentalEquipmentRepository = rentalEquipmentRepository;
@@ -31,6 +33,7 @@ public class RentalAgreementService : IRentalAgreementService
         agreement.RentalEquipment = rentalEquipment.ToList();
         var result = await _rentalAgreementRepository.AddAsync(agreement);
         result.Payments = (await _paymentRepository.BrowseAllAsync(result.Id)).ToList();
+
         return result.ToDto();
     }
 
@@ -59,6 +62,7 @@ public class RentalAgreementService : IRentalAgreementService
             onlyUnpaid,
             from,
             to);
+
         return await Task.FromResult(result.Select(x => x.ToDto()));
     }
 
@@ -70,6 +74,7 @@ public class RentalAgreementService : IRentalAgreementService
     public async Task<RentalAgreementDto> GetAsync(int id)
     {
         var result = await _rentalAgreementRepository.GetAsync(id);
+
         return await Task.FromResult(result.ToDto());
     }
 
@@ -84,6 +89,7 @@ public class RentalAgreementService : IRentalAgreementService
         agreement.Employee = employee;
         await _rentalAgreementRepository.UpdateAsync(agreement, id);
         agreement.Payments = (await _paymentRepository.BrowseAllAsync(id)).ToList();
+
         return await Task.FromResult(agreement.ToDto());
     }
 }
