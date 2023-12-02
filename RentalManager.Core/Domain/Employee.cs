@@ -8,7 +8,9 @@ public class Employee
 
     public string Surname { get; set; } = null!;
 
-    public DateTime DateAdded { get; set; }
+    public Gender Gender { get; set; }
 
-    public virtual ICollection<RentalAgreement> RentalAgreements { get; set; }
+    public byte[]? Image { get; set; }
+
+    public DateTime DateAdded { get; set; }
 }

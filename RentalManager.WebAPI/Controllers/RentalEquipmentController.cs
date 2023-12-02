@@ -18,7 +18,7 @@ public class RentalEquipmentController : Controller
 
     [ProducesResponseType(typeof(RentalEquipmentDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddRentalEquipment([FromBody] CreateRentalEquipment createRentalEquipment)
+    public async Task<IActionResult> AddRentalEquipment([FromForm] CreateRentalEquipment createRentalEquipment)
     {
         var result = await _rentalEquipmentService.AddAsync(createRentalEquipment);
 
@@ -55,11 +55,26 @@ public class RentalEquipmentController : Controller
 
     [ProducesResponseType(typeof(RentalEquipmentDto), 200)]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateRentalEquipment([FromBody] UpdateRentalEquipment updateRentalEquipment,
+    public async Task<IActionResult> UpdateRentalEquipment([FromForm] UpdateRentalEquipment updateRentalEquipment,
         int id)
     {
         var result = await _rentalEquipmentService.UpdateAsync(updateRentalEquipment, id);
 
         return Json(result);
+    }
+
+    [ProducesResponseType(typeof(File), 200)]
+    [Route("/RentalEquipment/Image/{id}")]
+    [HttpGet]
+    public async Task<IActionResult?> GetRentalEquipmentImage(int id)
+    {
+        var rentalEquipmentDto = await _rentalEquipmentService.GetAsync(id);
+
+        if (rentalEquipmentDto.Image is null)
+        {
+            return File("DefaultEquipmentImage.png", "image/png");
+        }
+
+        return File(rentalEquipmentDto.Image, "image/jpeg");
     }
 }

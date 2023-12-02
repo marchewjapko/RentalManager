@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Repositories;
@@ -11,8 +12,9 @@ builder.Services.AddCors(options => {
         policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
 });
 
-
 builder.Services.AddControllers();
+//builder.Services.AddControllers()
+    //.AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -60,6 +62,8 @@ app.UseCors(allowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
 
 if (builder.Environment.EnvironmentName != "InMemory")
 {

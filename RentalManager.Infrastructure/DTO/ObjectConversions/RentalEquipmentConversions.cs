@@ -1,5 +1,6 @@
 ﻿using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands.RentalEquipmentCommands;
+using RentalManager.Infrastructure.Extensions;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 
@@ -11,7 +12,8 @@ public static class RentalEquipmentConversions
         {
             Name = createRentalEquipment.Name,
             Price = createRentalEquipment.Price,
-            DateAdded = DateTime.Now
+            DateAdded = DateTime.Now,
+            Image = createRentalEquipment.Image.ToByteArray()
         };
     }
 
@@ -22,7 +24,8 @@ public static class RentalEquipmentConversions
             Id = rentalEquipment.Id,
             Name = rentalEquipment.Name,
             Price = rentalEquipment.Price,
-            DateAdded = rentalEquipment.DateAdded
+            DateAdded = rentalEquipment.DateAdded,
+            Image = rentalEquipment.Image
         };
     }
 
@@ -31,7 +34,8 @@ public static class RentalEquipmentConversions
         return new RentalEquipmentDto
         {
             Name = createRentalEquipment.Name,
-            Price = createRentalEquipment.Price
+            Price = createRentalEquipment.Price,
+            Image = createRentalEquipment.Image.ToByteArray()
         };
     }
 
@@ -40,7 +44,8 @@ public static class RentalEquipmentConversions
         return new RentalEquipmentDto
         {
             Name = updateRentalEquipment.Name,
-            Price = updateRentalEquipment.Price
+            Price = updateRentalEquipment.Price,
+            Image = updateRentalEquipment.Image.ToByteArray()
         };
     }
 
@@ -49,7 +54,8 @@ public static class RentalEquipmentConversions
         var result = new RentalEquipment
         {
             Name = updateRentalEquipment.Name,
-            Price = updateRentalEquipment.Price
+            Price = updateRentalEquipment.Price,
+            Image = updateRentalEquipment.Image.ToByteArray()
         };
 
         return result;
@@ -62,7 +68,8 @@ public static class RentalEquipmentConversions
             Id = rentalEquipmentDto.Id,
             Name = rentalEquipmentDto.Name,
             Price = rentalEquipmentDto.Price,
-            DateAdded = rentalEquipmentDto.DateAdded
+            DateAdded = rentalEquipmentDto.DateAdded,
+            Image = rentalEquipmentDto.Image
         };
 
         return result;

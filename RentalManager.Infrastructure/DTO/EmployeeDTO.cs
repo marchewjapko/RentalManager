@@ -8,5 +8,9 @@ public class EmployeeDto
 
     public string Surname { get; init; } = null!;
 
+    public GenderDto Gender { get; set; }
+
+    public byte[]? Image { get; set; }
+
     public DateTime DateAdded { get; init; }
 }

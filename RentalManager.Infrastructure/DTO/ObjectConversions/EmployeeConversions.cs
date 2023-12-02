@@ -1,5 +1,6 @@
 ﻿using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
+using RentalManager.Infrastructure.Extensions;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 
@@ -11,7 +12,9 @@ public static class EmployeeConversions
         {
             Name = createEmployee.Name,
             Surname = createEmployee.Surname,
-            DateAdded = DateTime.Now
+            DateAdded = DateTime.Now,
+            Gender = (Gender)createEmployee.Gender,
+            Image = createEmployee.Image.ToByteArray()
         };
     }
 
@@ -22,7 +25,9 @@ public static class EmployeeConversions
             Id = employee.Id,
             Name = employee.Name,
             Surname = employee.Surname,
-            DateAdded = employee.DateAdded
+            DateAdded = employee.DateAdded,
+            Gender = (GenderDto)employee.Gender,
+            Image = employee.Image
         };
     }
 
@@ -31,7 +36,9 @@ public static class EmployeeConversions
         return new EmployeeDto
         {
             Name = createEmployee.Name,
-            Surname = createEmployee.Surname
+            Surname = createEmployee.Surname,
+            Gender = createEmployee.Gender,
+            Image = createEmployee.Image.ToByteArray()
         };
     }
 
@@ -40,7 +47,9 @@ public static class EmployeeConversions
         return new EmployeeDto
         {
             Name = updateEmployee.Name,
-            Surname = updateEmployee.Surname
+            Surname = updateEmployee.Surname,
+            Gender = updateEmployee.Gender,
+            Image = updateEmployee.Image.ToByteArray()
         };
     }
 
@@ -49,7 +58,9 @@ public static class EmployeeConversions
         var result = new Employee
         {
             Name = updateEmployee.Name,
-            Surname = updateEmployee.Surname
+            Surname = updateEmployee.Surname,
+            Gender = (Gender)updateEmployee.Gender,
+            Image = updateEmployee.Image.ToByteArray()
         };
 
         return result;
@@ -62,7 +73,9 @@ public static class EmployeeConversions
             Id = employeeDto.Id,
             Name = employeeDto.Name,
             Surname = employeeDto.Surname,
-            DateAdded = employeeDto.DateAdded
+            Gender = (Gender)employeeDto.Gender,
+            Image = employeeDto.Image,
+            DateAdded = employeeDto.DateAdded,
         };
 
         return result;

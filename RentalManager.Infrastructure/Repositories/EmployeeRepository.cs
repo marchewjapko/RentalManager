@@ -69,6 +69,8 @@ public class EmployeeRepository : IEmployeeRepository
 
         x.Name = employee.Name;
         x.Surname = employee.Surname;
+        x.Image = employee.Image;
+        x.Gender = employee.Gender;
         await _appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(x);

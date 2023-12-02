@@ -19,6 +19,4 @@ public class Client
     public string Street { get; set; } = null!;
 
     public DateTime DateAdded { get; set; }
-
-    public virtual ICollection<RentalAgreement> RentalAgreements { get; set; }
 }

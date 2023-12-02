@@ -35,12 +35,7 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client> GetAsync(int id)
     {
-        var result = await Task.FromResult(_appDbContext.Clients.Include(x => x.RentalAgreements)
-            .ThenInclude(x => x.Employee)
-            .Include(x => x.RentalAgreements)
-            .ThenInclude(x => x.RentalEquipment)
-            .Include(x => x.RentalAgreements)
-            .ThenInclude(x => x.Payments)
+        var result = await Task.FromResult(_appDbContext.Clients
             .FirstOrDefault(x => x.Id == id));
 
         if (result == null) throw new Exception("Unable to find client");

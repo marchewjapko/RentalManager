@@ -281,19 +281,45 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateEmployee"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEmployee"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEmployee"
+                "required": [
+                  "Gender",
+                  "Name",
+                  "Surname"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "default": "John"
+                  },
+                  "Surname": {
+                    "type": "string",
+                    "default": "Kowalski"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Gender": {
+                    "$ref": "#/components/schemas/GenderDto"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Surname": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                },
+                "Gender": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -460,19 +486,45 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateEmployee"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateEmployee"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateEmployee"
+                "required": [
+                  "Gender",
+                  "Name",
+                  "Surname"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "default": "John"
+                  },
+                  "Surname": {
+                    "type": "string",
+                    "default": "Kowalski"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Gender": {
+                    "$ref": "#/components/schemas/GenderDto"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Surname": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                },
+                "Gender": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -494,6 +546,46 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EmployeeDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Employee/Image/{id}": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
                 }
               }
             }
@@ -1040,19 +1132,39 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRentalEquipment"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRentalEquipment"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRentalEquipment"
+                "required": [
+                  "Name",
+                  "Price"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "default": "Fun equipment mk III"
+                  },
+                  "Price": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 100
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1219,19 +1331,39 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRentalEquipment"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRentalEquipment"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRentalEquipment"
+                "required": [
+                  "Name",
+                  "Price"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "default": "Fun equipment mk III"
+                  },
+                  "Price": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 100
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1253,6 +1385,46 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RentalEquipmentDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RentalEquipment/Image/{id}": {
+      "get": {
+        "tags": [
+          "RentalEquipment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
                 }
               }
             }
@@ -1327,61 +1499,28 @@
           },
           "phoneNumber": {
             "minLength": 1,
-            "pattern": "^((\\+[0-9]{1,4})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})[-. ]?([0-9]{3}))$|^(\\(?[0-9]{2}\\)?[-. ]?[0-9]{2}[-. ]?[0-9]{3}[-. ]?[0-9]{2})$",
             "type": "string",
             "default": "+48 123 123 123"
           },
           "email": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-Z]*\\@[a-zA-Z]{3,}\\.[a-zA-Z]{2,5}$",
             "type": "string",
             "default": "JohnKowalski@email.com",
             "nullable": true
           },
           "idCard": {
-            "pattern": "^([a-zA-Z]){3}[ ]?[0-9]{6}$",
             "type": "string",
             "default": "ABC 123456",
             "nullable": true
           },
           "city": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
+            "minLength": 1,
             "type": "string",
             "default": "Warsaw"
           },
           "street": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.]*$",
+            "minLength": 1,
             "type": "string",
             "default": "Wiejska 4/6/8"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateEmployee": {
-        "required": [
-          "name",
-          "surname"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
-            "type": "string",
-            "default": "John"
-          },
-          "surname": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
-            "type": "string",
-            "default": "Kowalski"
           }
         },
         "additionalProperties": false
@@ -1390,16 +1529,11 @@
         "type": "object",
         "properties": {
           "method": {
-            "maxLength": 10,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
             "default": "Cash",
             "nullable": true
           },
           "amount": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100
@@ -1419,8 +1553,6 @@
         "type": "object",
         "properties": {
           "employeeId": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 1
@@ -1430,14 +1562,11 @@
             "default": true
           },
           "clientId": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 1
           },
           "rentalEquipmentIds": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "type": "integer",
@@ -1449,30 +1578,22 @@
             "nullable": true
           },
           "comment": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "default": "Fun comment",
             "nullable": true
           },
           "deposit": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100
           },
           "transportFrom": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100,
             "nullable": true
           },
           "transportTo": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100
@@ -1487,30 +1608,6 @@
               "$ref": "#/components/schemas/CreatePayment"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateRentalEquipment": {
-        "required": [
-          "name",
-          "price"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.\\-\\+]*$",
-            "type": "string",
-            "default": "Fun equipment mk III"
-          },
-          "price": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "default": 100
           }
         },
         "additionalProperties": false
@@ -1530,12 +1627,32 @@
             "type": "string",
             "nullable": true
           },
+          "gender": {
+            "$ref": "#/components/schemas/GenderDto"
+          },
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
           "dateAdded": {
             "type": "string",
             "format": "date-time"
           }
         },
         "additionalProperties": false
+      },
+      "File": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "GenderDto": {
+        "enum": [
+          "Man",
+          "Woman",
+          "OtherPreferNotSay"
+        ],
+        "type": "string"
       },
       "PaymentDto": {
         "type": "object",
@@ -1636,6 +1753,11 @@
             "type": "integer",
             "format": "int32"
           },
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
           "dateAdded": {
             "type": "string",
             "format": "date-time"
@@ -1665,61 +1787,28 @@
           },
           "phoneNumber": {
             "minLength": 1,
-            "pattern": "^((\\+[0-9]{1,4})?[-. ]?([0-9]{3})[-. ]?([0-9]{3})[-. ]?([0-9]{3}))$|^(\\(?[0-9]{2}\\)?[-. ]?[0-9]{2}[-. ]?[0-9]{3}[-. ]?[0-9]{2})$",
             "type": "string",
             "default": "+48 123 123 123"
           },
           "email": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-Z]*\\@[a-zA-Z]{3,}\\.[a-zA-Z]{2,5}$",
             "type": "string",
             "default": "JohnKowalski@email.com",
             "nullable": true
           },
           "idCard": {
-            "pattern": "^([a-zA-Z]){3}[ ]?[0-9]{6}$",
             "type": "string",
             "default": "ABC 123456",
             "nullable": true
           },
           "city": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
+            "minLength": 1,
             "type": "string",
             "default": "Warsaw"
           },
           "street": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.]*$",
+            "minLength": 1,
             "type": "string",
             "default": "Wiejska 4/6/8"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateEmployee": {
-        "required": [
-          "name",
-          "surname"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
-            "type": "string",
-            "default": "John"
-          },
-          "surname": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
-            "type": "string",
-            "default": "Kowalski"
           }
         },
         "additionalProperties": false
@@ -1728,16 +1817,11 @@
         "type": "object",
         "properties": {
           "method": {
-            "maxLength": 10,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$",
             "type": "string",
             "default": "Cash",
             "nullable": true
           },
           "amount": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100
@@ -1757,8 +1841,6 @@
         "type": "object",
         "properties": {
           "employeeId": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 1
@@ -1768,14 +1850,11 @@
             "default": true
           },
           "clientId": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 1
           },
           "rentalEquipmentIds": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "type": "integer",
@@ -1787,30 +1866,22 @@
             "nullable": true
           },
           "comment": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "default": "Fun comment",
             "nullable": true
           },
           "deposit": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100
           },
           "transportFrom": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 100,
             "nullable": true
           },
           "transportTo": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "default": 10
@@ -1818,30 +1889,6 @@
           "dateAdded": {
             "type": "string",
             "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateRentalEquipment": {
-        "required": [
-          "name",
-          "price"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\\/.\\-\\+]*$",
-            "type": "string",
-            "default": "Fun equipment mk III"
-          },
-          "price": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "default": 100
           }
         },
         "additionalProperties": false

@@ -21,7 +21,7 @@ public class ClientController : Controller
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
         var result = await _clientService.AddAsync(createClient);
-
+        
         return Json(result);
     }
 

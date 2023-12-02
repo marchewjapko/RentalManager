@@ -7,6 +7,8 @@ public class RentalEquipmentDto
     public string Name { get; init; } = null!;
 
     public int Price { get; init; }
+    
+    public byte[]? Image { get; set; }
 
     public DateTime DateAdded { get; init; }
 }

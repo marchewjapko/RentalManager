@@ -77,6 +77,7 @@ public class RentalEquipmentRepository : IRentalEquipmentRepository
 
         z.Name = rentalEquipment.Name;
         z.Price = rentalEquipment.Price;
+        z.Image = rentalEquipment.Image;
         await _appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(z);
