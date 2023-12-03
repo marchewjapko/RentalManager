@@ -1,7 +1,7 @@
 ﻿using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.DTO;
 
-namespace RentalManager.Infrastructure.Services;
+namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IPaymentService
 {

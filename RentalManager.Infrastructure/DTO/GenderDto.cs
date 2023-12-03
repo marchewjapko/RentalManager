@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+// ReSharper disable UnusedMember.Global
+
 namespace RentalManager.Infrastructure.DTO;
 
 public enum GenderDto

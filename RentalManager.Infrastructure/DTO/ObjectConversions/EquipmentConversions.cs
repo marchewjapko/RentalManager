@@ -60,18 +60,4 @@ public static class EquipmentConversions
 
         return result;
     }
-
-    public static Equipment ToDomain(this EquipmentDto equipmentDto)
-    {
-        var result = new Equipment
-        {
-            Id = equipmentDto.Id,
-            Name = equipmentDto.Name,
-            Price = equipmentDto.Price,
-            DateAdded = equipmentDto.DateAdded,
-            Image = equipmentDto.Image
-        };
-
-        return result;
-    }
 }

@@ -1,35 +1,33 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 
-namespace RentalManager.Infrastructure.Services.Validators;
+namespace RentalManager.Infrastructure.Validators;
 
 public class AgreementValidator : AbstractValidator<AgreementBaseCommand>
 {
     public AgreementValidator()
     {
         RuleFor(x => x.EmployeeId)
-            .NotNull()
             .NotEmpty();
 
         RuleFor(x => x.IsActive)
             .NotNull();
 
         RuleFor(x => x.ClientId)
-            .NotNull()
             .NotEmpty();
 
         RuleFor(x => x.EquipmentIds)
-            .NotNull()
+            .NotEmpty()
             .Must(x => x.Count > 0)
             .WithMessage("'EquipmentIds' must contain at least one element")
             .Must(x => x.Count < 100);
 
         RuleFor(x => x.Comment)
-            .NotEmpty()
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\/.\/+\-\/%]*$");
+            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ 0-9\/.\/+\-\/%]*$")
+            .When(x => x.Comment is not null);
 
         RuleFor(x => x.Deposit)
-            .NotNull()
+            .NotEmpty()
             .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.TransportFromPrice)
@@ -37,7 +35,7 @@ public class AgreementValidator : AbstractValidator<AgreementBaseCommand>
             .When(x => x.TransportFromPrice is not null);
 
         RuleFor(x => x.TransportToPrice)
-            .NotNull()
+            .NotEmpty()
             .GreaterThanOrEqualTo(0);
 
         RuleForEach(x => x.Payments)

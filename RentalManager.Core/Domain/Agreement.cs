@@ -1,4 +1,6 @@
-﻿namespace RentalManager.Core.Domain;
+﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+
+namespace RentalManager.Core.Domain;
 
 public class Agreement
 {

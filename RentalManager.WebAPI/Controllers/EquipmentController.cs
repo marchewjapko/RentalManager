@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services;
+using RentalManager.Infrastructure.Services.Interfaces;
+
+// ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
 namespace RentalManager.WebAPI.Controllers;
 

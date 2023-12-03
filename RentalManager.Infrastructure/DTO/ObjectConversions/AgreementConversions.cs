@@ -40,46 +40,6 @@ public static class AgreementConversions
         };
     }
 
-    public static AgreementDto ToDto(this CreateAgreement createAgreement,
-        EmployeeDto employeeDto,
-        ClientDto clientDto,
-        IEnumerable<EquipmentDto> equipmentDtos,
-        IEnumerable<PaymentDto> paymentDtos)
-    {
-        return new AgreementDto
-        {
-            Employee = employeeDto,
-            IsActive = createAgreement.IsActive,
-            Client = clientDto,
-            Equipment = equipmentDtos,
-            Comment = createAgreement.Comment,
-            Deposit = createAgreement.Deposit,
-            TransportFrom = createAgreement.TransportFromPrice,
-            TransportTo = createAgreement.TransportToPrice,
-            Payments = paymentDtos
-        };
-    }
-
-    public static AgreementDto ToDto(this UpdateAgreement updateAgreement,
-        EmployeeDto employeeDto,
-        ClientDto clientDto,
-        IEnumerable<EquipmentDto> equipmentDtos,
-        IEnumerable<PaymentDto> paymentDtos)
-    {
-        return new AgreementDto
-        {
-            Employee = employeeDto,
-            IsActive = updateAgreement.IsActive,
-            Client = clientDto,
-            Equipment = equipmentDtos,
-            Comment = updateAgreement.Comment,
-            Deposit = updateAgreement.Deposit,
-            TransportFrom = updateAgreement.TransportFromPrice,
-            TransportTo = updateAgreement.TransportToPrice,
-            Payments = paymentDtos
-        };
-    }
-
     public static Agreement ToDomain(this UpdateAgreement updateAgreement)
     {
         var result = new Agreement

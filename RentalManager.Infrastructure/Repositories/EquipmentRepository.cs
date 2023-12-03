@@ -5,21 +5,14 @@ using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class EquipmentRepository : IEquipmentRepository
+public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentRepository
 {
-    private readonly AppDbContext _appDbContext;
-
-    public EquipmentRepository(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public async Task<Equipment> AddAsync(Equipment equipment)
     {
         try
         {
-            _appDbContext.Equipment.Add(equipment);
-            await _appDbContext.SaveChangesAsync();
+            appDbContext.Equipment.Add(equipment);
+            await appDbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -31,21 +24,21 @@ public class EquipmentRepository : IEquipmentRepository
 
     public async Task DeleteAsync(int id)
     {
-        var result = await _appDbContext.Equipment.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Equipment.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
             throw new EquipmentNotFoundException(id);
         }
 
-        _appDbContext.Equipment.Remove(result);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Equipment.Remove(result);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Equipment> GetAsync(int id)
     {
         var result =
-            await Task.FromResult(_appDbContext.Equipment.FirstOrDefault(x => x.Id == id));
+            await Task.FromResult(appDbContext.Equipment.FirstOrDefault(x => x.Id == id));
 
         if (result == null)
         {
@@ -59,7 +52,7 @@ public class EquipmentRepository : IEquipmentRepository
     {
         var result =
             await Task.FromResult(
-                _appDbContext.Equipment.Where(x => ids.Any(a => a == x.Id)));
+                appDbContext.Equipment.Where(x => ids.Any(a => a == x.Id)));
 
         if (result == null)
         {
@@ -73,7 +66,7 @@ public class EquipmentRepository : IEquipmentRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = _appDbContext.Equipment.AsQueryable();
+        var result = appDbContext.Equipment.AsQueryable();
         if (name != null)
         {
             result = result.Where(x => x.Name.Contains(name));
@@ -94,18 +87,18 @@ public class EquipmentRepository : IEquipmentRepository
 
     public async Task<Equipment> UpdateAsync(Equipment equipment, int id)
     {
-        var z = _appDbContext.Equipment.FirstOrDefault(x => x.Id == id);
+        var equipmentToUpdate = appDbContext.Equipment.FirstOrDefault(x => x.Id == id);
 
-        if (z == null)
+        if (equipmentToUpdate == null)
         {
             throw new EquipmentNotFoundException(id);
         }
 
-        z.Name = equipment.Name;
-        z.Price = equipment.Price;
-        z.Image = equipment.Image;
-        await _appDbContext.SaveChangesAsync();
+        equipmentToUpdate.Name = equipment.Name;
+        equipmentToUpdate.Price = equipment.Price;
+        equipmentToUpdate.Image = equipment.Image;
+        await appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(z);
+        return await Task.FromResult(equipmentToUpdate);
     }
 }

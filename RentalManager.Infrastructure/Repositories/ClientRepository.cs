@@ -5,39 +5,32 @@ using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class ClientRepository : IClientRepository
+public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 {
-    private readonly AppDbContext _appDbContext;
-
-    public ClientRepository(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public async Task<Client> AddAsync(Client client)
     {
-        _appDbContext.Clients.Add(client);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Clients.Add(client);
+        await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(client);
     }
 
     public async Task DeleteAsync(int id)
     {
-        var result = await _appDbContext.Clients.FirstOrDefaultAsync(client => client.Id == id);
+        var result = await appDbContext.Clients.FirstOrDefaultAsync(client => client.Id == id);
 
         if (result == null)
         {
             throw new ClientNotFoundException(id);
         }
 
-        _appDbContext.Clients.Remove(result);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Clients.Remove(result);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Client> GetAsync(int id)
     {
-        var result = await Task.FromResult(_appDbContext.Clients
+        var result = await Task.FromResult(appDbContext.Clients
             .FirstOrDefault(x => x.Id == id));
 
         if (result == null)
@@ -58,7 +51,7 @@ public class ClientRepository : IClientRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = _appDbContext.Clients.AsQueryable();
+        var result = appDbContext.Clients.AsQueryable();
         if (name != null)
         {
             result = result.Where(x => x.Name.Contains(name));
@@ -109,21 +102,21 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client> UpdateAsync(Client client, int id)
     {
-        var clientToUpdate = _appDbContext.Clients.FirstOrDefault(x => x.Id == id);
+        var clientToUpdate = appDbContext.Clients.FirstOrDefault(x => x.Id == id);
 
         if (clientToUpdate == null)
         {
             throw new ClientNotFoundException(id);
         }
 
-        clientToUpdate.Name = clientToUpdate.Name;
-        clientToUpdate.Surname = clientToUpdate.Surname;
-        clientToUpdate.PhoneNumber = clientToUpdate.PhoneNumber;
-        clientToUpdate.Email = clientToUpdate.Email;
-        clientToUpdate.IdCard = clientToUpdate.IdCard;
-        clientToUpdate.City = clientToUpdate.City;
-        clientToUpdate.Street = clientToUpdate.Street;
-        await _appDbContext.SaveChangesAsync();
+        clientToUpdate.Name = client.Name;
+        clientToUpdate.Surname = client.Surname;
+        clientToUpdate.PhoneNumber = client.PhoneNumber;
+        clientToUpdate.Email = client.Email;
+        clientToUpdate.IdCard = client.IdCard;
+        clientToUpdate.City = client.City;
+        clientToUpdate.Street = client.Street;
+        await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(clientToUpdate);
     }

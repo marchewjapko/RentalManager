@@ -31,6 +31,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
+        // arrange
         var newClient = new Client
         {
             Name = "Test Name",
@@ -40,7 +41,11 @@ public class ClientRepositoryTests
             IdCard = "ABC 123456",
             PhoneNumber = "123 456 789"
         };
+
+        // act
         var result = await _clientRepository.AddAsync(newClient);
+
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
@@ -50,6 +55,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldDelete()
     {
+        // arrange
         var newClient = new Client
         {
             Name = "Test Name",
@@ -61,21 +67,26 @@ public class ClientRepositoryTests
         };
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
-        Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+        
+        // act
         await _clientRepository.DeleteAsync(1);
+        
+        // assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(0));
     }
 
     [Test]
     public void ShouldNotDelete()
     {
-        var ex = Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+        Assert.ThrowsAsync<ClientNotFoundException>(async () =>
             await _clientRepository.DeleteAsync(1));
     }
 
     [Test]
     public async Task ShouldGet()
     {
+        // arrange
         var newClient = new Client
         {
             Name = "Test Name",
@@ -87,20 +98,25 @@ public class ClientRepositoryTests
         };
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = await _clientRepository.GetAsync(1);
+        
+        // assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
 
     [Test]
     public void ShouldNotGetClient()
     {
-        var ex = Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+        Assert.ThrowsAsync<ClientNotFoundException>(async () =>
             await _clientRepository.GetAsync(1));
     }
 
     [Test]
     public async Task ShouldBrowseAll()
     {
+        // arrange
         var newClient1 = new Client
         {
             Name = "Test Name 1",
@@ -122,13 +138,18 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = await _clientRepository.BrowseAllAsync();
+        
+        // assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task ShouldFilter_byName()
     {
+        // arrange
         var newClient1 = new Client
         {
             Name = "Test Name 1",
@@ -150,7 +171,11 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = (await _clientRepository.BrowseAllAsync("Test Name 1")).ToList();
+        
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
@@ -160,6 +185,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldFilter_bySurname()
     {
+        // arrange
         var newClient1 = new Client
         {
             Name = "Test Name 1",
@@ -181,7 +207,11 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = (await _clientRepository.BrowseAllAsync(null, "Test Surname 1")).ToList();
+        
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
@@ -191,6 +221,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldFilter_byPhoneNumber()
     {
+        // arrange
         var newClient1 = new Client
         {
             Name = "Test Name 1",
@@ -212,7 +243,11 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = (await _clientRepository.BrowseAllAsync(null, null, "111 111 111")).ToList();
+        
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
@@ -222,6 +257,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
+        // arrange
         var newClient = new Client
         {
             Name = "Test Name 1",
@@ -234,7 +270,11 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
         newClient.Name = "NEW TEST NAME";
+        
+        // act
         await _clientRepository.UpdateAsync(newClient, 1);
+        
+        // assert
         var updatedClient = _appDbContext.Clients.First();
         Assert.That(updatedClient.Name, Is.EqualTo("NEW TEST NAME"));
     }

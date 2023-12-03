@@ -8,6 +8,7 @@ namespace RentalManager.Infrastructure.Exceptions;
 
 public static class ProblemDetailsConfiguration
 {
+    // ReSharper disable once CognitiveComplexity
     public static void ConfigureCustomProblemDetails(IServiceCollection services,
         IWebHostEnvironment environment)
     {
@@ -27,7 +28,7 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
-                    
+
                     case AgreementNotFoundException:
                         context.ProblemDetails.Title = "Agreement not found";
                         context.ProblemDetails.Detail = exception.Message;
@@ -35,7 +36,7 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
-                    
+
                     case ClientNotFoundException:
                         context.ProblemDetails.Title = "Client not found";
                         context.ProblemDetails.Detail = exception.Message;
@@ -43,7 +44,7 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
-                    
+
                     case EquipmentNotFoundException:
                         context.ProblemDetails.Title = "Equipment not found";
                         context.ProblemDetails.Detail = exception.Message;
@@ -51,7 +52,7 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
-                    
+
                     case PaymentNotFoundException:
                         context.ProblemDetails.Title = "Payment not found";
                         context.ProblemDetails.Detail = exception.Message;

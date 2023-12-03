@@ -5,20 +5,13 @@ using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class AgreementRepository : IAgreementRepository
+public class AgreementRepository(AppDbContext appDbContext) : IAgreementRepository
 {
-    private readonly AppDbContext _appDbContext;
-
-    public AgreementRepository(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public async Task<Agreement> AddAsync(Agreement agreement)
     {
         try
         {
-            var client = _appDbContext.Clients.FirstOrDefault(x => x.Id == agreement.ClientId);
+            var client = appDbContext.Clients.FirstOrDefault(x => x.Id == agreement.ClientId);
 
             if (client == null)
             {
@@ -26,7 +19,7 @@ public class AgreementRepository : IAgreementRepository
             }
 
             var employee =
-                _appDbContext.Employees.FirstOrDefault(x => x.Id == agreement.EmployeeId);
+                appDbContext.Employees.FirstOrDefault(x => x.Id == agreement.EmployeeId);
 
             if (employee == null)
             {
@@ -35,8 +28,8 @@ public class AgreementRepository : IAgreementRepository
 
             agreement.Client = client;
             agreement.Employee = employee;
-            _appDbContext.Agreements.Add(agreement);
-            await _appDbContext.SaveChangesAsync();
+            appDbContext.Agreements.Add(agreement);
+            await appDbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -48,20 +41,20 @@ public class AgreementRepository : IAgreementRepository
 
     public async Task DeleteAsync(int id)
     {
-        var result = await _appDbContext.Agreements.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Agreements.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
             throw new AgreementNotFoundException(id);
         }
 
-        _appDbContext.Agreements.Remove(result);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Agreements.Remove(result);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Agreement> GetAsync(int id)
     {
-        var result = await Task.FromResult(_appDbContext.Agreements.Include(x => x.Equipment)
+        var result = await Task.FromResult(appDbContext.Agreements.Include(x => x.Equipment)
             .Include(x => x.Client)
             .Include(x => x.Employee)
             .Include(x => x.Payments)
@@ -88,7 +81,7 @@ public class AgreementRepository : IAgreementRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = _appDbContext.Agreements.Include(x => x.Equipment)
+        var result = appDbContext.Agreements.Include(x => x.Equipment)
             .Include(x => x.Client)
             .Include(x => x.Employee)
             .Include(x => x.Payments)
@@ -161,31 +154,31 @@ public class AgreementRepository : IAgreementRepository
 
     public async Task<Agreement> UpdateAsync(Agreement agreement, int id)
     {
-        var x = _appDbContext.Agreements
+        var agreementToUpdate = appDbContext.Agreements
             .Include(x => x.Equipment)
             .Include(x => x.Client)
             .Include(x => x.Employee)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id);
 
-        if (x == null)
+        if (agreementToUpdate == null)
         {
             throw new AgreementNotFoundException(id);
         }
 
-        x.IsActive = agreement.IsActive;
-        x.EmployeeId = agreement.EmployeeId;
-        x.Employee = agreement.Employee;
-        x.ClientId = agreement.ClientId;
-        x.Client = agreement.Client;
-        x.Comment = agreement.Comment;
-        x.Deposit = agreement.Deposit;
-        x.Equipment = agreement.Equipment;
-        x.TransportFromPrice = agreement.TransportFromPrice;
-        x.TransportToPrice = agreement.TransportToPrice;
-        x.DateAdded = agreement.DateAdded;
-        await _appDbContext.SaveChangesAsync();
+        agreementToUpdate.IsActive = agreement.IsActive;
+        agreementToUpdate.EmployeeId = agreement.EmployeeId;
+        agreementToUpdate.Employee = agreement.Employee;
+        agreementToUpdate.ClientId = agreement.ClientId;
+        agreementToUpdate.Client = agreement.Client;
+        agreementToUpdate.Comment = agreement.Comment;
+        agreementToUpdate.Deposit = agreement.Deposit;
+        agreementToUpdate.Equipment = agreement.Equipment;
+        agreementToUpdate.TransportFromPrice = agreement.TransportFromPrice;
+        agreementToUpdate.TransportToPrice = agreement.TransportToPrice;
+        agreementToUpdate.DateAdded = agreement.DateAdded;
+        await appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(x);
+        return await Task.FromResult(agreementToUpdate);
     }
 }

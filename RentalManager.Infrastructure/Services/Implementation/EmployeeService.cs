@@ -2,6 +2,7 @@
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
+using RentalManager.Infrastructure.Services.Interfaces;
 
 namespace RentalManager.Infrastructure.Services.Implementation;
 

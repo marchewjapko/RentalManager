@@ -1,29 +1,26 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
 
-namespace RentalManager.Infrastructure.Services.Validators;
+namespace RentalManager.Infrastructure.Validators;
 
 public class PaymentValidator : AbstractValidator<PaymentBaseCommand>
 {
     public PaymentValidator()
     {
         RuleFor(x => x.Method)
-            .NotNull()
             .NotEmpty()
-            .MaximumLength(100);
+            .MaximumLength(10)
+            .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$");
 
         RuleFor(x => x.Amount)
-            .NotNull()
             .NotEmpty()
             .GreaterThan(0);
 
         RuleFor(x => x.DateTimeTo)
-            .NotNull()
             .NotEmpty()
             .GreaterThan(x => x.DateTimeFrom);
 
         RuleFor(x => x.DateTimeFrom)
-            .NotNull()
             .NotEmpty();
     }
 }

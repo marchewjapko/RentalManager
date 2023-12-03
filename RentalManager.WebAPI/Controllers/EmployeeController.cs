@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services;
+using RentalManager.Infrastructure.Services.Interfaces;
+
+// ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
 namespace RentalManager.WebAPI.Controllers;
 
@@ -72,12 +74,10 @@ public class EmployeeController : Controller
 
         if (employeeDto.Image is null)
         {
-            if (employeeDto.Gender == GenderDto.Man)
-            {
-                return File("~/DefaultUserImageMan.png", "image/png");
-            }
-
-            return File("~/DefaultUserImageWoman.png", "image/png");
+            return File(
+                employeeDto.Gender == GenderDto.Man
+                    ? "~/DefaultUserImageMan.png"
+                    : "~/DefaultUserImageWoman.png", "image/png");
         }
 
         return File(employeeDto.Image, "image/jpeg");

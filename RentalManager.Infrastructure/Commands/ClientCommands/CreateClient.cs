@@ -1,5 +1,3 @@
 ﻿namespace RentalManager.Infrastructure.Commands.ClientCommands;
 
-public class CreateClient : ClientBaseCommand
-{
-}
+public class CreateClient : ClientBaseCommand;

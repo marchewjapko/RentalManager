@@ -1,7 +1,7 @@
 ﻿using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.DTO;
 
-namespace RentalManager.Infrastructure.Services;
+namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IEmployeeService
 {

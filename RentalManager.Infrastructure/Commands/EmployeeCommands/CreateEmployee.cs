@@ -1,5 +1,3 @@
 ﻿namespace RentalManager.Infrastructure.Commands.EmployeeCommands;
 
-public class CreateEmployee : EmployeeBaseCommand
-{
-}
+public class CreateEmployee : EmployeeBaseCommand;

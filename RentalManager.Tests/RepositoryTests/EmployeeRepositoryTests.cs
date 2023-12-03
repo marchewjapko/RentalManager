@@ -31,12 +31,17 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
+        // arrange
         var newEmployee = new Employee
         {
             Name = "Test Name",
             Surname = "Test Surname"
         };
+        
+        // act
         var result = await _employeeRepository.AddAsync(newEmployee);
+        
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
@@ -46,6 +51,7 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task ShouldDelete()
     {
+        // arrange
         var newEmployee = new Employee
         {
             Name = "Test Name",
@@ -53,21 +59,26 @@ public class EmployeeRepositoryTests
         };
         _appDbContext.Add(newEmployee);
         await _appDbContext.SaveChangesAsync();
-        Assert.That(_appDbContext.Employees.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Employees.Count(), Is.EqualTo(1));
+        
+        // act
         await _employeeRepository.DeleteAsync(1);
+        
+        // assert
         Assert.That(_appDbContext.Employees.Count(), Is.EqualTo(0));
     }
 
     [Test]
     public void ShouldNotDelete()
     {
-        var ex = Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
             await _employeeRepository.DeleteAsync(1));
     }
 
     [Test]
     public async Task ShouldGet()
     {
+        // arrange
         var newEmployee = new Employee
         {
             Name = "Test Name",
@@ -75,20 +86,25 @@ public class EmployeeRepositoryTests
         };
         _appDbContext.Add(newEmployee);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = await _employeeRepository.GetAsync(1);
+        
+        // assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
 
     [Test]
     public void ShouldNotGetEmployee()
     {
-        var ex = Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
             await _employeeRepository.GetAsync(1));
     }
 
     [Test]
     public async Task ShouldBrowseAll()
     {
+        // arrange
         var newEmployee1 = new Employee
         {
             Name = "Test Name 1",
@@ -102,13 +118,18 @@ public class EmployeeRepositoryTests
         _appDbContext.Add(newEmployee1);
         _appDbContext.Add(newEmployee2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = await _employeeRepository.BrowseAllAsync();
+        
+        // assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task ShouldFilter_byName()
     {
+        // arrange
         var newEmployee1 = new Employee
         {
             Name = "Test Name 1",
@@ -122,7 +143,11 @@ public class EmployeeRepositoryTests
         _appDbContext.Add(newEmployee1);
         _appDbContext.Add(newEmployee2);
         await _appDbContext.SaveChangesAsync();
+        
+        // act
         var result = (await _employeeRepository.BrowseAllAsync("Test Name 1")).ToList();
+        
+        // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
@@ -132,6 +157,7 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
+        // arrange
         var newEmployee = new Employee
         {
             Name = "Test Name 1",
@@ -140,7 +166,11 @@ public class EmployeeRepositoryTests
         _appDbContext.Add(newEmployee);
         await _appDbContext.SaveChangesAsync();
         newEmployee.Name = "NEW TEST NAME";
+        
+        // act
         await _employeeRepository.UpdateAsync(newEmployee, 1);
+        
+        // assert
         var updatedEmployee = _appDbContext.Employees.First();
         Assert.That(updatedEmployee.Name, Is.EqualTo("NEW TEST NAME"));
     }

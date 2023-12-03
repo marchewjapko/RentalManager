@@ -1,28 +1,25 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.ClientCommands;
 
-namespace RentalManager.Infrastructure.Services.Validators;
+namespace RentalManager.Infrastructure.Validators;
 
 public class ClientValidator : AbstractValidator<ClientBaseCommand>
 {
     public ClientValidator()
     {
         RuleFor(x => x.Name)
-            .NotNull()
             .NotEmpty()
             .MaximumLength(100)
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$")
+            .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
             .WithMessage("'Name' should only contain letters");
 
         RuleFor(x => x.Surname)
-            .NotNull()
             .NotEmpty()
             .MaximumLength(100)
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]*$")
+            .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
             .WithMessage("'Surname' should only contain letters");
 
         RuleFor(x => x.PhoneNumber)
-            .NotNull()
             .NotEmpty()
             .MaximumLength(100)
             .Matches(
@@ -31,19 +28,22 @@ public class ClientValidator : AbstractValidator<ClientBaseCommand>
         RuleFor(x => x.Email)
             .NotEmpty()
             .MaximumLength(100)
-            .Matches(@"^[a-zA-Z]*\@[a-zA-Z]{3,}\.[a-zA-Z]{2,5}$");
+            .Matches(@"^[a-zA-Z 0-9 \._]*\@[a-zA-Z 0-9 \._]{3,}\.[a-zA-Z]{2,5}$");
+
+        RuleFor(x => x.IdCard)
+            .NotEmpty()
+            .MaximumLength(10)
+            .Matches("^([a-zA-Z]){3}[ ]?[0-9]{6}$");
 
         RuleFor(x => x.City)
-            .NotNull()
             .NotEmpty()
             .MaximumLength(100)
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ ]*$");
+            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ \-()]*$");
 
         RuleFor(x => x.Street)
-            .NotNull()
             .NotEmpty()
             .MaximumLength(100)
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ 0-9\/.]*$")
+            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ 0-9\/.]*$")
             .WithMessage("'Street' should only contain letter, numbers, digits, slashes and dots");
     }
 }

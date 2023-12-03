@@ -1,5 +1,3 @@
 ﻿namespace RentalManager.Infrastructure.Commands.EquipmentCommands;
 
-public class CreateEquipment : EquipmentBaseCommand
-{
-}
+public class CreateEquipment : EquipmentBaseCommand;

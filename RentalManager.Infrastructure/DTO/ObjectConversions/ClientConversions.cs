@@ -38,38 +38,6 @@ public static class ClientConversions
         return clientDto;
     }
 
-    public static ClientDto ToDto(this CreateClient createClient)
-    {
-        var clientDto = new ClientDto
-        {
-            Name = createClient.Name,
-            Surname = createClient.Surname,
-            PhoneNumber = createClient.PhoneNumber,
-            Email = createClient.Email,
-            IdCard = createClient.IdCard?.ToUpper(),
-            City = createClient.City,
-            Street = createClient.Street
-        };
-
-        return clientDto;
-    }
-
-    public static ClientDto ToDto(this UpdateClient updateClient)
-    {
-        var clientDto = new ClientDto
-        {
-            Name = updateClient.Name,
-            Surname = updateClient.Surname,
-            PhoneNumber = updateClient.PhoneNumber,
-            Email = updateClient.Email,
-            IdCard = updateClient.IdCard?.ToUpper(),
-            City = updateClient.City,
-            Street = updateClient.Street
-        };
-
-        return clientDto;
-    }
-
     public static Client ToDomain(this UpdateClient updateClient)
     {
         var result = new Client
@@ -81,24 +49,6 @@ public static class ClientConversions
             IdCard = updateClient.IdCard?.ToUpper(),
             City = updateClient.City,
             Street = updateClient.Street
-        };
-
-        return result;
-    }
-
-    public static Client ToDomain(this ClientDto clientDto)
-    {
-        var result = new Client
-        {
-            Id = clientDto.Id,
-            Name = clientDto.Name,
-            Surname = clientDto.Surname,
-            PhoneNumber = clientDto.PhoneNumber,
-            Email = clientDto.Email,
-            IdCard = clientDto.IdCard?.ToUpper(),
-            City = clientDto.City,
-            Street = clientDto.Street,
-            DateAdded = clientDto.DateAdded
         };
 
         return result;

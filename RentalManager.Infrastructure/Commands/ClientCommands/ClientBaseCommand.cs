@@ -28,6 +28,6 @@ public class ClientBaseCommand
     public string City { get; set; } = null!;
 
     [Required]
-    [DefaultValue("Wiejska 4/6/8")]
+    [DefaultValue("Woodland Ave 4/6/8")]
     public string Street { get; set; } = null!;
 }

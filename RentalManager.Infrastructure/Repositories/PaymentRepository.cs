@@ -5,22 +5,15 @@ using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class PaymentRepository : IPaymentRepository
+public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 {
-    private readonly AppDbContext _appDbContext;
-
-    public PaymentRepository(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public async Task<Payment> AddAsync(Payment payment, int agreementId)
     {
         payment.AgreementId = agreementId;
         try
         {
-            _appDbContext.Payments.Add(payment);
-            await _appDbContext.SaveChangesAsync();
+            appDbContext.Payments.Add(payment);
+            await appDbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -32,20 +25,20 @@ public class PaymentRepository : IPaymentRepository
 
     public async Task DeleteAsync(int id)
     {
-        var result = await _appDbContext.Payments.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Payments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
             throw new PaymentNotFoundException(id);
         }
 
-        _appDbContext.Payments.Remove(result);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Payments.Remove(result);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Payment> GetAsync(int id)
     {
-        var result = await Task.FromResult(_appDbContext.Payments.FirstOrDefault(x => x.Id == id));
+        var result = await Task.FromResult(appDbContext.Payments.FirstOrDefault(x => x.Id == id));
 
         if (result == null)
         {
@@ -60,7 +53,7 @@ public class PaymentRepository : IPaymentRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = _appDbContext.Payments.AsQueryable();
+        var result = appDbContext.Payments.AsQueryable();
         if (agreementId != null)
         {
             result = result.Where(x => x.AgreementId == agreementId);
@@ -86,20 +79,20 @@ public class PaymentRepository : IPaymentRepository
 
     public async Task<Payment> UpdateAsync(Payment payment, int id)
     {
-        var z = _appDbContext.Payments.FirstOrDefault(x => x.Id == id);
+        var paymentToUpdate = appDbContext.Payments.FirstOrDefault(x => x.Id == id);
 
-        if (z == null)
+        if (paymentToUpdate == null)
         {
             throw new PaymentNotFoundException(id);
         }
 
-        z.AgreementId = payment.AgreementId;
-        z.Method = payment.Method;
-        z.Amount = payment.Amount;
-        z.DateFrom = payment.DateFrom;
-        z.DateTo = payment.DateTo;
-        await _appDbContext.SaveChangesAsync();
+        paymentToUpdate.AgreementId = payment.AgreementId;
+        paymentToUpdate.Method = payment.Method;
+        paymentToUpdate.Amount = payment.Amount;
+        paymentToUpdate.DateFrom = payment.DateFrom;
+        paymentToUpdate.DateTo = payment.DateTo;
+        await appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(z);
+        return await Task.FromResult(paymentToUpdate);
     }
 }

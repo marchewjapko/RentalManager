@@ -5,21 +5,14 @@ using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class EmployeeRepository : IEmployeeRepository
+public class EmployeeRepository(AppDbContext appDbContext) : IEmployeeRepository
 {
-    private readonly AppDbContext _appDbContext;
-
-    public EmployeeRepository(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public async Task<Employee> AddAsync(Employee employee)
     {
         try
         {
-            _appDbContext.Employees.Add(employee);
-            await _appDbContext.SaveChangesAsync();
+            appDbContext.Employees.Add(employee);
+            await appDbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -31,20 +24,20 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task DeleteAsync(int id)
     {
-        var result = await _appDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
             throw new EmployeeNotFoundException(id);
         }
 
-        _appDbContext.Employees.Remove(result);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Employees.Remove(result);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Employee> GetAsync(int id)
     {
-        var result = await Task.FromResult(_appDbContext.Employees.FirstOrDefault(x => x.Id == id));
+        var result = await Task.FromResult(appDbContext.Employees.FirstOrDefault(x => x.Id == id));
 
         if (result == null)
         {
@@ -58,7 +51,7 @@ public class EmployeeRepository : IEmployeeRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = _appDbContext.Employees.AsQueryable();
+        var result = appDbContext.Employees.AsQueryable();
         if (name != null)
         {
             result = result.Where(x => x.Name.Contains(name));
@@ -79,19 +72,19 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<Employee> UpdateAsync(Employee employee, int id)
     {
-        var x = _appDbContext.Employees.FirstOrDefault(x => x.Id == id);
+        var employeeToUpdate = appDbContext.Employees.FirstOrDefault(x => x.Id == id);
 
-        if (x == null)
+        if (employeeToUpdate == null)
         {
             throw new EmployeeNotFoundException(id);
         }
 
-        x.Name = employee.Name;
-        x.Surname = employee.Surname;
-        x.Image = employee.Image;
-        x.Gender = employee.Gender;
-        await _appDbContext.SaveChangesAsync();
+        employeeToUpdate.Name = employee.Name;
+        employeeToUpdate.Surname = employee.Surname;
+        employeeToUpdate.Image = employee.Image;
+        employeeToUpdate.Gender = employee.Gender;
+        await appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(x);
+        return await Task.FromResult(employeeToUpdate);
     }
 }

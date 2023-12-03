@@ -23,7 +23,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-ServiceRegistration.RegisterAPIServices(builder.Services);
+ServiceRegistration.RegisterApiServices(builder.Services);
 ServiceRegistration.RegisterValidatorServices(builder.Services);
 ProblemDetailsConfiguration.ConfigureCustomProblemDetails(builder.Services, builder.Environment);
 

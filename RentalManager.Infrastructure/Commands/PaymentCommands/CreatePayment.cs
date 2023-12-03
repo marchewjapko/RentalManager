@@ -1,5 +1,3 @@
 ﻿namespace RentalManager.Infrastructure.Commands.PaymentCommands;
 
-public class CreatePayment : PaymentBaseCommand
-{
-}
+public class CreatePayment : PaymentBaseCommand;

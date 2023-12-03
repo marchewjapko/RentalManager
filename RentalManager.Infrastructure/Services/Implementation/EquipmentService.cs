@@ -2,6 +2,7 @@
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
+using RentalManager.Infrastructure.Services.Interfaces;
 
 namespace RentalManager.Infrastructure.Services.Implementation;
 
@@ -61,11 +62,6 @@ public class EquipmentService : IEquipmentService
 
     private static bool ValidateRentalEquipment(EquipmentDto equipmentDto)
     {
-        if (equipmentDto.Price < 0)
-        {
-            return false;
-        }
-
-        return true;
+        return equipmentDto.Price >= 0;
     }
 }

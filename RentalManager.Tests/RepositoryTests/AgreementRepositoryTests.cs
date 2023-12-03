@@ -16,16 +16,19 @@ public class AgreementRepositoryTests
         IdCard = "ABC 123456",
         PhoneNumber = "111 111 111"
     };
+
     private readonly Employee _mockEmployee = new()
     {
         Name = "Test Name",
         Surname = "Test Surname"
     };
+
     private readonly Equipment _mockEquipment = new()
     {
         Name = "Test Name",
         Price = 100
     };
+
     private AgreementRepository _agreementRepository = null!;
     private AppDbContext _appDbContext = null!;
 
@@ -56,6 +59,7 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
+        // arrange
         var (client, employee, equipment) = GetMocks();
         var newAgreement = new Agreement
         {
@@ -66,7 +70,11 @@ public class AgreementRepositoryTests
             TransportToPrice = 200,
             Equipment = new List<Equipment> { equipment }
         };
+
+        // act
         var result = await _agreementRepository.AddAsync(newAgreement);
+
+        // assert
         Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.Employee, Is.Not.Null);
@@ -80,6 +88,7 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldGet()
     {
+        // arrange
         var (client, employee, equipment) = GetMocks();
         var newAgreement = new Agreement
         {
@@ -90,9 +99,13 @@ public class AgreementRepositoryTests
             TransportToPrice = 200,
             Equipment = new List<Equipment> { equipment }
         };
+
+        // act
         _appDbContext.Agreements.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
         var result = await _agreementRepository.GetAsync(1);
+
+        // assert
         Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.Employee, Is.Not.Null);
@@ -106,13 +119,15 @@ public class AgreementRepositoryTests
     [Test]
     public void ShouldNotGet()
     {
-        var ex = Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
+        // assert
+        Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
             await _agreementRepository.GetAsync(1));
     }
 
     [Test]
     public async Task ShouldDelete()
     {
+        // arrange
         var (client, employee, equipment) = GetMocks();
         var newAgreement = new Agreement
         {
@@ -123,8 +138,12 @@ public class AgreementRepositoryTests
             TransportToPrice = 200,
             Equipment = new List<Equipment> { equipment }
         };
+
+        // act
         _appDbContext.Agreements.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
+
+        // assert
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
         await _agreementRepository.DeleteAsync(1);
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(0));
@@ -133,13 +152,15 @@ public class AgreementRepositoryTests
     [Test]
     public void ShouldNotDelete()
     {
-        var ex = Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
+        // assert
+        Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
             await _agreementRepository.DeleteAsync(1));
     }
 
     [Test]
     public async Task ShouldBrowseAll()
     {
+        // arrange
         var (client, employee, equipment) = GetMocks();
         var newAgreement = new Agreement
         {
@@ -159,9 +180,13 @@ public class AgreementRepositoryTests
             TransportToPrice = 300,
             Equipment = new List<Equipment> { equipment }
         };
+
+        // act
         _appDbContext.Agreements.Add(newAgreement);
         _appDbContext.Agreements.Add(newAgreement2);
         await _appDbContext.SaveChangesAsync();
+
+        // assert
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(2));
         var result = await _agreementRepository.BrowseAllAsync();
         Assert.That(result.Count(), Is.EqualTo(2));
@@ -170,6 +195,7 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldFilter()
     {
+        // arrange
         var (client, employee, equipment) = GetMocks();
         var newAgreement = new Agreement
         {
@@ -218,10 +244,15 @@ public class AgreementRepositoryTests
         await _appDbContext.SaveChangesAsync();
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(2));
 
+        // act
         var result1 = await _agreementRepository.BrowseAllAsync(null, "Test Surname 2");
-        Assert.That(result1.Count(), Is.EqualTo(1));
         var result2 = await _agreementRepository.BrowseAllAsync(null, null, null, "Test City 1");
-        Assert.That(result2.Count(), Is.EqualTo(2));
+
+        // assert
+        Assert.Multiple(() => {
+            Assert.That(result1.Count(), Is.EqualTo(1));
+            Assert.That(result2.Count(), Is.EqualTo(2));
+        });
     }
 
     [Test]
