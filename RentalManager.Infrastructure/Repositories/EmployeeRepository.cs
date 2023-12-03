@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -32,7 +33,10 @@ public class EmployeeRepository : IEmployeeRepository
     {
         var result = await _appDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
 
-        if (result == null) throw new Exception("Unable to find employee");
+        if (result == null)
+        {
+            throw new EmployeeNotFoundException(id);
+        }
 
         _appDbContext.Employees.Remove(result);
         await _appDbContext.SaveChangesAsync();
@@ -42,7 +46,10 @@ public class EmployeeRepository : IEmployeeRepository
     {
         var result = await Task.FromResult(_appDbContext.Employees.FirstOrDefault(x => x.Id == id));
 
-        if (result == null) throw new Exception("Unable to find employee");
+        if (result == null)
+        {
+            throw new EmployeeNotFoundException(id);
+        }
 
         return result;
     }
@@ -52,11 +59,20 @@ public class EmployeeRepository : IEmployeeRepository
         DateTime? to = null)
     {
         var result = _appDbContext.Employees.AsQueryable();
-        if (name != null) result = result.Where(x => x.Name.Contains(name));
+        if (name != null)
+        {
+            result = result.Where(x => x.Name.Contains(name));
+        }
 
-        if (from != null) result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+        if (from != null)
+        {
+            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+        }
 
-        if (to != null) result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+        if (to != null)
+        {
+            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+        }
 
         return await Task.FromResult(result.AsEnumerable());
     }
@@ -65,7 +81,10 @@ public class EmployeeRepository : IEmployeeRepository
     {
         var x = _appDbContext.Employees.FirstOrDefault(x => x.Id == id);
 
-        if (x == null) throw new Exception("Unable to update employee");
+        if (x == null)
+        {
+            throw new EmployeeNotFoundException(id);
+        }
 
         x.Name = employee.Name;
         x.Surname = employee.Surname;

@@ -18,21 +18,22 @@ public class PaymentController : Controller
 
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment, int rentalAgreementId)
+    public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment,
+        int agreementId)
     {
-        var result = await _paymentService.AddAsync(createPayment, rentalAgreementId);
+        var result = await _paymentService.AddAsync(createPayment, agreementId);
 
         return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllPayments(int? rentalAgreementId = null,
+    public async Task<IActionResult> BrowseAllPayments(int? agreementId = null,
         string? method = null,
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = await _paymentService.BrowseAllAsync(rentalAgreementId, method, from, to);
+        var result = await _paymentService.BrowseAllAsync(agreementId, method, from, to);
 
         return Json(result);
     }

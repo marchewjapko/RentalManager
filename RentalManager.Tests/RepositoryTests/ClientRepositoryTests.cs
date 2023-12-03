@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
+using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 
 namespace RentalManager.Tests.RepositoryTests;
@@ -12,7 +13,8 @@ public class ClientRepositoryTests
     [SetUp]
     public void Setup()
     {
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
+        var optionsBuilder =
+            new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
         _appDbContext = new AppDbContext(optionsBuilder.Options);
         _clientRepository = new ClientRepository(_appDbContext);
 
@@ -67,8 +69,8 @@ public class ClientRepositoryTests
     [Test]
     public void ShouldNotDelete()
     {
-        var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.DeleteAsync(1));
-        Assert.That(ex.Message, Is.EqualTo("Unable to find client"));
+        var ex = Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+            await _clientRepository.DeleteAsync(1));
     }
 
     [Test]
@@ -92,8 +94,8 @@ public class ClientRepositoryTests
     [Test]
     public void ShouldNotGetClient()
     {
-        var ex = Assert.ThrowsAsync<Exception>(async () => await _clientRepository.GetAsync(1));
-        Assert.That(ex.Message, Is.EqualTo("Unable to find client"));
+        var ex = Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+            await _clientRepository.GetAsync(1));
     }
 
     [Test]

@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Infrastructure.Exceptions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -16,7 +16,6 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client> AddAsync(Client client)
     {
-        client.PhoneNumber = Regex.Replace(client.PhoneNumber, @"\s+", "");
         _appDbContext.Clients.Add(client);
         await _appDbContext.SaveChangesAsync();
 
@@ -27,7 +26,10 @@ public class ClientRepository : IClientRepository
     {
         var result = await _appDbContext.Clients.FirstOrDefaultAsync(client => client.Id == id);
 
-        if (result == null) throw new Exception("Unable to find client");
+        if (result == null)
+        {
+            throw new ClientNotFoundException(id);
+        }
 
         _appDbContext.Clients.Remove(result);
         await _appDbContext.SaveChangesAsync();
@@ -38,7 +40,10 @@ public class ClientRepository : IClientRepository
         var result = await Task.FromResult(_appDbContext.Clients
             .FirstOrDefault(x => x.Id == id));
 
-        if (result == null) throw new Exception("Unable to find client");
+        if (result == null)
+        {
+            throw new ClientNotFoundException(id);
+        }
 
         return result;
     }
@@ -54,23 +59,50 @@ public class ClientRepository : IClientRepository
         DateTime? to = null)
     {
         var result = _appDbContext.Clients.AsQueryable();
-        if (name != null) result = result.Where(x => x.Name.Contains(name));
+        if (name != null)
+        {
+            result = result.Where(x => x.Name.Contains(name));
+        }
 
-        if (surname != null) result = result.Where(x => x.Surname.Contains(surname));
+        if (surname != null)
+        {
+            result = result.Where(x => x.Surname.Contains(surname));
+        }
 
-        if (phoneNumber != null) result = result.Where(x => x.PhoneNumber == phoneNumber);
+        if (phoneNumber != null)
+        {
+            result = result.Where(x => x.PhoneNumber == phoneNumber);
+        }
 
-        if (email != null) result = result.Where(x => x.Email != null && x.Email.Contains(email));
+        if (email != null)
+        {
+            result = result.Where(x => x.Email != null && x.Email.Contains(email));
+        }
 
-        if (idCard != null) result = result.Where(x => x.IdCard != null && x.IdCard.Contains(idCard));
+        if (idCard != null)
+        {
+            result = result.Where(x => x.IdCard != null && x.IdCard.Contains(idCard));
+        }
 
-        if (city != null) result = result.Where(x => x.City.Contains(city));
+        if (city != null)
+        {
+            result = result.Where(x => x.City.Contains(city));
+        }
 
-        if (street != null) result = result.Where(x => x.Street.Contains(street));
+        if (street != null)
+        {
+            result = result.Where(x => x.Street.Contains(street));
+        }
 
-        if (from != null) result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+        if (from != null)
+        {
+            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+        }
 
-        if (to != null) result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+        if (to != null)
+        {
+            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+        }
 
         return await Task.FromResult(result.AsEnumerable());
     }
@@ -79,7 +111,10 @@ public class ClientRepository : IClientRepository
     {
         var clientToUpdate = _appDbContext.Clients.FirstOrDefault(x => x.Id == id);
 
-        if (clientToUpdate == null) throw new Exception("Unable to update client");
+        if (clientToUpdate == null)
+        {
+            throw new ClientNotFoundException(id);
+        }
 
         clientToUpdate.Name = clientToUpdate.Name;
         clientToUpdate.Surname = clientToUpdate.Surname;

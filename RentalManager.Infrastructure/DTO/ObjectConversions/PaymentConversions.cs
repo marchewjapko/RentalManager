@@ -12,8 +12,8 @@ public static class PaymentConversions
             Method = createPayment.Method,
             Amount = createPayment.Amount,
             DateAdded = DateTime.Now,
-            DateFrom = createPayment.From,
-            DateTo = createPayment.To
+            DateFrom = createPayment.DateTimeFrom,
+            DateTo = createPayment.DateTimeTo
         };
     }
 
@@ -36,8 +36,8 @@ public static class PaymentConversions
         {
             Method = updatePayment.Method,
             Amount = updatePayment.Amount,
-            DateFrom = updatePayment.From,
-            DateTo = updatePayment.To
+            DateFrom = updatePayment.DateTimeFrom,
+            DateTo = updatePayment.DateTimeTo
         };
     }
 }

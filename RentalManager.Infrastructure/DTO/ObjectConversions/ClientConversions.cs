@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using RentalManager.Core.Domain;
+﻿using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
@@ -33,7 +32,7 @@ public static class ClientConversions
             IdCard = client.IdCard?.ToUpper(),
             City = client.City,
             Street = client.Street,
-            DateAdded = client.DateAdded,
+            DateAdded = client.DateAdded
         };
 
         return clientDto;

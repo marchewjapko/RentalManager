@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services;
@@ -11,11 +10,10 @@ namespace RentalManager.WebAPI.Controllers;
 public class EmployeeController : Controller
 {
     private readonly IEmployeeService _employeeService;
-    private static Random random;
+
     public EmployeeController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
-        random = new Random();
     }
 
     [ProducesResponseType(typeof(EmployeeDto), 200)]
@@ -29,7 +27,9 @@ public class EmployeeController : Controller
 
     [ProducesResponseType(typeof(IEnumerable<EmployeeDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllEmployees(string? name = null, DateTime? from = null, DateTime? to = null)
+    public async Task<IActionResult> BrowseAllEmployees(string? name = null,
+        DateTime? from = null,
+        DateTime? to = null)
     {
         var result = await _employeeService.BrowseAllAsync(name, from, to);
 
@@ -55,7 +55,8 @@ public class EmployeeController : Controller
 
     [ProducesResponseType(typeof(EmployeeDto), 200)]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateEmployee([FromForm] UpdateEmployee updateEmployee, int id)
+    public async Task<IActionResult> UpdateEmployee([FromForm] UpdateEmployee updateEmployee,
+        int id)
     {
         var result = await _employeeService.UpdateAsync(updateEmployee, id);
 
@@ -75,6 +76,7 @@ public class EmployeeController : Controller
             {
                 return File("~/DefaultUserImageMan.png", "image/png");
             }
+
             return File("~/DefaultUserImageWoman.png", "image/png");
         }
 

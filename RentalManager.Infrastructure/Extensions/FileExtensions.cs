@@ -16,9 +16,7 @@ public static class FileExtensions
         using var memoryStream = new MemoryStream();
         int read;
         while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-        {
             memoryStream.Write(buffer, 0, read);
-        }
 
         return memoryStream.ToArray();
     }

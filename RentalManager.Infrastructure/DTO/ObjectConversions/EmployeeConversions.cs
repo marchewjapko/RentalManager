@@ -75,7 +75,7 @@ public static class EmployeeConversions
             Surname = employeeDto.Surname,
             Gender = (Gender)employeeDto.Gender,
             Image = employeeDto.Image,
-            DateAdded = employeeDto.DateAdded,
+            DateAdded = employeeDto.DateAdded
         };
 
         return result;

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using RentalManager.Core.Repositories;
+using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services;
 
@@ -9,29 +9,23 @@ const string allowSpecificOrigins = "allowSpecificOrigins";
 
 builder.Services.AddCors(options => {
     options.AddPolicy(allowSpecificOrigins,
-        policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
+        policy => {
+            policy.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        });
 });
 
-builder.Services.AddControllers();
-//builder.Services.AddControllers()
-    //.AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddScoped<IClientService, ClientService>();
-
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
-builder.Services.AddScoped<IRentalEquipmentRepository, RentalEquipmentRepository>();
-builder.Services.AddScoped<IRentalEquipmentService, RentalEquipmentService>();
-
-builder.Services.AddScoped<IRentalAgreementRepository, RentalAgreementRepository>();
-builder.Services.AddScoped<IRentalAgreementService, RentalAgreementService>();
-
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
+ServiceRegistration.RegisterAPIServices(builder.Services);
+ServiceRegistration.RegisterValidatorServices(builder.Services);
+ProblemDetailsConfiguration.ConfigureCustomProblemDetails(builder.Services, builder.Environment);
 
 if (builder.Environment.EnvironmentName == "InMemory")
 {
@@ -65,12 +59,18 @@ app.MapControllers();
 
 app.UseStaticFiles();
 
+app.UseExceptionHandler();
+
 if (builder.Environment.EnvironmentName != "InMemory")
 {
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    if (context.Database.GetPendingMigrations().Any()) context.Database.Migrate();
+    if (context.Database.GetPendingMigrations()
+        .Any())
+    {
+        context.Database.Migrate();
+    }
 }
 
 app.Run();

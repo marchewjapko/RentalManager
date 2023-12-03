@@ -22,19 +22,45 @@ namespace RentalManager.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("RentalAgreementRentalEquipment", b =>
+            modelBuilder.Entity("RentalManager.Core.Domain.Agreement", b =>
                 {
-                    b.Property<int>("RentalAgreementsId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("RentalEquipmentId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.HasKey("RentalAgreementsId", "RentalEquipmentId");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("RentalEquipmentId");
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
 
-                    b.ToTable("RentalAgreementRentalEquipment");
+                    b.Property<int>("Deposit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("TransportFromPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransportToPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Agreements");
                 });
 
             modelBuilder.Entity("RentalManager.Core.Domain.Client", b =>
@@ -109,7 +135,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("RentalManager.Core.Domain.Payment", b =>
+            modelBuilder.Entity("RentalManager.Core.Domain.Equipment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,79 +143,8 @@ namespace RentalManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
+                    b.Property<int?>("AgreementId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateTo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Method")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RentalAgreementId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RentalAgreementId");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("RentalManager.Core.Domain.RentalAgreement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Deposit")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("TransportFromPrice")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TransportToPrice")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("RentalAgreements");
-                });
-
-            modelBuilder.Entity("RentalManager.Core.Domain.RentalEquipment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
@@ -206,39 +161,48 @@ namespace RentalManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgreementId");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("RentalEquipment");
-                });
-
-            modelBuilder.Entity("RentalAgreementRentalEquipment", b =>
-                {
-                    b.HasOne("RentalManager.Core.Domain.RentalAgreement", null)
-                        .WithMany()
-                        .HasForeignKey("RentalAgreementsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RentalManager.Core.Domain.RentalEquipment", null)
-                        .WithMany()
-                        .HasForeignKey("RentalEquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("Equipment");
                 });
 
             modelBuilder.Entity("RentalManager.Core.Domain.Payment", b =>
                 {
-                    b.HasOne("RentalManager.Core.Domain.RentalAgreement", "RentalAgreement")
-                        .WithMany("Payments")
-                        .HasForeignKey("RentalAgreementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("RentalAgreement");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AgreementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Method")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgreementId");
+
+                    b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("RentalManager.Core.Domain.RentalAgreement", b =>
+            modelBuilder.Entity("RentalManager.Core.Domain.Agreement", b =>
                 {
                     b.HasOne("RentalManager.Core.Domain.Client", "Client")
                         .WithMany()
@@ -257,8 +221,28 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("RentalManager.Core.Domain.RentalAgreement", b =>
+            modelBuilder.Entity("RentalManager.Core.Domain.Equipment", b =>
                 {
+                    b.HasOne("RentalManager.Core.Domain.Agreement", null)
+                        .WithMany("Equipment")
+                        .HasForeignKey("AgreementId");
+                });
+
+            modelBuilder.Entity("RentalManager.Core.Domain.Payment", b =>
+                {
+                    b.HasOne("RentalManager.Core.Domain.Agreement", "Agreement")
+                        .WithMany("Payments")
+                        .HasForeignKey("AgreementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agreement");
+                });
+
+            modelBuilder.Entity("RentalManager.Core.Domain.Agreement", b =>
+                {
+                    b.Navigation("Equipment");
+
                     b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618

@@ -4,9 +4,9 @@ public class Payment
 {
     public int Id { get; set; }
 
-    public int RentalAgreementId { get; set; }
+    public int AgreementId { get; set; }
 
-    public RentalAgreement RentalAgreement { get; set; } = null!;
+    public Agreement Agreement { get; set; } = null!;
 
     public string? Method { get; set; }
 

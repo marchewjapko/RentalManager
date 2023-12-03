@@ -15,13 +15,13 @@ public class AppDbContext : DbContext
 
     public DbSet<Payment> Payments { get; set; } = null!;
 
-    public DbSet<RentalAgreement> RentalAgreements { get; set; } = null!;
+    public DbSet<Agreement> Agreements { get; set; } = null!;
 
-    public DbSet<RentalEquipment> RentalEquipment { get; set; } = null!;
+    public DbSet<Equipment> Equipment { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<RentalEquipment>()
+        modelBuilder.Entity<Equipment>()
             .HasIndex(c => c.Id)
             .IsUnique();
     }
