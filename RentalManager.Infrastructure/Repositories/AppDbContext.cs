@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 
 namespace RentalManager.Infrastructure.Repositories;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -21,8 +23,18 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Equipment>()
-            .HasIndex(c => c.Id)
-            .IsUnique();
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.Email);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.NormalizedEmail);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.EmailConfirmed);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.PhoneNumber);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.PhoneNumberConfirmed);
+        modelBuilder.Entity<Employee>()
+            .Ignore(x => x.TwoFactorEnabled);
     }
 }

@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services;
@@ -23,8 +25,14 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-ServiceRegistration.RegisterApiServices(builder.Services);
-ServiceRegistration.RegisterValidatorServices(builder.Services);
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<Employee>()
+    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.ConfigureIdentityOptions();
+
+builder.Services.RegisterApiServices();
+builder.Services.RegisterValidatorServices();
+
 ProblemDetailsConfiguration.ConfigureCustomProblemDetails(builder.Services, builder.Environment);
 
 if (builder.Environment.EnvironmentName == "InMemory")
@@ -40,6 +48,8 @@ else
 }
 
 var app = builder.Build();
+
+app.MapIdentityApi<IdentityUser>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

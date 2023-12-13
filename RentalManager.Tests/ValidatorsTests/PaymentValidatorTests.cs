@@ -6,7 +6,7 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class PaymentValidatorTests
 {
-    private readonly PaymentValidator _paymentValidator = new PaymentValidator();
+    private readonly PaymentBaseValidator _paymentBaseValidator = new();
 
     private static PaymentBaseCommand InitializePayment()
     {
@@ -25,51 +25,11 @@ public class PaymentValidatorTests
         var payment = InitializePayment();
 
         // act
-        var result = await _paymentValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.ValidateAsync(payment);
 
         // assert
         Assert.That(result.IsValid);
     }
-
-    #region MethodRules
-
-    [Test]
-    public async Task ValidateMethod_Failure_Invalid_Character()
-    {
-        // arrange
-        var payment = InitializePayment();
-        payment.Method = "Cash;";
-
-        // act
-        var result = await _paymentValidator.ValidateAsync(payment);
-
-        // assert
-        Assert.Multiple((() => {
-            Assert.That(!result.IsValid);
-            Assert.That(result.Errors, Has.Count.EqualTo(1));
-            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
-        }));
-    }
-    
-    [Test]
-    public async Task ValidateMethod_Failure_Too_Long()
-    {
-        // arrange
-        var payment = InitializePayment();
-        payment.Method = new string('A', 11);
-
-        // act
-        var result = await _paymentValidator.ValidateAsync(payment);
-
-        // assert
-        Assert.Multiple((() => {
-            Assert.That(!result.IsValid);
-            Assert.That(result.Errors, Has.Count.EqualTo(1));
-            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
-        }));
-    }
-
-    #endregion
 
     #region AmountRules
 
@@ -81,14 +41,14 @@ public class PaymentValidatorTests
         payment.Amount = -1;
 
         // act
-        var result = await _paymentValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.ValidateAsync(payment);
 
         // assert
-        Assert.Multiple((() => {
+        Assert.Multiple(() => {
             Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("GreaterThanValidator"));
-        }));
+        });
     }
 
     #endregion
@@ -102,16 +62,56 @@ public class PaymentValidatorTests
         var payment = InitializePayment();
         payment.DateTimeFrom = DateTime.Today;
         payment.DateTimeTo = DateTime.Today.AddDays(-1);
-        
+
         // act
-        var result = await _paymentValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.ValidateAsync(payment);
 
         // assert
-        Assert.Multiple((() => {
+        Assert.Multiple(() => {
             Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("GreaterThanValidator"));
-        }));
+        });
+    }
+
+    #endregion
+
+    #region MethodRules
+
+    [Test]
+    public async Task ValidateMethod_Failure_Invalid_Character()
+    {
+        // arrange
+        var payment = InitializePayment();
+        payment.Method = "Cash;";
+
+        // act
+        var result = await _paymentBaseValidator.ValidateAsync(payment);
+
+        // assert
+        Assert.Multiple(() => {
+            Assert.That(!result.IsValid);
+            Assert.That(result.Errors, Has.Count.EqualTo(1));
+            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
+        });
+    }
+
+    [Test]
+    public async Task ValidateMethod_Failure_Too_Long()
+    {
+        // arrange
+        var payment = InitializePayment();
+        payment.Method = new string('A', 11);
+
+        // act
+        var result = await _paymentBaseValidator.ValidateAsync(payment);
+
+        // assert
+        Assert.Multiple(() => {
+            Assert.That(!result.IsValid);
+            Assert.That(result.Errors, Has.Count.EqualTo(1));
+            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
+        });
     }
 
     #endregion

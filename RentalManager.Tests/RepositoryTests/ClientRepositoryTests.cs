@@ -68,10 +68,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
-        
+
         // act
         await _clientRepository.DeleteAsync(1);
-        
+
         // assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(0));
     }
@@ -98,10 +98,10 @@ public class ClientRepositoryTests
         };
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = await _clientRepository.GetAsync(1);
-        
+
         // assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
@@ -138,10 +138,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = await _clientRepository.BrowseAllAsync();
-        
+
         // assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
@@ -171,10 +171,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = (await _clientRepository.BrowseAllAsync("Test Name 1")).ToList();
-        
+
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
@@ -207,10 +207,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = (await _clientRepository.BrowseAllAsync(null, "Test Surname 1")).ToList();
-        
+
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
@@ -243,10 +243,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient1);
         _appDbContext.Add(newClient2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = (await _clientRepository.BrowseAllAsync(null, null, "111 111 111")).ToList();
-        
+
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
@@ -270,10 +270,10 @@ public class ClientRepositoryTests
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
         newClient.Name = "NEW TEST NAME";
-        
+
         // act
         await _clientRepository.UpdateAsync(newClient, 1);
-        
+
         // assert
         var updatedClient = _appDbContext.Clients.First();
         Assert.That(updatedClient.Name, Is.EqualTo("NEW TEST NAME"));

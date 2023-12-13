@@ -3,9 +3,9 @@ using RentalManager.Infrastructure.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.Validators;
 
-public class ClientValidator : AbstractValidator<ClientBaseCommand>
+public class ClientBaseValidator : AbstractValidator<ClientBaseCommand>
 {
-    public ClientValidator()
+    public ClientBaseValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()
@@ -27,6 +27,7 @@ public class ClientValidator : AbstractValidator<ClientBaseCommand>
 
         RuleFor(x => x.Email)
             .NotEmpty()
+            .When(x => x.Email is not null)
             .MaximumLength(100)
             .Matches(@"^[a-zA-Z 0-9 \._]*\@[a-zA-Z 0-9 \._]{3,}\.[a-zA-Z]{2,5}$");
 

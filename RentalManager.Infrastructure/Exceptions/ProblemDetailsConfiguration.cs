@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,14 @@ public static class ProblemDetailsConfiguration
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status404NotFound;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+
+                        break;
+
+                    case ValidationException:
+                        context.ProblemDetails.Title = "Validation error";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status400BadRequest;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
                         break;
                 }

@@ -37,10 +37,10 @@ public class EquipmentRepositoryTests
             Name = "Test Name",
             Price = 100
         };
-        
+
         // act
         var result = await _equipmentRepository.AddAsync(newEquipment);
-        
+
         // assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
@@ -57,10 +57,10 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
-        
+
         // act
         await _equipmentRepository.DeleteAsync(1);
-        
+
         // assert
         Assert.That(_appDbContext.Equipment.Count(), Is.EqualTo(0));
     }
@@ -83,10 +83,10 @@ public class EquipmentRepositoryTests
         };
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = await _equipmentRepository.GetAsync(1);
-        
+
         // assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
@@ -115,10 +115,10 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment1);
         _appDbContext.Add(newEquipment2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = await _equipmentRepository.BrowseAllAsync();
-        
+
         // assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
@@ -140,10 +140,10 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment1);
         _appDbContext.Add(newEquipment2);
         await _appDbContext.SaveChangesAsync();
-        
+
         // act
         var result = (await _equipmentRepository.BrowseAllAsync("Test Name 1")).ToList();
-        
+
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
@@ -163,10 +163,10 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
         newEquipment.Name = "NEW TEST NAME";
-        
+
         // act
         await _equipmentRepository.UpdateAsync(newEquipment, 1);
-        
+
         // assert
         var updatedEquipment = _appDbContext.Equipment.First();
         Assert.That(updatedEquipment.Name, Is.EqualTo("NEW TEST NAME"));

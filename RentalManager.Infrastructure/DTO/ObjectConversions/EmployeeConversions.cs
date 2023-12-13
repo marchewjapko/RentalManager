@@ -11,6 +11,7 @@ public static class EmployeeConversions
         return new Employee
         {
             Name = createEmployee.Name,
+            UserName = createEmployee.UserName,
             Surname = createEmployee.Surname,
             DateAdded = DateTime.Now,
             Gender = (Gender)createEmployee.Gender,
@@ -24,6 +25,7 @@ public static class EmployeeConversions
         {
             Id = employee.Id,
             Name = employee.Name,
+            UserName = employee.UserName,
             Surname = employee.Surname,
             DateAdded = employee.DateAdded,
             Gender = (GenderDto)employee.Gender,

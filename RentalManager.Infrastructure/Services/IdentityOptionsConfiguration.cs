@@ -1,0 +1,19 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace RentalManager.Infrastructure.Services;
+
+public static class IdentityOptionsConfiguration
+{
+    public static void ConfigureIdentityOptions(this IServiceCollection services)
+    {
+        services.Configure<IdentityOptions>(options => {
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireDigit = true;
+        });
+    }
+}

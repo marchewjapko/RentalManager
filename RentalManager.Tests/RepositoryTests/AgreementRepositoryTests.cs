@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
+using RentalManager.Infrastructure.Commands.AgreementCommands;
+using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 
@@ -7,27 +10,27 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class AgreementRepositoryTests
 {
-    private readonly Client _mockClient = new()
-    {
-        Name = "Test Name 1",
-        Surname = "Test Surname 1",
-        City = "Test City 1",
-        Street = "Test street 1",
-        IdCard = "ABC 123456",
-        PhoneNumber = "111 111 111"
-    };
+    private readonly Client _mockClient = new Faker<Client>()
+        .RuleFor(x => x.Name, (f) => f.Name.FirstName())
+        .RuleFor(x => x.Surname, (f) => f.Name.LastName())
+        .RuleFor(x => x.City, (f) => f.Address.City())
+        .RuleFor(x => x.Street, (f) => f.Address.StreetName())
+        .RuleFor(x => x.IdCard, () => "ABC 123456")
+        .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+        .Generate();
 
-    private readonly Employee _mockEmployee = new()
-    {
-        Name = "Test Name",
-        Surname = "Test Surname"
-    };
+    private readonly Employee _mockEmployee = new Faker<Employee>()
+        .RuleFor(x => x.Name, (f) => f.Name.FirstName())
+        .RuleFor(x => x.Surname, (f) => f.Name.LastName())
+        .RuleFor(x => x.UserName, (f) => f.Internet.UserName())
+        .RuleFor(x => x.Gender, () => Gender.Man)
+        .RuleFor(x => x.DateAdded, () => DateTime.Now)
+        .Generate();
 
-    private readonly Equipment _mockEquipment = new()
-    {
-        Name = "Test Name",
-        Price = 100
-    };
+    private readonly Equipment _mockEquipment = new Faker<Equipment>()
+        .RuleFor(x => x.Name, (f) => f.Commerce.ProductName())
+        .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
+        .Generate();
 
     private AgreementRepository _agreementRepository = null!;
     private AppDbContext _appDbContext = null!;
@@ -208,25 +211,28 @@ public class AgreementRepositoryTests
         };
         _appDbContext.Agreements.Add(newAgreement);
 
-        var newClient = new Client
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2",
-            City = "Test City 1",
-            Street = "Test street 2",
-            IdCard = "ABC 123456",
-            PhoneNumber = "111 111 111"
-        };
-        var newEmployee = new Employee
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2"
-        };
-        var newEquipment = new Equipment
-        {
-            Name = "Test Name 2",
-            Price = 200
-        };
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Name, (f) => f.Name.FirstName())
+            .RuleFor(x => x.Surname, () => "Test Surname 2")
+            .RuleFor(x => x.City, () => _mockClient.City)
+            .RuleFor(x => x.Street, (f) => f.Address.StreetName())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .Generate();
+        
+        var newEmployee = new Faker<Employee>()
+            .RuleFor(x => x.Name, (f) => f.Name.FirstName())
+            .RuleFor(x => x.Surname, (f) => f.Name.LastName())
+            .RuleFor(x => x.UserName, (f) => f.Internet.UserName())
+            .RuleFor(x => x.Gender, () => Gender.Man)
+            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .Generate();
+        
+        var newEquipment = new Faker<Equipment>()
+            .RuleFor(x => x.Name, (f) => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
+            .Generate();
+        
         var clientEntry = _appDbContext.Clients.Add(newClient);
         var employeeEntry = _appDbContext.Employees.Add(newEmployee);
         var equipmentEntry = _appDbContext.Equipment.Add(newEquipment);
@@ -246,7 +252,7 @@ public class AgreementRepositoryTests
 
         // act
         var result1 = await _agreementRepository.BrowseAllAsync(null, "Test Surname 2");
-        var result2 = await _agreementRepository.BrowseAllAsync(null, null, null, "Test City 1");
+        var result2 = await _agreementRepository.BrowseAllAsync(null, null, null, _mockClient.City);
 
         // assert
         Assert.Multiple(() => {

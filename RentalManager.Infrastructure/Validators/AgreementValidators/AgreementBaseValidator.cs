@@ -3,9 +3,9 @@ using RentalManager.Infrastructure.Commands.AgreementCommands;
 
 namespace RentalManager.Infrastructure.Validators;
 
-public class AgreementValidator : AbstractValidator<AgreementBaseCommand>
+public class AgreementBaseValidator : AbstractValidator<AgreementBaseCommand>
 {
-    public AgreementValidator()
+    public AgreementBaseValidator()
     {
         RuleFor(x => x.EmployeeId)
             .NotEmpty();
@@ -39,6 +39,6 @@ public class AgreementValidator : AbstractValidator<AgreementBaseCommand>
             .GreaterThanOrEqualTo(0);
 
         RuleForEach(x => x.Payments)
-            .SetValidator(new PaymentValidator());
+            .SetValidator(new PaymentBaseValidator());
     }
 }

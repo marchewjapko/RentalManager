@@ -3,9 +3,9 @@ using RentalManager.Infrastructure.Commands.PaymentCommands;
 
 namespace RentalManager.Infrastructure.Validators;
 
-public class PaymentValidator : AbstractValidator<PaymentBaseCommand>
+public class PaymentBaseValidator : AbstractValidator<PaymentBaseCommand>
 {
-    public PaymentValidator()
+    public PaymentBaseValidator()
     {
         RuleFor(x => x.Method)
             .NotEmpty()

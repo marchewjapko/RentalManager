@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations;
 namespace RentalManager.Infrastructure.Commands.ClientCommands;
 
 public class ClientBaseCommand
+
 {
-    [DefaultValue("John")]
     [Required]
+    [DefaultValue("John")]
     public string Name { get; set; } = null!;
 
-    [DefaultValue("Kowalski")]
     [Required]
+    [DefaultValue("Kowalski")]
     public string Surname { get; set; } = null!;
 
     [Required]

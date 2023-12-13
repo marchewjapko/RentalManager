@@ -6,7 +6,7 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class ClientValidatorTests
 {
-    private readonly ClientValidator _clientValidator = new();
+    private readonly ClientBaseValidator _clientBaseValidator = new();
 
     private static ClientBaseCommand InitializeClient()
     {
@@ -28,7 +28,7 @@ public class ClientValidatorTests
         var client = InitializeClient();
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -44,7 +44,7 @@ public class ClientValidatorTests
         client.Name = "John Jack";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -58,7 +58,7 @@ public class ClientValidatorTests
         client.Name = "John1Jack";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -76,7 +76,7 @@ public class ClientValidatorTests
         client.Name = "John.Jack";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -94,7 +94,7 @@ public class ClientValidatorTests
         client.Name = null!;
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -112,7 +112,7 @@ public class ClientValidatorTests
         client.Name = new string('A', 101);
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -134,7 +134,7 @@ public class ClientValidatorTests
         client.Surname = "Scott Brown";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -148,7 +148,7 @@ public class ClientValidatorTests
         client.Surname = "Scott1Brown";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -166,7 +166,7 @@ public class ClientValidatorTests
         client.Surname = "Scott.Brown";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -184,7 +184,7 @@ public class ClientValidatorTests
         client.Surname = null!;
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -202,7 +202,7 @@ public class ClientValidatorTests
         client.Surname = new string('A', 101);
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -224,7 +224,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "+48 123 456 789";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -238,7 +238,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123 456 789";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -252,7 +252,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123-456-789";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -266,7 +266,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123456789";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -280,7 +280,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "12 34 567 89";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -298,7 +298,7 @@ public class ClientValidatorTests
         client.Email = "email!@email.com";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -316,7 +316,7 @@ public class ClientValidatorTests
         client.Email = new string('A', 91) + "@email.com"; // 101 characters
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -338,7 +338,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC123456";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.That(result.IsValid);
@@ -352,7 +352,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC!23456";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -370,7 +370,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC1234567";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         //assert
         Assert.Multiple(() => {
@@ -392,7 +392,7 @@ public class ClientValidatorTests
         client.City = "Paris!";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -410,7 +410,7 @@ public class ClientValidatorTests
         client.City = new string('A', 101);
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -432,7 +432,7 @@ public class ClientValidatorTests
         client.Street = "al. AK 12B!";
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {
@@ -450,7 +450,7 @@ public class ClientValidatorTests
         client.Street = new string('A', 101);
 
         // act
-        var result = await _clientValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.ValidateAsync(client);
 
         // assert
         Assert.Multiple(() => {

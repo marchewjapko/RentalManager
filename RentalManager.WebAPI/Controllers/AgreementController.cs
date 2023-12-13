@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -58,6 +59,7 @@ public class AgreementController : Controller
         return Json(result);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAgreement(int id)
     {

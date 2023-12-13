@@ -7,7 +7,7 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class EquipmentValidatorTests
 {
-    private readonly EquipmentValidator _equipmentValidator = new();
+    private readonly EquipmentBaseValidator _equipmentBaseValidator = new();
 
     private static EquipmentBaseCommand InitializeEquipment()
     {
@@ -24,7 +24,7 @@ public class EquipmentValidatorTests
         var equipment = InitializeEquipment();
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
 
         // assert
         Assert.That(result.IsValid);
@@ -40,7 +40,7 @@ public class EquipmentValidatorTests
         equipment.Price = -1;
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
 
         // assert
         Assert.Multiple(() => {
@@ -62,7 +62,7 @@ public class EquipmentValidatorTests
         equipment.Name = "Fun equipment mk4;";
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
 
         // assert
         Assert.Multiple(() => {
@@ -80,7 +80,7 @@ public class EquipmentValidatorTests
         equipment.Name = new string('A', 101);
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
 
         // assert
         Assert.Multiple(() => {
@@ -111,7 +111,7 @@ public class EquipmentValidatorTests
         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(employee);
 
         //assert
         Assert.That(result.IsValid);
@@ -133,7 +133,7 @@ public class EquipmentValidatorTests
         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(employee);
 
         //assert
         Assert.Multiple(() => {
@@ -159,7 +159,7 @@ public class EquipmentValidatorTests
         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(employee);
 
         //assert
         Assert.Multiple(() => {

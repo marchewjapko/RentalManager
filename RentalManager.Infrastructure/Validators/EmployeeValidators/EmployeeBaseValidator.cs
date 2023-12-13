@@ -1,23 +1,27 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using RentalManager.Infrastructure.Commands.EquipmentCommands;
+using RentalManager.Infrastructure.Commands.EmployeeCommands;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.EmployeeValidators;
 
-public class EquipmentValidator : AbstractValidator<EquipmentBaseCommand>
+public class EmployeeBaseValidator : AbstractValidator<EmployeeBaseCommand>
 {
-    public EquipmentValidator()
+    public EmployeeBaseValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .Matches(@"^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ 0-9\/.\/+\-\/%]*$")
-            .WithMessage(
-                "'Name' should only contain letters, numbers, dots, slashes, minuses, pluses and percents ")
-            .MaximumLength(100);
+            .MaximumLength(100)
+            .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
+            .WithMessage("'Name' should only contain letters");
 
-        RuleFor(x => x.Price)
+        RuleFor(x => x.Surname)
             .NotEmpty()
-            .GreaterThan(0);
+            .MaximumLength(100)
+            .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
+            .WithMessage("'Surname' should only contain letters");
+
+        RuleFor(x => x.Gender)
+            .NotNull();
 
         When(x => x.Image is not null, () => {
             RuleFor(x => x.Image)
