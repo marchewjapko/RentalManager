@@ -22,8 +22,8 @@ public static class ProblemDetailsConfiguration
 
                 switch (exception)
                 {
-                    case EmployeeNotFoundException:
-                        context.ProblemDetails.Title = "Employee not found";
+                    case UserNotFoundException:
+                        context.ProblemDetails.Title = "User not found";
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status404NotFound;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -67,6 +67,22 @@ public static class ProblemDetailsConfiguration
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status400BadRequest;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                        break;
+
+                    case UserNotConfirmedException:
+                        context.ProblemDetails.Title = "User not confirmed";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                        break;
+
+                    case LoginFailedException:
+                        context.ProblemDetails.Title = "Login failed";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status404NotFound;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
                 }

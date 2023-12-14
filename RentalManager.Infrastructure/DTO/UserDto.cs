@@ -1,6 +1,6 @@
 ﻿namespace RentalManager.Infrastructure.DTO;
 
-public class EmployeeDto
+public class UserDto
 {
     public int Id { get; init; }
 

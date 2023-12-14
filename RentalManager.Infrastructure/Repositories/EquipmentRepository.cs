@@ -2,6 +2,7 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -66,7 +67,8 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = appDbContext.Equipment.AsQueryable();
+        var result = appDbContext.Equipment.Where(x => x.IsActive)
+            .AsQueryable();
         if (name != null)
         {
             result = result.Where(x => x.Name.Contains(name));
@@ -74,12 +76,12 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
         if (from != null)
         {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > from.Value.Date);
         }
 
         if (to != null)
         {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < to.Value.Date);
         }
 
         return await Task.FromResult(result.AsEnumerable());
@@ -100,5 +102,18 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(equipmentToUpdate);
+    }
+
+    public async Task Deactivate(int id)
+    {
+        var result = await appDbContext.Equipment.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            throw new EquipmentNotFoundException(id);
+        }
+
+        result.IsActive = false;
+        await appDbContext.SaveChangesAsync();
     }
 }

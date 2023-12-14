@@ -12,7 +12,6 @@ public static class EquipmentConversions
         {
             Name = createEquipment.Name,
             Price = createEquipment.Price,
-            DateAdded = DateTime.Now,
             Image = createEquipment.Image.ToByteArray()
         };
     }
@@ -24,7 +23,6 @@ public static class EquipmentConversions
             Id = equipment.Id,
             Name = equipment.Name,
             Price = equipment.Price,
-            DateAdded = equipment.DateAdded,
             Image = equipment.Image
         };
     }

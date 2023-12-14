@@ -1,6 +1,6 @@
 ﻿namespace RentalManager.Core.Domain;
 
-public class Payment
+public class Payment : DomainBase
 {
     public int Id { get; set; }
 
@@ -15,6 +15,4 @@ public class Payment
     public DateTime DateFrom { get; set; }
 
     public DateTime DateTo { get; set; }
-
-    public DateTime DateAdded { get; set; }
 }

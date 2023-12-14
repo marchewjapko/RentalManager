@@ -1,12 +1,26 @@
+using Bogus;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Tests.RepositoryTests;
 
 public class ClientRepositoryTests
 {
+    private readonly Client _mockClient = new Faker<Client>()
+        .RuleFor(x => x.Id, () => 1)
+        .RuleFor(x => x.Name, f => f.Name.FirstName())
+        .RuleFor(x => x.Surname, f => f.Name.LastName())
+        .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+        .RuleFor(x => x.Email, f => f.Internet.Email())
+        .RuleFor(x => x.IdCard, () => "ABC 123456")
+        .RuleFor(x => x.City, f => f.Address.City())
+        .RuleFor(x => x.Street, f => f.Address.StreetName())
+        .Generate();
+
     private AppDbContext _appDbContext = null!;
     private ClientRepository _clientRepository = null!;
 
@@ -31,42 +45,20 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
-        // arrange
-        var newClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789"
-        };
-
         // act
-        var result = await _clientRepository.AddAsync(newClient);
+        var result = await _clientRepository.AddAsync(_mockClient);
 
         // assert
-        Assert.Multiple(() => {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(1));
-        });
+        Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task ShouldDelete()
     {
         // arrange
-        var newClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789"
-        };
-        _appDbContext.Add(newClient);
+        _appDbContext.Add(_mockClient);
         await _appDbContext.SaveChangesAsync();
+
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
         // act
@@ -87,17 +79,10 @@ public class ClientRepositoryTests
     public async Task ShouldGet()
     {
         // arrange
-        var newClient = new Client
-        {
-            Name = "Test Name",
-            Surname = "Test Surname",
-            City = "Test City",
-            Street = "Test street",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789"
-        };
-        _appDbContext.Add(newClient);
+        _appDbContext.Add(_mockClient);
         await _appDbContext.SaveChangesAsync();
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
         // act
         var result = await _clientRepository.GetAsync(1);
@@ -117,30 +102,30 @@ public class ClientRepositoryTests
     public async Task ShouldBrowseAll()
     {
         // arrange
-        var newClient1 = new Client
-        {
-            Name = "Test Name 1",
-            Surname = "Test Surname 1",
-            City = "Test City 1",
-            Street = "Test street 1",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789"
-        };
-        var newClient2 = new Client
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2",
-            City = "Test City 2",
-            Street = "Test street 2",
-            IdCard = "ABC 123456",
-            PhoneNumber = "123 456 789"
-        };
-        _appDbContext.Add(newClient1);
-        _appDbContext.Add(newClient2);
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.Name, f => f.Name.FirstName())
+            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
+
+        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Clients.First()
+            .Id, Is.EqualTo(1));
+        Assume.That(_appDbContext.Clients.Skip(1)
+            .First()
+            .Id, Is.EqualTo(2));
+
         // act
-        var result = await _clientRepository.BrowseAllAsync();
+        var result = await _clientRepository.BrowseAllAsync(new QueryClients());
 
         // assert
         Assert.That(result.Count(), Is.EqualTo(2));
@@ -150,35 +135,40 @@ public class ClientRepositoryTests
     public async Task ShouldFilter_byName()
     {
         // arrange
-        var newClient1 = new Client
-        {
-            Name = "Test Name 1",
-            Surname = "Test Surname 1",
-            City = "Test City 1",
-            Street = "Test street 1",
-            IdCard = "ABC 123456",
-            PhoneNumber = "111 111 111"
-        };
-        var newClient2 = new Client
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2",
-            City = "Test City 2",
-            Street = "Test street 2",
-            IdCard = "ABC 123456",
-            PhoneNumber = "222 222 222"
-        };
-        _appDbContext.Add(newClient1);
-        _appDbContext.Add(newClient2);
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.Name, f => f.Name.FirstName())
+            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
+
+        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
+        var query = new QueryClients
+        {
+            Name = newClient.Name
+        };
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Clients.First()
+            .Id, Is.EqualTo(1));
+        Assume.That(_appDbContext.Clients.Skip(1)
+            .First()
+            .Id, Is.EqualTo(2));
+
         // act
-        var result = (await _clientRepository.BrowseAllAsync("Test Name 1")).ToList();
+        var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Name, Is.EqualTo("Test Name 1"));
+            Assert.That(result[0].Name, Is.EqualTo(newClient.Name));
         });
     }
 
@@ -186,35 +176,40 @@ public class ClientRepositoryTests
     public async Task ShouldFilter_bySurname()
     {
         // arrange
-        var newClient1 = new Client
-        {
-            Name = "Test Name 1",
-            Surname = "Test Surname 1",
-            City = "Test City 1",
-            Street = "Test street 1",
-            IdCard = "ABC 123456",
-            PhoneNumber = "111 111 111"
-        };
-        var newClient2 = new Client
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2",
-            City = "Test City 2",
-            Street = "Test street 2",
-            IdCard = "ABC 123456",
-            PhoneNumber = "222 222 222"
-        };
-        _appDbContext.Add(newClient1);
-        _appDbContext.Add(newClient2);
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.Name, f => f.Name.FirstName())
+            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
+
+        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
+        var query = new QueryClients
+        {
+            Surname = _mockClient.Surname
+        };
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Clients.First()
+            .Id, Is.EqualTo(1));
+        Assume.That(_appDbContext.Clients.Skip(1)
+            .First()
+            .Id, Is.EqualTo(2));
+
         // act
-        var result = (await _clientRepository.BrowseAllAsync(null, "Test Surname 1")).ToList();
+        var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
+            Assert.That(result[0].Surname, Is.EqualTo(_mockClient.Surname));
         });
     }
 
@@ -222,35 +217,40 @@ public class ClientRepositoryTests
     public async Task ShouldFilter_byPhoneNumber()
     {
         // arrange
-        var newClient1 = new Client
-        {
-            Name = "Test Name 1",
-            Surname = "Test Surname 1",
-            City = "Test City 1",
-            Street = "Test street 1",
-            IdCard = "ABC 123456",
-            PhoneNumber = "111 111 111"
-        };
-        var newClient2 = new Client
-        {
-            Name = "Test Name 2",
-            Surname = "Test Surname 2",
-            City = "Test City 2",
-            Street = "Test street 2",
-            IdCard = "ABC 123456",
-            PhoneNumber = "222 222 222"
-        };
-        _appDbContext.Add(newClient1);
-        _appDbContext.Add(newClient2);
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.Name, f => f.Name.FirstName())
+            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
+
+        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
+        var query = new QueryClients
+        {
+            PhoneNumber = _mockClient.PhoneNumber
+        };
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Clients.First()
+            .Id, Is.EqualTo(1));
+        Assume.That(_appDbContext.Clients.Skip(1)
+            .First()
+            .Id, Is.EqualTo(2));
+
         // act
-        var result = (await _clientRepository.BrowseAllAsync(null, null, "111 111 111")).ToList();
+        var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo("Test Surname 1"));
+            Assert.That(result[0].Surname, Is.EqualTo(_mockClient.Surname));
         });
     }
 
@@ -258,18 +258,21 @@ public class ClientRepositoryTests
     public async Task ShouldUpdate()
     {
         // arrange
-        var newClient = new Client
-        {
-            Name = "Test Name 1",
-            Surname = "Test Surname 1",
-            City = "Test City 1",
-            Street = "Test street 1",
-            IdCard = "ABC 123456",
-            PhoneNumber = "111 111 111"
-        };
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.Name, f => f.Name.FirstName())
+            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
         newClient.Name = "NEW TEST NAME";
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
         // act
         await _clientRepository.UpdateAsync(newClient, 1);
@@ -277,5 +280,24 @@ public class ClientRepositoryTests
         // assert
         var updatedClient = _appDbContext.Clients.First();
         Assert.That(updatedClient.Name, Is.EqualTo("NEW TEST NAME"));
+    }
+
+    [Test]
+    public async Task ShouldDeactivate()
+    {
+        // arrange
+        _appDbContext.Add(_mockClient);
+        await _appDbContext.SaveChangesAsync();
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+
+        // act
+        await _clientRepository.Deactivate(1);
+
+        // assert
+        Assert.Multiple(() => {
+            Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+            Assert.That(_appDbContext.Clients.First()
+                .IsActive, Is.False);
+        });
     }
 }

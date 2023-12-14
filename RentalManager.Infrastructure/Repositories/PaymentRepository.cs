@@ -2,6 +2,7 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -53,7 +54,8 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         DateTime? from = null,
         DateTime? to = null)
     {
-        var result = appDbContext.Payments.AsQueryable();
+        var result = appDbContext.Payments.Where(x => x.IsActive)
+            .AsQueryable();
         if (agreementId != null)
         {
             result = result.Where(x => x.AgreementId == agreementId);
@@ -66,12 +68,12 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
         if (from != null)
         {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > from.Value.Date);
         }
 
         if (to != null)
         {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < to.Value.Date);
         }
 
         return await Task.FromResult(result.AsEnumerable());
@@ -94,5 +96,18 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(paymentToUpdate);
+    }
+
+    public async Task Deactivate(int id)
+    {
+        var result = await appDbContext.Payments.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            throw new PaymentNotFoundException(id);
+        }
+
+        result.IsActive = false;
+        await appDbContext.SaveChangesAsync();
     }
 }

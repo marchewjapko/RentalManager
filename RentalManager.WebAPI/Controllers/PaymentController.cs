@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -8,6 +9,7 @@ using RentalManager.Infrastructure.Services.Interfaces;
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[Controller]")]
 public class PaymentController : Controller
 {
@@ -23,7 +25,7 @@ public class PaymentController : Controller
     public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment,
         int agreementId)
     {
-        var result = await _paymentService.AddAsync(createPayment, agreementId);
+        var result = await _paymentService.AddAsync(createPayment, agreementId, User);
 
         return Json(result);
     }
@@ -40,6 +42,7 @@ public class PaymentController : Controller
         return Json(result);
     }
 
+    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePayment(int id)
     {
@@ -64,5 +67,14 @@ public class PaymentController : Controller
         var result = await _paymentService.UpdateAsync(updatePayment, id);
 
         return Json(result);
+    }
+
+    [Route("/Payment/Deactivate/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeactivateEquipment(int id)
+    {
+        await _paymentService.Deactivate(id);
+
+        return NoContent();
     }
 }

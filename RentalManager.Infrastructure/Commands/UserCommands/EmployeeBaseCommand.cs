@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using RentalManager.Infrastructure.DTO;
 
-namespace RentalManager.Infrastructure.Commands.EmployeeCommands;
+namespace RentalManager.Infrastructure.Commands.UserCommands;
 
-public class EmployeeBaseCommand
+public class UserBaseCommand
 {
     [Required]
     [DefaultValue("John")]

@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
-using RentalManager.Infrastructure.Commands.EmployeeCommands;
+using RentalManager.Infrastructure.Commands.UserCommands;
 
-namespace RentalManager.Infrastructure.Validators.EmployeeValidators;
+namespace RentalManager.Infrastructure.Validators.UserValidators;
 
-public class CreateEmployeeValidator : AbstractValidator<CreateEmployee>
+public class CreateUserValidator : AbstractValidator<CreateUser>
 {
-    public CreateEmployeeValidator()
+    public CreateUserValidator()
     {
         RuleFor(x => x)
-            .SetValidator(new EmployeeBaseValidator());
-        
+            .SetValidator(new UserBaseValidator());
+
         RuleFor(x => x.Password)
             .NotEmpty()
             .MinimumLength(6)

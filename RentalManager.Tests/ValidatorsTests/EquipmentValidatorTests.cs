@@ -107,11 +107,11 @@ public class EquipmentValidatorTests
         await writer.FlushAsync();
         stream.Position = 0;
 
-        var employee = InitializeEquipment();
-        employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+        var user = InitializeEquipment();
+        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(user);
 
         //assert
         Assert.That(result.IsValid);
@@ -129,11 +129,11 @@ public class EquipmentValidatorTests
         await writer.FlushAsync();
         stream.Position = 0;
 
-        var employee = InitializeEquipment();
-        employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+        var user = InitializeEquipment();
+        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(user);
 
         //assert
         Assert.Multiple(() => {
@@ -155,11 +155,11 @@ public class EquipmentValidatorTests
         await writer.FlushAsync();
         stream.Position = 0;
 
-        var employee = InitializeEquipment();
-        employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+        var user = InitializeEquipment();
+        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(employee);
+        var result = await _equipmentBaseValidator.ValidateAsync(user);
 
         //assert
         Assert.Multiple(() => {

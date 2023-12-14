@@ -13,4 +13,6 @@ public interface IEquipmentRepository
     Task<IEnumerable<Equipment>> BrowseAllAsync(string? name = null,
         DateTime? from = null,
         DateTime? to = null);
+
+    Task Deactivate(int id);
 }

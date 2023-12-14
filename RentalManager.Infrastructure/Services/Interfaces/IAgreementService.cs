@@ -1,26 +1,19 @@
-﻿using RentalManager.Infrastructure.Commands.AgreementCommands;
+﻿using System.Security.Claims;
+using RentalManager.Global.Queries;
+using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.DTO;
 
 namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IAgreementService
 {
-    Task<AgreementDto> AddAsync(CreateAgreement createAgreement);
+    Task<AgreementDto> AddAsync(CreateAgreement createAgreement, ClaimsPrincipal user);
     Task<AgreementDto> GetAsync(int id);
 
-    Task<IEnumerable<AgreementDto>> BrowseAllAsync(
-        int? clientId = null,
-        string? surname = null,
-        string? phoneNumber = null,
-        string? city = null,
-        string? street = null,
-        int? rentalEquipmentId = null,
-        string? rentalEquipmentName = null,
-        int? employeeId = null,
-        bool onlyUnpaid = false,
-        DateTime? from = null,
-        DateTime? to = null);
+    Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements);
 
     Task DeleteAsync(int id);
     Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement, int id);
+
+    Task Deactivate(int id);
 }

@@ -1,18 +1,18 @@
 ﻿// using Bogus;
 // using Microsoft.AspNetCore.Http;
-// using RentalManager.Infrastructure.Commands.EmployeeCommands;
+// using RentalManager.Infrastructure.Commands.UserCommands;
 // using RentalManager.Infrastructure.DTO;
 // using RentalManager.Infrastructure.Validators;
 //
 // namespace RentalManager.Tests.ValidatorsTests;
 //
-// public class EmployeeValidatorTests
+// public class UserValidatorTests
 // {
-//     private readonly EmployeeValidator _employeeValidator = new();
+//     private readonly UserValidator _userValidator = new();
 //
-//     private static EmployeeBaseCommand InitializeEmployee()
+//     private static UserBaseCommand InitializeUser()
 //     {
-//         return new Faker<EmployeeBaseCommand>()
+//         return new Faker<UserBaseCommand>()
 //             .RuleFor(x => x.Name, () => "John")
 //             .RuleFor(x => x.Surname, f => f.Name.LastName())
 //             .RuleFor(x => x.Gender, () => GenderDto.Man)
@@ -20,13 +20,13 @@
 //     }
 //
 //     [Test]
-//     public async Task ValidateEmployee_Success()
+//     public async Task ValidateUser_Success()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
+//         var user = InitializeUser();
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.That(result.IsValid);
@@ -38,11 +38,11 @@
 //     public async Task ValidateName_Success_Two_Names()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Name = "John Jack";
+//         var user = InitializeUser();
+//         user.Name = "John Jack";
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.That(result.IsValid);
@@ -52,11 +52,11 @@
 //     public async Task ValidateName_Failure_Invalid_Character()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Name = "John;";
+//         var user = InitializeUser();
+//         user.Name = "John;";
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {
@@ -70,11 +70,11 @@
 //     public async Task ValidateName_Failure_Null()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Name = null!;
+//         var user = InitializeUser();
+//         user.Name = null!;
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {
@@ -88,11 +88,11 @@
 //     public async Task ValidateName_Failure_Too_Long()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Name = new string('A', 101);
+//         var user = InitializeUser();
+//         user.Name = new string('A', 101);
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         // assert
 //         Assert.Multiple(() => {
@@ -110,11 +110,11 @@
 //     public async Task ValidateSurname_Success_Two_Surnames()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Surname = "Levinson Brown";
+//         var user = InitializeUser();
+//         user.Surname = "Levinson Brown";
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.That(result.IsValid);
@@ -124,11 +124,11 @@
 //     public async Task ValidateSurname_Failure_Invalid_Character()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Surname = "Brown;";
+//         var user = InitializeUser();
+//         user.Surname = "Brown;";
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {
@@ -142,11 +142,11 @@
 //     public async Task ValidateSurname_Failure_Null()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Surname = null!;
+//         var user = InitializeUser();
+//         user.Surname = null!;
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {
@@ -160,11 +160,11 @@
 //     public async Task ValidateSurname_Failure_Too_Long()
 //     {
 //         // arrange
-//         var employee = InitializeEmployee();
-//         employee.Surname = new string('A', 101);
+//         var user = InitializeUser();
+//         user.Surname = new string('A', 101);
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         // assert
 //         Assert.Multiple(() => {
@@ -191,11 +191,11 @@
 //         await writer.FlushAsync();
 //         stream.Position = 0;
 //
-//         var employee = InitializeEmployee();
-//         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+//         var user = InitializeUser();
+//         user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.That(result.IsValid);
@@ -213,11 +213,11 @@
 //         await writer.FlushAsync();
 //         stream.Position = 0;
 //
-//         var employee = InitializeEmployee();
-//         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+//         var user = InitializeUser();
+//         user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {
@@ -239,11 +239,11 @@
 //         await writer.FlushAsync();
 //         stream.Position = 0;
 //
-//         var employee = InitializeEmployee();
-//         employee.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+//         var user = InitializeUser();
+//         user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 //
 //         // act
-//         var result = await _employeeValidator.ValidateAsync(employee);
+//         var result = await _userValidator.ValidateAsync(user);
 //
 //         //assert
 //         Assert.Multiple(() => {

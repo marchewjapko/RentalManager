@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Exceptions;
-using RentalManager.Infrastructure.Repositories;
+using RentalManager.Infrastructure.Repositories.DbContext;
 using RentalManager.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,8 +26,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<Employee>()
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<AppDbContext>();
+
 builder.Services.ConfigureIdentityOptions();
 
 builder.Services.RegisterApiServices();
@@ -49,7 +51,7 @@ else
 
 var app = builder.Build();
 
-app.MapIdentityApi<IdentityUser>();
+// app.MapIdentityApi<User>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

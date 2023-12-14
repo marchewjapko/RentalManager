@@ -1,6 +1,6 @@
 ﻿namespace RentalManager.Core.Domain;
 
-public class Client
+public class Client : DomainBase
 {
     public int Id { get; set; }
 
@@ -17,6 +17,4 @@ public class Client
     public string City { get; set; } = null!;
 
     public string Street { get; set; } = null!;
-
-    public DateTime DateAdded { get; set; }
 }

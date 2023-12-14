@@ -1,6 +1,6 @@
 ﻿namespace RentalManager.Core.Domain;
 
-public class Equipment
+public class Equipment : DomainBase
 {
     public int Id { get; set; }
 
@@ -9,6 +9,4 @@ public class Equipment
     public int Price { get; set; }
 
     public byte[]? Image { get; set; }
-
-    public DateTime DateAdded { get; set; }
 }

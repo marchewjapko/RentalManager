@@ -2,7 +2,7 @@
 
 namespace RentalManager.Core.Domain;
 
-public class Employee : IdentityUser<int>
+public class User : IdentityUser<int>
 {
     public string Name { get; set; } = null!;
 
@@ -13,6 +13,8 @@ public class Employee : IdentityUser<int>
     public Gender Gender { get; set; }
 
     public byte[]? Image { get; set; }
+
+    public bool IsConfirmed { get; set; } = false;
 
     public DateTime DateAdded { get; set; }
 }

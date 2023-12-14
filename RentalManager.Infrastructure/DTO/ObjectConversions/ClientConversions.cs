@@ -15,8 +15,7 @@ public static class ClientConversions
             Email = createClient.Email,
             IdCard = createClient.IdCard?.ToUpper(),
             City = createClient.City,
-            Street = createClient.Street,
-            DateAdded = DateTime.Now
+            Street = createClient.Street
         };
     }
 
@@ -31,8 +30,7 @@ public static class ClientConversions
             Email = client.Email,
             IdCard = client.IdCard?.ToUpper(),
             City = client.City,
-            Street = client.Street,
-            DateAdded = client.DateAdded
+            Street = client.Street
         };
 
         return clientDto;

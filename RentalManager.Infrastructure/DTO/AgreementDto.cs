@@ -4,7 +4,7 @@ public class AgreementDto
 {
     public int Id { get; init; }
 
-    public EmployeeDto Employee { get; init; } = null!;
+    public UserDto Employee { get; init; } = null!;
 
     public bool IsActive { get; init; }
 

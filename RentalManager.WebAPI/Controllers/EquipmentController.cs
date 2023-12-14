@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -8,6 +9,7 @@ using RentalManager.Infrastructure.Services.Interfaces;
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[Controller]")]
 public class EquipmentController : Controller
 {
@@ -22,7 +24,7 @@ public class EquipmentController : Controller
     [HttpPost]
     public async Task<IActionResult> AddEquipment([FromForm] CreateEquipment createEquipment)
     {
-        var result = await _equipmentService.AddAsync(createEquipment);
+        var result = await _equipmentService.AddAsync(createEquipment, User);
 
         return Json(result);
     }
@@ -38,6 +40,7 @@ public class EquipmentController : Controller
         return Json(result);
     }
 
+    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteEquipment(int id)
     {
@@ -79,5 +82,14 @@ public class EquipmentController : Controller
         }
 
         return File(equipment.Image, "image/jpeg");
+    }
+
+    [Route("/Equipment/Deactivate/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeactivateEquipment(int id)
+    {
+        await _equipmentService.Deactivate(id);
+
+        return NoContent();
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -41,60 +43,53 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         return result;
     }
 
-    public async Task<IEnumerable<Client>> BrowseAllAsync(string? name = null,
-        string? surname = null,
-        string? phoneNumber = null,
-        string? email = null,
-        string? idCard = null,
-        string? city = null,
-        string? street = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<Client>> BrowseAllAsync(QueryClients queryClients)
     {
-        var result = appDbContext.Clients.AsQueryable();
-        if (name != null)
+        var result = appDbContext.Clients.Where(x => x.IsActive)
+            .AsQueryable();
+        if (queryClients.Name != null)
         {
-            result = result.Where(x => x.Name.Contains(name));
+            result = result.Where(x => x.Name.Contains(queryClients.Name));
         }
 
-        if (surname != null)
+        if (queryClients.Surname != null)
         {
-            result = result.Where(x => x.Surname.Contains(surname));
+            result = result.Where(x => x.Surname.Contains(queryClients.Surname));
         }
 
-        if (phoneNumber != null)
+        if (queryClients.PhoneNumber != null)
         {
-            result = result.Where(x => x.PhoneNumber == phoneNumber);
+            result = result.Where(x => x.PhoneNumber == queryClients.PhoneNumber);
         }
 
-        if (email != null)
+        if (queryClients.Email != null)
         {
-            result = result.Where(x => x.Email != null && x.Email.Contains(email));
+            result = result.Where(x => x.Email != null && x.Email.Contains(queryClients.Email));
         }
 
-        if (idCard != null)
+        if (queryClients.IdCard != null)
         {
-            result = result.Where(x => x.IdCard != null && x.IdCard.Contains(idCard));
+            result = result.Where(x => x.IdCard != null && x.IdCard.Contains(queryClients.IdCard));
         }
 
-        if (city != null)
+        if (queryClients.City != null)
         {
-            result = result.Where(x => x.City.Contains(city));
+            result = result.Where(x => x.City.Contains(queryClients.City));
         }
 
-        if (street != null)
+        if (queryClients.Street != null)
         {
-            result = result.Where(x => x.Street.Contains(street));
+            result = result.Where(x => x.Street.Contains(queryClients.Street));
         }
 
-        if (from != null)
+        if (queryClients.From != null)
         {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > queryClients.From.Value.Date);
         }
 
-        if (to != null)
+        if (queryClients.To != null)
         {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < queryClients.To.Value.Date);
         }
 
         return await Task.FromResult(result.AsEnumerable());
@@ -119,5 +114,18 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(clientToUpdate);
+    }
+
+    public async Task Deactivate(int id)
+    {
+        var result = await appDbContext.Clients.FirstOrDefaultAsync(client => client.Id == id);
+
+        if (result == null)
+        {
+            throw new ClientNotFoundException(id);
+        }
+
+        result.IsActive = false;
+        await appDbContext.SaveChangesAsync();
     }
 }

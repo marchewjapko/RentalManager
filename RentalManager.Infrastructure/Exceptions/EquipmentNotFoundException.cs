@@ -7,7 +7,7 @@ public class EquipmentNotFoundException : Exception
     }
 
     public EquipmentNotFoundException(IEnumerable<int> ids) : base(
-        $"Equipment with ids {string.Join(", ", ids)} not found")
+        $"Equipment with ids: {string.Join(", ", ids)} not found")
     {
     }
 }

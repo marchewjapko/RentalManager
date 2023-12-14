@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using RentalManager.Infrastructure.Commands.EmployeeCommands;
+using RentalManager.Infrastructure.Commands.UserCommands;
 
-namespace RentalManager.Infrastructure.Validators.EmployeeValidators;
+namespace RentalManager.Infrastructure.Validators.UserValidators;
 
-public class EmployeeBaseValidator : AbstractValidator<EmployeeBaseCommand>
+public class UserBaseValidator : AbstractValidator<UserBaseCommand>
 {
-    public EmployeeBaseValidator()
+    public UserBaseValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

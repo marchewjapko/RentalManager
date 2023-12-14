@@ -13,4 +13,6 @@ public interface IPaymentRepository
         string? method = null,
         DateTime? from = null,
         DateTime? to = null);
+
+    Task Deactivate(int id);
 }

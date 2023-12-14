@@ -3,14 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Commands.ClientCommands;
-using RentalManager.Infrastructure.Commands.EmployeeCommands;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
+using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services.Implementation;
 using RentalManager.Infrastructure.Services.Interfaces;
 using RentalManager.Infrastructure.Validators;
-using RentalManager.Infrastructure.Validators.EmployeeValidators;
+using RentalManager.Infrastructure.Validators.UserValidators;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
@@ -23,8 +23,8 @@ public static class ServiceRegistration
         services.AddScoped<IClientRepository, ClientRepository>();
         services.AddScoped<IClientService, ClientService>();
 
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IEquipmentRepository, EquipmentRepository>();
         services.AddScoped<IEquipmentService, EquipmentService>();
@@ -42,9 +42,9 @@ public static class ServiceRegistration
             configuration.ValidationStrategy = ValidationStrategy.All;
             configuration.EnableFormBindingSourceAutomaticValidation = true;
         });
-        
-        services.AddScoped<IValidator<CreateEmployee>, CreateEmployeeValidator>();
-        services.AddScoped<IValidator<UpdateEmployee>, UpdateEmployeeValidator>();
+
+        services.AddScoped<IValidator<CreateUser>, CreateUserValidator>();
+        services.AddScoped<IValidator<UpdateUser>, UpdateUserValidator>();
 
         services.AddScoped<IValidator<CreateEquipment>, EquipmentBaseValidator>();
         services.AddScoped<IValidator<UpdateEquipment>, EquipmentBaseValidator>();

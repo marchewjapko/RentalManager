@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace RentalManager.Infrastructure.Commands.EmployeeCommands;
+namespace RentalManager.Infrastructure.Commands.UserCommands;
 
-public class CreateEmployee : EmployeeBaseCommand
+public class CreateUser : UserBaseCommand
 {
     [Required]
+    [DefaultValue("123123")]
     public string Password { get; set; } = null!;
 
     [Required]

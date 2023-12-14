@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.ClientCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -8,6 +10,7 @@ using RentalManager.Infrastructure.Services.Interfaces;
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[Controller]")]
 public class ClientController : Controller
 {
@@ -22,30 +25,22 @@ public class ClientController : Controller
     [HttpPost]
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
-        var result = await _clientService.AddAsync(createClient);
+        var result = await _clientService.AddAsync(createClient, User);
 
         return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllClients(string? name = null,
-        string? surname = null,
-        string? phoneNumber = null,
-        string? email = null,
-        string? idCard = null,
-        string? city = null,
-        string? street = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IActionResult> BrowseAllClients([FromQuery] QueryClients queryClients)
     {
         var result =
-            await _clientService.BrowseAllAsync(name, surname, phoneNumber, email, idCard, city,
-                street, from, to);
+            await _clientService.BrowseAllAsync(queryClients);
 
         return Json(result);
     }
 
+    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteClient(int id)
     {
@@ -70,5 +65,14 @@ public class ClientController : Controller
         var result = await _clientService.UpdateAsync(updateClient, id);
 
         return Json(result);
+    }
+
+    [Route("/Client/Deactivate/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeactivateEquipment(int id)
+    {
+        await _clientService.Deactivate(id);
+
+        return NoContent();
     }
 }

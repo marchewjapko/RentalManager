@@ -3,7 +3,7 @@ using RentalManager.Infrastructure.Commands.AgreementCommands;
 
 namespace RentalManager.Infrastructure.Validators;
 
-public class UpdateAgreementValidator  : AbstractValidator<CreateAgreement>
+public class UpdateAgreementValidator : AbstractValidator<CreateAgreement>
 {
     public UpdateAgreementValidator()
     {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -9,6 +10,7 @@ using RentalManager.Infrastructure.Services.Interfaces;
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[Controller]")]
 public class AgreementController : Controller
 {
@@ -23,7 +25,7 @@ public class AgreementController : Controller
     [HttpPost]
     public async Task<IActionResult> AddAgreement([FromBody] CreateAgreement createAgreement)
     {
-        var result = await _agreementService.AddAsync(createAgreement);
+        var result = await _agreementService.AddAsync(createAgreement, User);
 
         return Json(result);
     }
@@ -31,35 +33,14 @@ public class AgreementController : Controller
     [ProducesResponseType(typeof(IEnumerable<AgreementDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllAgreements(
-        int? clientId = null,
-        string? surname = null,
-        string? phoneNumber = null,
-        string? city = null,
-        string? street = null,
-        int? equipmentId = null,
-        string? equipmentName = null,
-        int? employeeId = null,
-        bool onlyUnpaid = false,
-        DateTime? from = null,
-        DateTime? to = null)
+        [FromQuery] QueryAgreements queryAgreements)
     {
-        var result = await _agreementService.BrowseAllAsync(
-            clientId,
-            surname,
-            phoneNumber,
-            city,
-            street,
-            equipmentId,
-            equipmentName,
-            employeeId,
-            onlyUnpaid,
-            from,
-            to);
+        var result = await _agreementService.BrowseAllAsync(queryAgreements);
 
         return Json(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAgreement(int id)
     {
@@ -86,5 +67,14 @@ public class AgreementController : Controller
         var result = await _agreementService.UpdateAsync(updateAgreement, id);
 
         return Json(result);
+    }
+
+    [Route("/Agreement/Deactivate/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeactivateEquipment(int id)
+    {
+        await _agreementService.Deactivate(id);
+
+        return NoContent();
     }
 }

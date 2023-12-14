@@ -2,15 +2,13 @@
 
 namespace RentalManager.Core.Domain;
 
-public class Agreement
+public class Agreement : DomainBase
 {
     public int Id { get; set; }
 
     public int EmployeeId { get; set; }
 
-    public Employee Employee { get; set; } = null!;
-
-    public bool IsActive { get; set; }
+    public User Employee { get; set; } = null!;
 
     public int ClientId { get; set; }
 

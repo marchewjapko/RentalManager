@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -11,23 +13,6 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     {
         try
         {
-            var client = appDbContext.Clients.FirstOrDefault(x => x.Id == agreement.ClientId);
-
-            if (client == null)
-            {
-                throw new ClientNotFoundException(agreement.ClientId);
-            }
-
-            var employee =
-                appDbContext.Employees.FirstOrDefault(x => x.Id == agreement.EmployeeId);
-
-            if (employee == null)
-            {
-                throw new EmployeeNotFoundException(agreement.EmployeeId);
-            }
-
-            agreement.Client = client;
-            agreement.Employee = employee;
             appDbContext.Agreements.Add(agreement);
             await appDbContext.SaveChangesAsync();
         }
@@ -56,6 +41,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     {
         var result = await Task.FromResult(appDbContext.Agreements.Include(x => x.Equipment)
             .Include(x => x.Client)
+            .Include(x => x.User)
             .Include(x => x.Employee)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id));
@@ -68,69 +54,61 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         return result;
     }
 
-    public async Task<IEnumerable<Agreement>> BrowseAllAsync(
-        int? clientId = null,
-        string? surname = null,
-        string? phoneNumber = null,
-        string? city = null,
-        string? street = null,
-        int? equipmentId = null,
-        string? equipmentName = null,
-        int? employeeId = null,
-        bool onlyUnpaid = false,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<Agreement>> BrowseAllAsync(QueryAgreements queryAgreements)
     {
-        var result = appDbContext.Agreements.Include(x => x.Equipment)
+        var result = appDbContext.Agreements
+            .Include(x => x.Equipment)
             .Include(x => x.Client)
+            .Include(x => x.User)
             .Include(x => x.Employee)
             .Include(x => x.Payments)
             .AsSingleQuery()
             .AsQueryable();
-        if (clientId != null)
+
+        if (queryAgreements.ClientId != null)
         {
-            result = result.Where(x => x.ClientId == clientId);
+            result = result.Where(x => x.ClientId == queryAgreements.ClientId);
         }
 
-        if (surname != null)
+        if (queryAgreements.Surname != null)
         {
-            result = result.Where(x => x.Client.Surname.Contains(surname));
+            result = result.Where(x => x.Client.Surname.Contains(queryAgreements.Surname));
         }
 
-        if (phoneNumber != null)
+        if (queryAgreements.PhoneNumber != null)
         {
-            result = result.Where(x => x.Client.PhoneNumber.Contains(phoneNumber));
+            result = result.Where(x => x.Client.PhoneNumber.Contains(queryAgreements.PhoneNumber));
         }
 
-        if (city != null)
+        if (queryAgreements.City != null)
         {
-            result = result.Where(x => x.Client.City.Contains(city));
+            result = result.Where(x => x.Client.City.Contains(queryAgreements.City));
         }
 
-        if (street != null)
+        if (queryAgreements.Street != null)
         {
-            result = result.Where(x => x.Client.Street.Contains(street));
+            result = result.Where(x => x.Client.Street.Contains(queryAgreements.Street));
         }
 
-        if (equipmentId != null)
+        if (queryAgreements.EquipmentId != null)
         {
-            result = result.Where(x => x.Equipment.Any(a => a.Id == equipmentId));
+            result = result.Where(x => x.Equipment.Any(a => a.Id == queryAgreements.EquipmentId));
         }
 
-        if (equipmentName != null)
+        if (queryAgreements.EquipmentName != null)
         {
             result = result.Where(x =>
                 x.Equipment.Any(a =>
-                    a.Name.Contains(equipmentName,
+                    a.Name.Contains(queryAgreements.EquipmentName,
                         StringComparison.CurrentCultureIgnoreCase)));
         }
 
-        if (employeeId != null)
+        if (queryAgreements.EmployeeId != null)
         {
-            result = result.Where(x => x.EmployeeId == employeeId);
+            result = result.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
         }
 
-        if (onlyUnpaid)
+        if (queryAgreements.OnlyUnpaid)
         {
             result = result.Where(x =>
                 x.Payments.OrderByDescending(payment => payment.DateTo)
@@ -138,14 +116,19 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
                     .DateTo < DateTime.Now.Date);
         }
 
-        if (from != null)
+        if (queryAgreements.From != null)
         {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+            result = result.Where(x => x.DateAdded.Date > queryAgreements.From.Value.Date);
         }
 
-        if (to != null)
+        if (queryAgreements.To != null)
         {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+            result = result.Where(x => x.DateAdded.Date < queryAgreements.To.Value.Date);
+        }
+
+        if (queryAgreements.OnlyActive)
+        {
+            result = result.Where(x => x.IsActive);
         }
 
         return await Task.FromResult(result.OrderByDescending(x => x.DateAdded)
@@ -157,7 +140,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         var agreementToUpdate = appDbContext.Agreements
             .Include(x => x.Equipment)
             .Include(x => x.Client)
-            .Include(x => x.Employee)
+            .Include(x => x.User)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id);
 
@@ -168,7 +151,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         agreementToUpdate.IsActive = agreement.IsActive;
         agreementToUpdate.EmployeeId = agreement.EmployeeId;
-        agreementToUpdate.Employee = agreement.Employee;
+        agreementToUpdate.User = agreement.User;
         agreementToUpdate.ClientId = agreement.ClientId;
         agreementToUpdate.Client = agreement.Client;
         agreementToUpdate.Comment = agreement.Comment;
@@ -180,5 +163,18 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         await appDbContext.SaveChangesAsync();
 
         return await Task.FromResult(agreementToUpdate);
+    }
+
+    public async Task Deactivate(int id)
+    {
+        var result = await appDbContext.Agreements.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            throw new AgreementNotFoundException(id);
+        }
+
+        result.IsActive = false;
+        await appDbContext.SaveChangesAsync();
     }
 }
