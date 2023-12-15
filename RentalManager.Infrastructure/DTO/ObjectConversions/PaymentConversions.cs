@@ -12,7 +12,8 @@ public static class PaymentConversions
             Method = createPayment.Method,
             Amount = createPayment.Amount,
             DateFrom = createPayment.DateTimeFrom,
-            DateTo = createPayment.DateTimeTo
+            DateTo = createPayment.DateTimeTo,
+            AgreementId = createPayment.AgreementId
         };
     }
 

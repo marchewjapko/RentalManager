@@ -51,8 +51,6 @@ else
 
 var app = builder.Build();
 
-// app.MapIdentityApi<User>();
-
 app.UseSwagger();
 app.UseSwaggerUI();
 

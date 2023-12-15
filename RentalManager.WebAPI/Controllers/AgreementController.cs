@@ -25,9 +25,9 @@ public class AgreementController : Controller
     [HttpPost]
     public async Task<IActionResult> AddAgreement([FromBody] CreateAgreement createAgreement)
     {
-        var result = await _agreementService.AddAsync(createAgreement, User);
+        await _agreementService.AddAsync(createAgreement, User);
 
-        return Json(result);
+        return Ok();
     }
 
     [ProducesResponseType(typeof(IEnumerable<AgreementDto>), 200)]
@@ -64,9 +64,9 @@ public class AgreementController : Controller
         [FromBody] UpdateAgreement updateAgreement,
         int id)
     {
-        var result = await _agreementService.UpdateAsync(updateAgreement, id);
+        await _agreementService.UpdateAsync(updateAgreement, id);
 
-        return Json(result);
+        return Ok();
     }
 
     [Route("/Agreement/Deactivate/{id}")]

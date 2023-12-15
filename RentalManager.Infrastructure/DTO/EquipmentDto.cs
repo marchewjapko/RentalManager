@@ -9,6 +9,4 @@ public class EquipmentDto
     public int Price { get; init; }
 
     public byte[]? Image { get; set; }
-
-    public DateTime DateAdded { get; init; }
 }

@@ -9,19 +9,10 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class AgreementRepository(AppDbContext appDbContext) : IAgreementRepository
 {
-    public async Task<Agreement> AddAsync(Agreement agreement)
+    public async Task AddAsync(Agreement agreement)
     {
-        try
-        {
-            appDbContext.Agreements.Add(agreement);
-            await appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to add rental agreement\n" + ex.Message);
-        }
-
-        return await Task.FromResult(agreement);
+        appDbContext.Agreements.Add(agreement);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
@@ -135,7 +126,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             .AsEnumerable());
     }
 
-    public async Task<Agreement> UpdateAsync(Agreement agreement, int id)
+    public async Task UpdateAsync(Agreement agreement, int id)
     {
         var agreementToUpdate = appDbContext.Agreements
             .Include(x => x.Equipment)
@@ -151,18 +142,15 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         agreementToUpdate.IsActive = agreement.IsActive;
         agreementToUpdate.EmployeeId = agreement.EmployeeId;
-        agreementToUpdate.User = agreement.User;
-        agreementToUpdate.ClientId = agreement.ClientId;
-        agreementToUpdate.Client = agreement.Client;
+        agreementToUpdate.Employee = agreement.Employee;
         agreementToUpdate.Comment = agreement.Comment;
         agreementToUpdate.Deposit = agreement.Deposit;
         agreementToUpdate.Equipment = agreement.Equipment;
         agreementToUpdate.TransportFromPrice = agreement.TransportFromPrice;
         agreementToUpdate.TransportToPrice = agreement.TransportToPrice;
         agreementToUpdate.DateAdded = agreement.DateAdded;
+        agreementToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(agreementToUpdate);
     }
 
     public async Task Deactivate(int id)

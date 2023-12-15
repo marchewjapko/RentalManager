@@ -9,12 +9,10 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 {
-    public async Task<Client> AddAsync(Client client)
+    public async Task AddAsync(Client client)
     {
         appDbContext.Clients.Add(client);
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(client);
     }
 
     public async Task DeleteAsync(int id)
@@ -91,11 +89,16 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         {
             result = result.Where(x => x.CreatedTs.Date < queryClients.To.Value.Date);
         }
+        
+        if (queryClients.OnlyActive)
+        {
+            result = result.Where(x => x.IsActive);
+        }
 
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task<Client> UpdateAsync(Client client, int id)
+    public async Task UpdateAsync(Client client, int id)
     {
         var clientToUpdate = appDbContext.Clients.FirstOrDefault(x => x.Id == id);
 
@@ -111,9 +114,8 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         clientToUpdate.IdCard = client.IdCard;
         clientToUpdate.City = client.City;
         clientToUpdate.Street = client.Street;
+        clientToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(clientToUpdate);
     }
 
     public async Task Deactivate(int id)

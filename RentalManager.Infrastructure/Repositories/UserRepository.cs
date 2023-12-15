@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 using RentalManager.Infrastructure.Requests;
@@ -10,21 +11,6 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class UserRepository(AppDbContext appDbContext) : IUserRepository
 {
-    public async Task<User> AddAsync(User user)
-    {
-        try
-        {
-            appDbContext.Users.Add(user);
-            await appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to add user\n" + ex.Message);
-        }
-
-        return await Task.FromResult(user);
-    }
-
     public async Task DeleteAsync(int id)
     {
         var result = await appDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -50,30 +36,29 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         return result;
     }
 
-    public async Task<IEnumerable<User>> BrowseAllAsync(string? name = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<User>> BrowseAllAsync(QueryUser queryUser)
     {
         var result = appDbContext.Users.AsQueryable();
-        if (name != null)
+        
+        if (queryUser.Name != null)
         {
-            result = result.Where(x => x.Name.Contains(name));
+            result = result.Where(x => x.Name.Contains(queryUser.Name));
         }
 
-        if (from != null)
+        if (queryUser.From != null)
         {
-            result = result.Where(x => x.DateAdded.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > queryUser.From.Value.Date);
         }
 
-        if (to != null)
+        if (queryUser.To != null)
         {
-            result = result.Where(x => x.DateAdded.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < queryUser.To.Value.Date);
         }
 
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task<User> UpdateAsync(User user, int id)
+    public async Task UpdateAsync(User user, int id)
     {
         var userToUpdate = appDbContext.Users.FirstOrDefault(x => x.Id == id);
 
@@ -86,9 +71,8 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         userToUpdate.Surname = user.Surname;
         userToUpdate.Image = user.Image;
         userToUpdate.Gender = user.Gender;
+        userToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(userToUpdate);
     }
 
     public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
@@ -102,7 +86,7 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
             throw new PasswordChangeFailedException(resetPasswordRequest.UserName);
         }
 
-        user.PasswordHash = hasher.HashPassword(null, resetPasswordRequest.NewPassword);
+        user.PasswordHash = hasher.HashPassword(null!, resetPasswordRequest.NewPassword);
         await appDbContext.SaveChangesAsync();
     }
 }

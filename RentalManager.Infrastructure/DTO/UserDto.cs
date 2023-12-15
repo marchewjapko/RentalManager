@@ -13,6 +13,4 @@ public class UserDto
     public GenderDto Gender { get; set; }
 
     public byte[]? Image { get; set; }
-
-    public DateTime DateAdded { get; init; }
 }

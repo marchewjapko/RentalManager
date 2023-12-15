@@ -19,10 +19,11 @@ public class AgreementService(IAgreementRepository agreementRepository,
         UserManager<User> userManager)
     : IAgreementService
 {
-    public async Task<AgreementDto> AddAsync(CreateAgreement createAgreement,
+    public async Task AddAsync(CreateAgreement createAgreement,
         ClaimsPrincipal claimsPrincipal)
     {
-        var equipment = await equipmentRepository.GetAsync(createAgreement.EquipmentIds);
+        var equipment = (await equipmentRepository.GetAsync(createAgreement.EquipmentIds)).ToList();
+
         var client = await clientRepository.GetAsync(createAgreement.ClientId);
         var employee = await userRepository.GetAsync(createAgreement.EmployeeId);
         var user = (await userManager.GetUserAsync(claimsPrincipal))!;
@@ -52,10 +53,7 @@ public class AgreementService(IAgreementRepository agreementRepository,
         agreement.User = user;
         foreach (var payment in agreement.Payments) payment.User = user;
 
-        var result = await agreementRepository.AddAsync(agreement);
-        result.Payments = (await paymentRepository.BrowseAllAsync(result.Id)).ToList();
-
-        return result.ToDto();
+        await agreementRepository.AddAsync(agreement);
     }
 
     public async Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements)
@@ -77,19 +75,30 @@ public class AgreementService(IAgreementRepository agreementRepository,
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement, int id)
+    public async Task UpdateAsync(UpdateAgreement updateAgreement, int id)
     {
         var agreement = updateAgreement.ToDomain();
-        var rentalEquipment = await equipmentRepository.GetAsync(updateAgreement.EquipmentIds);
-        var client = await clientRepository.GetAsync(updateAgreement.ClientId);
-        var user = await userRepository.GetAsync(updateAgreement.EmployeeId);
-        agreement.Equipment = rentalEquipment.ToList();
-        agreement.Client = client;
-        agreement.User = user;
-        await agreementRepository.UpdateAsync(agreement, id);
-        agreement.Payments = (await paymentRepository.BrowseAllAsync(id)).ToList();
+        var equipment = (await equipmentRepository.GetAsync(updateAgreement.EquipmentIds)).ToList();
+        var employee = await userRepository.GetAsync(updateAgreement.EmployeeId);
 
-        return await Task.FromResult(agreement.ToDto());
+        if (!equipment.Select(x => x.Id)
+                .OrderBy(x => x)
+                .SequenceEqual(updateAgreement.EquipmentIds.OrderBy(x => x)))
+        {
+            var missingIds = updateAgreement.EquipmentIds.Except(equipment.Select(x => x.Id));
+
+            throw new EquipmentNotFoundException(missingIds);
+        }
+
+        if (employee is null)
+        {
+            throw new UserNotFoundException(updateAgreement.EmployeeId);
+        }
+
+        agreement.Employee = employee;
+        agreement.Equipment = equipment.ToList();
+        
+        await agreementRepository.UpdateAsync(agreement, id);
     }
 
     public async Task Deactivate(int id)

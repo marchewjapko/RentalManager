@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
@@ -12,24 +13,17 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 public class PaymentService
     (IPaymentRepository paymentRepository, UserManager<User> userManager) : IPaymentService
 {
-    public async Task<PaymentDto> AddAsync(CreatePayment createPayment,
-        int rentalAgreementId,
-        ClaimsPrincipal user)
+    public async Task AddAsync(CreatePayment createPayment, ClaimsPrincipal user)
     {
         var newPayment = createPayment.ToDomain();
         newPayment.User = (await userManager.GetUserAsync(user))!;
 
-        var result = await paymentRepository.AddAsync(newPayment, rentalAgreementId);
-
-        return result.ToDto();
+        await paymentRepository.AddAsync(newPayment);
     }
 
-    public async Task<IEnumerable<PaymentDto>> BrowseAllAsync(int? rentalAgreementId = null,
-        string? method = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<PaymentDto>> BrowseAllAsync(QueryPayment queryPayment)
     {
-        var result = await paymentRepository.BrowseAllAsync(rentalAgreementId, method, from, to);
+        var result = await paymentRepository.BrowseAllAsync(queryPayment);
 
         return await Task.FromResult(result.Select(x => x.ToDto()));
     }
@@ -46,11 +40,9 @@ public class PaymentService
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task<PaymentDto> UpdateAsync(UpdatePayment updatePayment, int id)
+    public async Task UpdateAsync(UpdatePayment updatePayment, int id)
     {
-        var result = await paymentRepository.UpdateAsync(updatePayment.ToDomain(), id);
-
-        return await Task.FromResult(result.ToDto());
+        await paymentRepository.UpdateAsync(updatePayment.ToDomain(), id);
     }
 
     public async Task Deactivate(int id)

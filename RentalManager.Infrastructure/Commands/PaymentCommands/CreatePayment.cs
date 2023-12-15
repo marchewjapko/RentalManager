@@ -1,3 +1,9 @@
-﻿namespace RentalManager.Infrastructure.Commands.PaymentCommands;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class CreatePayment : PaymentBaseCommand;
+namespace RentalManager.Infrastructure.Commands.PaymentCommands;
+
+public class CreatePayment : PaymentBaseCommand
+{
+    [Required]
+    public int AgreementId { get; set; }
+}

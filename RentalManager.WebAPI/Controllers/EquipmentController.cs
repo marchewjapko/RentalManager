@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -24,18 +25,16 @@ public class EquipmentController : Controller
     [HttpPost]
     public async Task<IActionResult> AddEquipment([FromForm] CreateEquipment createEquipment)
     {
-        var result = await _equipmentService.AddAsync(createEquipment, User);
+        await _equipmentService.AddAsync(createEquipment, User);
 
-        return Json(result);
+        return Ok();
     }
 
     [ProducesResponseType(typeof(IEnumerable<EquipmentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllEquipment(string? name = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IActionResult> BrowseAllEquipment(QueryEquipment queryEquipment)
     {
-        var result = await _equipmentService.BrowseAllAsync(name, from, to);
+        var result = await _equipmentService.BrowseAllAsync(queryEquipment);
 
         return Json(result);
     }
@@ -64,9 +63,9 @@ public class EquipmentController : Controller
         [FromForm] UpdateEquipment updateEquipment,
         int id)
     {
-        var result = await _equipmentService.UpdateAsync(updateEquipment, id);
+        await _equipmentService.UpdateAsync(updateEquipment, id);
 
-        return Json(result);
+        return Ok();
     }
 
     [ProducesResponseType(typeof(File), 200)]

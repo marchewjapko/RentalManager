@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -8,20 +9,10 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 {
-    public async Task<Payment> AddAsync(Payment payment, int agreementId)
+    public async Task AddAsync(Payment payment)
     {
-        payment.AgreementId = agreementId;
-        try
-        {
-            appDbContext.Payments.Add(payment);
-            await appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to add payment\n" + ex.Message);
-        }
-
-        return await Task.FromResult(payment);
+        appDbContext.Payments.Add(payment);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
@@ -49,37 +40,40 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         return result;
     }
 
-    public async Task<IEnumerable<Payment>> BrowseAllAsync(int? agreementId = null,
-        string? method = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<Payment>> BrowseAllAsync(QueryPayment queryPayment)
     {
         var result = appDbContext.Payments.Where(x => x.IsActive)
             .AsQueryable();
-        if (agreementId != null)
+        
+        if (queryPayment.AgreementId != null)
         {
-            result = result.Where(x => x.AgreementId == agreementId);
+            result = result.Where(x => x.AgreementId == queryPayment.AgreementId);
         }
 
-        if (method != null)
+        if (queryPayment.Method != null)
         {
-            result = result.Where(x => x.Method == method);
+            result = result.Where(x => x.Method == queryPayment.Method);
         }
 
-        if (from != null)
+        if (queryPayment.From != null)
         {
-            result = result.Where(x => x.CreatedTs.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > queryPayment.From.Value.Date);
         }
 
-        if (to != null)
+        if (queryPayment.To != null)
         {
-            result = result.Where(x => x.CreatedTs.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < queryPayment.To.Value.Date);
+        }
+        
+        if (queryPayment.OnlyActive)
+        {
+            result = result.Where(x => x.IsActive);
         }
 
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task<Payment> UpdateAsync(Payment payment, int id)
+    public async Task UpdateAsync(Payment payment, int id)
     {
         var paymentToUpdate = appDbContext.Payments.FirstOrDefault(x => x.Id == id);
 
@@ -93,9 +87,8 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         paymentToUpdate.Amount = payment.Amount;
         paymentToUpdate.DateFrom = payment.DateFrom;
         paymentToUpdate.DateTo = payment.DateTo;
+        paymentToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(paymentToUpdate);
     }
 
     public async Task Deactivate(int id)

@@ -5,13 +5,13 @@ namespace RentalManager.Core.Repositories;
 
 public interface IClientRepository
 {
-    Task<Client> AddAsync(Client client);
+    Task AddAsync(Client client);
 
     Task<Client> GetAsync(int id);
 
     Task DeleteAsync(int id);
 
-    Task<Client> UpdateAsync(Client client, int id);
+    Task UpdateAsync(Client client, int id);
 
     Task<IEnumerable<Client>> BrowseAllAsync(QueryClients queryClients);
 

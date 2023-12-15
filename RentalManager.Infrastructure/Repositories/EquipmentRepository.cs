@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -8,19 +9,10 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentRepository
 {
-    public async Task<Equipment> AddAsync(Equipment equipment)
+    public async Task AddAsync(Equipment equipment)
     {
-        try
-        {
-            appDbContext.Equipment.Add(equipment);
-            await appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to add rental equipment\n" + ex.Message);
-        }
-
-        return await Task.FromResult(equipment);
+        appDbContext.Equipment.Add(equipment);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
@@ -63,31 +55,35 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         return result;
     }
 
-    public async Task<IEnumerable<Equipment>> BrowseAllAsync(string? name = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<Equipment>> BrowseAllAsync(QueryEquipment queryEquipment)
     {
         var result = appDbContext.Equipment.Where(x => x.IsActive)
             .AsQueryable();
-        if (name != null)
+        
+        if (queryEquipment.Name != null)
         {
-            result = result.Where(x => x.Name.Contains(name));
+            result = result.Where(x => x.Name.Contains(queryEquipment.Name));
         }
 
-        if (from != null)
+        if (queryEquipment.From != null)
         {
-            result = result.Where(x => x.CreatedTs.Date > from.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date > queryEquipment.From.Value.Date);
         }
 
-        if (to != null)
+        if (queryEquipment.To != null)
         {
-            result = result.Where(x => x.CreatedTs.Date < to.Value.Date);
+            result = result.Where(x => x.CreatedTs.Date < queryEquipment.To.Value.Date);
+        }
+        
+        if (queryEquipment.OnlyActive)
+        {
+            result = result.Where(x => x.IsActive);
         }
 
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task<Equipment> UpdateAsync(Equipment equipment, int id)
+    public async Task UpdateAsync(Equipment equipment, int id)
     {
         var equipmentToUpdate = appDbContext.Equipment.FirstOrDefault(x => x.Id == id);
 
@@ -99,9 +95,8 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         equipmentToUpdate.Name = equipment.Name;
         equipmentToUpdate.Price = equipment.Price;
         equipmentToUpdate.Image = equipment.Image;
+        equipmentToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
-
-        return await Task.FromResult(equipmentToUpdate);
     }
 
     public async Task Deactivate(int id)

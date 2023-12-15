@@ -9,4 +9,6 @@ public class Equipment : DomainBase
     public int Price { get; set; }
 
     public byte[]? Image { get; set; }
+    
+    public virtual ICollection<Agreement> Agreements { get; set; } = null!;
 }

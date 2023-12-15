@@ -17,6 +17,4 @@ public class ClientDto
     public string City { get; init; } = null!;
 
     public string Street { get; init; } = null!;
-
-    public DateTime DateAdded { get; init; }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Requests;
@@ -20,19 +21,17 @@ public class UserController
     [HttpPost]
     public async Task<IActionResult> AddUser([FromForm] CreateUser createUser)
     {
-        var result = await userService.AddAsync(createUser);
+        await userService.AddAsync(createUser);
 
-        return Json(result);
+        return Ok();
     }
 
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllUsers(string? name = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IActionResult> BrowseAllUsers(QueryUser queryUser)
     {
-        var result = await userService.BrowseAllAsync(name, from, to);
+        var result = await userService.BrowseAllAsync(queryUser);
 
         return Json(result);
     }
@@ -62,9 +61,9 @@ public class UserController
     public async Task<IActionResult> UpdateUser([FromForm] UpdateUser updateUser,
         int id)
     {
-        var result = await userService.UpdateAsync(updateUser, id);
+        await userService.UpdateAsync(updateUser, id);
 
-        return Json(result);
+        return Ok();
     }
 
     [Authorize]

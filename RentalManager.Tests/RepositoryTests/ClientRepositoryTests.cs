@@ -46,7 +46,7 @@ public class ClientRepositoryTests
     public async Task ShouldAdd()
     {
         // act
-        var result = await _clientRepository.AddAsync(_mockClient);
+        await _clientRepository.AddAsync(_mockClient);
 
         // assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
@@ -193,7 +193,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Surname = _mockClient.Surname
+            Surname = newClient.Surname
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -209,7 +209,7 @@ public class ClientRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo(_mockClient.Surname));
+            Assert.That(result[0].Surname, Is.EqualTo(newClient.Surname));
         });
     }
 
@@ -234,7 +234,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            PhoneNumber = _mockClient.PhoneNumber
+            PhoneNumber = newClient.PhoneNumber
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -246,11 +246,11 @@ public class ClientRepositoryTests
 
         // act
         var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
-
+        
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo(_mockClient.Surname));
+            Assert.That(result[0].Surname, Is.EqualTo(newClient.Surname));
         });
     }
 

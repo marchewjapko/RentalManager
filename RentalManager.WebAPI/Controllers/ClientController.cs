@@ -25,9 +25,9 @@ public class ClientController : Controller
     [HttpPost]
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
-        var result = await _clientService.AddAsync(createClient, User);
+        await _clientService.AddAsync(createClient, User);
 
-        return Json(result);
+        return Ok();
     }
 
     [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
@@ -62,9 +62,9 @@ public class ClientController : Controller
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
     {
-        var result = await _clientService.UpdateAsync(updateClient, id);
+        await _clientService.UpdateAsync(updateClient, id);
 
-        return Json(result);
+        return Ok();
     }
 
     [Route("/Client/Deactivate/{id}")]

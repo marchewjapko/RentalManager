@@ -16,5 +16,7 @@ public class User : IdentityUser<int>
 
     public bool IsConfirmed { get; set; } = false;
 
-    public DateTime DateAdded { get; set; }
+    public DateTime CreatedTs { get; set; } = DateTime.Now;
+    
+    public DateTime? UpdatedTs { get; set; } = null;
 }

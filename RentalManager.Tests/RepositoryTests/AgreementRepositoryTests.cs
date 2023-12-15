@@ -32,7 +32,7 @@ public class AgreementRepositoryTests
         .RuleFor(x => x.Surname, f => f.Name.LastName())
         .RuleFor(x => x.UserName, f => f.Internet.UserName())
         .RuleFor(x => x.Gender, () => Gender.Man)
-        .RuleFor(x => x.DateAdded, () => DateTime.Now)
+        .RuleFor(x => x.CreatedTs, () => DateTime.Now)
         .Generate();
 
     private static readonly Agreement MockAgreement = new Faker<Agreement>()
@@ -72,8 +72,10 @@ public class AgreementRepositoryTests
     [TearDown]
     public void TearDown()
     {
-        // _appDbContext.Agreements.RemoveRange(_appDbContext.Agreements);
-        // _appDbContext.SaveChanges();
+        _appDbContext.Agreements.RemoveRange(_appDbContext.Agreements);
+        _appDbContext.Clients.RemoveRange(_appDbContext.Clients);
+        _appDbContext.Equipment.RemoveRange(_appDbContext.Equipment);
+        _appDbContext.SaveChanges();
         _appDbContext.Database.EnsureDeleted();
         _appDbContext.Dispose();
     }
@@ -82,7 +84,7 @@ public class AgreementRepositoryTests
     public async Task ShouldAdd()
     {
         // act
-        var result = await _agreementRepository.AddAsync(MockAgreement);
+        await _agreementRepository.AddAsync(MockAgreement);
 
         // assert
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
@@ -194,7 +196,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.Surname, f => f.Name.LastName())
             .RuleFor(x => x.UserName, f => f.Internet.UserName())
             .RuleFor(x => x.Gender, () => Gender.Man)
-            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.CreatedTs, () => DateTime.Now)
             .Generate();
 
         var newEquipment = new Faker<Equipment>()
@@ -239,9 +241,7 @@ public class AgreementRepositoryTests
         {
             City = MockClient.City
         };
-
-        var xx = _appDbContext.Agreements.ToList();
-
+        
         // act
         var result1 = await _agreementRepository.BrowseAllAsync(query1);
         var result2 = await _agreementRepository.BrowseAllAsync(query2);
@@ -263,59 +263,68 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
-        var (client, user, equipment) = GetMocks();
-        var newAgreement = new Agreement
-        {
-            EmployeeId = user.Id,
-            CreatedBy = user.Id,
-            IsActive = true,
-            ClientId = client.Id,
-            Deposit = 100,
-            TransportToPrice = 200,
-            Equipment = new List<Equipment> { equipment }
-        };
-        var id = _appDbContext.Agreements.Add(newAgreement)
-            .Entity.Id;
+        // arrange
+        var newAgreement = new Faker<Agreement>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.EmployeeId, () => MockUser.Id)
+            .RuleFor(x => x.Employee, () => MockUser)
+            .RuleFor(x => x.User, () => MockUser)
+            .RuleFor(x => x.ClientId, () => MockClient.Id)
+            .RuleFor(x => x.Client, () => MockClient)
+            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
+            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TransportFromPrice, () => null)
+            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Payments, () => new List<Payment>())
+            .Generate();
+        
+        _appDbContext.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
-        Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
-        newAgreement.IsActive = false;
-        newAgreement.Deposit = 250;
-        var result = await _agreementRepository.UpdateAsync(newAgreement, id);
-        Assert.Multiple(() => {
-            Assert.That(result.IsActive, Is.False);
-            Assert.That(result.Equipment, Has.Count.EqualTo(1));
-            Assert.That(result.Deposit, Is.EqualTo(250));
-        });
+        newAgreement.Comment = "NEW COMMENT";
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+
+        // act
+        await _agreementRepository.UpdateAsync(newAgreement, 1);
+
+        // assert
+        var updatedAgreement = _appDbContext.Agreements.First();
+        Assert.That(updatedAgreement.Comment, Is.EqualTo("NEW COMMENT"));
     }
 
     [Test]
     public async Task ShouldDeactivate()
     {
         // arrange
-        var (client, user, equipment) = GetMocks();
-        var newAgreement = new Agreement
-        {
-            EmployeeId = user.Id,
-            IsActive = true,
-            ClientId = client.Id,
-            Deposit = 100,
-            TransportToPrice = 200,
-            Equipment = new List<Equipment> { equipment }
-        };
-
-        // act
-        _appDbContext.Agreements.Add(newAgreement);
+        var newAgreement = new Faker<Agreement>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.EmployeeId, () => MockUser.Id)
+            .RuleFor(x => x.Employee, () => MockUser)
+            .RuleFor(x => x.User, () => MockUser)
+            .RuleFor(x => x.ClientId, () => MockClient.Id)
+            .RuleFor(x => x.Client, () => MockClient)
+            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
+            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TransportFromPrice, () => null)
+            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Payments, () => new List<Payment>())
+            .Generate();
+        
+        _appDbContext.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
 
-        // assert
-        Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
-        await _agreementRepository.Deactivate(1);
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
-        Assert.Multiple(() => {
-            Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
-            Assert.That(_appDbContext.Agreements.First()
-                .IsActive, Is.False);
-        });
+        // act
+        await _agreementRepository.Deactivate(2);
+
+        // assert
+        var agreement = _appDbContext.Agreements.First();
+        Assert.That(agreement.IsActive, Is.False);
     }
 
     private Tuple<Client, User, Equipment> GetMocks()

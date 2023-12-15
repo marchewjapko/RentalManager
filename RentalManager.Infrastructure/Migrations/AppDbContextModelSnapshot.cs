@@ -22,6 +22,21 @@ namespace RentalManager.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AgreementEquipment", b =>
+                {
+                    b.Property<int>("AgreementsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AgreementsId", "EquipmentId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.ToTable("AgreementEquipment");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -276,9 +291,6 @@ namespace RentalManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AgreementId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -302,8 +314,6 @@ namespace RentalManager.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AgreementId");
 
                     b.HasIndex("CreatedBy");
 
@@ -369,7 +379,7 @@ namespace RentalManager.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateAdded")
+                    b.Property<DateTime>("CreatedTs")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -425,6 +435,9 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("UpdatedTs")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -441,6 +454,21 @@ namespace RentalManager.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("AgreementEquipment", b =>
+                {
+                    b.HasOne("RentalManager.Core.Domain.Agreement", null)
+                        .WithMany()
+                        .HasForeignKey("AgreementsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RentalManager.Core.Domain.Equipment", null)
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -534,11 +562,6 @@ namespace RentalManager.Infrastructure.Migrations
 
             modelBuilder.Entity("RentalManager.Core.Domain.Equipment", b =>
                 {
-                    b.HasOne("RentalManager.Core.Domain.Agreement", null)
-                        .WithMany("Equipment")
-                        .HasForeignKey("AgreementId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("RentalManager.Core.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -569,8 +592,6 @@ namespace RentalManager.Infrastructure.Migrations
 
             modelBuilder.Entity("RentalManager.Core.Domain.Agreement", b =>
                 {
-                    b.Navigation("Equipment");
-
                     b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618

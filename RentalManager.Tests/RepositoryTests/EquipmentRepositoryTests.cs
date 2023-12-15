@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
@@ -40,10 +41,10 @@ public class EquipmentRepositoryTests
     public async Task ShouldAdd()
     {
         // act
-        var result = await _equipmentRepository.AddAsync(_mockEquipment);
+        await _equipmentRepository.AddAsync(_mockEquipment);
 
         // assert
-        Assert.That(result.Id, Is.EqualTo(1));
+        Assert.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
     }
 
     [Test]
@@ -114,7 +115,7 @@ public class EquipmentRepositoryTests
             .Id, Is.EqualTo(2));
 
         // act
-        var result = await _equipmentRepository.BrowseAllAsync();
+        var result = await _equipmentRepository.BrowseAllAsync(new QueryEquipment());
 
         // assert
         Assert.That(result.Count(), Is.EqualTo(2));
@@ -134,6 +135,11 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
 
+        var query = new QueryEquipment()
+        {
+            Name = newEquipment.Name
+        };
+
         Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(2));
         Assume.That(_appDbContext.Equipment.First()
             .Id, Is.EqualTo(1));
@@ -142,7 +148,7 @@ public class EquipmentRepositoryTests
             .Id, Is.EqualTo(2));
 
         // act
-        var result = (await _equipmentRepository.BrowseAllAsync(newEquipment.Name)).ToList();
+        var result = (await _equipmentRepository.BrowseAllAsync(query)).ToList();
 
         // assert
         Assert.Multiple(() => {

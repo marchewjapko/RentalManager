@@ -41,7 +41,8 @@ namespace RentalManager.Infrastructure.Migrations
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedTs = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedTs = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -106,6 +107,31 @@ namespace RentalManager.Infrastructure.Migrations
                     table.PrimaryKey("PK_Clients", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Clients_Users_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Equipment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    CreatedTs = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedTs = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Equipment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Equipment_Users_CreatedBy",
                         column: x => x.CreatedBy,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -239,33 +265,25 @@ namespace RentalManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Equipment",
+                name: "AgreementEquipment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    AgreementId = table.Column<int>(type: "int", nullable: true),
-                    CreatedTs = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTs = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false)
+                    AgreementsId = table.Column<int>(type: "int", nullable: false),
+                    EquipmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Equipment", x => x.Id);
+                    table.PrimaryKey("PK_AgreementEquipment", x => new { x.AgreementsId, x.EquipmentId });
                     table.ForeignKey(
-                        name: "FK_Equipment_Agreements_AgreementId",
-                        column: x => x.AgreementId,
+                        name: "FK_AgreementEquipment_Agreements_AgreementsId",
+                        column: x => x.AgreementsId,
                         principalTable: "Agreements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Equipment_Users_CreatedBy",
-                        column: x => x.CreatedBy,
-                        principalTable: "Users",
+                        name: "FK_AgreementEquipment_Equipment_EquipmentId",
+                        column: x => x.EquipmentId,
+                        principalTable: "Equipment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -309,6 +327,11 @@ namespace RentalManager.Infrastructure.Migrations
                 values: new object[] { 1, null, "Administrator", "administrator" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AgreementEquipment_EquipmentId",
+                table: "AgreementEquipment",
+                column: "EquipmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Agreements_ClientId",
                 table: "Agreements",
                 column: "ClientId");
@@ -327,11 +350,6 @@ namespace RentalManager.Infrastructure.Migrations
                 name: "IX_Clients_CreatedBy",
                 table: "Clients",
                 column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Equipment_AgreementId",
-                table: "Equipment",
-                column: "AgreementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Equipment_CreatedBy",
@@ -393,7 +411,7 @@ namespace RentalManager.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Equipment");
+                name: "AgreementEquipment");
 
             migrationBuilder.DropTable(
                 name: "Payments");
@@ -413,6 +431,9 @@ namespace RentalManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Equipment");
 
             migrationBuilder.DropTable(
                 name: "Agreements");

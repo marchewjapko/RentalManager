@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.Services.Interfaces;
@@ -22,22 +23,18 @@ public class PaymentController : Controller
 
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment,
-        int agreementId)
+    public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment)
     {
-        var result = await _paymentService.AddAsync(createPayment, agreementId, User);
+        await _paymentService.AddAsync(createPayment, User);
 
-        return Json(result);
+        return Ok();
     }
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllPayments(int? agreementId = null,
-        string? method = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IActionResult> BrowseAllPayments(QueryPayment queryPayment)
     {
-        var result = await _paymentService.BrowseAllAsync(agreementId, method, from, to);
+        var result = await _paymentService.BrowseAllAsync(queryPayment);
 
         return Json(result);
     }
@@ -64,9 +61,9 @@ public class PaymentController : Controller
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePayment([FromBody] UpdatePayment updatePayment, int id)
     {
-        var result = await _paymentService.UpdateAsync(updatePayment, id);
+        await _paymentService.UpdateAsync(updatePayment, id);
 
-        return Json(result);
+        return Ok();
     }
 
     [Route("/Payment/Deactivate/{id}")]

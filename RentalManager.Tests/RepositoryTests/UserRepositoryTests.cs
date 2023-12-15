@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
@@ -14,7 +15,7 @@ public class UserRepositoryTests
         .RuleFor(x => x.Surname, f => f.Name.LastName())
         .RuleFor(x => x.UserName, f => f.Internet.UserName())
         .RuleFor(x => x.Gender, () => Gender.Man)
-        .RuleFor(x => x.DateAdded, () => DateTime.Now)
+        .RuleFor(x => x.CreatedTs, () => DateTime.Now)
         .Generate();
 
     private AppDbContext _appDbContext = null!;
@@ -36,16 +37,6 @@ public class UserRepositoryTests
     {
         _appDbContext.Database.EnsureDeleted();
         _appDbContext.Dispose();
-    }
-
-    [Test]
-    public async Task ShouldAdd()
-    {
-        // act
-        var result = await _userRepository.AddAsync(_mockUser);
-
-        // assert
-        Assert.That(_appDbContext.Users.Count(), Is.EqualTo(1));
     }
 
     [Test]
@@ -104,7 +95,7 @@ public class UserRepositoryTests
             .RuleFor(x => x.Surname, f => f.Name.LastName())
             .RuleFor(x => x.UserName, f => f.Internet.UserName())
             .RuleFor(x => x.Gender, () => Gender.Man)
-            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.CreatedTs, () => DateTime.Now)
             .Generate();
 
         _appDbContext.Add(_mockUser);
@@ -119,7 +110,7 @@ public class UserRepositoryTests
             .Id, Is.EqualTo(2));
 
         // act
-        var result = await _userRepository.BrowseAllAsync();
+        var result = await _userRepository.BrowseAllAsync(new QueryUser());
 
         // assert
         Assert.That(result.Count(), Is.EqualTo(2));
@@ -135,13 +126,18 @@ public class UserRepositoryTests
             .RuleFor(x => x.Surname, f => f.Name.LastName())
             .RuleFor(x => x.UserName, f => f.Internet.UserName())
             .RuleFor(x => x.Gender, () => Gender.Man)
-            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.CreatedTs, () => DateTime.Now)
             .Generate();
 
         _appDbContext.Add(_mockUser);
         _appDbContext.Add(newUser2);
         await _appDbContext.SaveChangesAsync();
 
+        var query = new QueryUser()
+        {
+            Name = _mockUser.Name
+        };
+        
         Assume.That(_appDbContext.Users.Count(), Is.EqualTo(2));
         Assume.That(_appDbContext.Users.First()
             .Id, Is.EqualTo(1));
@@ -150,7 +146,7 @@ public class UserRepositoryTests
             .Id, Is.EqualTo(2));
 
         // act
-        var result = (await _userRepository.BrowseAllAsync(_mockUser.Name)).ToList();
+        var result = (await _userRepository.BrowseAllAsync(query)).ToList();
 
         // assert
         Assert.Multiple(() => {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
+using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
@@ -12,21 +13,17 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 public class EquipmentService(IEquipmentRepository equipmentRepository,
     UserManager<User> userManager) : IEquipmentService
 {
-    public async Task<EquipmentDto> AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
+    public async Task AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
     {
         var newEquipment = createEquipment.ToDomain();
         newEquipment.User = (await userManager.GetUserAsync(user))!;
 
-        var result = await equipmentRepository.AddAsync(newEquipment);
-
-        return result.ToDto();
+        await equipmentRepository.AddAsync(newEquipment);
     }
 
-    public async Task<IEnumerable<EquipmentDto>> BrowseAllAsync(string? name = null,
-        DateTime? from = null,
-        DateTime? to = null)
+    public async Task<IEnumerable<EquipmentDto>> BrowseAllAsync(QueryEquipment queryEquipment)
     {
-        var result = await equipmentRepository.BrowseAllAsync(name, from, to);
+        var result = await equipmentRepository.BrowseAllAsync(queryEquipment);
 
         return await Task.FromResult(result.Select(x => x.ToDto()));
     }
@@ -43,11 +40,9 @@ public class EquipmentService(IEquipmentRepository equipmentRepository,
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task<EquipmentDto> UpdateAsync(UpdateEquipment updateEquipment, int id)
+    public async Task UpdateAsync(UpdateEquipment updateEquipment, int id)
     {
-        var result = await equipmentRepository.UpdateAsync(updateEquipment.ToDomain(), id);
-
-        return await Task.FromResult(result.ToDto());
+        await equipmentRepository.UpdateAsync(updateEquipment.ToDomain(), id);
     }
 
     public async Task Deactivate(int id)
