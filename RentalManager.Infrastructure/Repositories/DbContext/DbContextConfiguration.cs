@@ -32,13 +32,6 @@ public static class DbContextConfiguration
             });
 
         modelBuilder.Entity<IdentityRoleClaim<int>>()
-            .ToTable("RoleClaims", "dbo");
-    }
-
-    public static void ConfigureOnDeleteActions(this ModelBuilder modelBuilder)
-    {
-        foreach (var relationship in modelBuilder.Model.GetEntityTypes()
-                     .SelectMany(e => e.GetForeignKeys()))
-            relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            .ToTable("RoleClaims");
     }
 }

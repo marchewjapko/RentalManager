@@ -29,7 +29,7 @@ public class UserController
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllUsers(QueryUser queryUser)
+    public async Task<IActionResult> BrowseAllUsers([FromQuery] QueryUser queryUser)
     {
         var result = await userService.BrowseAllAsync(queryUser);
 

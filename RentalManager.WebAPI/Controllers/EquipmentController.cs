@@ -32,7 +32,7 @@ public class EquipmentController : Controller
 
     [ProducesResponseType(typeof(IEnumerable<EquipmentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllEquipment(QueryEquipment queryEquipment)
+    public async Task<IActionResult> BrowseAllEquipment([FromQuery] QueryEquipment queryEquipment)
     {
         var result = await _equipmentService.BrowseAllAsync(queryEquipment);
 

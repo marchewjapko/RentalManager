@@ -11,9 +11,6 @@ namespace RentalManager.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "dbo");
-
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -64,7 +61,6 @@ namespace RentalManager.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "RoleClaims",
-                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -81,7 +77,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,7 +106,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.CreatedBy,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,7 +152,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,7 +172,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,13 +190,13 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,7 +216,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,7 +245,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Agreements_Users_CreatedBy",
                         column: x => x.CreatedBy,
@@ -279,7 +275,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.AgreementsId,
                         principalTable: "Agreements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AgreementEquipment_Equipment_EquipmentId",
                         column: x => x.EquipmentId,
@@ -312,7 +308,7 @@ namespace RentalManager.Infrastructure.Migrations
                         column: x => x.AgreementId,
                         principalTable: "Agreements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Payments_Users_CreatedBy",
                         column: x => x.CreatedBy,
@@ -368,7 +364,6 @@ namespace RentalManager.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
-                schema: "dbo",
                 table: "RoleClaims",
                 column: "RoleId");
 
@@ -417,8 +412,7 @@ namespace RentalManager.Infrastructure.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "RoleClaims",
-                schema: "dbo");
+                name: "RoleClaims");
 
             migrationBuilder.DropTable(
                 name: "UserClaims");

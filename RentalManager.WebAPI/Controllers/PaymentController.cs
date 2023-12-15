@@ -32,7 +32,7 @@ public class PaymentController : Controller
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllPayments(QueryPayment queryPayment)
+    public async Task<IActionResult> BrowseAllPayments([FromQuery] QueryPayment queryPayment)
     {
         var result = await _paymentService.BrowseAllAsync(queryPayment);
 

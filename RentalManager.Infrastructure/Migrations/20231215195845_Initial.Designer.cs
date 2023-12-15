@@ -12,7 +12,7 @@ using RentalManager.Infrastructure.Repositories.DbContext;
 namespace RentalManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231214234750_Initial")]
+    [Migration("20231215195845_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -99,7 +99,7 @@ namespace RentalManager.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims", "dbo");
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
@@ -464,7 +464,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.Agreement", null)
                         .WithMany()
                         .HasForeignKey("AgreementsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RentalManager.Core.Domain.Equipment", null)
@@ -479,7 +479,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -488,7 +488,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -497,7 +497,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -506,13 +506,13 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RentalManager.Core.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -521,7 +521,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -530,7 +530,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RentalManager.Core.Domain.User", "User")
@@ -557,7 +557,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -579,7 +579,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.Agreement", "Agreement")
                         .WithMany("Payments")
                         .HasForeignKey("AgreementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RentalManager.Core.Domain.User", "User")

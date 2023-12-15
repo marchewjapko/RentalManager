@@ -24,7 +24,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ConfigureIdentityDbContext();
-
-        modelBuilder.ConfigureOnDeleteActions();
+        
+        modelBuilder.ConfigureDomainEntities();
     }
 }
