@@ -21,7 +21,6 @@ public class PaymentController : Controller
         _paymentService = paymentService;
     }
 
-    [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment)
     {
@@ -57,7 +56,6 @@ public class PaymentController : Controller
         return Json(result);
     }
 
-    [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePayment([FromBody] UpdatePayment updatePayment, int id)
     {
@@ -66,8 +64,8 @@ public class PaymentController : Controller
         return Ok();
     }
 
-    [Route("/Payment/Deactivate/{id}")]
-    [HttpGet]
+    [Route("Deactivate/{id}")]
+    [HttpPatch]
     public async Task<IActionResult> DeactivateEquipment(int id)
     {
         await _paymentService.Deactivate(id);

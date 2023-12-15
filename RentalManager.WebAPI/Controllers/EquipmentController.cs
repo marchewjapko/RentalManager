@@ -12,20 +12,12 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class EquipmentController : Controller
+public class EquipmentController(IEquipmentService equipmentService) : Controller
 {
-    private readonly IEquipmentService _equipmentService;
-
-    public EquipmentController(IEquipmentService equipmentService)
-    {
-        _equipmentService = equipmentService;
-    }
-
-    [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddEquipment([FromForm] CreateEquipment createEquipment)
     {
-        await _equipmentService.AddAsync(createEquipment, User);
+        await equipmentService.AddAsync(createEquipment, User);
 
         return Ok();
     }
@@ -34,7 +26,7 @@ public class EquipmentController : Controller
     [HttpGet]
     public async Task<IActionResult> BrowseAllEquipment([FromQuery] QueryEquipment queryEquipment)
     {
-        var result = await _equipmentService.BrowseAllAsync(queryEquipment);
+        var result = await equipmentService.BrowseAllAsync(queryEquipment);
 
         return Json(result);
     }
@@ -43,7 +35,7 @@ public class EquipmentController : Controller
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteEquipment(int id)
     {
-        await _equipmentService.DeleteAsync(id);
+        await equipmentService.DeleteAsync(id);
 
         return NoContent();
     }
@@ -52,28 +44,26 @@ public class EquipmentController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetEquipment(int id)
     {
-        var clientDto = await _equipmentService.GetAsync(id);
+        var clientDto = await equipmentService.GetAsync(id);
 
         return Json(clientDto);
     }
 
-    [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateEquipment(
         [FromForm] UpdateEquipment updateEquipment,
         int id)
     {
-        await _equipmentService.UpdateAsync(updateEquipment, id);
+        await equipmentService.UpdateAsync(updateEquipment, id);
 
         return Ok();
     }
 
-    [ProducesResponseType(typeof(File), 200)]
-    [Route("/Equipment/Image/{id}")]
+    [Route("Image/{id}")]
     [HttpGet]
     public async Task<IActionResult?> GetEquipmentImage(int id)
     {
-        var equipment = await _equipmentService.GetAsync(id);
+        var equipment = await equipmentService.GetAsync(id);
 
         if (equipment.Image is null)
         {
@@ -83,11 +73,11 @@ public class EquipmentController : Controller
         return File(equipment.Image, "image/jpeg");
     }
 
-    [Route("/Equipment/Deactivate/{id}")]
-    [HttpGet]
+    [Route("Deactivate/{id}")]
+    [HttpPatch]
     public async Task<IActionResult> DeactivateEquipment(int id)
     {
-        await _equipmentService.Deactivate(id);
+        await equipmentService.Deactivate(id);
 
         return NoContent();
     }

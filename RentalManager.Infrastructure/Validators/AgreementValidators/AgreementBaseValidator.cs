@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
+using RentalManager.Infrastructure.Validators.PaymentValidators;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.AgreementValidators;
 
 public class AgreementBaseValidator : AbstractValidator<AgreementBaseCommand>
 {

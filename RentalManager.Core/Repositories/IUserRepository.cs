@@ -1,6 +1,6 @@
 ﻿using RentalManager.Core.Domain;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Requests;
+using RentalManager.Global.Requests;
 
 namespace RentalManager.Core.Repositories;
 

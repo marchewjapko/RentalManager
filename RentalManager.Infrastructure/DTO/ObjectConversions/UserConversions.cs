@@ -45,7 +45,7 @@ public static class UserConversions
 
     public static UserWithRolesDto ToUserWithRoles(this User user)
     {
-        return new UserWithRolesDto()
+        return new UserWithRolesDto
         {
             Id = user.Id,
             Name = user.Name,

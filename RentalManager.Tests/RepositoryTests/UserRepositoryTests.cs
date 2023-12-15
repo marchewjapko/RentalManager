@@ -133,11 +133,11 @@ public class UserRepositoryTests
         _appDbContext.Add(newUser2);
         await _appDbContext.SaveChangesAsync();
 
-        var query = new QueryUser()
+        var query = new QueryUser
         {
             Name = _mockUser.Name
         };
-        
+
         Assume.That(_appDbContext.Users.Count(), Is.EqualTo(2));
         Assume.That(_appDbContext.Users.First()
             .Id, Is.EqualTo(1));

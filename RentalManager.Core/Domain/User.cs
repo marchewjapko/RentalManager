@@ -14,9 +14,9 @@ public class User : IdentityUser<int>
 
     public byte[]? Image { get; set; }
 
-    public bool IsConfirmed { get; set; } = false;
+    public bool IsConfirmed { get; set; }
 
     public DateTime CreatedTs { get; set; } = DateTime.Now;
-    
-    public DateTime? UpdatedTs { get; set; } = null;
+
+    public DateTime? UpdatedTs { get; set; }
 }

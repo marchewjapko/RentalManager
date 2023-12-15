@@ -246,7 +246,7 @@ public class ClientRepositoryTests
 
         // act
         var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
-        
+
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));

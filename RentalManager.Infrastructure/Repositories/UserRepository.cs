@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Requests;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
-using RentalManager.Infrastructure.Requests;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -39,7 +39,7 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
     public async Task<IEnumerable<User>> BrowseAllAsync(QueryUser queryUser)
     {
         var result = appDbContext.Users.AsQueryable();
-        
+
         if (queryUser.Name != null)
         {
             result = result.Where(x => x.Name.Contains(queryUser.Name));

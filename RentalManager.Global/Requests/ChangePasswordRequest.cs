@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RentalManager.Infrastructure.Requests;
+namespace RentalManager.Global.Requests;
 
 public class ChangePasswordRequest
 {

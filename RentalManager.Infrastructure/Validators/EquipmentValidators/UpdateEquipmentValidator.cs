@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.EquipmentValidators;
 
-public class UpdateEquipmentValidator : AbstractValidator<CreateEquipment>
+public class UpdateEquipmentValidator : AbstractValidator<UpdateEquipment>
 {
     public UpdateEquipmentValidator()
     {

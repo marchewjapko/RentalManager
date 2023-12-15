@@ -19,6 +19,6 @@ public class QueryClients
     public DateTime? From { get; set; }
 
     public DateTime? To { get; set; }
-    
+
     public bool OnlyActive { get; set; } = true;
 }

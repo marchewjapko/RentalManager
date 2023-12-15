@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Requests;
 using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Requests;
 using RentalManager.Infrastructure.Services.Interfaces;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
@@ -67,7 +67,6 @@ public class UserController
     }
 
     [Authorize]
-    [ProducesResponseType(typeof(File), 200)]
     [Route("/User/Image/{id}")]
     [HttpGet]
     public async Task<IActionResult?> GetUserImage(int id)

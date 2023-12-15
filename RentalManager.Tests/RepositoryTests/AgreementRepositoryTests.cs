@@ -94,7 +94,6 @@ public class AgreementRepositoryTests
     public async Task ShouldGet()
     {
         // arrange
-        var xx = _appDbContext.Agreements.Add(MockAgreement);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
@@ -241,17 +240,17 @@ public class AgreementRepositoryTests
         {
             City = MockClient.City
         };
-        
+
         // act
-        var result1 = await _agreementRepository.BrowseAllAsync(query1);
-        var result2 = await _agreementRepository.BrowseAllAsync(query2);
+        var result1 = (await _agreementRepository.BrowseAllAsync(query1)).ToList();
+        var result2 = (await _agreementRepository.BrowseAllAsync(query2)).ToList();
 
         // assert
         Assert.Multiple(() => {
-            Assert.That(result1.Count(), Is.EqualTo(1));
+            Assert.That(result1, Has.Count.EqualTo(1));
             Assert.That(result1.First()
                 .Employee.Name, Is.EqualTo(newAgreement.Employee.Name));
-            Assert.That(result2.Count(), Is.EqualTo(2));
+            Assert.That(result2, Has.Count.EqualTo(2));
             Assert.That(result2.First()
                 .Client.City, Is.EqualTo(MockAgreement.Client.City));
             Assert.That(result2.Skip(1)
@@ -279,7 +278,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
-        
+
         _appDbContext.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
         newAgreement.Comment = "NEW COMMENT";
@@ -313,7 +312,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
-        
+
         _appDbContext.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
 
@@ -325,19 +324,5 @@ public class AgreementRepositoryTests
         // assert
         var agreement = _appDbContext.Agreements.First();
         Assert.That(agreement.IsActive, Is.False);
-    }
-
-    private Tuple<Client, User, Equipment> GetMocks()
-    {
-        var client = _appDbContext.Clients.First();
-        var user = _appDbContext.Users.First();
-        var equipment = _appDbContext.Equipment.First();
-
-        if (client == null || user == null || equipment == null)
-        {
-            throw new Exception("No mocks in database");
-        }
-
-        return Tuple.Create(client, user, equipment);
     }
 }

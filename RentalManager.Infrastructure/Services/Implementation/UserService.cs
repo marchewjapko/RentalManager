@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Requests;
 using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
 using RentalManager.Infrastructure.Exceptions;
-using RentalManager.Infrastructure.Requests;
 using RentalManager.Infrastructure.Services.Interfaces;
 
 namespace RentalManager.Infrastructure.Services.Implementation;
@@ -25,9 +25,9 @@ public class UserService(IUserRepository userRepository,
 
         if (!result.Succeeded)
         {
-            var validationFailure = new List<ValidationFailure>();
-            foreach (var error in result.Errors)
-                validationFailure.Add(new ValidationFailure(error.Code, error.Description));
+            var validationFailure = result.Errors
+                .Select(error => new ValidationFailure(error.Code, error.Description))
+                .ToList();
 
             throw new ValidationException(validationFailure);
         }
@@ -116,7 +116,7 @@ public class UserService(IUserRepository userRepository,
         var result = user!.ToUserWithRoles();
 
         result.Roles = await userManager.GetRolesAsync(user!);
-        
+
         return await Task.FromResult(result);
     }
 }

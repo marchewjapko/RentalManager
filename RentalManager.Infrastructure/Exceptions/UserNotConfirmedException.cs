@@ -3,7 +3,7 @@
 public class UserNotConfirmedException : Exception
 {
     public UserNotConfirmedException(string userName) : base(
-        $@"User {userName} has not been activated")
+        $"User {userName} has not been activated")
     {
     }
 }

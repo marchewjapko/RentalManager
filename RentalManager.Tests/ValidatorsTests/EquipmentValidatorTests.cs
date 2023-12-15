@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using Microsoft.AspNetCore.Http;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
-using RentalManager.Infrastructure.Validators;
+using RentalManager.Infrastructure.Validators.EquipmentValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
 

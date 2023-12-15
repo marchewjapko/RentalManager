@@ -9,7 +9,10 @@ using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Services.Implementation;
 using RentalManager.Infrastructure.Services.Interfaces;
-using RentalManager.Infrastructure.Validators;
+using RentalManager.Infrastructure.Validators.AgreementValidators;
+using RentalManager.Infrastructure.Validators.ClientValidators;
+using RentalManager.Infrastructure.Validators.EquipmentValidators;
+using RentalManager.Infrastructure.Validators.PaymentValidators;
 using RentalManager.Infrastructure.Validators.UserValidators;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -46,20 +49,20 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<CreateUser>, CreateUserValidator>();
         services.AddScoped<IValidator<UpdateUser>, UpdateUserValidator>();
 
-        services.AddScoped<IValidator<CreateEquipment>, EquipmentBaseValidator>();
-        services.AddScoped<IValidator<UpdateEquipment>, EquipmentBaseValidator>();
+        services.AddScoped<IValidator<CreateEquipment>, CreateEquipmentValidator>();
+        services.AddScoped<IValidator<UpdateEquipment>, UpdateEquipmentValidator>();
 
-        services.AddScoped<IValidator<CreatePayment>, PaymentBaseValidator>();
-        services.AddScoped<IValidator<UpdatePayment>, PaymentBaseValidator>();
+        services.AddScoped<IValidator<CreatePayment>, CreatePaymentValidator>();
+        services.AddScoped<IValidator<UpdatePayment>, UpdatePaymentValidator>();
 
-        services.AddScoped<IValidator<CreateClient>, ClientBaseValidator>();
-        services.AddScoped<IValidator<UpdateClient>, ClientBaseValidator>();
+        services.AddScoped<IValidator<CreateClient>, CreateClientValidator>();
+        services.AddScoped<IValidator<UpdateClient>, UpdateClientValidator>();
 
-        services.AddScoped<IValidator<CreatePayment>, PaymentBaseValidator>();
-        services.AddScoped<IValidator<UpdatePayment>, PaymentBaseValidator>();
+        services.AddScoped<IValidator<CreatePayment>, CreatePaymentValidator>();
+        services.AddScoped<IValidator<UpdatePayment>, UpdatePaymentValidator>();
 
-        services.AddScoped<IValidator<CreateAgreement>, AgreementBaseValidator>();
-        services.AddScoped<IValidator<UpdateAgreement>, AgreementBaseValidator>();
+        services.AddScoped<IValidator<CreateAgreement>, CreateAgreementValidator>();
+        services.AddScoped<IValidator<UpdateAgreement>, UpdateAgreementValidator>();
 
         services.AddFluentValidationAutoValidation();
     }

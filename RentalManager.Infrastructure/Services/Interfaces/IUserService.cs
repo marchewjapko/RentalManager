@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Requests;
 using RentalManager.Infrastructure.Commands.UserCommands;
 using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Requests;
 
 namespace RentalManager.Infrastructure.Services.Interfaces;
 

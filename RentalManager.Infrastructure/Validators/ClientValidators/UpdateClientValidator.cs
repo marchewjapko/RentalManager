@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.ClientCommands;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.ClientValidators;
 
-public class UpdateClientValidator : AbstractValidator<CreateClient>
+public class UpdateClientValidator : AbstractValidator<UpdateClient>
 {
     public UpdateClientValidator()
     {

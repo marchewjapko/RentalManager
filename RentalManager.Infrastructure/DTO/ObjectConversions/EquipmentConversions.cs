@@ -27,26 +27,6 @@ public static class EquipmentConversions
         };
     }
 
-    public static EquipmentDto ToDto(this CreateEquipment createEquipment)
-    {
-        return new EquipmentDto
-        {
-            Name = createEquipment.Name,
-            Price = createEquipment.Price,
-            Image = createEquipment.Image.ToByteArray()
-        };
-    }
-
-    public static EquipmentDto ToDto(this UpdateEquipment updateEquipment)
-    {
-        return new EquipmentDto
-        {
-            Name = updateEquipment.Name,
-            Price = updateEquipment.Price,
-            Image = updateEquipment.Image.ToByteArray()
-        };
-    }
-
     public static Equipment ToDomain(this UpdateEquipment updateEquipment)
     {
         var result = new Equipment

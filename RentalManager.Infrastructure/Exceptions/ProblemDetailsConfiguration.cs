@@ -85,6 +85,14 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
+
+                    case ConfigurationNotFoundException:
+                        context.ProblemDetails.Title = "Configuration not found";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status404NotFound;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+
+                        break;
                 }
 
                 if (environment.IsDevelopment())

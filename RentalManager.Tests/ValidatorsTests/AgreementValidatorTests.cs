@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
-using RentalManager.Infrastructure.Validators;
+using RentalManager.Infrastructure.Validators.AgreementValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
 

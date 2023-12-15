@@ -15,7 +15,6 @@ public class AgreementService(IAgreementRepository agreementRepository,
         IEquipmentRepository equipmentRepository,
         IClientRepository clientRepository,
         IUserRepository userRepository,
-        IPaymentRepository paymentRepository,
         UserManager<User> userManager)
     : IAgreementService
 {
@@ -97,7 +96,7 @@ public class AgreementService(IAgreementRepository agreementRepository,
 
         agreement.Employee = employee;
         agreement.Equipment = equipment.ToList();
-        
+
         await agreementRepository.UpdateAsync(agreement, id);
     }
 

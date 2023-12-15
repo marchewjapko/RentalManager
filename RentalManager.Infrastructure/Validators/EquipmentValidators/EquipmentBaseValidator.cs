@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using RentalManager.Infrastructure.Commands.EquipmentCommands;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.EquipmentValidators;
 
 public class EquipmentBaseValidator : AbstractValidator<EquipmentBaseCommand>
 {

@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.DTO;
+using RentalManager.Infrastructure.DTO.ObjectConversions;
+using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Services.Interfaces;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
@@ -12,20 +17,13 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class AgreementController : Controller
+public class AgreementController(IAgreementService agreementService, IConfiguration configuration)
+    : Controller
 {
-    private readonly IAgreementService _agreementService;
-
-    public AgreementController(IAgreementService agreementService)
-    {
-        _agreementService = agreementService;
-    }
-
-    [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddAgreement([FromBody] CreateAgreement createAgreement)
     {
-        await _agreementService.AddAsync(createAgreement, User);
+        await agreementService.AddAsync(createAgreement, User);
 
         return Ok();
     }
@@ -35,7 +33,7 @@ public class AgreementController : Controller
     public async Task<IActionResult> BrowseAllAgreements(
         [FromQuery] QueryAgreements queryAgreements)
     {
-        var result = await _agreementService.BrowseAllAsync(queryAgreements);
+        var result = await agreementService.BrowseAllAsync(queryAgreements);
 
         return Json(result);
     }
@@ -44,37 +42,86 @@ public class AgreementController : Controller
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAgreement(int id)
     {
-        await _agreementService.DeleteAsync(id);
+        await agreementService.DeleteAsync(id);
 
-        return NoContent();
+        return Ok();
     }
 
     [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetAgreement(int id)
     {
-        var result = await _agreementService.GetAsync(id);
+        var result = await agreementService.GetAsync(id);
 
         return Json(result);
     }
 
-    [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAgreement(
         [FromBody] UpdateAgreement updateAgreement,
         int id)
     {
-        await _agreementService.UpdateAsync(updateAgreement, id);
+        await agreementService.UpdateAsync(updateAgreement, id);
 
         return Ok();
     }
 
-    [Route("/Agreement/Deactivate/{id}")]
-    [HttpGet]
+    [Route("Deactivate/{id}")]
+    [HttpPatch]
     public async Task<IActionResult> DeactivateEquipment(int id)
     {
-        await _agreementService.Deactivate(id);
+        await agreementService.Deactivate(id);
 
-        return NoContent();
+        return Ok();
+    }
+
+    [Route("Document/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> GenerateDocument(int id)
+    {
+        var address = configuration.GetSection("DocumentServiceURL");
+
+        if (address.Value is null)
+        {
+            throw new ConfigurationNotFoundException("DocumentServiceURL");
+        }
+
+        var agreement = await agreementService.GetAsync(id);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+        };
+
+        using StringContent jsonContent = new(
+            JsonSerializer.Serialize(agreement.ToDocumentRequest(), options),
+            Encoding.UTF8,
+            "application/json");
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri(address.Value)
+        };
+
+        using var response = await httpClient.PostAsync(
+            "/documents/generate_document",
+            jsonContent);
+
+        var fileName =
+            $"Umowa wypożyczenia - {agreement.Client.Name} {agreement.Client.Surname}.pdf";
+
+        fileName = string.Join(
+            "/",
+            fileName.Split("/")
+                .Select(WebUtility.UrlEncode)
+        );
+        fileName = fileName.Replace('+', ' ');
+
+        Response.Headers.Add("Content-Type", "application/pdf");
+        Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+
+        var pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+        return File(pdfBytes, "application/pdf");
     }
 }

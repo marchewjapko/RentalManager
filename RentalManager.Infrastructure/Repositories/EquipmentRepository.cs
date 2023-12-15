@@ -59,7 +59,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
     {
         var result = appDbContext.Equipment.Where(x => x.IsActive)
             .AsQueryable();
-        
+
         if (queryEquipment.Name != null)
         {
             result = result.Where(x => x.Name.Contains(queryEquipment.Name));
@@ -74,7 +74,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         {
             result = result.Where(x => x.CreatedTs.Date < queryEquipment.To.Value.Date);
         }
-        
+
         if (queryEquipment.OnlyActive)
         {
             result = result.Where(x => x.IsActive);

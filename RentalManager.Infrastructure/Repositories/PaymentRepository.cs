@@ -44,7 +44,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
     {
         var result = appDbContext.Payments.Where(x => x.IsActive)
             .AsQueryable();
-        
+
         if (queryPayment.AgreementId != null)
         {
             result = result.Where(x => x.AgreementId == queryPayment.AgreementId);
@@ -64,7 +64,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         {
             result = result.Where(x => x.CreatedTs.Date < queryPayment.To.Value.Date);
         }
-        
+
         if (queryPayment.OnlyActive)
         {
             result = result.Where(x => x.IsActive);

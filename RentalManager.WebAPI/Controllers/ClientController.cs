@@ -12,20 +12,12 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class ClientController : Controller
+public class ClientController(IClientService clientService) : Controller
 {
-    private readonly IClientService _clientService;
-
-    public ClientController(IClientService clientService)
-    {
-        _clientService = clientService;
-    }
-
-    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
-        await _clientService.AddAsync(createClient, User);
+        await clientService.AddAsync(createClient, User);
 
         return Ok();
     }
@@ -35,7 +27,7 @@ public class ClientController : Controller
     public async Task<IActionResult> BrowseAllClients([FromQuery] QueryClients queryClients)
     {
         var result =
-            await _clientService.BrowseAllAsync(queryClients);
+            await clientService.BrowseAllAsync(queryClients);
 
         return Json(result);
     }
@@ -44,7 +36,7 @@ public class ClientController : Controller
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteClient(int id)
     {
-        await _clientService.DeleteAsync(id);
+        await clientService.DeleteAsync(id);
 
         return NoContent();
     }
@@ -53,25 +45,24 @@ public class ClientController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetClient(int id)
     {
-        var clientDto = await _clientService.GetAsync(id);
+        var clientDto = await clientService.GetAsync(id);
 
         return Json(clientDto);
     }
 
-    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
     {
-        await _clientService.UpdateAsync(updateClient, id);
+        await clientService.UpdateAsync(updateClient, id);
 
         return Ok();
     }
 
-    [Route("/Client/Deactivate/{id}")]
-    [HttpGet]
+    [Route("Deactivate/{id}")]
+    [HttpPatch]
     public async Task<IActionResult> DeactivateEquipment(int id)
     {
-        await _clientService.Deactivate(id);
+        await clientService.Deactivate(id);
 
         return NoContent();
     }

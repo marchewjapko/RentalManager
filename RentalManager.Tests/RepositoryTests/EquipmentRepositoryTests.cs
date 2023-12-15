@@ -135,7 +135,7 @@ public class EquipmentRepositoryTests
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
 
-        var query = new QueryEquipment()
+        var query = new QueryEquipment
         {
             Name = newEquipment.Name
         };
@@ -188,8 +188,6 @@ public class EquipmentRepositoryTests
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
-
-        var xx = _appDbContext.Equipment.ToList();
 
         // act
         await _equipmentRepository.Deactivate(1);

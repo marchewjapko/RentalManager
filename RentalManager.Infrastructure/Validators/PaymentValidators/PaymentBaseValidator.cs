@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Commands.PaymentCommands;
 
-namespace RentalManager.Infrastructure.Validators;
+namespace RentalManager.Infrastructure.Validators.PaymentValidators;
 
 public class PaymentBaseValidator : AbstractValidator<PaymentBaseCommand>
 {

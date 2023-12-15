@@ -1,5 +1,6 @@
 ﻿using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
+using Payment = RentalManager.Global.Requests.GetAgreementDocument.Payment;
 
 namespace RentalManager.Infrastructure.DTO.ObjectConversions;
 
@@ -42,7 +43,7 @@ public static class AgreementConversions
 
     public static Agreement ToDomain(this UpdateAgreement updateAgreement)
     {
-        var result = new Agreement
+        return new Agreement
         {
             EmployeeId = updateAgreement.EmployeeId,
             IsActive = updateAgreement.IsActive,
@@ -53,7 +54,38 @@ public static class AgreementConversions
             TransportToPrice = updateAgreement.TransportToPrice,
             DateAdded = updateAgreement.DateAdded
         };
+    }
 
-        return result;
+    public static Global.Requests.GetAgreementDocument.Agreement ToDocumentRequest(
+        this AgreementDto agreement)
+    {
+        return new Global.Requests.GetAgreementDocument.Agreement
+        {
+            Client = new Global.Requests.GetAgreementDocument.Client
+            {
+                Name = agreement.Client.Name,
+                Surname = agreement.Client.Surname,
+                Address = agreement.Client.City + " " + agreement.Client.Street,
+                PhoneNumber = agreement.Client.PhoneNumber,
+                IdCard = agreement.Client.IdCard
+            },
+            Equipments = agreement.Equipment.Select(x =>
+                    new Global.Requests.GetAgreementDocument.Equipment
+                    {
+                        Name = x.Name,
+                        Price = x.Price
+                    })
+                .ToList(),
+            Payments = agreement.Payments.Select(x => new Payment
+                {
+                    Start = x.From,
+                    End = x.To,
+                    Value = x.Amount
+                })
+                .ToList(),
+            TransportFrom = agreement.TransportFrom,
+            TransportTo = agreement.TransportTo,
+            Deposit = agreement.Deposit
+        };
     }
 }

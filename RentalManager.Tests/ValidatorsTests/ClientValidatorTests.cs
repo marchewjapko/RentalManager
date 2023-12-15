@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using RentalManager.Infrastructure.Commands.ClientCommands;
-using RentalManager.Infrastructure.Validators;
+using RentalManager.Infrastructure.Validators.ClientValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
 

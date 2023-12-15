@@ -89,7 +89,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         {
             result = result.Where(x => x.CreatedTs.Date < queryClients.To.Value.Date);
         }
-        
+
         if (queryClients.OnlyActive)
         {
             result = result.Where(x => x.IsActive);
