@@ -117,8 +117,8 @@ public class AgreementController(IAgreementService agreementService, IConfigurat
         );
         fileName = fileName.Replace('+', ' ');
 
-        Response.Headers.Add("Content-Type", "application/pdf");
-        Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+        Response.Headers.Append("Content-Type", "application/pdf");
+        Response.Headers.Append("Content-Disposition", $"attachment; filename={fileName}");
 
         var pdfBytes = await response.Content.ReadAsByteArrayAsync();
 

@@ -1,58 +1,31 @@
 {
-  "name": "rentalmanager.webapp",
+  "name": "RentalManager.WebApp",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.19",
-    "@mui/material": "^5.14.19",
-    "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jest": "^29.5.10",
-    "@types/node": "^20.10.2",
-    "@types/react": "^18.2.41",
-    "@types/react-dom": "^18.2.17",
-    "axios": "^1.6.2",
-    "eslint": "8.55.0",
-    "framer-motion": "^10.16.12",
-    "localforage": "^1.10.0",
-    "match-sorter": "^6.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1",
-    "react-scripts": "5.0.1",
-    "sort-by": "^1.2.0",
-    "typescript": "^5.3.2",
-    "web-vitals": "^3.5.0"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "codegen": "npx openapi-typescript-codegen --input src/references/rentalManagerAPI.json --output src/references/codegen/rentalManagerAPI --client axios exportServices --useOptions --useUnionTypes && npx openapi-typescript-codegen --input src/references/documentServiceAPI.json --output src/references/codegen/documentServiceAPI --client axios exportServices --useOptions --useUnionTypes"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "codegen": "npx openapi-typescript-codegen --input app/ApiClient/rentalManagerAPI.json --output app/ApiClient/codegen --client axios exportServices --useOptions --useUnionTypes",
+    "lighthouse test": "lighthouse http://localhost:3000/ --quiet --chrome-flags=\"--headless\" --output-path=./lighthouse-results.html --only-categories=\"performance,accessibility,best-practices\"; & \"C:\\Program Files\\Mozilla Firefox\\firefox.exe\" \"$pwd\\lighthouse-results.html\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "openapi-typescript-codegen": "^0.25.0"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "lighthouse": "^11.4.0",
+    "openapi-typescript-codegen": "^0.25.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
   }
 }
