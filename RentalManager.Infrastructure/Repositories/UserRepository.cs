@@ -70,7 +70,6 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         userToUpdate.Name = user.Name;
         userToUpdate.Surname = user.Surname;
         userToUpdate.Image = user.Image;
-        userToUpdate.Gender = user.Gender;
         userToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
     }

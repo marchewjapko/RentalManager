@@ -35,7 +35,6 @@ namespace RentalManager.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     CreatedTs = table.Column<DateTime>(type: "datetime2", nullable: false),

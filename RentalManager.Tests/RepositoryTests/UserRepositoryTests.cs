@@ -14,7 +14,6 @@ public class UserRepositoryTests
         .RuleFor(x => x.Name, f => f.Name.FirstName())
         .RuleFor(x => x.Surname, f => f.Name.LastName())
         .RuleFor(x => x.UserName, f => f.Internet.UserName())
-        .RuleFor(x => x.Gender, () => Gender.Man)
         .RuleFor(x => x.CreatedTs, () => DateTime.Now)
         .Generate();
 
@@ -94,7 +93,6 @@ public class UserRepositoryTests
             .RuleFor(x => x.Name, f => f.Name.FirstName())
             .RuleFor(x => x.Surname, f => f.Name.LastName())
             .RuleFor(x => x.UserName, f => f.Internet.UserName())
-            .RuleFor(x => x.Gender, () => Gender.Man)
             .RuleFor(x => x.CreatedTs, () => DateTime.Now)
             .Generate();
 
@@ -125,7 +123,6 @@ public class UserRepositoryTests
             .RuleFor(x => x.Name, f => f.Name.FirstName())
             .RuleFor(x => x.Surname, f => f.Name.LastName())
             .RuleFor(x => x.UserName, f => f.Internet.UserName())
-            .RuleFor(x => x.Gender, () => Gender.Man)
             .RuleFor(x => x.CreatedTs, () => DateTime.Now)
             .Generate();
 

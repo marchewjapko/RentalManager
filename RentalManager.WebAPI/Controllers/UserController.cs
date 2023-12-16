@@ -18,6 +18,7 @@ public class UserController
     (IUserService userService) : Controller
 {
     [ProducesResponseType(typeof(UserDto), 200)]
+    [ProducesResponseType(typeof(ProblemDetails), 500)]
     [HttpPost]
     public async Task<IActionResult> AddUser([FromForm] CreateUser createUser)
     {
@@ -75,10 +76,7 @@ public class UserController
 
         if (userDto.Image is null)
         {
-            return File(
-                userDto.Gender == GenderDto.Man
-                    ? "~/DefaultUserImageMan.png"
-                    : "~/DefaultUserImageWoman.png", "image/png");
+            return File("~/DefaultUserImageMan.png", "image/png");
         }
 
         return File(userDto.Image, "image/jpeg");

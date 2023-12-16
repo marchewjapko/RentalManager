@@ -14,7 +14,6 @@ public static class UserConversions
             UserName = createUser.UserName,
             Surname = createUser.Surname,
             CreatedTs = DateTime.Now,
-            Gender = (Gender)createUser.Gender,
             Image = createUser.Image.ToByteArray()
         };
     }
@@ -27,7 +26,6 @@ public static class UserConversions
             Name = user.Name,
             UserName = user.UserName,
             Surname = user.Surname,
-            Gender = (GenderDto)user.Gender,
             Image = user.Image
         };
     }
@@ -38,7 +36,6 @@ public static class UserConversions
         {
             Name = updateUser.Name,
             Surname = updateUser.Surname,
-            Gender = (Gender)updateUser.Gender,
             Image = updateUser.Image.ToByteArray()
         };
     }
@@ -51,7 +48,6 @@ public static class UserConversions
             Name = user.Name,
             UserName = user.UserName,
             Surname = user.Surname,
-            Gender = (GenderDto)user.Gender,
             Image = user.Image
         };
     }

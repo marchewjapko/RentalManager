@@ -18,8 +18,4 @@ public class UserBaseCommand
     public string Surname { get; init; } = null!;
 
     public IFormFile? Image { get; init; }
-
-    [Required]
-    [DefaultValue(GenderDto.Man)]
-    public GenderDto Gender { get; init; }
 }

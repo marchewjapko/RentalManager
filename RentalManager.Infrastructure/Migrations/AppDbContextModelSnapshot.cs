@@ -389,9 +389,6 @@ namespace RentalManager.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 

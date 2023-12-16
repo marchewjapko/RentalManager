@@ -9,8 +9,6 @@ public class UserDto
     public string Surname { get; init; } = null!;
 
     public string UserName { get; set; } = null!;
-
-    public GenderDto Gender { get; set; }
-
+    
     public byte[]? Image { get; set; }
 }

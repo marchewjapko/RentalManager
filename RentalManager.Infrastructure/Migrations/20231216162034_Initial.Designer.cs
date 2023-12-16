@@ -12,7 +12,7 @@ using RentalManager.Infrastructure.Repositories.DbContext;
 namespace RentalManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231216125632_Initial")]
+    [Migration("20231216162034_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -391,9 +391,6 @@ namespace RentalManager.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");

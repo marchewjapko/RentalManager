@@ -20,9 +20,6 @@ public class UserBaseValidator : AbstractValidator<UserBaseCommand>
             .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
             .WithMessage("'Surname' should only contain letters");
 
-        RuleFor(x => x.Gender)
-            .NotNull();
-
         When(x => x.Image is not null, () => {
             RuleFor(x => x.Image)
                 .Must(x => x!.Length <= 1024 * 1024)
