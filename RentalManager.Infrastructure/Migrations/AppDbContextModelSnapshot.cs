@@ -554,7 +554,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

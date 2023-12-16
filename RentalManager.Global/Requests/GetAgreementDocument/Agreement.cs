@@ -1,16 +1,17 @@
-﻿namespace RentalManager.Global.Requests.GetAgreementDocument;
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace RentalManager.Global.Requests.GetAgreementDocument;
 
 public class Agreement
 {
-    public Client Client { get; set; } = null!;
+    public Client Client { get; init; } = null!;
 
-    public IList<Equipment> Equipments { get; set; } = null!;
+    public IList<Equipment> Equipments { get; init; } = null!;
 
-    public IList<Payment> Payments { get; set; } = null!;
+    public IList<Payment> Payments { get; init; } = null!;
 
-    public int? TransportFrom { get; set; }
+    public int? TransportFrom { get; init; }
 
-    public int TransportTo { get; set; }
+    public int TransportTo { get; init; }
 
-    public int Deposit { get; set; }
+    public int Deposit { get; init; }
 }

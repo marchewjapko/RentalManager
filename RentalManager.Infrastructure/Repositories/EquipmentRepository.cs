@@ -97,7 +97,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         await appDbContext.SaveChangesAsync();
     }
 
-    public static IQueryable<Equipment> FilterClients(IQueryable<Equipment> equipments,
+    private static IQueryable<Equipment> FilterClients(IQueryable<Equipment> equipments,
         QueryEquipment queryEquipment)
     {
         if (queryEquipment.Name != null)

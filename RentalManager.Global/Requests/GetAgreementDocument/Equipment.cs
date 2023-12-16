@@ -1,8 +1,9 @@
-﻿namespace RentalManager.Global.Requests.GetAgreementDocument;
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace RentalManager.Global.Requests.GetAgreementDocument;
 
 public class Equipment
 {
-    public string Name { get; set; } = null!;
+    public string Name { get; init; } = null!;
 
-    public int Price { get; set; }
+    public int Price { get; init; }
 }

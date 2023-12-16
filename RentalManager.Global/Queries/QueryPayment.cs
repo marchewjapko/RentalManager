@@ -1,14 +1,16 @@
-﻿namespace RentalManager.Global.Queries;
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+namespace RentalManager.Global.Queries;
 
 public class QueryPayment
 {
-    public int? AgreementId { get; set; }
+    public int? AgreementId { get; init; }
 
-    public string? Method { get; set; } = null!;
+    public string? Method { get; init; } = null!;
 
-    public DateTime? From { get; set; }
+    public DateTime? From { get; init; }
 
-    public DateTime? To { get; set; }
+    public DateTime? To { get; init; }
 
-    public bool OnlyActive { get; set; } = true;
+    public bool OnlyActive { get; init; } = true;
 }

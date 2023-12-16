@@ -12,7 +12,7 @@ using RentalManager.Infrastructure.Repositories.DbContext;
 namespace RentalManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231215195845_Initial")]
+    [Migration("20231216112428_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -557,7 +557,7 @@ namespace RentalManager.Infrastructure.Migrations
                     b.HasOne("RentalManager.Core.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

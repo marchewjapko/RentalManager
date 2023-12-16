@@ -8,7 +8,9 @@ public class User : IdentityUser<int>
 
     public string Surname { get; set; } = null!;
 
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     public override string UserName { get; set; } = null!;
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
 
     public Gender Gender { get; set; }
 

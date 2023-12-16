@@ -1,24 +1,26 @@
 ﻿using RentalManager.Global.Queries.Sorting;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace RentalManager.Global.Queries;
 
 public class QueryClients : PagedQueryBase
 {
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
-    public string? Surname { get; set; }
+    public string? Surname { get; init; }
 
-    public string? Email { get; set; }
+    public string? Email { get; init; }
 
-    public string? City { get; set; }
+    public string? City { get; init; }
 
-    public string? Street { get; set; }
+    public string? Street { get; init; }
 
-    public DateTime? AddedFrom { get; set; }
+    public DateTime? AddedFrom { get; init; }
 
-    public DateTime? AddedTo { get; set; }
+    public DateTime? AddedTo { get; init; }
 
-    public bool OnlyActive { get; set; } = true;
+    public bool OnlyActive { get; init; } = true;
 
-    public SortClientsBy SortClientsBy { get; set; }
+    public SortClientsBy SortClientsBy { get; init; }
 }

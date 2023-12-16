@@ -1,4 +1,5 @@
-﻿namespace RentalManager.Infrastructure.DTO;
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace RentalManager.Infrastructure.DTO;
 
 public class UserWithRolesDto : UserDto
 {
