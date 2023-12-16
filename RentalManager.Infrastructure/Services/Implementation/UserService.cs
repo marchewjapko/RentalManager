@@ -78,6 +78,11 @@ public class UserService(IUserRepository userRepository,
             throw new UserNotConfirmedException(loginRequest.UserName);
         }
 
+        if (user.PasswordValidTo is not null)
+        {
+            throw new PasswordChangeRequiredException(loginRequest.UserName);
+        }
+
         var result =
             await signInManager.PasswordSignInAsync(loginRequest.UserName, loginRequest.Password,
                 isPersistent,
@@ -100,8 +105,15 @@ public class UserService(IUserRepository userRepository,
             throw new PasswordChangeFailedException(changePasswordRequest.UserName);
         }
 
+        if (user.PasswordValidTo is not null && user.PasswordValidTo < DateTime.Now)
+        {
+            throw new TemporaryPasswordExpiredException(changePasswordRequest.UserName);
+        }
+
         await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword,
             changePasswordRequest.NewPassword);
+
+        await userRepository.ClearPasswordExpiration(user);
     }
 
     public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)

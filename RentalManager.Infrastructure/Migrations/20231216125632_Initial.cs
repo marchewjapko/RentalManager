@@ -40,6 +40,7 @@ namespace RentalManager.Infrastructure.Migrations
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     CreatedTs = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedTs = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PasswordValidTo = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

@@ -81,8 +81,8 @@ public static class ProblemDetailsConfiguration
                     case LoginFailedException:
                         context.ProblemDetails.Title = "Login failed";
                         context.ProblemDetails.Detail = exception.Message;
-                        context.ProblemDetails.Status = StatusCodes.Status404NotFound;
-                        context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                        context.ProblemDetails.Status = StatusCodes.Status400BadRequest;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
                         break;
 
@@ -91,6 +91,22 @@ public static class ProblemDetailsConfiguration
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status404NotFound;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+
+                        break;
+
+                    case PasswordChangeRequiredException:
+                        context.ProblemDetails.Title = "Password change is required";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                        break;
+
+                    case TemporaryPasswordExpiredException:
+                        context.ProblemDetails.Title = $"Temporary password for user has expired";
+                        context.ProblemDetails.Detail = exception.Message;
+                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
+                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
                         break;
                 }

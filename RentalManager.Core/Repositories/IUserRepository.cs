@@ -13,4 +13,6 @@ public interface IUserRepository
     Task<IEnumerable<User>> BrowseAllAsync(QueryUser queryUser);
 
     Task ResetPassword(ResetPasswordRequest resetPasswordRequest);
+
+    Task ClearPasswordExpiration(User user);
 }

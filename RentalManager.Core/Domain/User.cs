@@ -21,4 +21,6 @@ public class User : IdentityUser<int>
     public DateTime CreatedTs { get; set; } = DateTime.Now;
 
     public DateTime? UpdatedTs { get; set; }
+    
+    public DateTime? PasswordValidTo { get; set; }
 }

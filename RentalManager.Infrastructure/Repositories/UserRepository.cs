@@ -87,6 +87,13 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         }
 
         user.PasswordHash = hasher.HashPassword(null!, resetPasswordRequest.NewPassword);
+        user.PasswordValidTo = DateTime.Now.AddMinutes(5);
+        await appDbContext.SaveChangesAsync();
+    }
+
+    public async Task ClearPasswordExpiration(User user)
+    {
+        user.PasswordValidTo = null;
         await appDbContext.SaveChangesAsync();
     }
 }
