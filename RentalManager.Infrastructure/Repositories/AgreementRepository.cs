@@ -2,6 +2,7 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -56,74 +57,11 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             .AsSingleQuery()
             .AsQueryable();
 
-        if (queryAgreements.ClientId != null)
-        {
-            result = result.Where(x => x.ClientId == queryAgreements.ClientId);
-        }
+        result = FilterAgreements(result, queryAgreements);
 
-        if (queryAgreements.Surname != null)
-        {
-            result = result.Where(x => x.Client.Surname.Contains(queryAgreements.Surname));
-        }
+        result = SortAgreements(result, queryAgreements);
 
-        if (queryAgreements.PhoneNumber != null)
-        {
-            result = result.Where(x => x.Client.PhoneNumber.Contains(queryAgreements.PhoneNumber));
-        }
-
-        if (queryAgreements.City != null)
-        {
-            result = result.Where(x => x.Client.City.Contains(queryAgreements.City));
-        }
-
-        if (queryAgreements.Street != null)
-        {
-            result = result.Where(x => x.Client.Street.Contains(queryAgreements.Street));
-        }
-
-        if (queryAgreements.EquipmentId != null)
-        {
-            result = result.Where(x => x.Equipment.Any(a => a.Id == queryAgreements.EquipmentId));
-        }
-
-        if (queryAgreements.EquipmentName != null)
-        {
-            result = result.Where(x =>
-                x.Equipment.Any(a =>
-                    a.Name.Contains(queryAgreements.EquipmentName,
-                        StringComparison.CurrentCultureIgnoreCase)));
-        }
-
-        if (queryAgreements.EmployeeId != null)
-        {
-            result = result.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
-        }
-
-        if (queryAgreements.OnlyUnpaid)
-        {
-            result = result.Where(x =>
-                x.Payments.OrderByDescending(payment => payment.DateTo)
-                    .First()
-                    .DateTo < DateTime.Now.Date);
-        }
-
-        if (queryAgreements.From != null)
-        {
-            result = result.Where(x => x.DateAdded.Date > queryAgreements.From.Value.Date);
-        }
-
-        if (queryAgreements.To != null)
-        {
-            result = result.Where(x => x.DateAdded.Date < queryAgreements.To.Value.Date);
-        }
-
-        if (queryAgreements.OnlyActive)
-        {
-            result = result.Where(x => x.IsActive);
-        }
-
-        return await Task.FromResult(result.OrderByDescending(x => x.DateAdded)
-            .AsEnumerable());
+        return await Task.FromResult(result.AsEnumerable());
     }
 
     public async Task UpdateAsync(Agreement agreement, int id)
@@ -164,5 +102,91 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         result.IsActive = false;
         await appDbContext.SaveChangesAsync();
+    }
+
+    private static IQueryable<Agreement> FilterAgreements(IQueryable<Agreement> agreements,
+        QueryAgreements queryAgreements)
+    {
+        if (queryAgreements.ClientId != null)
+        {
+            agreements = agreements.Where(x => x.ClientId == queryAgreements.ClientId);
+        }
+
+        if (queryAgreements.Surname != null)
+        {
+            agreements = agreements.Where(x => x.Client.Surname.Contains(queryAgreements.Surname));
+        }
+
+        if (queryAgreements.City != null)
+        {
+            agreements = agreements.Where(x => x.Client.City.Contains(queryAgreements.City));
+        }
+
+        if (queryAgreements.Street != null)
+        {
+            agreements = agreements.Where(x => x.Client.Street.Contains(queryAgreements.Street));
+        }
+
+        if (queryAgreements.EmployeeId != null)
+        {
+            agreements = agreements.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
+        }
+
+        if (queryAgreements.OnlyUnpaid)
+        {
+            agreements = agreements.Where(x =>
+                x.Payments.OrderByDescending(payment => payment.DateTo)
+                    .First()
+                    .DateTo < DateTime.Now.Date);
+        }
+
+        if (queryAgreements.AddedFrom != null)
+        {
+            agreements =
+                agreements.Where(x => x.DateAdded.Date > queryAgreements.AddedFrom.Value.Date);
+        }
+
+        if (queryAgreements.AddedTo != null)
+        {
+            agreements =
+                agreements.Where(x => x.DateAdded.Date < queryAgreements.AddedTo.Value.Date);
+        }
+
+        if (queryAgreements.OnlyActive)
+        {
+            agreements = agreements.Where(x => x.IsActive);
+        }
+
+        return agreements;
+    }
+
+    private static IQueryable<Agreement> SortAgreements(IQueryable<Agreement> agreements,
+        QueryAgreements queryAgreements)
+    {
+        if (queryAgreements.Descending)
+        {
+            agreements = queryAgreements.SortAgreementsBy switch
+            {
+                SortAgreementsBy.Id => agreements.OrderByDescending(x => x.Id),
+                SortAgreementsBy.Surname => agreements.OrderByDescending(x => x.Client.Surname),
+                SortAgreementsBy.DateAdded => agreements.OrderByDescending(x => x.DateAdded),
+                _ => agreements.OrderByDescending(x => x.DateAdded)
+            };
+        }
+        else
+        {
+            agreements = queryAgreements.SortAgreementsBy switch
+            {
+                SortAgreementsBy.Id => agreements.OrderBy(x => x.Id),
+                SortAgreementsBy.Surname => agreements.OrderBy(x => x.Client.Surname),
+                SortAgreementsBy.DateAdded => agreements.OrderBy(x => x.DateAdded),
+                _ => agreements.OrderBy(x => x.DateAdded)
+            };
+        }
+
+        agreements = agreements.Skip(queryAgreements.Position);
+        agreements = agreements.Take(queryAgreements.PageSize);
+
+        return agreements;
     }
 }

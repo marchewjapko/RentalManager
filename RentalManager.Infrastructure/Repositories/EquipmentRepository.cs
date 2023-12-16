@@ -2,6 +2,7 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -60,25 +61,9 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         var result = appDbContext.Equipment.Where(x => x.IsActive)
             .AsQueryable();
 
-        if (queryEquipment.Name != null)
-        {
-            result = result.Where(x => x.Name.Contains(queryEquipment.Name));
-        }
+        result = FilterClients(result, queryEquipment);
 
-        if (queryEquipment.From != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date > queryEquipment.From.Value.Date);
-        }
-
-        if (queryEquipment.To != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date < queryEquipment.To.Value.Date);
-        }
-
-        if (queryEquipment.OnlyActive)
-        {
-            result = result.Where(x => x.IsActive);
-        }
+        result = SortClients(result, queryEquipment);
 
         return await Task.FromResult(result.AsEnumerable());
     }
@@ -110,5 +95,65 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
         result.IsActive = false;
         await appDbContext.SaveChangesAsync();
+    }
+
+    public static IQueryable<Equipment> FilterClients(IQueryable<Equipment> equipments,
+        QueryEquipment queryEquipment)
+    {
+        if (queryEquipment.Name != null)
+        {
+            equipments = equipments.Where(x => x.Name.Contains(queryEquipment.Name));
+        }
+
+        if (queryEquipment.AddedFrom != null)
+        {
+            equipments =
+                equipments.Where(x => x.CreatedTs.Date > queryEquipment.AddedFrom.Value.Date);
+        }
+
+        if (queryEquipment.AddedTo != null)
+        {
+            equipments =
+                equipments.Where(x => x.CreatedTs.Date < queryEquipment.AddedTo.Value.Date);
+        }
+
+        if (queryEquipment.OnlyActive)
+        {
+            equipments = equipments.Where(x => x.IsActive);
+        }
+
+        return equipments;
+    }
+
+    private static IQueryable<Equipment> SortClients(IQueryable<Equipment> equipments,
+        QueryEquipment queryEquipment)
+    {
+        if (queryEquipment.Descending)
+        {
+            equipments = queryEquipment.SortEquipmentBy switch
+            {
+                SortEquipmentBy.Id => equipments.OrderByDescending(x => x.Id),
+                SortEquipmentBy.Name => equipments.OrderByDescending(x => x.Name),
+                SortEquipmentBy.DateAdded => equipments.OrderByDescending(x => x.CreatedTs),
+                SortEquipmentBy.Price => equipments.OrderByDescending(x => x.Price),
+                _ => equipments.OrderByDescending(x => x.CreatedTs)
+            };
+        }
+        else
+        {
+            equipments = queryEquipment.SortEquipmentBy switch
+            {
+                SortEquipmentBy.Id => equipments.OrderBy(x => x.Id),
+                SortEquipmentBy.Name => equipments.OrderBy(x => x.Name),
+                SortEquipmentBy.DateAdded => equipments.OrderBy(x => x.CreatedTs),
+                SortEquipmentBy.Price => equipments.OrderBy(x => x.Price),
+                _ => equipments.OrderBy(x => x.CreatedTs)
+            };
+        }
+
+        equipments = equipments.Skip(queryEquipment.Position);
+        equipments = equipments.Take(queryEquipment.PageSize);
+
+        return equipments;
     }
 }

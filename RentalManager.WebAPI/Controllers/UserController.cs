@@ -97,7 +97,7 @@ public class UserController
     [Authorize]
     [Route("/User/WhoAmI")]
     [HttpPost]
-    public async Task<IActionResult> Login()
+    public async Task<IActionResult> WhoAmI()
     {
         var result = await userService.GetCurrentUser(User);
 

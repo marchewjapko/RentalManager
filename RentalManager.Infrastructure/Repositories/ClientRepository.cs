@@ -2,6 +2,7 @@
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -45,55 +46,10 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     {
         var result = appDbContext.Clients.Where(x => x.IsActive)
             .AsQueryable();
-        if (queryClients.Name != null)
-        {
-            result = result.Where(x => x.Name.Contains(queryClients.Name));
-        }
 
-        if (queryClients.Surname != null)
-        {
-            result = result.Where(x => x.Surname.Contains(queryClients.Surname));
-        }
+        result = FilterClients(result, queryClients);
 
-        if (queryClients.PhoneNumber != null)
-        {
-            result = result.Where(x => x.PhoneNumber == queryClients.PhoneNumber);
-        }
-
-        if (queryClients.Email != null)
-        {
-            result = result.Where(x => x.Email != null && x.Email.Contains(queryClients.Email));
-        }
-
-        if (queryClients.IdCard != null)
-        {
-            result = result.Where(x => x.IdCard != null && x.IdCard.Contains(queryClients.IdCard));
-        }
-
-        if (queryClients.City != null)
-        {
-            result = result.Where(x => x.City.Contains(queryClients.City));
-        }
-
-        if (queryClients.Street != null)
-        {
-            result = result.Where(x => x.Street.Contains(queryClients.Street));
-        }
-
-        if (queryClients.From != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date > queryClients.From.Value.Date);
-        }
-
-        if (queryClients.To != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date < queryClients.To.Value.Date);
-        }
-
-        if (queryClients.OnlyActive)
-        {
-            result = result.Where(x => x.IsActive);
-        }
+        result = SortClients(result, queryClients);
 
         return await Task.FromResult(result.AsEnumerable());
     }
@@ -129,5 +85,83 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 
         result.IsActive = false;
         await appDbContext.SaveChangesAsync();
+    }
+
+    private static IQueryable<Client> FilterClients(IQueryable<Client> clients,
+        QueryClients queryClients)
+    {
+        if (queryClients.Name != null)
+        {
+            clients = clients.Where(x => x.Name.Contains(queryClients.Name));
+        }
+
+        if (queryClients.Surname != null)
+        {
+            clients = clients.Where(x => x.Surname.Contains(queryClients.Surname));
+        }
+
+        if (queryClients.Email != null)
+        {
+            clients = clients.Where(x => x.Email != null && x.Email.Contains(queryClients.Email));
+        }
+
+        if (queryClients.City != null)
+        {
+            clients = clients.Where(x => x.City.Contains(queryClients.City));
+        }
+
+        if (queryClients.Street != null)
+        {
+            clients = clients.Where(x => x.Street.Contains(queryClients.Street));
+        }
+
+        if (queryClients.AddedFrom != null)
+        {
+            clients = clients.Where(x => x.CreatedTs.Date > queryClients.AddedFrom.Value.Date);
+        }
+
+        if (queryClients.AddedTo != null)
+        {
+            clients = clients.Where(x => x.CreatedTs.Date < queryClients.AddedTo.Value.Date);
+        }
+
+        if (queryClients.OnlyActive)
+        {
+            clients = clients.Where(x => x.IsActive);
+        }
+
+        return clients;
+    }
+
+    private static IQueryable<Client> SortClients(IQueryable<Client> clients,
+        QueryClients queryClients)
+    {
+        if (queryClients.Descending)
+        {
+            clients = queryClients.SortClientsBy switch
+            {
+                SortClientsBy.Id => clients.OrderByDescending(x => x.Id),
+                SortClientsBy.Name => clients.OrderByDescending(x => x.Name),
+                SortClientsBy.Surname => clients.OrderByDescending(x => x.Surname),
+                SortClientsBy.DateAdded => clients.OrderByDescending(x => x.CreatedTs),
+                _ => clients.OrderByDescending(x => x.CreatedTs)
+            };
+        }
+        else
+        {
+            clients = queryClients.SortClientsBy switch
+            {
+                SortClientsBy.Id => clients.OrderBy(x => x.Id),
+                SortClientsBy.Name => clients.OrderBy(x => x.Name),
+                SortClientsBy.Surname => clients.OrderBy(x => x.Surname),
+                SortClientsBy.DateAdded => clients.OrderBy(x => x.CreatedTs),
+                _ => clients.OrderBy(x => x.CreatedTs)
+            };
+        }
+
+        clients = clients.Skip(queryClients.Position);
+        clients = clients.Take(queryClients.PageSize);
+
+        return clients;
     }
 }

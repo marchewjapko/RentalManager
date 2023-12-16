@@ -1,12 +1,16 @@
-﻿namespace RentalManager.Global.Queries;
+﻿using RentalManager.Global.Queries.Sorting;
 
-public class QueryEquipment
+namespace RentalManager.Global.Queries;
+
+public class QueryEquipment : PagedQueryBase
 {
     public string? Name { get; set; }
 
-    public DateTime? From { get; set; }
+    public DateTime? AddedFrom { get; set; }
 
-    public DateTime? To { get; set; }
+    public DateTime? AddedTo { get; set; }
 
     public bool OnlyActive { get; set; } = true;
+
+    public SortEquipmentBy SortEquipmentBy { get; set; }
 }

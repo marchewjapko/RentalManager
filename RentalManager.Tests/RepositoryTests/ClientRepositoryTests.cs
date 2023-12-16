@@ -234,7 +234,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            PhoneNumber = newClient.PhoneNumber
+            Name = newClient.Name
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
