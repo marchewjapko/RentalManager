@@ -60,7 +60,7 @@ public class ClientController(IClientService clientService) : Controller
 
     [Route("Deactivate/{id}")]
     [HttpPatch]
-    public async Task<IActionResult> DeactivateEquipment(int id)
+    public async Task<IActionResult> DeactivateClient(int id)
     {
         await clientService.Deactivate(id);
 

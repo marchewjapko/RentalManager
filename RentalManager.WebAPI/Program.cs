@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using RentalManager.Core.Domain;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
@@ -23,7 +24,19 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo {
+        Title = "RentalManager.API", Version = "v1"
+    });
+    c.EnableAnnotations();
+
+    c.TagActionsBy(d =>
+    {
+        return new List<string>() { d.ActionDescriptor.RouteValues["action"]! };
+    });
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<User>()
@@ -53,11 +66,6 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseSwaggerUI(c => {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RentalManager API V1");
-    c.RoutePrefix = "";
-});
 
 app.UseHttpsRedirection();
 

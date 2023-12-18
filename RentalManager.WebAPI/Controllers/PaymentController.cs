@@ -66,7 +66,7 @@ public class PaymentController : Controller
 
     [Route("Deactivate/{id}")]
     [HttpPatch]
-    public async Task<IActionResult> DeactivateEquipment(int id)
+    public async Task<IActionResult> DeactivatePayment(int id)
     {
         await _paymentService.Deactivate(id);
 

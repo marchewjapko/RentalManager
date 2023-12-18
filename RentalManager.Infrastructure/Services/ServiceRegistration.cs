@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using RentalManager.Core.Repositories;
 using RentalManager.Infrastructure.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Commands.ClientCommands;
@@ -16,6 +17,7 @@ using RentalManager.Infrastructure.Validators.PaymentValidators;
 using RentalManager.Infrastructure.Validators.UserValidators;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace RentalManager.Infrastructure.Services;
 

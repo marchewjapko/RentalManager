@@ -2,6 +2,7 @@ import LoginForm from "@/app/Login/LoginForm";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button, Divider, Paper } from "@mui/material";
+import React from "react";
 
 export default function Page() {
 	return (

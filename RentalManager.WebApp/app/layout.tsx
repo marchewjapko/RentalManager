@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ContextRegistry from "./ContextRegistry";
 import React from "react";
-import { OpenAPI } from "@/app/ApiClient/codegen";
+import ThemeRegistry from "@/src/ThemeRegistry/ThemeRegistry";
+import RecoilProvider from "@/src/RecoilProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +20,9 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<ContextRegistry options={{ key: "mui-theme" }}>
-					{children}
-				</ContextRegistry>
+				<RecoilProvider>
+					<ThemeRegistry>{children}</ThemeRegistry>
+				</RecoilProvider>
 			</body>
 		</html>
 	);

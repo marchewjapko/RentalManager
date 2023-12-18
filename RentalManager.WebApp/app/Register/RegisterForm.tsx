@@ -2,37 +2,22 @@
 
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { OpenAPI, ProblemDetails, UserService } from "@/app/ApiClient/codegen";
-import {
-	Button,
-	Divider,
-	IconButton,
-	InputAdornment,
-	TextField,
-} from "@mui/material";
+import { Divider, IconButton, InputAdornment, TextField } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { LoadingButton } from "@mui/lab";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { registerSchema } from "@/app/Register/registerSchema";
-import RegisterAlert from "@/app/Register/RegisterAlert";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
-
-OpenAPI.BASE = "http://localhost:8080";
-OpenAPI.WITH_CREDENTIALS = true;
-OpenAPI.CREDENTIALS = "include";
-
-export interface registerAlertType {
-	mode: "error" | "success";
-	title: string;
-	message: string;
-}
+import { IInlineAlert } from "@/src/InlineAlert/IInlineAlert";
+import InlineAlert from "@/src/InlineAlert/InlineAlert";
+import SignUp from "@/app/Actions/SignUp";
 
 export default function RegisterForm() {
 	const [isLoading, setIsLoading] = useState(false);
-	const [alert, setAlert] = useState<registerAlertType | null>(null);
+	const [alert, setAlert] = useState<IInlineAlert | null>(null);
 	const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
 	const formik = useFormik({
@@ -45,41 +30,22 @@ export default function RegisterForm() {
 		validationSchema: registerSchema,
 		onSubmit: (values) => {
 			setIsLoading(true);
-			UserService.postUser({
+			SignUp({
 				formData: {
 					Name: values.name,
 					Surname: values.surname,
 					Password: values.password,
 					UserName: values.userName,
 				},
-			})
-				.then(() => {
-					setIsLoading(false);
-					setAlert({
-						mode: "success",
-						title: "Your account has been created!",
-						message: "Contact your administrator to confirm your registration.",
-					});
-				})
-				.catch((error) => {
-					setIsLoading(false);
-
-					const errorBody = JSON.parse(JSON.stringify(error))
-						.body as ProblemDetails;
-
-					let title = errorBody.title;
-					let message = errorBody.detail;
-
-					if (errorBody.detail.includes("DuplicateUserName")) {
-						title = "Username already taken :/";
-						message = "Choose a different one.";
-					}
+			}).then((result) => {
+				setIsLoading(false);
+				if (!result.isSuccess)
 					setAlert({
 						mode: "error",
-						title: title,
-						message: message,
+						title: result.title,
+						message: result.message,
 					});
-				});
+			});
 		},
 	});
 
@@ -172,7 +138,7 @@ export default function RegisterForm() {
 				}}
 			/>
 
-			<RegisterAlert alert={alert} setAlert={setAlert}></RegisterAlert>
+			<InlineAlert alert={alert} setAlert={setAlert}></InlineAlert>
 
 			<LoadingButton
 				variant="contained"

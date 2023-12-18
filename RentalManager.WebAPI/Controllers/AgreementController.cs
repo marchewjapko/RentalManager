@@ -9,6 +9,7 @@ using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Services.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
@@ -68,7 +69,7 @@ public class AgreementController(IAgreementService agreementService, IConfigurat
 
     [Route("Deactivate/{id}")]
     [HttpPatch]
-    public async Task<IActionResult> DeactivateEquipment(int id)
+    public async Task<IActionResult> DeactivateAgreement(int id)
     {
         await agreementService.Deactivate(id);
 

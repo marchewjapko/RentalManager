@@ -8,28 +8,18 @@ import {
 	InputAdornment,
 	TextField,
 } from "@mui/material";
-import { OpenAPI, ProblemDetails, UserService } from "@/app/ApiClient/codegen";
 import { loginSchema } from "@/app/Login/loginSchema";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingButton } from "@mui/lab";
-import LoginAlert from "@/app/Login/LoginAlert";
-import { registerAlertType } from "@/app/Register/RegisterForm";
-
-OpenAPI.BASE = "http://localhost:8080";
-OpenAPI.WITH_CREDENTIALS = true;
-OpenAPI.CREDENTIALS = "include";
-
-export interface loginAlertType {
-	mode: "error" | "success";
-	title: string;
-	message: string;
-}
+import { IInlineAlert } from "@/src/InlineAlert/IInlineAlert";
+import InlineAlert from "@/src/InlineAlert/InlineAlert";
+import SignIn from "@/app/Actions/SignIn";
 
 export default function LoginForm() {
 	const [isLoading, setIsLoading] = useState(false);
-	const [alert, setAlert] = useState<loginAlertType | null>(null);
+	const [alert, setAlert] = useState<IInlineAlert | null>(null);
 
 	const formik = useFormik({
 		initialValues: {
@@ -40,33 +30,20 @@ export default function LoginForm() {
 		validationSchema: loginSchema,
 		onSubmit: (values) => {
 			setIsLoading(true);
-			UserService.postUserLogin({
+			SignIn({
 				userName: values.userName,
 				password: values.password,
 				useCookies: true,
 				useSessionCookies: !values.rememberMe,
-			})
-				.then(() => {
-					setIsLoading(false);
-				})
-				.catch((error) => {
-					setIsLoading(false);
-					const errorBody = JSON.parse(JSON.stringify(error))
-						.body as ProblemDetails;
-
-					let message = errorBody.detail;
-
-					if (errorBody.title === "Login failed") {
-						message = "Username and/or password is incorrect";
-					} else if (errorBody.title === "User not confirmed") {
-						message = "Contact your administrator to confirm your account.";
-					}
+			}).then((result) => {
+				setIsLoading(false);
+				if (!result.isSuccess)
 					setAlert({
 						mode: "error",
-						title: errorBody.title,
-						message: message,
+						title: result.title,
+						message: result.message,
 					});
-				});
+			});
 		},
 	});
 
@@ -132,7 +109,7 @@ export default function LoginForm() {
 				</Button>
 			</div>
 
-			<LoginAlert alert={alert} setAlert={setAlert}></LoginAlert>
+			<InlineAlert alert={alert} setAlert={setAlert}></InlineAlert>
 
 			<LoadingButton
 				variant="contained"
