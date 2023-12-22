@@ -8,14 +8,19 @@ namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IUserService
 {
-    Task AddAsync(CreateUser createUser);
+    Task<UserDto> AddAsync(CreateUser createUser);
+
     Task<UserDto> GetAsync(int id);
+
     Task DeleteAsync(int id);
-    Task UpdateAsync(UpdateUser updateUser, int id);
+
+    Task<UserDto> UpdateAsync(UpdateUser updateUser, int id);
 
     Task<IEnumerable<UserDto>> BrowseAllAsync(QueryUser queryUser);
 
-    Task Login(LoginRequest loginRequest);
+    Task SignIn(SignInRequest signInRequest);
+
+    Task SignOut();
 
     Task<UserWithRolesDto> GetCurrentUser(ClaimsPrincipal claimsPrincipal);
 

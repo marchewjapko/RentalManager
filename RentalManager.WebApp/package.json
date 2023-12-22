@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "npx openapi-typescript-codegen --input app/ApiClient/rentalManagerAPI.json --output app/ApiClient/codegen --client axios exportServices --useOptions --useUnionTypes",
+    "codegen": "npx openapi-typescript-codegen --input app/lib/actions/apiClient/rentalManagerAPI.json --output app/lib/actions/apiClient/client --client axios exportServices --useOptions --useUnionTypes",
     "lighthouse test": "lighthouse http://localhost:3000/ --quiet --chrome-flags=\"--headless\" --output-path=./lighthouse-results.html --only-categories=\"performance,accessibility,best-practices\" --view"
   },
   "dependencies": {
@@ -17,9 +17,10 @@
     "@mui/lab": "^5.0.0-alpha.156",
     "@mui/material": "^5.15.0",
     "axios": "^1.6.2",
+    "cookies-next": "^4.1.0",
     "formik": "^2.4.5",
-    "iron-session": "^8.0.1",
     "next": "14.0.4",
+    "next-auth": "^5.0.0-beta.4",
     "react": "^18",
     "react-dom": "^18",
     "recoil": "^0.7.7",

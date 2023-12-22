@@ -4,7 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NextAppDirEmotionCacheProvider from "./EmotionCache";
 import darkTheme from "./darkTheme";
-import lightTheme from "@/src/ThemeRegistry/lightTheme";
+import lightTheme from "@/app/lib/ThemeRegistry/lightTheme";
 
 export default function ThemeRegistry({
 	children,

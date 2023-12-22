@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Alert, AlertTitle } from "@mui/material";
-import { IInlineAlert } from "@/src/InlineAlert/IInlineAlert";
+import { IInlineAlert } from "@/app/lib/InlineAlert/IInlineAlert";
 
 export default function InlineAlert(props: {
 	alert: IInlineAlert | null;

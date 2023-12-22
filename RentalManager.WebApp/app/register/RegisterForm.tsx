@@ -6,14 +6,14 @@ import { Divider, IconButton, InputAdornment, TextField } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { LoadingButton } from "@mui/lab";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { registerSchema } from "@/app/Register/registerSchema";
+import { registerSchema } from "@/app/register/registerSchema";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
-import { IInlineAlert } from "@/src/InlineAlert/IInlineAlert";
-import InlineAlert from "@/src/InlineAlert/InlineAlert";
-import SignUp from "@/app/Actions/SignUp";
+import { IInlineAlert } from "@/app/lib/InlineAlert/IInlineAlert";
+import InlineAlert from "@/app/lib/InlineAlert/InlineAlert";
+import SignUp from "@/app/Actions/ProxyActions/SignUp";
 
 export default function RegisterForm() {
 	const [isLoading, setIsLoading] = useState(false);
@@ -39,12 +39,12 @@ export default function RegisterForm() {
 				},
 			}).then((result) => {
 				setIsLoading(false);
-				if (!result.isSuccess)
-					setAlert({
-						mode: "error",
-						title: result.title,
-						message: result.message,
-					});
+				// if (!result.isSuccess)
+				// 	setAlert({
+				// 		mode: "error",
+				// 		title: result.title,
+				// 		message: result.message,
+				// 	});
 			});
 		},
 	});

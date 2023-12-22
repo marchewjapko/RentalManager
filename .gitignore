@@ -31,4 +31,4 @@
 */__pycache__/*
 /.idea/*
 RentalManager.sln.DotSettings.user
-RentalManager.WebApp/app/ApiClient/*
+RentalManager.WebApp/app/lib/actions/apiClient/*

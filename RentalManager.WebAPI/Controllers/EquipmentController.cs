@@ -14,12 +14,13 @@ namespace RentalManager.WebAPI.Controllers;
 [Route("[Controller]")]
 public class EquipmentController(IEquipmentService equipmentService) : Controller
 {
+    [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddEquipment([FromForm] CreateEquipment createEquipment)
     {
-        await equipmentService.AddAsync(createEquipment, User);
+        var result = await equipmentService.AddAsync(createEquipment, User);
 
-        return Ok();
+        return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<EquipmentDto>), 200)]
@@ -49,14 +50,15 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
         return Json(clientDto);
     }
 
+    [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateEquipment(
         [FromForm] UpdateEquipment updateEquipment,
         int id)
     {
-        await equipmentService.UpdateAsync(updateEquipment, id);
+        var result = await equipmentService.UpdateAsync(updateEquipment, id);
 
-        return Ok();
+        return Json(result);
     }
 
     [Route("Image/{id}")]

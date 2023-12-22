@@ -7,13 +7,15 @@ namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IAgreementService
 {
-    Task AddAsync(CreateAgreement createAgreement, ClaimsPrincipal user);
+    Task<AgreementDto> AddAsync(CreateAgreement createAgreement, ClaimsPrincipal user);
+
     Task<AgreementDto> GetAsync(int id);
 
     Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements);
 
     Task DeleteAsync(int id);
-    Task UpdateAsync(UpdateAgreement updateAgreement, int id);
+
+    Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement, int id);
 
     Task Deactivate(int id);
 }

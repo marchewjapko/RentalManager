@@ -13,12 +13,14 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 public class PaymentService
     (IPaymentRepository paymentRepository, UserManager<User> userManager) : IPaymentService
 {
-    public async Task AddAsync(CreatePayment createPayment, ClaimsPrincipal user)
+    public async Task<PaymentDto> AddAsync(CreatePayment createPayment, ClaimsPrincipal user)
     {
         var newPayment = createPayment.ToDomain();
         newPayment.User = (await userManager.GetUserAsync(user))!;
 
-        await paymentRepository.AddAsync(newPayment);
+        var result = await paymentRepository.AddAsync(newPayment);
+
+        return result.ToDto();
     }
 
     public async Task<IEnumerable<PaymentDto>> BrowseAllAsync(QueryPayment queryPayment)
@@ -40,9 +42,11 @@ public class PaymentService
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task UpdateAsync(UpdatePayment updatePayment, int id)
+    public async Task<PaymentDto> UpdateAsync(UpdatePayment updatePayment, int id)
     {
-        await paymentRepository.UpdateAsync(updatePayment.ToDomain(), id);
+        var result = await paymentRepository.UpdateAsync(updatePayment.ToDomain(), id);
+
+        return result.ToDto();
     }
 
     public async Task Deactivate(int id)

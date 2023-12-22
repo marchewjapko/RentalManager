@@ -1,5 +1,6 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
 namespace RentalManager.Global.Queries;
 
 public class QueryPayment

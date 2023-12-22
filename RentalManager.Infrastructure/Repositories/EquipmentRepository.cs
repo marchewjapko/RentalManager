@@ -10,10 +10,12 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentRepository
 {
-    public async Task AddAsync(Equipment equipment)
+    public async Task<Equipment> AddAsync(Equipment equipment)
     {
-        appDbContext.Equipment.Add(equipment);
+        var result = appDbContext.Equipment.Add(equipment);
         await appDbContext.SaveChangesAsync();
+
+        return result.Entity;
     }
 
     public async Task DeleteAsync(int id)
@@ -68,7 +70,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task UpdateAsync(Equipment equipment, int id)
+    public async Task<Equipment> UpdateAsync(Equipment equipment, int id)
     {
         var equipmentToUpdate = appDbContext.Equipment.FirstOrDefault(x => x.Id == id);
 
@@ -82,6 +84,8 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         equipmentToUpdate.Image = equipment.Image;
         equipmentToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
+
+        return equipmentToUpdate;
     }
 
     public async Task Deactivate(int id)

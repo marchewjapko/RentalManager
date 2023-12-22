@@ -18,7 +18,7 @@ public class AgreementService(IAgreementRepository agreementRepository,
         UserManager<User> userManager)
     : IAgreementService
 {
-    public async Task AddAsync(CreateAgreement createAgreement,
+    public async Task<AgreementDto> AddAsync(CreateAgreement createAgreement,
         ClaimsPrincipal claimsPrincipal)
     {
         var equipment = (await equipmentRepository.GetAsync(createAgreement.EquipmentIds)).ToList();
@@ -52,7 +52,9 @@ public class AgreementService(IAgreementRepository agreementRepository,
         agreement.User = user;
         foreach (var payment in agreement.Payments) payment.User = user;
 
-        await agreementRepository.AddAsync(agreement);
+        var result = await agreementRepository.AddAsync(agreement);
+
+        return result.ToDto();
     }
 
     public async Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements)
@@ -74,7 +76,7 @@ public class AgreementService(IAgreementRepository agreementRepository,
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task UpdateAsync(UpdateAgreement updateAgreement, int id)
+    public async Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement, int id)
     {
         var agreement = updateAgreement.ToDomain();
         var equipment = (await equipmentRepository.GetAsync(updateAgreement.EquipmentIds)).ToList();
@@ -97,7 +99,9 @@ public class AgreementService(IAgreementRepository agreementRepository,
         agreement.Employee = employee;
         agreement.Equipment = equipment.ToList();
 
-        await agreementRepository.UpdateAsync(agreement, id);
+        var result = await agreementRepository.UpdateAsync(agreement, id);
+
+        return result.ToDto();
     }
 
     public async Task Deactivate(int id)

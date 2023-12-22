@@ -17,9 +17,10 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 
 public class UserService(IUserRepository userRepository,
     UserManager<User> userManager,
-    SignInManager<User> signInManager) : IUserService
+    SignInManager<User> signInManager
+) : IUserService
 {
-    public async Task AddAsync(CreateUser createUser)
+    public async Task<UserDto> AddAsync(CreateUser createUser)
     {
         var result = await userManager.CreateAsync(createUser.ToDomain(), createUser.Password);
 
@@ -31,6 +32,11 @@ public class UserService(IUserRepository userRepository,
 
             throw new ValidationException(validationFailure);
         }
+
+        var newUser =
+            await userManager.Users.FirstOrDefaultAsync(x => x.UserName == createUser.UserName);
+
+        return newUser!.ToDto();
     }
 
     public async Task<IEnumerable<UserDto>> BrowseAllAsync(QueryUser queryUser)
@@ -52,46 +58,49 @@ public class UserService(IUserRepository userRepository,
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task UpdateAsync(UpdateUser updateUser, int id)
+    public async Task<UserDto> UpdateAsync(UpdateUser updateUser, int id)
     {
-        await userRepository.UpdateAsync(updateUser.ToDomain(), id);
+        var result = await userRepository.UpdateAsync(updateUser.ToDomain(), id);
+
+        return result.ToDto();
     }
 
-    public async Task Login(LoginRequest loginRequest)
+    public async Task SignIn(SignInRequest signInRequest)
     {
-        var useCookieScheme = loginRequest.UseCookies || loginRequest.UseSessionCookies;
-        var isPersistent = loginRequest.UseCookies && loginRequest.UseSessionCookies != true;
-        signInManager.AuthenticationScheme = useCookieScheme
-            ? IdentityConstants.ApplicationScheme
-            : IdentityConstants.BearerScheme;
+        signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
 
         var user =
-            await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginRequest.UserName);
+            await userManager.Users.FirstOrDefaultAsync(x => x.UserName == signInRequest.UserName);
 
         if (user is null)
         {
-            throw new LoginFailedException(loginRequest.UserName);
+            throw new SignInFailedException(signInRequest.UserName);
         }
 
         if (!user.IsConfirmed)
         {
-            throw new UserNotConfirmedException(loginRequest.UserName);
+            throw new UserNotConfirmedException(signInRequest.UserName);
         }
 
         if (user.PasswordValidTo is not null)
         {
-            throw new PasswordChangeRequiredException(loginRequest.UserName);
+            throw new PasswordChangeRequiredException(signInRequest.UserName);
         }
 
         var result =
-            await signInManager.PasswordSignInAsync(loginRequest.UserName, loginRequest.Password,
-                isPersistent,
+            await signInManager.PasswordSignInAsync(signInRequest.UserName, signInRequest.Password,
+                signInRequest.IsPersistent,
                 true);
 
         if (!result.Succeeded)
         {
-            throw new LoginFailedException(loginRequest.UserName);
+            throw new SignInFailedException(signInRequest.UserName);
         }
+    }
+
+    public async Task SignOut()
+    {
+        await signInManager.SignOutAsync();
     }
 
     public async Task ChangePassword(ChangePasswordRequest changePasswordRequest)
@@ -112,8 +121,8 @@ public class UserService(IUserRepository userRepository,
 
         await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword,
             changePasswordRequest.NewPassword);
-
         await userRepository.ClearPasswordExpiration(user);
+        await userManager.UpdateSecurityStampAsync(user);
     }
 
     public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)

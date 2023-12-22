@@ -24,18 +24,36 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
         Title = "RentalManager.API", Version = "v1"
     });
-    c.EnableAnnotations();
-
-    c.TagActionsBy(d =>
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        return new List<string>() { d.ActionDescriptor.RouteValues["action"]! };
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
     });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+    c.EnableAnnotations();
 });
 
 builder.Services.AddAuthorization();
@@ -62,9 +80,14 @@ else
     );
 }
 
+builder.Services.Configure<SecurityStampValidatorOptions>(options => {
+    options.ValidationInterval = TimeSpan.FromMinutes(0);
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();

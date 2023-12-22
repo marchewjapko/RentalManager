@@ -7,13 +7,14 @@ namespace RentalManager.Infrastructure.Services.Interfaces;
 
 public interface IEquipmentService
 {
-    Task AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user);
+    Task<EquipmentDto> AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user);
+
     Task<EquipmentDto> GetAsync(int id);
 
     Task<IEnumerable<EquipmentDto>> BrowseAllAsync(QueryEquipment queryEquipment);
 
     Task DeleteAsync(int id);
-    Task UpdateAsync(UpdateEquipment updateEquipment, int id);
+    Task<EquipmentDto> UpdateAsync(UpdateEquipment updateEquipment, int id);
 
     Task Deactivate(int id);
 }

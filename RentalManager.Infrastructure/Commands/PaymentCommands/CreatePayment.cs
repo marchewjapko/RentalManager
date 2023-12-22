@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace RentalManager.Infrastructure.Commands.PaymentCommands;

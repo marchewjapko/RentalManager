@@ -58,7 +58,7 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task UpdateAsync(User user, int id)
+    public async Task<User> UpdateAsync(User user, int id)
     {
         var userToUpdate = appDbContext.Users.FirstOrDefault(x => x.Id == id);
 
@@ -72,6 +72,8 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         userToUpdate.Image = user.Image;
         userToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
+
+        return userToUpdate;
     }
 
     public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)

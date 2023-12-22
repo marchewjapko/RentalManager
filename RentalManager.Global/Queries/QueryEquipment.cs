@@ -1,4 +1,5 @@
 ﻿using RentalManager.Global.Queries.Sorting;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 

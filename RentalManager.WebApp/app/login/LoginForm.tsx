@@ -8,14 +8,15 @@ import {
 	InputAdornment,
 	TextField,
 } from "@mui/material";
-import { loginSchema } from "@/app/Login/loginSchema";
+import { loginSchema } from "@/app/login/loginSchema";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingButton } from "@mui/lab";
-import { IInlineAlert } from "@/src/InlineAlert/IInlineAlert";
-import InlineAlert from "@/src/InlineAlert/InlineAlert";
-import SignIn from "@/app/Actions/SignIn";
+import { IInlineAlert } from "@/app/lib/InlineAlert/IInlineAlert";
+import InlineAlert from "@/app/lib/InlineAlert/InlineAlert";
+import GetCurrentUser from "@/app/Actions/ProxyActions/GetCurrentUser";
+import { signIn } from "@/auth";
 
 export default function LoginForm() {
 	const [isLoading, setIsLoading] = useState(false);
@@ -29,21 +30,33 @@ export default function LoginForm() {
 		},
 		validationSchema: loginSchema,
 		onSubmit: (values) => {
+			setAlert(null);
 			setIsLoading(true);
-			SignIn({
-				userName: values.userName,
+			signIn("credentials", {
+				username: values.userName,
 				password: values.password,
-				useCookies: true,
-				useSessionCookies: !values.rememberMe,
-			}).then((result) => {
+				rememberMe: values.rememberMe,
+			}).catch((error) => {
 				setIsLoading(false);
-				if (!result.isSuccess)
-					setAlert({
-						mode: "error",
-						title: result.title,
-						message: result.message,
-					});
+
+				console.log(error);
 			});
+			//
+			// SignIn({
+			// 	userName: values.userName,
+			// 	password: values.password,
+			// 	useCookies: true,
+			// 	useSessionCookies: !values.rememberMe,
+			// }).then((result) => {
+			// 	setIsLoading(false);
+			// 	if (!!result) {
+			// 		setAlert({
+			// 			mode: result.isSuccess ? "success" : "error",
+			// 			title: result.title,
+			// 			message: result.message,
+			// 		});
+			// 	}
+			// });
 		},
 	});
 
@@ -104,7 +117,11 @@ export default function LoginForm() {
 					label="Remember me"
 				/>
 
-				<Button variant="text" className={"h-min self-end"}>
+				<Button
+					variant="text"
+					className={"h-min self-end"}
+					onClick={() => GetCurrentUser()}
+				>
 					Change password
 				</Button>
 			</div>

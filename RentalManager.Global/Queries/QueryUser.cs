@@ -1,4 +1,5 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace RentalManager.Global.Queries;
 
 public class QueryUser

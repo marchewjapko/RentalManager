@@ -78,7 +78,7 @@ public static class ProblemDetailsConfiguration
 
                         break;
 
-                    case LoginFailedException:
+                    case SignInFailedException:
                         context.ProblemDetails.Title = "Login failed";
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status400BadRequest;
@@ -103,7 +103,7 @@ public static class ProblemDetailsConfiguration
                         break;
 
                     case TemporaryPasswordExpiredException:
-                        context.ProblemDetails.Title = $"Temporary password for user has expired";
+                        context.ProblemDetails.Title = "Temporary password for user has expired";
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;

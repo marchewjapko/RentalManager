@@ -1,8 +1,7 @@
-import LoginForm from "@/app/Login/LoginForm";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button, Divider, Paper } from "@mui/material";
-import React from "react";
+import RegisterForm from "@/app/register/RegisterForm";
 
 export default function Page() {
 	return (
@@ -13,15 +12,15 @@ export default function Page() {
 			}
 		>
 			<AccountCircleIcon sx={{ fontSize: 75 }} />
-			<p className="text-3xl">Sign in</p>
-			<LoginForm />
-			<Divider className={"w-full !mt-3"}>Not a member ?</Divider>
+			<p className="text-3xl">Sign up</p>
+			<RegisterForm />
+			<Divider className={"w-full !mt-3"}>Already a member ?</Divider>
 			<Button
 				variant="outlined"
-				href={"/Register/"}
+				href={"/login/"}
 				endIcon={<ArrowForwardIcon />}
 			>
-				Sign up
+				Sign in
 			</Button>
 		</Paper>
 	);

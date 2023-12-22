@@ -9,10 +9,9 @@ public static class IdentityOptionsConfiguration
     {
         services.Configure<IdentityOptions>(options => {
             options.Password.RequiredLength = 6;
-            options.Password.RequiredUniqueChars = 1;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
             options.Password.RequireDigit = true;
         });
     }

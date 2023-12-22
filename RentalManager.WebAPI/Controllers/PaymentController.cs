@@ -21,12 +21,13 @@ public class PaymentController : Controller
         _paymentService = paymentService;
     }
 
+    [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment)
     {
-        await _paymentService.AddAsync(createPayment, User);
+        var result = await _paymentService.AddAsync(createPayment, User);
 
-        return Ok();
+        return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
@@ -56,12 +57,13 @@ public class PaymentController : Controller
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePayment([FromBody] UpdatePayment updatePayment, int id)
     {
-        await _paymentService.UpdateAsync(updatePayment, id);
+        var result = await _paymentService.UpdateAsync(updatePayment, id);
 
-        return Ok();
+        return Json(result);
     }
 
     [Route("Deactivate/{id}")]

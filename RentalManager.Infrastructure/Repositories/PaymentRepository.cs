@@ -9,10 +9,12 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 {
-    public async Task AddAsync(Payment payment)
+    public async Task<Payment> AddAsync(Payment payment)
     {
-        appDbContext.Payments.Add(payment);
+        var result = appDbContext.Payments.Add(payment);
         await appDbContext.SaveChangesAsync();
+
+        return result.Entity;
     }
 
     public async Task DeleteAsync(int id)
@@ -73,7 +75,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task UpdateAsync(Payment payment, int id)
+    public async Task<Payment> UpdateAsync(Payment payment, int id)
     {
         var paymentToUpdate = appDbContext.Payments.FirstOrDefault(x => x.Id == id);
 
@@ -89,6 +91,8 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         paymentToUpdate.DateTo = payment.DateTo;
         paymentToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
+
+        return paymentToUpdate;
     }
 
     public async Task Deactivate(int id)

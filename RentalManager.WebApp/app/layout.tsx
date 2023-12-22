@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import ThemeRegistry from "@/src/ThemeRegistry/ThemeRegistry";
-import RecoilProvider from "@/src/RecoilProvider";
+import ThemeRegistry from "@/app/lib/ThemeRegistry/ThemeRegistry";
+import RecoilProvider from "@/app/lib/RecoilProvider";
+import { SessionProvider2 } from "@/app/lib/SessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +21,11 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<RecoilProvider>
+				<SessionProvider2>
+					{/*<RecoilProvider>*/}
 					<ThemeRegistry>{children}</ThemeRegistry>
-				</RecoilProvider>
+					{/*</RecoilProvider>*/}
+				</SessionProvider2>
 			</body>
 		</html>
 	);

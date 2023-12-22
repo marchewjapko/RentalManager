@@ -13,12 +13,14 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 public class ClientService
     (IClientRepository clientRepository, UserManager<User> userManager) : IClientService
 {
-    public async Task AddAsync(CreateClient createClient, ClaimsPrincipal user)
+    public async Task<ClientDto> AddAsync(CreateClient createClient, ClaimsPrincipal user)
     {
         var newClient = createClient.ToDomain();
         newClient.User = (await userManager.GetUserAsync(user))!;
 
-        await clientRepository.AddAsync(newClient);
+        var result = await clientRepository.AddAsync(newClient);
+
+        return result.ToDto();
     }
 
     public async Task<IEnumerable<ClientDto>> BrowseAllAsync(QueryClients queryClients)
@@ -41,9 +43,11 @@ public class ClientService
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task UpdateAsync(UpdateClient updateClient, int id)
+    public async Task<ClientDto> UpdateAsync(UpdateClient updateClient, int id)
     {
-        await clientRepository.UpdateAsync(updateClient.ToDomain(), id);
+        var result = await clientRepository.UpdateAsync(updateClient.ToDomain(), id);
+
+        return result.ToDto();
     }
 
     public async Task Deactivate(int id)

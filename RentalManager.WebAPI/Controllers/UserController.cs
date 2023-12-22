@@ -18,13 +18,12 @@ public class UserController
     (IUserService userService) : Controller
 {
     [ProducesResponseType(typeof(UserDto), 200)]
-    [ProducesResponseType(typeof(ProblemDetails), 500)]
     [HttpPost]
     public async Task<IActionResult> AddUser([FromForm] CreateUser createUser)
     {
-        await userService.AddAsync(createUser);
+        var result = await userService.AddAsync(createUser);
 
-        return Ok();
+        return Json(result);
     }
 
     [Authorize]
@@ -62,9 +61,9 @@ public class UserController
     public async Task<IActionResult> UpdateUser([FromForm] UpdateUser updateUser,
         int id)
     {
-        await userService.UpdateAsync(updateUser, id);
+        var result = await userService.UpdateAsync(updateUser, id);
 
-        return Ok();
+        return Json(result);
     }
 
     [Authorize]
@@ -82,19 +81,30 @@ public class UserController
         return File(userDto.Image, "image/jpeg");
     }
 
-    [Route("/User/login")]
+    [ProducesResponseType(typeof(AccessTokenResponse), 200)]
+    [Route("/User/signIn")]
     [HttpPost]
-    public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> Login(
-        [FromQuery] LoginRequest login)
+    public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> SignIn(
+        [FromQuery] SignInRequest signIn)
     {
-        await userService.Login(login);
+        await userService.SignIn(signIn);
 
         return TypedResults.Empty;
     }
 
+    [Route("/User/signOut")]
+    [HttpPost]
+    public new async Task<IActionResult> SignOut()
+    {
+        await userService.SignOut();
+
+        return Ok();
+    }
+
+    [ProducesResponseType(typeof(UserWithRolesDto), 200)]
     [Authorize]
     [Route("/User/WhoAmI")]
-    [HttpPost]
+    [HttpGet]
     public async Task<IActionResult> WhoAmI()
     {
         var result = await userService.GetCurrentUser(User);

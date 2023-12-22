@@ -9,7 +9,6 @@ using RentalManager.Infrastructure.DTO;
 using RentalManager.Infrastructure.DTO.ObjectConversions;
 using RentalManager.Infrastructure.Exceptions;
 using RentalManager.Infrastructure.Services.Interfaces;
-using Swashbuckle.AspNetCore.Annotations;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
@@ -21,12 +20,13 @@ namespace RentalManager.WebAPI.Controllers;
 public class AgreementController(IAgreementService agreementService, IConfiguration configuration)
     : Controller
 {
+    [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddAgreement([FromBody] CreateAgreement createAgreement)
     {
-        await agreementService.AddAsync(createAgreement, User);
+        var result = await agreementService.AddAsync(createAgreement, User);
 
-        return Ok();
+        return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<AgreementDto>), 200)]
@@ -57,14 +57,15 @@ public class AgreementController(IAgreementService agreementService, IConfigurat
         return Json(result);
     }
 
+    [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAgreement(
         [FromBody] UpdateAgreement updateAgreement,
         int id)
     {
-        await agreementService.UpdateAsync(updateAgreement, id);
+        var result = await agreementService.UpdateAsync(updateAgreement, id);
 
-        return Ok();
+        return Json(result);
     }
 
     [Route("Deactivate/{id}")]

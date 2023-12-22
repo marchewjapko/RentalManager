@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using RentalManager.Infrastructure.DTO;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -11,11 +11,11 @@ public class UserBaseCommand
 {
     [Required]
     [DefaultValue("John")]
-    public string Name { get; init; } = null!;
+    public string Name { get; set; } = null!;
 
     [Required]
     [DefaultValue("Kowalski")]
-    public string Surname { get; init; } = null!;
+    public string Surname { get; set; } = null!;
 
-    public IFormFile? Image { get; init; }
+    public IFormFile? Image { get; set; }
 }

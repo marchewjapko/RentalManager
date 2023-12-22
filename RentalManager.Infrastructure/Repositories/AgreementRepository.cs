@@ -10,10 +10,12 @@ namespace RentalManager.Infrastructure.Repositories;
 
 public class AgreementRepository(AppDbContext appDbContext) : IAgreementRepository
 {
-    public async Task AddAsync(Agreement agreement)
+    public async Task<Agreement> AddAsync(Agreement agreement)
     {
-        appDbContext.Agreements.Add(agreement);
+        var result = appDbContext.Agreements.Add(agreement);
         await appDbContext.SaveChangesAsync();
+
+        return result.Entity;
     }
 
     public async Task DeleteAsync(int id)
@@ -64,7 +66,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         return await Task.FromResult(result.AsEnumerable());
     }
 
-    public async Task UpdateAsync(Agreement agreement, int id)
+    public async Task<Agreement> UpdateAsync(Agreement agreement, int id)
     {
         var agreementToUpdate = appDbContext.Agreements
             .Include(x => x.Equipment)
@@ -89,6 +91,8 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         agreementToUpdate.DateAdded = agreement.DateAdded;
         agreementToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
+
+        return agreementToUpdate;
     }
 
     public async Task Deactivate(int id)

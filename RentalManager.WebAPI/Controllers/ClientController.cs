@@ -14,12 +14,13 @@ namespace RentalManager.WebAPI.Controllers;
 [Route("[Controller]")]
 public class ClientController(IClientService clientService) : Controller
 {
+    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
     {
-        await clientService.AddAsync(createClient, User);
+        var result = await clientService.AddAsync(createClient, User);
 
-        return Ok();
+        return Json(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
@@ -50,12 +51,13 @@ public class ClientController(IClientService clientService) : Controller
         return Json(clientDto);
     }
 
+    [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
     {
-        await clientService.UpdateAsync(updateClient, id);
+        var result = await clientService.UpdateAsync(updateClient, id);
 
-        return Ok();
+        return Json(result);
     }
 
     [Route("Deactivate/{id}")]

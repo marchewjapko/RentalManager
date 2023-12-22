@@ -13,12 +13,14 @@ namespace RentalManager.Infrastructure.Services.Implementation;
 public class EquipmentService(IEquipmentRepository equipmentRepository,
     UserManager<User> userManager) : IEquipmentService
 {
-    public async Task AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
+    public async Task<EquipmentDto> AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
     {
         var newEquipment = createEquipment.ToDomain();
         newEquipment.User = (await userManager.GetUserAsync(user))!;
 
-        await equipmentRepository.AddAsync(newEquipment);
+        var result = await equipmentRepository.AddAsync(newEquipment);
+
+        return result.ToDto();
     }
 
     public async Task<IEnumerable<EquipmentDto>> BrowseAllAsync(QueryEquipment queryEquipment)
@@ -40,9 +42,11 @@ public class EquipmentService(IEquipmentRepository equipmentRepository,
         return await Task.FromResult(result.ToDto());
     }
 
-    public async Task UpdateAsync(UpdateEquipment updateEquipment, int id)
+    public async Task<EquipmentDto> UpdateAsync(UpdateEquipment updateEquipment, int id)
     {
-        await equipmentRepository.UpdateAsync(updateEquipment.ToDomain(), id);
+        var result = await equipmentRepository.UpdateAsync(updateEquipment.ToDomain(), id);
+
+        return result.ToDto();
     }
 
     public async Task Deactivate(int id)

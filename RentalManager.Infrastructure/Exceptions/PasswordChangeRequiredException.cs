@@ -1,9 +1,4 @@
 ﻿namespace RentalManager.Infrastructure.Exceptions;
 
-public class PasswordChangeRequiredException : Exception
-{
-    public PasswordChangeRequiredException(string userName) : base(
-        $"Password change for user {userName} is required")
-    {
-    }
-}
+public class PasswordChangeRequiredException(string userName) : Exception(
+    $"Password change for user {userName} is required");
