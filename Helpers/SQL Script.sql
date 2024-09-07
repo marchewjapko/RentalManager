@@ -1,7 +1,0 @@
-DELETE FROM [RentalManager].[dbo].[__EFMigrationsHistory]
-DROP TABLE [RentalManager].[dbo].[Payments]
-DROP TABLE [RentalManager].[dbo].[RentalAgreementRentalEquipment]
-DROP TABLE [RentalManager].[dbo].[RentalAgreements]
-DROP TABLE [RentalManager].[dbo].[RentalEquipment]
-DROP TABLE [RentalManager].[dbo].[Clients]
-DROP TABLE [RentalManager].[dbo].[Employees]

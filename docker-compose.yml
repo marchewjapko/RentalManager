@@ -1,7 +1,8 @@
-version: "3.4"
+name: rental-manager
 
-services:          
+services:
     rental-manager-api:
+        container_name: web-api
         environment:
           - TZ=Europe/Warsaw
         image: "marchewjapko/rental-manager-api:latest"
@@ -11,6 +12,7 @@ services:
           - rental-manager-db
 
     rental-manager-document-service:
+        container_name: document-service
         environment:
           - TZ=Europe/Warsaw
         image: "marchewjapko/rental-manager-document-service:latest"
@@ -18,6 +20,7 @@ services:
           - "8081:80"
           
     rental-manager-db:
+        container_name: database
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         user: root
         ports:
