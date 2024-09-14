@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RentalManager.Infrastructure.Commands.ClientCommands;
+using RentalManager.Infrastructure.Models.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.Validators.ClientValidators;
 
@@ -7,13 +7,13 @@ public class ClientBaseValidator : AbstractValidator<ClientBaseCommand>
 {
     public ClientBaseValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.FirstName)
             .NotEmpty()
             .MaximumLength(100)
             .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")
             .WithMessage("'Name' should only contain letters");
 
-        RuleFor(x => x.Surname)
+        RuleFor(x => x.LastName)
             .NotEmpty()
             .MaximumLength(100)
             .Matches("^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻĆ ']*$")

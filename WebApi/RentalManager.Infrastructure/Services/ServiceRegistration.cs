@@ -1,20 +1,20 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using RentalManager.Core.Repositories;
-using RentalManager.Global.Requests;
-using RentalManager.Infrastructure.Commands.AgreementCommands;
-using RentalManager.Infrastructure.Commands.ClientCommands;
-using RentalManager.Infrastructure.Commands.EquipmentCommands;
-using RentalManager.Infrastructure.Commands.PaymentCommands;
-using RentalManager.Infrastructure.Commands.UserCommands;
+using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
+using RentalManager.Infrastructure.Models.Commands.ClientCommands;
+using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
+using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 using RentalManager.Infrastructure.Repositories;
-using RentalManager.Infrastructure.Services.Implementation;
-using RentalManager.Infrastructure.Services.Interfaces;
+using RentalManager.Infrastructure.Services.AgreementService;
+using RentalManager.Infrastructure.Services.ClientService;
+using RentalManager.Infrastructure.Services.EquipmentService;
+using RentalManager.Infrastructure.Services.PaymentService;
+using RentalManager.Infrastructure.Services.UserService;
 using RentalManager.Infrastructure.Validators.AgreementValidators;
 using RentalManager.Infrastructure.Validators.ClientValidators;
 using RentalManager.Infrastructure.Validators.EquipmentValidators;
 using RentalManager.Infrastructure.Validators.PaymentValidators;
-using RentalManager.Infrastructure.Validators.UserValidators;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
@@ -25,19 +25,18 @@ public static class ServiceRegistration
     public static void RegisterApiServices(this IServiceCollection services)
     {
         services.AddScoped<IClientRepository, ClientRepository>();
-        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<IClientService, ClientService.ClientService>();
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserService, UserService.UserService>();
 
         services.AddScoped<IEquipmentRepository, EquipmentRepository>();
-        services.AddScoped<IEquipmentService, EquipmentService>();
+        services.AddScoped<IEquipmentService, EquipmentService.EquipmentService>();
 
         services.AddScoped<IAgreementRepository, AgreementRepository>();
-        services.AddScoped<IAgreementService, AgreementService>();
+        services.AddScoped<IAgreementService, AgreementService.AgreementService>();
 
         services.AddScoped<IPaymentRepository, PaymentRepository>();
-        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IPaymentService, PaymentService.PaymentService>();
     }
 
     public static void RegisterValidatorServices(this IServiceCollection services)
@@ -46,9 +45,6 @@ public static class ServiceRegistration
             configuration.ValidationStrategy = ValidationStrategy.All;
             configuration.EnableFormBindingSourceAutomaticValidation = true;
         });
-
-        services.AddScoped<IValidator<CreateUser>, CreateUserValidator>();
-        services.AddScoped<IValidator<UpdateUser>, UpdateUserValidator>();
 
         services.AddScoped<IValidator<CreateEquipment>, CreateEquipmentValidator>();
         services.AddScoped<IValidator<UpdateEquipment>, UpdateEquipmentValidator>();
@@ -64,8 +60,6 @@ public static class ServiceRegistration
 
         services.AddScoped<IValidator<CreateAgreement>, CreateAgreementValidator>();
         services.AddScoped<IValidator<UpdateAgreement>, UpdateAgreementValidator>();
-
-        services.AddScoped<IValidator<ChangePasswordRequest>, ChangePasswordRequestValidator>();
 
         services.AddFluentValidationAutoValidation();
     }

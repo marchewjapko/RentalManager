@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RentalManager.Infrastructure.Commands.AgreementCommands;
+using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 
 namespace RentalManager.Infrastructure.Validators.AgreementValidators;
 

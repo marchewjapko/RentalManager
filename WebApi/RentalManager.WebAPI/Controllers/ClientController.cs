@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Commands.ClientCommands;
-using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services.Interfaces;
+using RentalManager.Infrastructure.Models.Commands.ClientCommands;
+using RentalManager.Infrastructure.Models.DTO;
+using RentalManager.Infrastructure.Services.ClientService;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
@@ -33,7 +33,6 @@ public class ClientController(IClientService clientService) : Controller
         return Json(result);
     }
 
-    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteClient(int id)
     {

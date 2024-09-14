@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using RentalManager.Infrastructure.Commands.ClientCommands;
+using RentalManager.Infrastructure.Models.Commands.ClientCommands;
 using RentalManager.Infrastructure.Validators.ClientValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
@@ -11,8 +11,8 @@ public class ClientValidatorTests
     private static ClientBaseCommand InitializeClient()
     {
         return new Faker<ClientBaseCommand>("pl")
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -41,7 +41,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Name = "John Jack";
+        client.FirstName = "John Jack";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -55,7 +55,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Name = "John1Jack";
+        client.FirstName = "John1Jack";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -73,7 +73,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Name = "John.Jack";
+        client.FirstName = "John.Jack";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -91,7 +91,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Name = null!;
+        client.FirstName = null!;
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -109,7 +109,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Name = new string('A', 101);
+        client.FirstName = new string('A', 101);
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -131,7 +131,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Surname = "Scott Brown";
+        client.LastName = "Scott Brown";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -145,7 +145,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Surname = "Scott1Brown";
+        client.LastName = "Scott1Brown";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -163,7 +163,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Surname = "Scott.Brown";
+        client.LastName = "Scott.Brown";
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -181,7 +181,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Surname = null!;
+        client.LastName = null!;
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);
@@ -199,7 +199,7 @@ public class ClientValidatorTests
     {
         // arrange
         var client = InitializeClient();
-        client.Surname = new string('A', 101);
+        client.LastName = new string('A', 101);
 
         // act
         var result = await _clientBaseValidator.ValidateAsync(client);

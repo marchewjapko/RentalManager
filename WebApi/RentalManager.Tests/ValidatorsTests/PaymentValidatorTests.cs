@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using RentalManager.Infrastructure.Commands.PaymentCommands;
+using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 using RentalManager.Infrastructure.Validators.PaymentValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
@@ -13,8 +13,8 @@ public class PaymentValidatorTests
         return new Faker<PaymentBaseCommand>()
             .RuleFor(x => x.Method, () => "Cash")
             .RuleFor(x => x.Amount, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.DateTimeFrom, () => DateTime.Today)
-            .RuleFor(x => x.DateTimeTo, () => DateTime.Today.AddMonths(1))
+            .RuleFor(x => x.DateFrom, () => DateTime.Today)
+            .RuleFor(x => x.DateTo, () => DateTime.Today.AddMonths(1))
             .Generate();
     }
 
@@ -60,8 +60,8 @@ public class PaymentValidatorTests
     {
         // arrange
         var payment = InitializePayment();
-        payment.DateTimeFrom = DateTime.Today;
-        payment.DateTimeTo = DateTime.Today.AddDays(-1);
+        payment.DateFrom = DateTime.Today;
+        payment.DateTo = DateTime.Today.AddDays(-1);
 
         // act
         var result = await _paymentBaseValidator.ValidateAsync(payment);

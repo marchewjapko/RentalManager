@@ -70,22 +70,6 @@ public static class ProblemDetailsConfiguration
 
                         break;
 
-                    case UserNotConfirmedException:
-                        context.ProblemDetails.Title = "User not activated";
-                        context.ProblemDetails.Detail = exception.Message;
-                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
-                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                        break;
-
-                    case SignInFailedException:
-                        context.ProblemDetails.Title = "Login failed";
-                        context.ProblemDetails.Detail = exception.Message;
-                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
-                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                        break;
-
                     case ConfigurationNotFoundException:
                         context.ProblemDetails.Title = "Configuration not found";
                         context.ProblemDetails.Detail = exception.Message;
@@ -96,14 +80,6 @@ public static class ProblemDetailsConfiguration
 
                     case PasswordChangeRequiredException:
                         context.ProblemDetails.Title = "Password change is required";
-                        context.ProblemDetails.Detail = exception.Message;
-                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
-                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                        break;
-
-                    case TemporaryPasswordExpiredException:
-                        context.ProblemDetails.Title = "Temporary password for user has expired";
                         context.ProblemDetails.Detail = exception.Message;
                         context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
                         context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;

@@ -4,11 +4,7 @@ namespace RentalManager.Core.Domain;
 
 public class Agreement : DomainBase
 {
-    public int Id { get; set; }
-
     public int EmployeeId { get; set; }
-
-    public User Employee { get; set; } = null!;
 
     public int ClientId { get; set; }
 

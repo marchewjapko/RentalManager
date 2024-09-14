@@ -65,8 +65,8 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
             throw new ClientNotFoundException(id);
         }
 
-        clientToUpdate.Name = client.Name;
-        clientToUpdate.Surname = client.Surname;
+        clientToUpdate.FirstName = client.FirstName;
+        clientToUpdate.LastName = client.LastName;
         clientToUpdate.PhoneNumber = client.PhoneNumber;
         clientToUpdate.Email = client.Email;
         clientToUpdate.IdCard = client.IdCard;
@@ -96,12 +96,12 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     {
         if (queryClients.Name != null)
         {
-            clients = clients.Where(x => x.Name.Contains(queryClients.Name));
+            clients = clients.Where(x => x.FirstName.Contains(queryClients.Name));
         }
 
         if (queryClients.Surname != null)
         {
-            clients = clients.Where(x => x.Surname.Contains(queryClients.Surname));
+            clients = clients.Where(x => x.LastName.Contains(queryClients.Surname));
         }
 
         if (queryClients.Email != null)
@@ -145,8 +145,8 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
             clients = queryClients.SortClientsBy switch
             {
                 SortClientsBy.Id => clients.OrderByDescending(x => x.Id),
-                SortClientsBy.Name => clients.OrderByDescending(x => x.Name),
-                SortClientsBy.Surname => clients.OrderByDescending(x => x.Surname),
+                SortClientsBy.Name => clients.OrderByDescending(x => x.FirstName),
+                SortClientsBy.Surname => clients.OrderByDescending(x => x.LastName),
                 SortClientsBy.DateAdded => clients.OrderByDescending(x => x.CreatedTs),
                 _ => clients.OrderByDescending(x => x.CreatedTs)
             };
@@ -156,8 +156,8 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
             clients = queryClients.SortClientsBy switch
             {
                 SortClientsBy.Id => clients.OrderBy(x => x.Id),
-                SortClientsBy.Name => clients.OrderBy(x => x.Name),
-                SortClientsBy.Surname => clients.OrderBy(x => x.Surname),
+                SortClientsBy.Name => clients.OrderBy(x => x.FirstName),
+                SortClientsBy.Surname => clients.OrderBy(x => x.LastName),
                 SortClientsBy.DateAdded => clients.OrderBy(x => x.CreatedTs),
                 _ => clients.OrderBy(x => x.CreatedTs)
             };

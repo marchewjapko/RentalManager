@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RentalManager.Infrastructure.Commands.PaymentCommands;
+using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 
 namespace RentalManager.Infrastructure.Validators.PaymentValidators;
 
@@ -16,11 +16,11 @@ public class PaymentBaseValidator : AbstractValidator<PaymentBaseCommand>
             .NotEmpty()
             .GreaterThan(0);
 
-        RuleFor(x => x.DateTimeTo)
+        RuleFor(x => x.DateTo)
             .NotEmpty()
-            .GreaterThan(x => x.DateTimeFrom);
+            .GreaterThan(x => x.DateFrom);
 
-        RuleFor(x => x.DateTimeFrom)
+        RuleFor(x => x.DateFrom)
             .NotEmpty();
     }
 }

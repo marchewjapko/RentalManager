@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Commands.EquipmentCommands;
-using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services.Interfaces;
+using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
+using RentalManager.Infrastructure.Models.DTO;
+using RentalManager.Infrastructure.Services.EquipmentService;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 

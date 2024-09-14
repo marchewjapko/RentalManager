@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RentalManager.Infrastructure.Commands.PaymentCommands;
+using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 
 namespace RentalManager.Infrastructure.Validators.PaymentValidators;
 

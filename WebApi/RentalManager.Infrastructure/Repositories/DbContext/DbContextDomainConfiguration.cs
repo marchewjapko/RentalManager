@@ -7,30 +7,30 @@ public static class DbContextDomainConfiguration
 {
     public static void ConfigureDomainEntities(this ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Agreement>()
-            .HasOne(e => e.Employee)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Agreement>()
-            .HasOne(e => e.User)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Equipment>()
-            .HasOne(e => e.User)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Payment>()
-            .HasOne(e => e.User)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Client>()
-            .HasOne(e => e.User)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
+        // modelBuilder.Entity<Agreement>()
+        //     .HasOne(e => e.Employee)
+        //     .WithMany()
+        //     .OnDelete(DeleteBehavior.Restrict);
+        //
+        // modelBuilder.Entity<Agreement>()
+        //     .HasOne(e => e.User)
+        //     .WithMany()
+        //     .OnDelete(DeleteBehavior.Restrict);
+        //
+        // modelBuilder.Entity<Equipment>()
+        //     .HasOne(e => e.User)
+        //     .WithMany()
+        //     .OnDelete(DeleteBehavior.Restrict);
+        //
+        // modelBuilder.Entity<Payment>()
+        //     .HasOne(e => e.User)
+        //     .WithMany()
+        //     .OnDelete(DeleteBehavior.Restrict);
+        //
+        // modelBuilder.Entity<Client>()
+        //     .HasOne(e => e.User)
+        //     .WithMany()
+        //     .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Agreement>()
             .HasMany(e => e.Equipment)

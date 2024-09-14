@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using RentalManager.Infrastructure.Commands.EquipmentCommands;
+using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 
 namespace RentalManager.Infrastructure.Validators.EquipmentValidators;
 

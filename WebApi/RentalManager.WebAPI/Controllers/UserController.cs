@@ -1,51 +1,25 @@
-﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+﻿using System.Dynamic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RentalManager.Global.Queries;
-using RentalManager.Global.Requests;
-using RentalManager.Infrastructure.Commands.UserCommands;
-using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services.Interfaces;
-
-// ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
+using RentalManager.Infrastructure.Models.DTO;
+using RentalManager.Infrastructure.Services.UserService;
 
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[Controller]")]
-public class UserController
-    (IUserService userService) : Controller
+public class UserController(IUserService userService) : Controller
 {
-    [ProducesResponseType(typeof(UserDto), 200)]
-    [HttpPost]
-    public async Task<IActionResult> AddUser([FromForm] CreateUser createUser)
-    {
-        var result = await userService.AddAsync(createUser);
-
-        return Json(result);
-    }
-
-    [Authorize]
-    [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<UserWithRolesDto>), 200)]
     [HttpGet]
-    public async Task<IActionResult> BrowseAllUsers([FromQuery] QueryUser queryUser)
+    public async Task<IActionResult> BrowseAllUsers()
     {
-        var result = await userService.BrowseAllAsync(queryUser);
+        var result = await userService.BrowseAllAsync();
 
         return Json(result);
     }
 
-    [Authorize(Roles = "Administrator")]
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteUser(int id)
-    {
-        await userService.DeleteAsync(id);
-
-        return NoContent();
-    }
-
-    [Authorize]
     [ProducesResponseType(typeof(UserDto), 200)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetUser(int id)
@@ -55,80 +29,37 @@ public class UserController
         return Json(clientDto);
     }
 
-    [Authorize]
-    [ProducesResponseType(typeof(UserDto), 200)]
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateUser([FromForm] UpdateUser updateUser,
-        int id)
-    {
-        var result = await userService.UpdateAsync(updateUser, id);
-
-        return Json(result);
-    }
-
-    [Authorize]
-    [Route("/User/Image/{id}")]
-    [HttpGet]
-    public async Task<IActionResult?> GetUserImage(int id)
-    {
-        var image = await userService.GetUserImage(id);
-
-        if (image is null)
-        {
-            return File("~/DefaultUserImageMan.png", "image/png");
-        }
-
-        return File(image, "image/jpeg");
-    }
-
-    [Route("/User/signIn")]
-    [HttpPost]
-    public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> SignIn(
-        [FromQuery] SignInRequest signIn)
-    {
-        await userService.SignIn(signIn);
-
-        return TypedResults.Empty;
-    }
-
-    [Route("/User/signOut")]
-    [HttpPost]
-    public new async Task<IActionResult> SignOut()
-    {
-        await userService.SignOut();
-
-        return Ok();
-    }
-
     [ProducesResponseType(typeof(UserWithRolesDto), 200)]
-    [Authorize]
-    [Route("/User/WhoAmI")]
+    [Route("/[Controller]/WhoAmI")]
     [HttpGet]
-    public async Task<IActionResult> WhoAmI()
+    public IActionResult WhoAmI()
     {
-        var result = await userService.GetCurrentUser(User);
+        var me = new UserWithRolesDto
+        {
+            Id = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "id")!
+                .Value),
+            FirstName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "first_name")!.Value,
+            LastName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "last_name")!.Value,
+            UserName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "preferred_username")!
+                .Value,
+            Roles = HttpContext.User.Claims.Where(x => x.Type == "groups")
+                .Select(x => x.Value)
+                .ToList()
+        };
 
-        return Json(result);
+        return Ok(me);
     }
 
-    [Route("/User/ChangePassword")]
-    [HttpPost]
-    public async Task<IActionResult> ChangePassword(
-        [FromForm] ChangePasswordRequest changePasswordRequest)
+    [Route("/[Controller]/GetMyClaims")]
+    [HttpGet]
+    public IActionResult GetMyClaims()
     {
-        await userService.ChangePassword(changePasswordRequest);
+        return Json(HttpContext.User.Claims.Select(x => {
+            dynamic result = new ExpandoObject();
+            result.Type = x.Type;
+            result.Value = x.Value;
 
-        return Ok();
-    }
-
-    [Authorize(Roles = "Administrator")]
-    [Route("/User/ResetPassword")]
-    [HttpPut]
-    public async Task<IActionResult> ResetPassword(
-        [FromForm] ResetPasswordRequest resetPasswordRequest)
-    {
-        await userService.ResetPassword(resetPasswordRequest);
-
-        return Ok();
+            return result;
+        }));
     }
 }

@@ -35,8 +35,8 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     {
         var result = await Task.FromResult(appDbContext.Agreements.Include(x => x.Equipment)
             .Include(x => x.Client)
-            .Include(x => x.User)
-            .Include(x => x.Employee)
+            //.Include(x => x.User)
+            //.Include(x => x.Employee)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id));
 
@@ -53,8 +53,8 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         var result = appDbContext.Agreements
             .Include(x => x.Equipment)
             .Include(x => x.Client)
-            .Include(x => x.User)
-            .Include(x => x.Employee)
+            //.Include(x => x.User)
+            //.Include(x => x.Employee)
             .Include(x => x.Payments)
             .AsSingleQuery()
             .AsQueryable();
@@ -71,7 +71,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         var agreementToUpdate = appDbContext.Agreements
             .Include(x => x.Equipment)
             .Include(x => x.Client)
-            .Include(x => x.User)
+            //.Include(x => x.User)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id);
 
@@ -81,8 +81,8 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         }
 
         agreementToUpdate.IsActive = agreement.IsActive;
-        agreementToUpdate.EmployeeId = agreement.EmployeeId;
-        agreementToUpdate.Employee = agreement.Employee;
+        //agreementToUpdate.EmployeeId = agreement.EmployeeId;
+        //agreementToUpdate.Employee = agreement.Employee;
         agreementToUpdate.Comment = agreement.Comment;
         agreementToUpdate.Deposit = agreement.Deposit;
         agreementToUpdate.Equipment = agreement.Equipment;
@@ -118,7 +118,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         if (queryAgreements.Surname != null)
         {
-            agreements = agreements.Where(x => x.Client.Surname.Contains(queryAgreements.Surname));
+            agreements = agreements.Where(x => x.Client.LastName.Contains(queryAgreements.Surname));
         }
 
         if (queryAgreements.City != null)
@@ -131,10 +131,10 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             agreements = agreements.Where(x => x.Client.Street.Contains(queryAgreements.Street));
         }
 
-        if (queryAgreements.EmployeeId != null)
-        {
-            agreements = agreements.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
-        }
+        // if (queryAgreements.EmployeeId != null)
+        // {
+        //     agreements = agreements.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
+        // }
 
         if (queryAgreements.OnlyUnpaid)
         {
@@ -172,7 +172,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             agreements = queryAgreements.SortAgreementsBy switch
             {
                 SortAgreementsBy.Id => agreements.OrderByDescending(x => x.Id),
-                SortAgreementsBy.Surname => agreements.OrderByDescending(x => x.Client.Surname),
+                SortAgreementsBy.Surname => agreements.OrderByDescending(x => x.Client.LastName),
                 SortAgreementsBy.DateAdded => agreements.OrderByDescending(x => x.DateAdded),
                 _ => agreements.OrderByDescending(x => x.DateAdded)
             };
@@ -182,7 +182,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             agreements = queryAgreements.SortAgreementsBy switch
             {
                 SortAgreementsBy.Id => agreements.OrderBy(x => x.Id),
-                SortAgreementsBy.Surname => agreements.OrderBy(x => x.Client.Surname),
+                SortAgreementsBy.Surname => agreements.OrderBy(x => x.Client.LastName),
                 SortAgreementsBy.DateAdded => agreements.OrderBy(x => x.DateAdded),
                 _ => agreements.OrderBy(x => x.DateAdded)
             };

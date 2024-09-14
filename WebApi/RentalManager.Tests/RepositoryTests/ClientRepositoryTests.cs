@@ -12,8 +12,8 @@ public class ClientRepositoryTests
 {
     private readonly Client _mockClient = new Faker<Client>()
         .RuleFor(x => x.Id, () => 1)
-        .RuleFor(x => x.Name, f => f.Name.FirstName())
-        .RuleFor(x => x.Surname, f => f.Name.LastName())
+        .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+        .RuleFor(x => x.LastName, f => f.Name.LastName())
         .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
         .RuleFor(x => x.Email, f => f.Internet.Email())
         .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -104,8 +104,8 @@ public class ClientRepositoryTests
         // arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -137,8 +137,8 @@ public class ClientRepositoryTests
         // arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -152,7 +152,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Name = newClient.Name
+            Name = newClient.FirstName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -168,7 +168,7 @@ public class ClientRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Name, Is.EqualTo(newClient.Name));
+            Assert.That(result[0].FirstName, Is.EqualTo(newClient.FirstName));
         });
     }
 
@@ -178,8 +178,8 @@ public class ClientRepositoryTests
         // arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -193,7 +193,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Surname = newClient.Surname
+            Surname = newClient.LastName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -209,7 +209,7 @@ public class ClientRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo(newClient.Surname));
+            Assert.That(result[0].LastName, Is.EqualTo(newClient.LastName));
         });
     }
 
@@ -219,8 +219,8 @@ public class ClientRepositoryTests
         // arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -234,7 +234,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Name = newClient.Name
+            Name = newClient.FirstName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -250,7 +250,7 @@ public class ClientRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Surname, Is.EqualTo(newClient.Surname));
+            Assert.That(result[0].LastName, Is.EqualTo(newClient.LastName));
         });
     }
 
@@ -260,8 +260,8 @@ public class ClientRepositoryTests
         // arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 1)
-            .RuleFor(x => x.Name, f => f.Name.FirstName())
-            .RuleFor(x => x.Surname, f => f.Name.LastName())
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.IdCard, () => "ABC 123456")
@@ -270,7 +270,7 @@ public class ClientRepositoryTests
             .Generate();
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
-        newClient.Name = "NEW TEST NAME";
+        newClient.FirstName = "NEW TEST NAME";
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
@@ -279,7 +279,7 @@ public class ClientRepositoryTests
 
         // assert
         var updatedClient = _appDbContext.Clients.First();
-        Assert.That(updatedClient.Name, Is.EqualTo("NEW TEST NAME"));
+        Assert.That(updatedClient.FirstName, Is.EqualTo("NEW TEST NAME"));
     }
 
     [Test]

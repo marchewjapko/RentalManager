@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Commands.PaymentCommands;
-using RentalManager.Infrastructure.DTO;
-using RentalManager.Infrastructure.Services.Interfaces;
+using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
+using RentalManager.Infrastructure.Models.DTO;
+using RentalManager.Infrastructure.Services.PaymentService;
 
 // ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
 
@@ -39,7 +39,6 @@ public class PaymentController : Controller
         return Json(result);
     }
 
-    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePayment(int id)
     {
