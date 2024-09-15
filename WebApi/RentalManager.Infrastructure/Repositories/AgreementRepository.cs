@@ -107,6 +107,11 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     private static IQueryable<Agreement> FilterAgreements(IQueryable<Agreement> agreements,
         QueryAgreements queryAgreements)
     {
+        if (queryAgreements.UserId.HasValue)
+        {
+            agreements = agreements.Where(x => x.UserId == queryAgreements.UserId.Value);
+        }
+        
         if (queryAgreements.ClientId != null)
         {
             agreements = agreements.Where(x => x.ClientId == queryAgreements.ClientId);

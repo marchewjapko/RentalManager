@@ -22,13 +22,13 @@ public class PaymentValidatorTests
     [Test]
     public async Task ValidatePayment_Success()
     {
-        // arrange
+        // Arrange
         var payment = InitializePayment();
 
-        // act
+        // Act
         var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
-        // assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -37,14 +37,14 @@ public class PaymentValidatorTests
     [Test]
     public async Task ValidateAmount_Failure_Negative()
     {
-        // arrange
+        // Arrange
         var payment = InitializePayment();
         payment.Amount = -1;
 
-        // act
+        // Act
         var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Amount);
 
@@ -61,15 +61,15 @@ public class PaymentValidatorTests
     [Test]
     public async Task ValidateDateTimeTo_Failure_Earlier_Than_From()
     {
-        // arrange
+        // Arrange
         var payment = InitializePayment();
         payment.DateFrom = DateTime.Today;
         payment.DateTo = DateTime.Today.AddDays(-1);
 
-        // act
+        // Act
         var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.DateTo);
 
@@ -86,14 +86,14 @@ public class PaymentValidatorTests
     [Test]
     public async Task ValidateMethod_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var payment = InitializePayment();
         payment.Method = "Cash;";
 
-        // act
+        // Act
         var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Method);
 
@@ -106,14 +106,14 @@ public class PaymentValidatorTests
     [Test]
     public async Task ValidateMethod_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var payment = InitializePayment();
         payment.Method = new string('A', 11);
 
-        // act
+        // Act
         var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Method);
 

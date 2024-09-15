@@ -43,26 +43,26 @@ public class EquipmentRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
-        // act
+        // Act
         await _equipmentRepository.AddAsync(MockEquipment);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task ShouldDelete()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _equipmentRepository.DeleteAsync(1);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(0));
     }
 
@@ -76,16 +76,16 @@ public class EquipmentRepositoryTests
     [Test]
     public async Task ShouldGet()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         var result = await _equipmentRepository.GetAsync(1);
 
-        // assert
+        // Assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
 
@@ -99,7 +99,7 @@ public class EquipmentRepositoryTests
     [Test]
     public async Task ShouldBrowseAll()
     {
-        // arrange
+        // Arrange
         var newEquipment = new Faker<Equipment>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.Name, f => f.Commerce.ProductName())
@@ -117,17 +117,17 @@ public class EquipmentRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = await _equipmentRepository.BrowseAllAsync(new QueryEquipment());
 
-        // assert
+        // Assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task ShouldFilter_byName()
     {
-        // arrange
+        // Arrange
         var newEquipment = new Faker<Equipment>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.Name, f => f.Commerce.ProductName())
@@ -150,10 +150,10 @@ public class EquipmentRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = (await _equipmentRepository.BrowseAllAsync(query)).ToList();
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo(newEquipment.Name));
@@ -163,7 +163,7 @@ public class EquipmentRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
-        // arrange
+        // Arrange
         var newEquipment = new Faker<Equipment>()
             .RuleFor(x => x.Id, () => 1)
             .RuleFor(x => x.Name, f => f.Commerce.ProductName())
@@ -175,10 +175,10 @@ public class EquipmentRepositoryTests
 
         Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _equipmentRepository.UpdateAsync(newEquipment, 1);
 
-        // assert
+        // Assert
         var updatedEquipment = _appDbContext.Equipments.First();
         Assert.That(updatedEquipment.Name, Is.EqualTo("NEW TEST NAME"));
     }
@@ -186,16 +186,16 @@ public class EquipmentRepositoryTests
     [Test]
     public async Task ShouldDeactivate()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _equipmentRepository.Deactivate(1);
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
             Assert.That(_appDbContext.Equipments.First()

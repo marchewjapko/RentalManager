@@ -8,7 +8,7 @@ public class UserProfiles : Profile
 {
     public UserProfiles()
     {
-        CreateMap<IdentityServiceUser, UserWithRolesDto>()
+        CreateMap<IdentityServiceUser, UserDto>()
             .ForMember(x => x.Id, x => x.MapFrom(a => a.Pk))
             .ForMember(x => x.UserName, x => x.MapFrom(a => a.UserName))
             .ForMember(x => x.Roles, x => x.MapFrom(a => a.Groups.Select(group => group.Name)))

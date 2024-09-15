@@ -1,8 +1,5 @@
 ﻿using RentalManager.Global.Queries.Sorting;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-
 namespace RentalManager.Global.Queries;
 
 public class QueryClients : PagedQueryBase
@@ -23,5 +20,5 @@ public class QueryClients : PagedQueryBase
 
     public bool OnlyActive { get; init; } = true;
 
-    public SortClientsBy SortClientsBy { get; init; }
+    public SortClientsBy SortClientsBy { get; init; } = SortClientsBy.DateAdded;
 }

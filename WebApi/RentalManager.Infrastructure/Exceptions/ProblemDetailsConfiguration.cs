@@ -77,14 +77,6 @@ public static class ProblemDetailsConfiguration
                         context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
                         break;
-
-                    case PasswordChangeRequiredException:
-                        context.ProblemDetails.Title = "Password change is required";
-                        context.ProblemDetails.Detail = exception.Message;
-                        context.ProblemDetails.Status = StatusCodes.Status401Unauthorized;
-                        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                        break;
                 }
 
                 if (environment.IsDevelopment())

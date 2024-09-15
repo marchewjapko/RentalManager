@@ -1,6 +1,6 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace RentalManager.Global.Requests.GetAgreementDocument;
+namespace RentalManager.Infrastructure.Models.ExternalServices.DocumentService;
 
 public class Payment
 {

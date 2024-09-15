@@ -29,13 +29,13 @@ public class AgreementValidatorTests
     [Test]
     public async Task ValidateAgreement_Success()
     {
-        // arrange
+        // Arrange
         var agreement = InitializeAgreement();
 
-        // act
+        // Act
         var result = await _agreementBaseValidator.TestValidateAsync(agreement);
 
-        // assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 }

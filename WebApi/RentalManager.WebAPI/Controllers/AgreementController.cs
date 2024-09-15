@@ -5,8 +5,6 @@ using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Services.AgreementService;
 
-// ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
-
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
@@ -58,7 +56,7 @@ public class AgreementController(IAgreementService agreementService)
         [FromBody] UpdateAgreement updateAgreement,
         int id)
     {
-        var result = await agreementService.UpdateAsync(updateAgreement, id);
+        var result = await agreementService.UpdateAsync(updateAgreement, id, User);
 
         return Json(result);
     }

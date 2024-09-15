@@ -20,13 +20,13 @@ public class EquipmentValidatorTests
     [Test]
     public async Task ValidateEquipment_Success()
     {
-        // arrange
+        // Arrange
         var equipment = InitializeEquipment();
 
-        // act
+        // Act
         var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
-        // assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -35,14 +35,14 @@ public class EquipmentValidatorTests
     [Test]
     public async Task ValidatePrice_Failure_Negative()
     {
-        // arrange
+        // Arrange
         var equipment = InitializeEquipment();
         equipment.Price = -1;
 
-        // act
+        // Act
         var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Price);
 
@@ -59,14 +59,14 @@ public class EquipmentValidatorTests
     [Test]
     public async Task ValidateName_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var equipment = InitializeEquipment();
         equipment.Name = "Fun equipment mk4;";
 
-        // act
+        // Act
         var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Name);
 
@@ -79,14 +79,14 @@ public class EquipmentValidatorTests
     [Test]
     public async Task ValidateName_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var equipment = InitializeEquipment();
         equipment.Name = new string('A', 101);
 
-        // act
+        // Act
         var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Name);
 

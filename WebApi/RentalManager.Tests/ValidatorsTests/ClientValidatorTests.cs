@@ -25,13 +25,13 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateClient_Success()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -40,28 +40,28 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateName_Success_Two_Names()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.FirstName = "John Jack";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidateName_Failure_Number_Present()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.FirstName = "John1Jack";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
 
@@ -74,14 +74,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateName_Failure_Symbol_Present()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.FirstName = "John.Jack";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
 
@@ -94,14 +94,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateName_Failure_Null()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.FirstName = null!;
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
 
@@ -114,14 +114,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateName_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.FirstName = new string('A', 101);
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
 
@@ -138,28 +138,28 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateSurname_Success_Two_Surnames()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.LastName = "Scott Brown";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidateSurname_Failure_Number_Present()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.LastName = "Scott1Brown";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.LastName);
 
@@ -172,14 +172,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateSurname_Failure_Symbol_Present()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.LastName = "Scott.Brown";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.LastName);
 
@@ -192,14 +192,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateSurname_Failure_Null()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.LastName = null!;
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.LastName);
 
@@ -212,14 +212,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateSurname_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.LastName = new string('A', 101);
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.LastName);
 
@@ -236,70 +236,70 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidatePhoneNumber_Success_With_Direction()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.PhoneNumber = "+48 123 456 789";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidatePhoneNumber_Success_With_Spaces()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.PhoneNumber = "123 456 789";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidatePhoneNumber_Success_With_Dashes()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.PhoneNumber = "123-456-789";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidatePhoneNumber_Success_Without_Separators()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.PhoneNumber = "123456789";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidatePhoneNumber_Success_Stationary_Format()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.PhoneNumber = "12 34 567 89";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -310,14 +310,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateEmail_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.Email = "email!@email.com";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Email);
 
@@ -330,14 +330,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateEmail_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.Email = new string('A', 91) + "@email.com"; // 101 characters
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Email);
 
@@ -354,28 +354,28 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateIdCard_Success_Without_Separator()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.IdCard = "ABC123456";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
     public async Task ValidateIdCard_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.IdCard = "ABC!23456";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.IdCard);
 
@@ -388,14 +388,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateIdCard_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.IdCard = "ABC1234567";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        //assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.IdCard);
 
@@ -412,14 +412,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateCity_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.City = "Paris!";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.City);
 
@@ -432,14 +432,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateCity_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.City = new string('A', 101);
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.City);
 
@@ -456,14 +456,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateStreet_Failure_Invalid_Character()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.Street = "al. AK 12B!";
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Street);
 
@@ -476,14 +476,14 @@ public class ClientValidatorTests
     [Test]
     public async Task ValidateStreet_Failure_Too_Long()
     {
-        // arrange
+        // Arrange
         var client = InitializeClient();
         client.Street = new string('A', 101);
 
-        // act
+        // Act
         var result = await _clientBaseValidator.TestValidateAsync(client);
 
-        // assert
+        // Assert
         result.ShouldHaveAnyValidationError();
         result.ShouldHaveValidationErrorFor(x => x.Street);
 

@@ -1,8 +1,5 @@
 ﻿using RentalManager.Global.Queries.Sorting;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-
 namespace RentalManager.Global.Queries;
 
 public class QueryAgreements : PagedQueryBase
@@ -21,7 +18,7 @@ public class QueryAgreements : PagedQueryBase
 
     public DateTime? AddedTo { get; init; }
 
-    public int? EmployeeId { get; init; }
+    public int? UserId { get; init; }
 
     public bool OnlyActive { get; init; } = true;
 

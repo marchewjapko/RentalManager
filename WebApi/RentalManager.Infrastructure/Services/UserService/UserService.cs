@@ -10,11 +10,11 @@ using RentalManager.Infrastructure.Options;
 
 namespace RentalManager.Infrastructure.Services.UserService;
 
-public class UserService(IOptions<IdentityServiceOptions> options, IMapper mapper) : IUserService
+public class UserService(IOptions<IdentityServiceOptions> options, IMapper mapper, IHttpClientFactory clientFactory) : IUserService
 {
-    private readonly HttpClient _client = new();
+    private readonly HttpClient _client = clientFactory.CreateClient();
 
-    public async Task<IEnumerable<UserWithRolesDto>> BrowseAllAsync()
+    public async Task<IEnumerable<UserDto>> BrowseAllAsync()
     {
         var uri = new UriBuilder
         {
@@ -43,7 +43,7 @@ public class UserService(IOptions<IdentityServiceOptions> options, IMapper mappe
         identityServiceUsers = identityServiceUsers.Where(x => x.Groups.Select(group => group.Name)
             .Any(groupName => options.Value.AppGroups.Contains(groupName)));
 
-        return mapper.Map<IEnumerable<UserWithRolesDto>>(identityServiceUsers);
+        return mapper.Map<IEnumerable<UserDto>>(identityServiceUsers);
     }
 
     public async Task<UserDto> GetAsync(int id)
@@ -86,6 +86,6 @@ public class UserService(IOptions<IdentityServiceOptions> options, IMapper mappe
             throw new UserNotFoundException(id);
         }
 
-        return mapper.Map<UserWithRolesDto>(user);
+        return mapper.Map<UserDto>(user);
     }
 }

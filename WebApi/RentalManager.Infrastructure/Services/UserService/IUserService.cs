@@ -6,5 +6,5 @@ public interface IUserService
 {
     Task<UserDto> GetAsync(int id);
 
-    Task<IEnumerable<UserWithRolesDto>> BrowseAllAsync();
+    Task<IEnumerable<UserDto>> BrowseAllAsync();
 }

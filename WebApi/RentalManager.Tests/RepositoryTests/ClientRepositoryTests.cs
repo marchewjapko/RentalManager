@@ -47,26 +47,26 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
-        // act
+        // Act
         await _clientRepository.AddAsync(MockClient);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task ShouldDelete()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _clientRepository.DeleteAsync(1);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(0));
     }
 
@@ -80,16 +80,16 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldGet()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         var result = await _clientRepository.GetAsync(1);
 
-        // assert
+        // Assert
         Assert.That(result.Id, Is.EqualTo(1));
     }
 
@@ -103,7 +103,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldBrowseAll()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -126,17 +126,17 @@ public class ClientRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = await _clientRepository.BrowseAllAsync(new QueryClients());
 
-        // assert
+        // Assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task ShouldFilter_byName()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -164,10 +164,10 @@ public class ClientRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].FirstName, Is.EqualTo(newClient.FirstName));
@@ -177,7 +177,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldFilter_bySurname()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -205,10 +205,10 @@ public class ClientRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].LastName, Is.EqualTo(newClient.LastName));
@@ -218,7 +218,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldFilter_byPhoneNumber()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -246,10 +246,10 @@ public class ClientRepositoryTests
             .First()
             .Id, Is.EqualTo(2));
 
-        // act
+        // Act
         var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].LastName, Is.EqualTo(newClient.LastName));
@@ -259,7 +259,7 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.Id, () => 1)
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -276,10 +276,10 @@ public class ClientRepositoryTests
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _clientRepository.UpdateAsync(newClient, 1);
 
-        // assert
+        // Assert
         var updatedClient = _appDbContext.Clients.First();
         Assert.That(updatedClient.FirstName, Is.EqualTo("NEW TEST NAME"));
     }
@@ -287,15 +287,15 @@ public class ClientRepositoryTests
     [Test]
     public async Task ShouldDeactivate()
     {
-        // arrange
+        // Arrange
         _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _clientRepository.Deactivate(1);
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
             Assert.That(_appDbContext.Clients.First()

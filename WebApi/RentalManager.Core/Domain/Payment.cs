@@ -4,7 +4,7 @@ public class Payment : DomainBase
 {
     public int AgreementId { get; set; }
 
-    public Agreement Agreement { get; set; } = null!;
+    public Agreement Agreement { get; set; }
 
     public string? Method { get; set; }
 

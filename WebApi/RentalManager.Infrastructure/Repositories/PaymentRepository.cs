@@ -44,8 +44,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
     public async Task<IEnumerable<Payment>> BrowseAllAsync(QueryPayment queryPayment)
     {
-        var result = appDbContext.Payments.Where(x => x.IsActive)
-            .AsQueryable();
+        var result = appDbContext.Payments.AsQueryable();
 
         if (queryPayment.AgreementId != null)
         {

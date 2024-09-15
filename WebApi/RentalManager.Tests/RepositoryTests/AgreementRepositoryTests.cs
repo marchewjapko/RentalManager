@@ -80,25 +80,25 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldAdd()
     {
-        // act
+        // Act
         await _agreementRepository.AddAsync(MockAgreement);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task ShouldGet()
     {
-        // arrange
+        // Arrange
         await _agreementRepository.AddAsync(MockAgreement);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         var result = await _agreementRepository.GetAsync(1);
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(MockAgreement.Id));
             Assert.That(result.UserId, Is.EqualTo(MockAgreement.UserId));
@@ -112,7 +112,7 @@ public class AgreementRepositoryTests
     [Test]
     public void ShouldNotGet()
     {
-        // assert
+        // Assert
         Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
             await _agreementRepository.GetAsync(1));
     }
@@ -120,23 +120,23 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldDelete()
     {
-        // arrange
+        // Arrange
         _appDbContext.Agreements.Add(MockAgreement);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _agreementRepository.DeleteAsync(1);
 
-        // assert
+        // Assert
         Assert.That(_appDbContext.Agreements.Count(), Is.EqualTo(0));
     }
 
     [Test]
     public void ShouldNotDelete()
     {
-        // assert
+        // Assert
         Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
             await _agreementRepository.DeleteAsync(1));
     }
@@ -144,7 +144,7 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldBrowseAll()
     {
-        // arrange
+        // Arrange
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
@@ -165,17 +165,17 @@ public class AgreementRepositoryTests
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(2));
 
-        // act
+        // Act
         var result = await _agreementRepository.BrowseAllAsync(new QueryAgreements());
 
-        // assert
+        // Assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task ShouldFilter()
     {
-        // arrange
+        // Arrange
         var newClient = new Faker<Client>()
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
             .RuleFor(x => x.LastName, f => f.Name.LastName())
@@ -224,11 +224,11 @@ public class AgreementRepositoryTests
             City = MockClient.City
         };
 
-        // act
+        // Act
         var result1 = (await _agreementRepository.BrowseAllAsync(query1)).ToList();
         var result2 = (await _agreementRepository.BrowseAllAsync(query2)).ToList();
 
-        // assert
+        // Assert
         Assert.Multiple(() => {
             Assert.That(result1, Has.Count.EqualTo(1));
             Assert.That(result1.First()
@@ -245,7 +245,7 @@ public class AgreementRepositoryTests
     [Test]
     public async Task ShouldUpdate()
     {
-        // arrange
+        // Arrange
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 1)
             .RuleFor(x => x.UserId, () => MockAgreement.UserId)
@@ -260,47 +260,33 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 
-        _appDbContext.Add(newAgreement);
+        _appDbContext.Agreements.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
-        newAgreement.Comment = "NEW COMMENT";
+        newAgreement.Comment = Guid.NewGuid().ToString();
 
-        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
-        // act
+        // Act
         await _agreementRepository.UpdateAsync(newAgreement, 1);
 
-        // assert
+        // Assert
         var updatedAgreement = _appDbContext.Agreements.First();
-        Assert.That(updatedAgreement.Comment, Is.EqualTo("NEW COMMENT"));
+        Assert.That(updatedAgreement.Comment, Is.EqualTo(newAgreement.Comment));
     }
 
     [Test]
     public async Task ShouldDeactivate()
     {
-        // arrange
-        var newAgreement = new Faker<Agreement>()
-            .RuleFor(x => x.Id, () => 2)
-            .RuleFor(x => x.UserId, () => MockAgreement.UserId)
-            .RuleFor(x => x.ClientId, () => MockClient.Id)
-            .RuleFor(x => x.Client, () => MockClient)
-            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
-            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.TransportFromPrice, () => null)
-            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.DateAdded, () => DateTime.Now)
-            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
-            .RuleFor(x => x.Payments, () => new List<Payment>())
-            .Generate();
-
-        _appDbContext.Add(newAgreement);
+        // Arrange
+        var agreementEntity = _appDbContext.Agreements.Add(MockAgreement).Entity;
         await _appDbContext.SaveChangesAsync();
 
-        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
-        // act
-        await _agreementRepository.Deactivate(2);
+        // Act
+        await _agreementRepository.Deactivate(agreementEntity.Id);
 
-        // assert
+        // Assert
         var agreement = _appDbContext.Agreements.First();
         Assert.That(agreement.IsActive, Is.False);
     }

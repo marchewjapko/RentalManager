@@ -1,8 +1,5 @@
 ﻿using RentalManager.Global.Queries.Sorting;
 
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace RentalManager.Global.Queries;
 
 public class QueryEquipment : PagedQueryBase
@@ -15,5 +12,5 @@ public class QueryEquipment : PagedQueryBase
 
     public bool OnlyActive { get; init; } = true;
 
-    public SortEquipmentBy SortEquipmentBy { get; init; }
+    public SortEquipmentBy SortEquipmentBy { get; init; } = SortEquipmentBy.DateAdded;
 }

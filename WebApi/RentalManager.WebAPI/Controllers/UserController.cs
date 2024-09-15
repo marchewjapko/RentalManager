@@ -11,7 +11,7 @@ namespace RentalManager.WebAPI.Controllers;
 [Route("[Controller]")]
 public class UserController(IUserService userService) : Controller
 {
-    [ProducesResponseType(typeof(IEnumerable<UserWithRolesDto>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllUsers()
     {
@@ -29,12 +29,12 @@ public class UserController(IUserService userService) : Controller
         return Json(clientDto);
     }
 
-    [ProducesResponseType(typeof(UserWithRolesDto), 200)]
+    [ProducesResponseType(typeof(UserDto), 200)]
     [Route("/[Controller]/WhoAmI")]
     [HttpGet]
     public IActionResult WhoAmI()
     {
-        var me = new UserWithRolesDto
+        var me = new UserDto
         {
             Id = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "id")!
                 .Value),

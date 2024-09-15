@@ -116,6 +116,8 @@ builder.Services.RegisterProfiles();
 
 builder.RegisterOptions();
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 app.UseSwagger();

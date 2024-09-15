@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-
 namespace RentalManager.Global.Queries;
 
 public class PagedQueryBase
