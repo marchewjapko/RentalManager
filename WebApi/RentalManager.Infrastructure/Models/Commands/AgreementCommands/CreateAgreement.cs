@@ -1,3 +1,8 @@
-﻿namespace RentalManager.Infrastructure.Models.Commands.AgreementCommands;
+﻿using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 
-public class CreateAgreement : AgreementBaseCommand;
+namespace RentalManager.Infrastructure.Models.Commands.AgreementCommands;
+
+public class CreateAgreement : AgreementBaseCommand
+{
+    public List<CreatePayment> Payments { get; init; } = null!;
+}

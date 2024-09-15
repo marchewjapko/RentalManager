@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FluentValidation.TestHelper;
 using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 using RentalManager.Infrastructure.Validators.PaymentValidators;
 
@@ -25,10 +26,10 @@ public class PaymentValidatorTests
         var payment = InitializePayment();
 
         // act
-        var result = await _paymentBaseValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
         // assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     #region AmountRules
@@ -41,11 +42,13 @@ public class PaymentValidatorTests
         payment.Amount = -1;
 
         // act
-        var result = await _paymentBaseValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Amount);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("GreaterThanValidator"));
         });
@@ -64,11 +67,13 @@ public class PaymentValidatorTests
         payment.DateTo = DateTime.Today.AddDays(-1);
 
         // act
-        var result = await _paymentBaseValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.DateTo);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("GreaterThanValidator"));
         });
@@ -86,11 +91,13 @@ public class PaymentValidatorTests
         payment.Method = "Cash;";
 
         // act
-        var result = await _paymentBaseValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Method);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -104,11 +111,13 @@ public class PaymentValidatorTests
         payment.Method = new string('A', 11);
 
         // act
-        var result = await _paymentBaseValidator.ValidateAsync(payment);
+        var result = await _paymentBaseValidator.TestValidateAsync(payment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Method);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });

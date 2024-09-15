@@ -2,8 +2,6 @@
 
 public class Payment : DomainBase
 {
-    public int Id { get; set; }
-
     public int AgreementId { get; set; }
 
     public Agreement Agreement { get; set; } = null!;

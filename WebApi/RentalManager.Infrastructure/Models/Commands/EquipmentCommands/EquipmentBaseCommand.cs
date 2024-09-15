@@ -14,5 +14,6 @@ public class EquipmentBaseCommand
     [DefaultValue(100)]
     public int Price { get; set; }
 
+    [DefaultValue(null)]
     public IFormFile? Image { get; set; }
 }

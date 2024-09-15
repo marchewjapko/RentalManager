@@ -28,4 +28,7 @@
             <DependentUpon>appsettings.json</DependentUpon>
         </Content>
     </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RentalManager.Infrastructure\RentalManager.Infrastructure.csproj"/>
+    </ItemGroup>
 </Project>

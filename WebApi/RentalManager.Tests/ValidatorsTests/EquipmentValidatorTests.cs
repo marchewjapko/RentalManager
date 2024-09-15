@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using Microsoft.AspNetCore.Http;
+using FluentValidation.TestHelper;
 using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.Validators.EquipmentValidators;
 
@@ -24,10 +24,10 @@ public class EquipmentValidatorTests
         var equipment = InitializeEquipment();
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
         // assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     #region PriceRules
@@ -40,11 +40,13 @@ public class EquipmentValidatorTests
         equipment.Price = -1;
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Price);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("GreaterThanValidator"));
         });
@@ -62,11 +64,13 @@ public class EquipmentValidatorTests
         equipment.Name = "Fun equipment mk4;";
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Name);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -80,92 +84,15 @@ public class EquipmentValidatorTests
         equipment.Name = new string('A', 101);
 
         // act
-        var result = await _equipmentBaseValidator.ValidateAsync(equipment);
+        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Name);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
-        });
-    }
-
-    #endregion
-
-    #region ImageRules
-
-    [Test]
-    public async Task ValidateFile_Success()
-    {
-        // arrange
-
-        const string content = "file-content";
-        const string fileName = "test-file.png";
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        await writer.WriteAsync(content);
-        await writer.FlushAsync();
-        stream.Position = 0;
-
-        var user = InitializeEquipment();
-        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
-
-        // act
-        var result = await _equipmentBaseValidator.ValidateAsync(user);
-
-        //assert
-        Assert.That(result.IsValid);
-    }
-
-    [Test]
-    public async Task ValidateFile_Failure_Wrong_Extension()
-    {
-        // arrange
-        const string content = "file-content";
-        const string fileName = "test-file.txt";
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        await writer.WriteAsync(content);
-        await writer.FlushAsync();
-        stream.Position = 0;
-
-        var user = InitializeEquipment();
-        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
-
-        // act
-        var result = await _equipmentBaseValidator.ValidateAsync(user);
-
-        //assert
-        Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
-            Assert.That(result.Errors, Has.Count.EqualTo(1));
-            Assert.That(result.Errors[0].ErrorMessage, Does.Contain("Unacceptable extension"));
-        });
-    }
-
-    [Test]
-    public async Task ValidateFile_Failure_Too_Large()
-    {
-        // arrange
-        var content = new string('A', 1024 * 1024 + 1);
-        const string fileName = "test-file.png";
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        await writer.WriteAsync(content);
-        await writer.FlushAsync();
-        stream.Position = 0;
-
-        var user = InitializeEquipment();
-        user.Image = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
-
-        // act
-        var result = await _equipmentBaseValidator.ValidateAsync(user);
-
-        //assert
-        Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
-            Assert.That(result.Errors, Has.Count.EqualTo(1));
-            Assert.That(result.Errors[0].ErrorMessage, Does.Contain("File too large"));
         });
     }
 

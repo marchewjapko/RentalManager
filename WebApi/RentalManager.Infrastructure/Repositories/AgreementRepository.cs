@@ -13,6 +13,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     public async Task<Agreement> AddAsync(Agreement agreement)
     {
         var result = appDbContext.Agreements.Add(agreement);
+
         await appDbContext.SaveChangesAsync();
 
         return result.Entity;
@@ -33,12 +34,10 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
     public async Task<Agreement> GetAsync(int id)
     {
-        var result = await Task.FromResult(appDbContext.Agreements.Include(x => x.Equipment)
+        var result = await appDbContext.Agreements.Include(x => x.Equipments)
             .Include(x => x.Client)
-            //.Include(x => x.User)
-            //.Include(x => x.Employee)
             .Include(x => x.Payments)
-            .FirstOrDefault(x => x.Id == id));
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
@@ -51,10 +50,8 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     public async Task<IEnumerable<Agreement>> BrowseAllAsync(QueryAgreements queryAgreements)
     {
         var result = appDbContext.Agreements
-            .Include(x => x.Equipment)
+            .Include(x => x.Equipments)
             .Include(x => x.Client)
-            //.Include(x => x.User)
-            //.Include(x => x.Employee)
             .Include(x => x.Payments)
             .AsSingleQuery()
             .AsQueryable();
@@ -63,15 +60,14 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         result = SortAgreements(result, queryAgreements);
 
-        return await Task.FromResult(result.AsEnumerable());
+        return await result.ToListAsync();
     }
 
     public async Task<Agreement> UpdateAsync(Agreement agreement, int id)
     {
         var agreementToUpdate = appDbContext.Agreements
-            .Include(x => x.Equipment)
+            .Include(x => x.Equipments)
             .Include(x => x.Client)
-            //.Include(x => x.User)
             .Include(x => x.Payments)
             .FirstOrDefault(x => x.Id == id);
 
@@ -80,12 +76,12 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
             throw new AgreementNotFoundException(id);
         }
 
+        agreementToUpdate.Client = agreement.Client;
+        agreementToUpdate.UserId = agreement.UserId;
         agreementToUpdate.IsActive = agreement.IsActive;
-        //agreementToUpdate.EmployeeId = agreement.EmployeeId;
-        //agreementToUpdate.Employee = agreement.Employee;
         agreementToUpdate.Comment = agreement.Comment;
         agreementToUpdate.Deposit = agreement.Deposit;
-        agreementToUpdate.Equipment = agreement.Equipment;
+        agreementToUpdate.Equipments = agreement.Equipments;
         agreementToUpdate.TransportFromPrice = agreement.TransportFromPrice;
         agreementToUpdate.TransportToPrice = agreement.TransportToPrice;
         agreementToUpdate.DateAdded = agreement.DateAdded;
@@ -130,11 +126,6 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         {
             agreements = agreements.Where(x => x.Client.Street.Contains(queryAgreements.Street));
         }
-
-        // if (queryAgreements.EmployeeId != null)
-        // {
-        //     agreements = agreements.Where(x => x.EmployeeId == queryAgreements.EmployeeId);
-        // }
 
         if (queryAgreements.OnlyUnpaid)
         {

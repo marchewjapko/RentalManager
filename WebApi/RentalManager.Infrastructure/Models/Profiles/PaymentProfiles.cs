@@ -23,7 +23,8 @@ public class PaymentProfiles : Profile
         CreateMap<CreatePayment, Payment>()
             .ForMember(x => x.AgreementId, x => x.MapFrom(a => a.AgreementId));
 
-        CreateMap<UpdatePayment, Payment>();
+        CreateMap<UpdatePayment, Payment>()
+            .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 
         CreateMap<Payment, PaymentDto>()
             .ForMember(x => x.Id, x => x.MapFrom(a => a.Id))

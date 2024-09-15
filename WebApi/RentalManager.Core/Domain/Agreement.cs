@@ -1,10 +1,8 @@
-﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
-
-namespace RentalManager.Core.Domain;
+﻿namespace RentalManager.Core.Domain;
 
 public class Agreement : DomainBase
 {
-    public int EmployeeId { get; set; }
+    public int UserId { get; set; }
 
     public int ClientId { get; set; }
 
@@ -20,7 +18,7 @@ public class Agreement : DomainBase
 
     public DateTime DateAdded { get; set; }
 
-    public virtual ICollection<Equipment> Equipment { get; set; } = null!;
+    public ICollection<Equipment> Equipments { get; set; } = null!;
 
-    public virtual ICollection<Payment> Payments { get; set; } = null!;
+    public ICollection<Payment> Payments { get; set; } = null!;
 }

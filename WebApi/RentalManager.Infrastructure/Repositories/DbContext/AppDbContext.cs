@@ -15,7 +15,7 @@ public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     public DbSet<Agreement> Agreements { get; set; } = null!;
 
-    public DbSet<Equipment> Equipment { get; set; } = null!;
+    public DbSet<Equipment> Equipments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

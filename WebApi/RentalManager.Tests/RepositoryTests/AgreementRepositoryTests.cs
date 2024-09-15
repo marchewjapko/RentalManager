@@ -10,50 +10,61 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class AgreementRepositoryTests
 {
-    private static readonly Client MockClient = new Faker<Client>()
-        .RuleFor(x => x.Id, () => 1)
-        .RuleFor(x => x.FirstName, f => f.Name.FirstName())
-        .RuleFor(x => x.LastName, f => f.Name.LastName())
-        .RuleFor(x => x.City, f => f.Address.City())
-        .RuleFor(x => x.Street, f => f.Address.StreetName())
-        .RuleFor(x => x.IdCard, () => "ABC 123456")
-        .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
-        .Generate();
-
-    private static readonly Equipment MockEquipment = new Faker<Equipment>()
-        .RuleFor(x => x.Id, () => 1)
-        .RuleFor(x => x.Name, f => f.Commerce.ProductName())
-        .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
-        .Generate();
-
-    private static readonly Agreement MockAgreement = new Faker<Agreement>()
-        .RuleFor(x => x.Id, () => 1)
-        // .RuleFor(x => x.EmployeeId, () => MockUser.Id)
-        // .RuleFor(x => x.Employee, () => MockUser)
-        // .RuleFor(x => x.User, () => MockUser)
-        .RuleFor(x => x.ClientId, () => MockClient.Id)
-        .RuleFor(x => x.Client, () => MockClient)
-        .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
-        .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
-        .RuleFor(x => x.TransportFromPrice, () => null)
-        .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
-        .RuleFor(x => x.DateAdded, () => DateTime.Now)
-        .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
-        .RuleFor(x => x.Payments, () => new List<Payment>())
-        .Generate();
-
     private AgreementRepository _agreementRepository = null!;
+
     private AppDbContext _appDbContext = null!;
+
+    private Client MockClient { get; set; }
+
+    private Equipment MockEquipment { get; set; }
+
+    private Agreement MockAgreement { get; set; }
 
     [SetUp]
     public void Setup()
     {
-        var optionsBuilder =
-            new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
-        _appDbContext = new AppDbContext(optionsBuilder.Options);
+        MockClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .Generate();
+
+        MockEquipment = new Faker<Equipment>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.Name, f => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
+            .RuleFor(x => x.Agreements, () => new List<Agreement>())
+            .Generate();
+
+        MockAgreement = new Faker<Agreement>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.ClientId, () => MockClient.Id)
+            .RuleFor(x => x.Client, () => MockClient)
+            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
+            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TransportFromPrice, () => null)
+            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Payments, () => new List<Payment>())
+            .Generate();
+
+        var guid = Guid.NewGuid()
+            .ToString();
+
+        _appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(guid)
+            .Options);
+
         _agreementRepository = new AgreementRepository(_appDbContext);
+
         _appDbContext.Clients.Add(MockClient);
-        _appDbContext.Equipment.Add(MockEquipment);
+        _appDbContext.Equipments.Add(MockEquipment);
         _appDbContext.SaveChanges();
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(0));
@@ -62,10 +73,6 @@ public class AgreementRepositoryTests
     [TearDown]
     public void TearDown()
     {
-        _appDbContext.Agreements.RemoveRange(_appDbContext.Agreements);
-        _appDbContext.Clients.RemoveRange(_appDbContext.Clients);
-        _appDbContext.Equipment.RemoveRange(_appDbContext.Equipment);
-        _appDbContext.SaveChanges();
         _appDbContext.Database.EnsureDeleted();
         _appDbContext.Dispose();
     }
@@ -84,8 +91,8 @@ public class AgreementRepositoryTests
     public async Task ShouldGet()
     {
         // arrange
+        await _agreementRepository.AddAsync(MockAgreement);
         await _appDbContext.SaveChangesAsync();
-
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
         // act
@@ -94,9 +101,9 @@ public class AgreementRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result.Id, Is.EqualTo(MockAgreement.Id));
-            // Assert.That(result.Employee, Is.Not.Null);
+            Assert.That(result.UserId, Is.EqualTo(MockAgreement.UserId));
             Assert.That(result.Client, Is.Not.Null);
-            Assert.That(result.Equipment, Has.Count.EqualTo(1));
+            Assert.That(result.Equipments, Has.Count.EqualTo(1));
             Assert.That(result.Deposit, Is.EqualTo(MockAgreement.Deposit));
             Assert.That(result.TransportToPrice, Is.EqualTo(MockAgreement.TransportToPrice));
         });
@@ -140,9 +147,7 @@ public class AgreementRepositoryTests
         // arrange
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 2)
-            // .RuleFor(x => x.EmployeeId, () => MockUser.Id)
-            // .RuleFor(x => x.Employee, () => MockUser)
-            // .RuleFor(x => x.User, () => MockUser)
+            .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
             .RuleFor(x => x.ClientId, () => MockClient.Id)
             .RuleFor(x => x.Client, () => MockClient)
             .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
@@ -150,7 +155,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.TransportFromPrice, () => null)
             .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
             .RuleFor(x => x.DateAdded, () => DateTime.Now)
-            .RuleFor(x => x.Equipment, () => new List<Equipment>())
+            .RuleFor(x => x.Equipments, () => new List<Equipment>())
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 
@@ -185,26 +190,22 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
             .Generate();
 
-        // var clientEntry = _appDbContext.Clients.Add(newClient)
-        //     .Entity;
-        // var userEntry = _appDbContext.Users.Add(newUser)
-        //     .Entity;
-        // var equipmentEntry = _appDbContext.Equipment.Add(newEquipment)
-        //     .Entity;
+        var clientEntry = _appDbContext.Clients.Add(newClient)
+            .Entity;
+        var equipmentEntry = _appDbContext.Equipments.Add(newEquipment)
+            .Entity;
 
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 2)
-            // .RuleFor(x => x.EmployeeId, () => clientEntry.Id)
-            // .RuleFor(x => x.Employee, () => userEntry)
-            // .RuleFor(x => x.User, () => userEntry)
-            // .RuleFor(x => x.ClientId, () => clientEntry.Id)
-            // .RuleFor(x => x.Client, () => clientEntry)
+            .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.ClientId, () => clientEntry.Id)
+            .RuleFor(x => x.Client, () => clientEntry)
             .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
             .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
             .RuleFor(x => x.TransportFromPrice, () => null)
             .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
             .RuleFor(x => x.DateAdded, () => DateTime.Now)
-            // .RuleFor(x => x.Equipment, () => new List<Equipment> { equipmentEntry })
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { equipmentEntry })
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 
@@ -230,8 +231,8 @@ public class AgreementRepositoryTests
         // assert
         Assert.Multiple(() => {
             Assert.That(result1, Has.Count.EqualTo(1));
-            // Assert.That(result1.First()
-            //     .Employee.Name, Is.EqualTo(newAgreement.Employee.Name));
+            Assert.That(result1.First()
+                .UserId, Is.EqualTo(newAgreement.UserId));
             Assert.That(result2, Has.Count.EqualTo(2));
             Assert.That(result2.First()
                 .Client.City, Is.EqualTo(MockAgreement.Client.City));
@@ -247,9 +248,7 @@ public class AgreementRepositoryTests
         // arrange
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 1)
-            // .RuleFor(x => x.EmployeeId, () => MockUser.Id)
-            // .RuleFor(x => x.Employee, () => MockUser)
-            // .RuleFor(x => x.User, () => MockUser)
+            .RuleFor(x => x.UserId, () => MockAgreement.UserId)
             .RuleFor(x => x.ClientId, () => MockClient.Id)
             .RuleFor(x => x.Client, () => MockClient)
             .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
@@ -257,7 +256,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.TransportFromPrice, () => null)
             .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
             .RuleFor(x => x.DateAdded, () => DateTime.Now)
-            .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 
@@ -281,9 +280,7 @@ public class AgreementRepositoryTests
         // arrange
         var newAgreement = new Faker<Agreement>()
             .RuleFor(x => x.Id, () => 2)
-            // .RuleFor(x => x.EmployeeId, () => MockUser.Id)
-            // .RuleFor(x => x.Employee, () => MockUser)
-            // .RuleFor(x => x.User, () => MockUser)
+            .RuleFor(x => x.UserId, () => MockAgreement.UserId)
             .RuleFor(x => x.ClientId, () => MockClient.Id)
             .RuleFor(x => x.Client, () => MockClient)
             .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
@@ -291,7 +288,7 @@ public class AgreementRepositoryTests
             .RuleFor(x => x.TransportFromPrice, () => null)
             .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
             .RuleFor(x => x.DateAdded, () => DateTime.Now)
-            .RuleFor(x => x.Equipment, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 

@@ -10,23 +10,25 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class ClientRepositoryTests
 {
-    private readonly Client _mockClient = new Faker<Client>()
-        .RuleFor(x => x.Id, () => 1)
-        .RuleFor(x => x.FirstName, f => f.Name.FirstName())
-        .RuleFor(x => x.LastName, f => f.Name.LastName())
-        .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
-        .RuleFor(x => x.Email, f => f.Internet.Email())
-        .RuleFor(x => x.IdCard, () => "ABC 123456")
-        .RuleFor(x => x.City, f => f.Address.City())
-        .RuleFor(x => x.Street, f => f.Address.StreetName())
-        .Generate();
-
     private AppDbContext _appDbContext = null!;
     private ClientRepository _clientRepository = null!;
+
+    private Client MockClient { get; set; }
 
     [SetUp]
     public void Setup()
     {
+        MockClient = new Faker<Client>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .Generate();
+
         var optionsBuilder =
             new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
         _appDbContext = new AppDbContext(optionsBuilder.Options);
@@ -46,7 +48,7 @@ public class ClientRepositoryTests
     public async Task ShouldAdd()
     {
         // act
-        await _clientRepository.AddAsync(_mockClient);
+        await _clientRepository.AddAsync(MockClient);
 
         // assert
         Assert.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
@@ -56,7 +58,7 @@ public class ClientRepositoryTests
     public async Task ShouldDelete()
     {
         // arrange
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
@@ -79,7 +81,7 @@ public class ClientRepositoryTests
     public async Task ShouldGet()
     {
         // arrange
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
@@ -113,7 +115,7 @@ public class ClientRepositoryTests
             .RuleFor(x => x.Street, f => f.Address.StreetName())
             .Generate();
 
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
@@ -146,7 +148,7 @@ public class ClientRepositoryTests
             .RuleFor(x => x.Street, f => f.Address.StreetName())
             .Generate();
 
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
@@ -187,7 +189,7 @@ public class ClientRepositoryTests
             .RuleFor(x => x.Street, f => f.Address.StreetName())
             .Generate();
 
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
@@ -228,7 +230,7 @@ public class ClientRepositoryTests
             .RuleFor(x => x.Street, f => f.Address.StreetName())
             .Generate();
 
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         _appDbContext.Add(newClient);
         await _appDbContext.SaveChangesAsync();
 
@@ -286,7 +288,7 @@ public class ClientRepositoryTests
     public async Task ShouldDeactivate()
     {
         // arrange
-        _appDbContext.Add(_mockClient);
+        _appDbContext.Add(MockClient);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(1));
 

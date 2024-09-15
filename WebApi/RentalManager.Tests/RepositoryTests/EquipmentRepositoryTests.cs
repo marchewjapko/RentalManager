@@ -10,24 +10,27 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class EquipmentRepositoryTests
 {
-    private readonly Equipment _mockEquipment = new Faker<Equipment>()
-        .RuleFor(x => x.Id, () => 1)
-        .RuleFor(x => x.Name, f => f.Commerce.ProductName())
-        .RuleFor(x => x.Price, f => f.Random.Int(1, 100))
-        .Generate();
-
     private AppDbContext _appDbContext = null!;
+
     private EquipmentRepository _equipmentRepository = null!;
+
+    private Equipment MockEquipment { get; set; }
 
     [SetUp]
     public void Setup()
     {
+        MockEquipment = new Faker<Equipment>()
+            .RuleFor(x => x.Id, () => 1)
+            .RuleFor(x => x.Name, f => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 100))
+            .Generate();
+
         var optionsBuilder =
             new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("TestingDatabase");
         _appDbContext = new AppDbContext(optionsBuilder.Options);
         _equipmentRepository = new EquipmentRepository(_appDbContext);
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(0));
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(0));
     }
 
     [TearDown]
@@ -41,26 +44,26 @@ public class EquipmentRepositoryTests
     public async Task ShouldAdd()
     {
         // act
-        await _equipmentRepository.AddAsync(_mockEquipment);
+        await _equipmentRepository.AddAsync(MockEquipment);
 
         // assert
-        Assert.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
+        Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task ShouldDelete()
     {
         // arrange
-        _appDbContext.Add(_mockEquipment);
+        _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
         // act
         await _equipmentRepository.DeleteAsync(1);
 
         // assert
-        Assert.That(_appDbContext.Equipment.Count(), Is.EqualTo(0));
+        Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(0));
     }
 
     [Test]
@@ -74,10 +77,10 @@ public class EquipmentRepositoryTests
     public async Task ShouldGet()
     {
         // arrange
-        _appDbContext.Add(_mockEquipment);
+        _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
         // act
         var result = await _equipmentRepository.GetAsync(1);
@@ -103,14 +106,14 @@ public class EquipmentRepositoryTests
             .RuleFor(x => x.Price, f => f.Random.Int(1, 100))
             .Generate();
 
-        _appDbContext.Add(_mockEquipment);
+        _appDbContext.Add(MockEquipment);
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(2));
-        Assume.That(_appDbContext.Equipment.First()
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Equipments.First()
             .Id, Is.EqualTo(1));
-        Assume.That(_appDbContext.Equipment.Skip(1)
+        Assume.That(_appDbContext.Equipments.Skip(1)
             .First()
             .Id, Is.EqualTo(2));
 
@@ -131,7 +134,7 @@ public class EquipmentRepositoryTests
             .RuleFor(x => x.Price, f => f.Random.Int(1, 100))
             .Generate();
 
-        _appDbContext.Add(_mockEquipment);
+        _appDbContext.Add(MockEquipment);
         _appDbContext.Add(newEquipment);
         await _appDbContext.SaveChangesAsync();
 
@@ -140,10 +143,10 @@ public class EquipmentRepositoryTests
             Name = newEquipment.Name
         };
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(2));
-        Assume.That(_appDbContext.Equipment.First()
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(2));
+        Assume.That(_appDbContext.Equipments.First()
             .Id, Is.EqualTo(1));
-        Assume.That(_appDbContext.Equipment.Skip(1)
+        Assume.That(_appDbContext.Equipments.Skip(1)
             .First()
             .Id, Is.EqualTo(2));
 
@@ -170,13 +173,13 @@ public class EquipmentRepositoryTests
         await _appDbContext.SaveChangesAsync();
         newEquipment.Name = "NEW TEST NAME";
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
         // act
         await _equipmentRepository.UpdateAsync(newEquipment, 1);
 
         // assert
-        var updatedEquipment = _appDbContext.Equipment.First();
+        var updatedEquipment = _appDbContext.Equipments.First();
         Assert.That(updatedEquipment.Name, Is.EqualTo("NEW TEST NAME"));
     }
 
@@ -184,18 +187,18 @@ public class EquipmentRepositoryTests
     public async Task ShouldDeactivate()
     {
         // arrange
-        _appDbContext.Add(_mockEquipment);
+        _appDbContext.Add(MockEquipment);
         await _appDbContext.SaveChangesAsync();
 
-        Assume.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
 
         // act
         await _equipmentRepository.Deactivate(1);
 
         // assert
         Assert.Multiple(() => {
-            Assert.That(_appDbContext.Equipment.Count(), Is.EqualTo(1));
-            Assert.That(_appDbContext.Equipment.First()
+            Assert.That(_appDbContext.Equipments.Count(), Is.EqualTo(1));
+            Assert.That(_appDbContext.Equipments.First()
                 .IsActive, Is.False);
         });
     }

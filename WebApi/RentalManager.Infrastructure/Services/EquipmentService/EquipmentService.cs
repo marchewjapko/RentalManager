@@ -10,7 +10,8 @@ using RentalManager.Infrastructure.Models.DTO;
 namespace RentalManager.Infrastructure.Services.EquipmentService;
 
 public class EquipmentService(
-    IEquipmentRepository equipmentRepository, IMapper mapper) : IEquipmentService
+    IEquipmentRepository equipmentRepository,
+    IMapper mapper) : IEquipmentService
 {
     public async Task<EquipmentDto> AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
     {
@@ -43,7 +44,8 @@ public class EquipmentService(
 
     public async Task<EquipmentDto> UpdateAsync(UpdateEquipment updateEquipment, int id)
     {
-        var result = await equipmentRepository.UpdateAsync(mapper.Map<Equipment>(updateEquipment), id);
+        var result =
+            await equipmentRepository.UpdateAsync(mapper.Map<Equipment>(updateEquipment), id);
 
         return mapper.Map<EquipmentDto>(result);
     }

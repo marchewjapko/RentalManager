@@ -38,7 +38,7 @@ builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("OpenIdConnect", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OpenIdConnect,
-        OpenIdConnectUrl = new Uri(builder.Configuration["OpenIdProvider:Configuration"]!),
+        OpenIdConnectUrl = new Uri(builder.Configuration["OpenIdProvider:Configuration"]!)
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -85,7 +85,9 @@ ProblemDetailsConfiguration.ConfigureCustomProblemDetails(builder.Services, buil
 
 if (builder.Configuration["InMemory"] == "True")
 {
-    builder.Services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase("TestingDatabase"));
+    var guid = Guid.NewGuid()
+        .ToString();
+    builder.Services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase(guid));
 }
 else
 {

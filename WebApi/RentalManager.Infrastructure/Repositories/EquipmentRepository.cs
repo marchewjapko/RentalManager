@@ -12,7 +12,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 {
     public async Task<Equipment> AddAsync(Equipment equipment)
     {
-        var result = appDbContext.Equipment.Add(equipment);
+        var result = appDbContext.Equipments.Add(equipment);
         await appDbContext.SaveChangesAsync();
 
         return result.Entity;
@@ -20,21 +20,20 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
     public async Task DeleteAsync(int id)
     {
-        var result = await appDbContext.Equipment.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Equipments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
             throw new EquipmentNotFoundException(id);
         }
 
-        appDbContext.Equipment.Remove(result);
+        appDbContext.Equipments.Remove(result);
         await appDbContext.SaveChangesAsync();
     }
 
     public async Task<Equipment> GetAsync(int id)
     {
-        var result =
-            await Task.FromResult(appDbContext.Equipment.FirstOrDefault(x => x.Id == id));
+        var result = await appDbContext.Equipments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
@@ -46,9 +45,8 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
     public async Task<IEnumerable<Equipment>> GetAsync(List<int> ids)
     {
-        var result =
-            await Task.FromResult(
-                appDbContext.Equipment.Where(x => ids.Any(a => a == x.Id)));
+        var result = await appDbContext.Equipments.Where(x => ids.Any(a => a == x.Id))
+            .ToListAsync();
 
         if (result == null)
         {
@@ -60,19 +58,19 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
     public async Task<IEnumerable<Equipment>> BrowseAllAsync(QueryEquipment queryEquipment)
     {
-        var result = appDbContext.Equipment.Where(x => x.IsActive)
+        var result = appDbContext.Equipments.Where(x => x.IsActive)
             .AsQueryable();
 
         result = FilterClients(result, queryEquipment);
 
         result = SortClients(result, queryEquipment);
 
-        return await Task.FromResult(result.AsEnumerable());
+        return await result.ToListAsync();
     }
 
     public async Task<Equipment> UpdateAsync(Equipment equipment, int id)
     {
-        var equipmentToUpdate = appDbContext.Equipment.FirstOrDefault(x => x.Id == id);
+        var equipmentToUpdate = appDbContext.Equipments.FirstOrDefault(x => x.Id == id);
 
         if (equipmentToUpdate == null)
         {
@@ -81,7 +79,6 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
         equipmentToUpdate.Name = equipment.Name;
         equipmentToUpdate.Price = equipment.Price;
-        equipmentToUpdate.Image = equipment.Image;
         equipmentToUpdate.UpdatedTs = DateTime.Now;
         await appDbContext.SaveChangesAsync();
 
@@ -90,7 +87,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
     public async Task Deactivate(int id)
     {
-        var result = await appDbContext.Equipment.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await appDbContext.Equipments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {

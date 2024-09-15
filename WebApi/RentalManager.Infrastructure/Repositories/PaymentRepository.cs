@@ -32,7 +32,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
     public async Task<Payment> GetAsync(int id)
     {
-        var result = await Task.FromResult(appDbContext.Payments.FirstOrDefault(x => x.Id == id));
+        var result = await appDbContext.Payments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
@@ -72,7 +72,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
             result = result.Where(x => x.IsActive);
         }
 
-        return await Task.FromResult(result.AsEnumerable());
+        return await result.ToListAsync();
     }
 
     public async Task<Payment> UpdateAsync(Payment payment, int id)

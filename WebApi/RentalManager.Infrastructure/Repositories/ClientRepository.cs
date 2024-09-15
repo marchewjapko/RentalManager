@@ -33,8 +33,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 
     public async Task<Client> GetAsync(int id)
     {
-        var result = await Task.FromResult(appDbContext.Clients
-            .FirstOrDefault(x => x.Id == id));
+        var result = await appDbContext.Clients.FirstOrDefaultAsync(x => x.Id == id);
 
         if (result == null)
         {
@@ -53,7 +52,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 
         result = SortClients(result, queryClients);
 
-        return await Task.FromResult(result.AsEnumerable());
+        return await result.ToListAsync();
     }
 
     public async Task<Client> UpdateAsync(Client client, int id)

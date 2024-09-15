@@ -15,16 +15,21 @@ public class EquipmentProfile : Profile
             .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.Name, x => x.MapFrom(a => a.Name))
             .ForMember(x => x.Price, x => x.MapFrom(a => a.Price))
-            .ForMember(x => x.Image, x => x.MapFrom(a => a.Image))
             .ForMember(x => x.Agreements, x => x.Ignore());
-        
-        CreateMap<CreateEquipment, Client>();
-        CreateMap<UpdateEquipment, Client>();
+
+        CreateMap<CreateEquipment, Equipment>();
+        CreateMap<UpdateEquipment, Equipment>()
+            .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 
         CreateMap<Equipment, EquipmentDto>()
             .ForMember(x => x.Id, x => x.MapFrom(a => a.Id))
             .ForMember(x => x.Name, x => x.MapFrom(a => a.Name))
+            .ForMember(x => x.Price, x => x.MapFrom(a => a.Price));
+
+        CreateMap<EquipmentDto, Equipment>()
+            .ForMember(x => x.Id, x => x.MapFrom(a => a.Id))
+            .ForMember(x => x.Name, x => x.MapFrom(a => a.Name))
             .ForMember(x => x.Price, x => x.MapFrom(a => a.Price))
-            .ForMember(x => x.Image, x => x.MapFrom(a => a.Image));
+            .ForMember(x => x.Agreements, x => x.Ignore());
     }
 }

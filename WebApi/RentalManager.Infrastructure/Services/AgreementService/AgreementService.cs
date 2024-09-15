@@ -1,55 +1,53 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
+using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
+using RentalManager.Infrastructure.Models.Commands.ClientCommands;
+using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.Models.DTO;
+using RentalManager.Infrastructure.Services.UserService;
 
 namespace RentalManager.Infrastructure.Services.AgreementService;
 
 public class AgreementService(
     IAgreementRepository agreementRepository,
+    IUserService userService,
+    IClientRepository clientRepository,
     IEquipmentRepository equipmentRepository,
-    IClientRepository clientRepository)
+    IMapper mapper)
     : IAgreementService
 {
     public async Task<AgreementDto> AddAsync(CreateAgreement createAgreement,
-        ClaimsPrincipal claimsPrincipal)
+        ClaimsPrincipal principal)
     {
-        var equipment = (await equipmentRepository.GetAsync(createAgreement.EquipmentIds)).ToList();
+        var user = await userService.GetAsync(createAgreement.UserId);
+        var agreement = mapper.Map<Agreement>(createAgreement);
 
-        var client = await clientRepository.GetAsync(createAgreement.ClientId);
+        FillCreatedBy(agreement, principal.GetId());
+        FillCreatedBy(agreement.Payments, principal.GetId());
 
-        if (!equipment.Select(x => x.Id)
-                .OrderBy(x => x)
-                .SequenceEqual(createAgreement.EquipmentIds.OrderBy(x => x)))
-        {
-            var missingIds = createAgreement.EquipmentIds.Except(equipment.Select(x => x.Id));
+        await FillClient(createAgreement.Client, agreement);
+        await FillEquipments(createAgreement.Equipments, agreement);
 
-            throw new EquipmentNotFoundException(missingIds);
-        }
+        var newAgreement = await agreementRepository.AddAsync(agreement);
+        var result = mapper.Map<AgreementDto>(newAgreement);
+        result.User = user;
 
-        if (client is null)
-        {
-            throw new ClientNotFoundException(createAgreement.ClientId);
-        }
-
-        var agreement = createAgreement.ToDomain();
-        agreement.Equipment = equipment.ToList();
-        agreement.Client = client;
-        //agreement.User = user;
-        //foreach (var payment in agreement.Payments) payment.User = user;
-
-        var result = await agreementRepository.AddAsync(agreement);
-
-        return result.ToDto();
+        return result;
     }
 
     public async Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements)
     {
-        var result = await agreementRepository.BrowseAllAsync(queryAgreements);
+        var agreements = await agreementRepository.BrowseAllAsync(queryAgreements);
+        var result = mapper.Map<IEnumerable<AgreementDto>>(agreements);
 
-        return await Task.FromResult(result.Select(x => x.ToDto()));
+        foreach (var agreement in result)
+            agreement.User = await userService.GetAsync(agreement.User.Id);
+
+        return mapper.Map<IEnumerable<AgreementDto>>(result);
     }
 
     public async Task DeleteAsync(int id)
@@ -59,35 +57,83 @@ public class AgreementService(
 
     public async Task<AgreementDto> GetAsync(int id)
     {
-        var result = await agreementRepository.GetAsync(id);
+        var agreement = await agreementRepository.GetAsync(id);
+        var result = mapper.Map<AgreementDto>(agreement);
+        result.User = await userService.GetAsync(result.User.Id);
 
-        return await Task.FromResult(result.ToDto());
+        return result;
     }
 
-    public async Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement, int id)
+    public async Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement,
+        int id,
+        ClaimsPrincipal principal)
     {
-        var agreement = updateAgreement.ToDomain();
-        var equipment = (await equipmentRepository.GetAsync(updateAgreement.EquipmentIds)).ToList();
+        var user = await userService.GetAsync(updateAgreement.UserId);
+        var agreement = mapper.Map<Agreement>(updateAgreement);
 
-        if (!equipment.Select(x => x.Id)
-                .OrderBy(x => x)
-                .SequenceEqual(updateAgreement.EquipmentIds.OrderBy(x => x)))
-        {
-            var missingIds = updateAgreement.EquipmentIds.Except(equipment.Select(x => x.Id));
+        FillCreatedBy(agreement, principal.GetId());
 
-            throw new EquipmentNotFoundException(missingIds);
-        }
+        await FillClient(updateAgreement.Client, agreement);
+        await FillEquipments(updateAgreement.Equipments, agreement);
 
-        //agreement.Employee = employee;
-        agreement.Equipment = equipment.ToList();
+        var newAgreement = await agreementRepository.UpdateAsync(agreement, id);
+        var result = mapper.Map<AgreementDto>(newAgreement);
+        result.User = user;
 
-        var result = await agreementRepository.UpdateAsync(agreement, id);
-
-        return result.ToDto();
+        return result;
     }
 
     public async Task Deactivate(int id)
     {
         await agreementRepository.Deactivate(id);
+    }
+
+    public async Task FillEquipments(List<CreateOrGetEquipment> equipments, Agreement agreement)
+    {
+        var equipmentIds = equipments.Where(x => x.Id.HasValue)
+            .Select(x => x.Id!.Value)
+            .ToList();
+
+        var allEquipments = await equipmentRepository.GetAsync(equipmentIds);
+
+        allEquipments = allEquipments.ToList();
+
+        foreach (var equipment in equipments)
+            if (equipment.Id.HasValue)
+            {
+                var existingEquipment =
+                    allEquipments.FirstOrDefault(x => x.Id == equipment.Id.Value);
+
+                agreement.Equipments.Add(mapper.Map<Equipment>(existingEquipment));
+            }
+            else
+            {
+                var newEquipment = mapper.Map<Equipment>(equipment);
+
+                newEquipment.CreatedBy = agreement.CreatedBy;
+
+                agreement.Equipments.Add(mapper.Map<Equipment>(equipment));
+            }
+    }
+
+    public async Task FillClient(CreateOrGetClient client, Agreement agreement)
+    {
+        if (client.Id.HasValue)
+        {
+            var existingClient = await clientRepository.GetAsync(client.Id.Value);
+
+            agreement.ClientId = existingClient.Id;
+            agreement.Client = existingClient;
+        }
+    }
+
+    private static void FillCreatedBy(DomainBase domain, int id)
+    {
+        domain.CreatedBy = id;
+    }
+
+    private static void FillCreatedBy(IEnumerable<DomainBase> domains, int id)
+    {
+        foreach (var domain in domains) domain.CreatedBy = id;
     }
 }

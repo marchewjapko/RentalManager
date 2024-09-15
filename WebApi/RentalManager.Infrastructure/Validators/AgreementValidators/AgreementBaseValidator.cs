@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
-using RentalManager.Infrastructure.Validators.PaymentValidators;
 
 namespace RentalManager.Infrastructure.Validators.AgreementValidators;
 
@@ -8,16 +7,16 @@ public class AgreementBaseValidator : AbstractValidator<AgreementBaseCommand>
 {
     public AgreementBaseValidator()
     {
-        RuleFor(x => x.EmployeeId)
+        RuleFor(x => x.UserId)
             .NotEmpty();
 
         RuleFor(x => x.IsActive)
             .NotNull();
 
-        RuleFor(x => x.ClientId)
+        RuleFor(x => x.Client)
             .NotEmpty();
 
-        RuleFor(x => x.EquipmentIds)
+        RuleFor(x => x.Equipments)
             .NotEmpty()
             .Must(x => x.Count > 0)
             .WithMessage("'EquipmentIds' must contain at least one element")
@@ -38,8 +37,5 @@ public class AgreementBaseValidator : AbstractValidator<AgreementBaseCommand>
         RuleFor(x => x.TransportToPrice)
             .NotEmpty()
             .GreaterThanOrEqualTo(0);
-
-        RuleForEach(x => x.Payments)
-            .SetValidator(new PaymentBaseValidator());
     }
 }

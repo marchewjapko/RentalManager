@@ -9,7 +9,7 @@
         "InMemory": "False"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5000"
+      "applicationUrl": "https://localhost:5000"
     },
     "WebAPI - In Memory": {
       "commandName": "Project",

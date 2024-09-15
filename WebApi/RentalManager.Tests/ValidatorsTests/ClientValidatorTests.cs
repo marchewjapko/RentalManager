@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FluentValidation.TestHelper;
 using RentalManager.Infrastructure.Models.Commands.ClientCommands;
 using RentalManager.Infrastructure.Validators.ClientValidators;
 
@@ -28,10 +29,10 @@ public class ClientValidatorTests
         var client = InitializeClient();
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     #region NameRules
@@ -44,10 +45,10 @@ public class ClientValidatorTests
         client.FirstName = "John Jack";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -58,11 +59,13 @@ public class ClientValidatorTests
         client.FirstName = "John1Jack";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.FirstName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -76,11 +79,13 @@ public class ClientValidatorTests
         client.FirstName = "John.Jack";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.FirstName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -94,11 +99,13 @@ public class ClientValidatorTests
         client.FirstName = null!;
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.FirstName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("NotEmptyValidator"));
         });
@@ -112,11 +119,13 @@ public class ClientValidatorTests
         client.FirstName = new string('A', 101);
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.FirstName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });
@@ -134,10 +143,10 @@ public class ClientValidatorTests
         client.LastName = "Scott Brown";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -148,11 +157,13 @@ public class ClientValidatorTests
         client.LastName = "Scott1Brown";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.LastName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -166,11 +177,13 @@ public class ClientValidatorTests
         client.LastName = "Scott.Brown";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.LastName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -184,11 +197,13 @@ public class ClientValidatorTests
         client.LastName = null!;
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.LastName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("NotEmptyValidator"));
         });
@@ -202,11 +217,13 @@ public class ClientValidatorTests
         client.LastName = new string('A', 101);
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.LastName);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });
@@ -224,10 +241,10 @@ public class ClientValidatorTests
         client.PhoneNumber = "+48 123 456 789";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -238,10 +255,10 @@ public class ClientValidatorTests
         client.PhoneNumber = "123 456 789";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -252,10 +269,10 @@ public class ClientValidatorTests
         client.PhoneNumber = "123-456-789";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -266,10 +283,10 @@ public class ClientValidatorTests
         client.PhoneNumber = "123456789";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -280,10 +297,10 @@ public class ClientValidatorTests
         client.PhoneNumber = "12 34 567 89";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     #endregion
@@ -298,11 +315,13 @@ public class ClientValidatorTests
         client.Email = "email!@email.com";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Email);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -316,11 +335,13 @@ public class ClientValidatorTests
         client.Email = new string('A', 91) + "@email.com"; // 101 characters
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Email);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });
@@ -338,10 +359,10 @@ public class ClientValidatorTests
         client.IdCard = "ABC123456";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
-        Assert.That(result.IsValid);
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Test]
@@ -352,11 +373,13 @@ public class ClientValidatorTests
         client.IdCard = "ABC!23456";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.IdCard);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -370,11 +393,13 @@ public class ClientValidatorTests
         client.IdCard = "ABC1234567";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         //assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.IdCard);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -392,11 +417,13 @@ public class ClientValidatorTests
         client.City = "Paris!";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.City);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -410,11 +437,13 @@ public class ClientValidatorTests
         client.City = new string('A', 101);
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.City);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });
@@ -432,11 +461,13 @@ public class ClientValidatorTests
         client.Street = "al. AK 12B!";
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Street);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("RegularExpressionValidator"));
         });
@@ -450,11 +481,13 @@ public class ClientValidatorTests
         client.Street = new string('A', 101);
 
         // act
-        var result = await _clientBaseValidator.ValidateAsync(client);
+        var result = await _clientBaseValidator.TestValidateAsync(client);
 
         // assert
+        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrorFor(x => x.Street);
+
         Assert.Multiple(() => {
-            Assert.That(!result.IsValid);
             Assert.That(result.Errors, Has.Count.EqualTo(1));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("MaximumLengthValidator"));
         });
