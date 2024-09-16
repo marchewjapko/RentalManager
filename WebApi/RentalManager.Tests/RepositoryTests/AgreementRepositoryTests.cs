@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -262,7 +262,8 @@ public class AgreementRepositoryTests
 
         _appDbContext.Agreements.Add(newAgreement);
         await _appDbContext.SaveChangesAsync();
-        newAgreement.Comment = Guid.NewGuid().ToString();
+        newAgreement.Comment = Guid.NewGuid()
+            .ToString();
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));
 
@@ -278,7 +279,8 @@ public class AgreementRepositoryTests
     public async Task ShouldDeactivate()
     {
         // Arrange
-        var agreementEntity = _appDbContext.Agreements.Add(MockAgreement).Entity;
+        var agreementEntity = _appDbContext.Agreements.Add(MockAgreement)
+            .Entity;
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(1));

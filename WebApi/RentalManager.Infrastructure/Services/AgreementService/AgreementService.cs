@@ -3,6 +3,7 @@ using AutoMapper;
 using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Models.Commands.ClientCommands;
@@ -94,17 +95,22 @@ public class AgreementService(
             .Select(x => x.Id!.Value)
             .ToList();
 
-        var allEquipments = await equipmentRepository.GetAsync(equipmentIds);
+        var existingEquipments = await equipmentRepository.GetAsync(equipmentIds);
 
-        allEquipments = allEquipments.ToList();
+        existingEquipments = existingEquipments.ToList();
 
         foreach (var equipment in equipments)
             if (equipment.Id.HasValue)
             {
                 var existingEquipment =
-                    allEquipments.FirstOrDefault(x => x.Id == equipment.Id.Value);
+                    existingEquipments.FirstOrDefault(x => x.Id == equipment.Id.Value);
 
-                agreement.Equipments.Add(mapper.Map<Equipment>(existingEquipment));
+                if (existingEquipment == null)
+                {
+                    throw new EquipmentNotFoundException(equipment.Id.Value);
+                }
+
+                agreement.Equipments.Add(existingEquipment);
             }
             else
             {
@@ -112,7 +118,7 @@ public class AgreementService(
 
                 newEquipment.CreatedBy = agreement.CreatedBy;
 
-                agreement.Equipments.Add(mapper.Map<Equipment>(equipment));
+                agreement.Equipments.Add(newEquipment);
             }
     }
 

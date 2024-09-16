@@ -2,7 +2,7 @@ using Bogus;
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
 

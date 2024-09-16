@@ -3,7 +3,7 @@ using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;

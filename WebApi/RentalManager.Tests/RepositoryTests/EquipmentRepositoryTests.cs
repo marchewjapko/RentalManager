@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -87,6 +87,42 @@ public class EquipmentRepositoryTests
 
         // Assert
         Assert.That(result.Id, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task ShouldGetAll()
+    {
+        // Arrange
+        var newEquipment = new Faker<Equipment>()
+            .RuleFor(x => x.Id, () => 2)
+            .RuleFor(x => x.Name, f => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 100))
+            .Generate();
+
+        _appDbContext.Add(MockEquipment);
+        _appDbContext.Add(newEquipment);
+        await _appDbContext.SaveChangesAsync();
+
+        Assume.That(_appDbContext.Equipments.Count(), Is.EqualTo(2));
+
+        // Act
+        var result = await _equipmentRepository.GetAsync([1, 2]);
+
+        // Assert
+        Assert.That(result.Count(), Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task ShouldNotGetAll()
+    {
+        // Arrange
+        _appDbContext.Add(MockEquipment);
+        await _appDbContext.SaveChangesAsync();
+
+        // Assert
+        var exception = Assert.ThrowsAsync<EquipmentNotFoundException>(async () =>
+            await _equipmentRepository.GetAsync([1, 2]));
+        Assert.That(exception.Message, Is.EqualTo("Equipment with ids: 2 not found"));
     }
 
     [Test]

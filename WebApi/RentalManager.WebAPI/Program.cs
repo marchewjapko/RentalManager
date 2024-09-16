@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling;
 using RentalManager.Infrastructure.Models.Profiles;
 using RentalManager.Infrastructure.Options;
 using RentalManager.Infrastructure.Repositories.DbContext;
@@ -81,8 +81,6 @@ builder.Services.RegisterApiServices();
 
 builder.Services.RegisterValidatorServices();
 
-ProblemDetailsConfiguration.ConfigureCustomProblemDetails(builder.Services, builder.Environment);
-
 if (builder.Configuration["InMemory"] == "True")
 {
     var guid = Guid.NewGuid()
@@ -141,8 +139,6 @@ app.UseCors(allowSpecificOrigins);
 
 app.MapControllers();
 
-app.UseExceptionHandler();
-
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -160,5 +156,7 @@ if (builder.Configuration["InMemory"] == "False")
         context.Database.Migrate();
     }
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();

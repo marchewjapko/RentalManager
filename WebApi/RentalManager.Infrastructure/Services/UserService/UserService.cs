@@ -3,14 +3,17 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using AutoMapper;
 using Microsoft.Extensions.Options;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Models.ExternalServices.IdentityService;
 using RentalManager.Infrastructure.Options;
 
 namespace RentalManager.Infrastructure.Services.UserService;
 
-public class UserService(IOptions<IdentityServiceOptions> options, IMapper mapper, IHttpClientFactory clientFactory) : IUserService
+public class UserService(
+    IOptions<IdentityServiceOptions> options,
+    IMapper mapper,
+    IHttpClientFactory clientFactory) : IUserService
 {
     private readonly HttpClient _client = clientFactory.CreateClient();
 

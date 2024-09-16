@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentalManager.Core.Domain;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
@@ -10,9 +10,8 @@ namespace RentalManager.Tests.RepositoryTests;
 
 public class PaymentRepositoryTests
 {
-    private PaymentRepository _paymentRepository = null!;
-
     private AppDbContext _appDbContext = null!;
+    private PaymentRepository _paymentRepository = null!;
 
     private Client MockClient { get; set; }
 
@@ -68,7 +67,7 @@ public class PaymentRepositoryTests
             .RuleFor(x => x.DateTo, f => f.Date.Future())
             .RuleFor(x => x.CreatedBy, f => f.Random.Int())
             .Generate();
-        
+
         var guid = Guid.NewGuid()
             .ToString();
 
@@ -92,7 +91,7 @@ public class PaymentRepositoryTests
         _appDbContext.Database.EnsureDeleted();
         _appDbContext.Dispose();
     }
-    
+
     [Test]
     public async Task ShouldAdd()
     {
@@ -102,7 +101,7 @@ public class PaymentRepositoryTests
         // Assert
         Assert.That(_appDbContext.Payments.Count(), Is.EqualTo(1));
     }
-    
+
     [Test]
     public async Task ShouldGet()
     {
@@ -125,7 +124,7 @@ public class PaymentRepositoryTests
             Assert.That(result.DateTo, Is.EqualTo(MockPayment.DateTo));
         });
     }
-    
+
     [Test]
     public void ShouldNotGet()
     {
@@ -133,7 +132,7 @@ public class PaymentRepositoryTests
         Assert.ThrowsAsync<PaymentNotFoundException>(async () =>
             await _paymentRepository.GetAsync(1));
     }
-    
+
     [Test]
     public async Task ShouldDelete()
     {
@@ -149,7 +148,7 @@ public class PaymentRepositoryTests
         // Assert
         Assert.That(_appDbContext.Payments.Count(), Is.EqualTo(0));
     }
-    
+
     [Test]
     public void ShouldNotDelete()
     {
@@ -157,7 +156,7 @@ public class PaymentRepositoryTests
         Assert.ThrowsAsync<PaymentNotFoundException>(async () =>
             await _paymentRepository.DeleteAsync(1));
     }
-    
+
     [Test]
     public async Task ShouldBrowseAll()
     {
@@ -184,8 +183,8 @@ public class PaymentRepositoryTests
         // Assert
         Assert.That(result.Count(), Is.EqualTo(2));
     }
-    
-        [Test]
+
+    [Test]
     public async Task ShouldFilter()
     {
         // Arrange
@@ -203,8 +202,9 @@ public class PaymentRepositoryTests
             .RuleFor(x => x.Payments, () => new List<Payment>())
             .Generate();
 
-        var newAgreementEntity = _appDbContext.Agreements.Add(newAgreement).Entity;
-                
+        var newAgreementEntity = _appDbContext.Agreements.Add(newAgreement)
+            .Entity;
+
         var newPayment = new Faker<Payment>()
             .RuleFor(x => x.Id, () => 2)
             .RuleFor(x => x.AgreementId, () => newAgreementEntity.Id)
@@ -215,13 +215,13 @@ public class PaymentRepositoryTests
             .RuleFor(x => x.DateTo, f => f.Date.Future())
             .RuleFor(x => x.IsActive, () => false)
             .Generate();
-        
+
         _appDbContext.Payments.Add(MockPayment);
         _appDbContext.Payments.Add(newPayment);
         await _appDbContext.SaveChangesAsync();
         Assume.That(_appDbContext.Payments.Count(), Is.EqualTo(2));
 
-        var query1 = new QueryPayment()
+        var query1 = new QueryPayment
         {
             AgreementId = newAgreementEntity.Id,
             OnlyActive = false
@@ -239,13 +239,15 @@ public class PaymentRepositoryTests
         // Assert
         Assert.Multiple(() => {
             Assert.That(result1, Has.Count.EqualTo(1));
-            Assert.That(result1.First().Method, Is.EqualTo(newPayment.Method));
+            Assert.That(result1.First()
+                .Method, Is.EqualTo(newPayment.Method));
             Assert.That(result2, Has.Count.EqualTo(1));
-            Assert.That(result2.First().Method, Is.EqualTo(MockPayment.Method));
+            Assert.That(result2.First()
+                .Method, Is.EqualTo(MockPayment.Method));
         });
     }
-    
-        [Test]
+
+    [Test]
     public async Task ShouldUpdate()
     {
         // Arrange
@@ -262,7 +264,8 @@ public class PaymentRepositoryTests
 
         _appDbContext.Payments.Add(newPayment);
         await _appDbContext.SaveChangesAsync();
-        newPayment.Method = Guid.NewGuid().ToString();
+        newPayment.Method = Guid.NewGuid()
+            .ToString();
 
         Assume.That(_appDbContext.Payments.Count(), Is.EqualTo(1));
 
@@ -278,7 +281,8 @@ public class PaymentRepositoryTests
     public async Task ShouldDeactivate()
     {
         // Arrange
-        var paymentEntity = _appDbContext.Payments.Add(MockPayment).Entity;
+        var paymentEntity = _appDbContext.Payments.Add(MockPayment)
+            .Entity;
         await _appDbContext.SaveChangesAsync();
 
         Assume.That(_appDbContext.Payments.Count(), Is.EqualTo(1));

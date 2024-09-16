@@ -3,7 +3,7 @@ using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
@@ -111,7 +111,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         {
             agreements = agreements.Where(x => x.UserId == queryAgreements.UserId.Value);
         }
-        
+
         if (queryAgreements.ClientId != null)
         {
             agreements = agreements.Where(x => x.ClientId == queryAgreements.ClientId);

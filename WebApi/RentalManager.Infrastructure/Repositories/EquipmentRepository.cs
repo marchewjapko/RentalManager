@@ -3,7 +3,7 @@ using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
-using RentalManager.Infrastructure.Exceptions;
+using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
@@ -48,9 +48,11 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         var result = await appDbContext.Equipments.Where(x => ids.Any(a => a == x.Id))
             .ToListAsync();
 
-        if (result == null)
+        if (result.Count != ids.Count)
         {
-            throw new EquipmentNotFoundException(ids);
+            var missingIds = ids.Except(result.Select(x => x.Id));
+
+            throw new EquipmentNotFoundException(missingIds);
         }
 
         return result;

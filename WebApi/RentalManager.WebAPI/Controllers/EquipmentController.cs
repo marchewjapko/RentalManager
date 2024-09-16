@@ -61,20 +61,6 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
         return Json(result);
     }
 
-    [Route("Image/{id}")]
-    [HttpGet]
-    public async Task<IActionResult?> GetEquipmentImage(int id)
-    {
-        var equipment = await equipmentService.GetAsync(id);
-
-        if (equipment.Image is null)
-        {
-            return File("DefaultEquipmentImage.png", "image/png");
-        }
-
-        return File(equipment.Image, "image/jpeg");
-    }
-
     [Route("Deactivate/{id}")]
     [HttpPatch]
     public async Task<IActionResult> DeactivateEquipment(int id)

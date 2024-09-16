@@ -43,7 +43,9 @@ public class PaymentService(IPaymentRepository paymentRepository, IMapper mapper
 
     public async Task<PaymentDto> UpdateAsync(UpdatePayment updatePayment, int id)
     {
-        var result = await paymentRepository.UpdateAsync(mapper.Map<Payment>(updatePayment), id);
+        var domainPayment = mapper.Map<Payment>(updatePayment);
+
+        var result = await paymentRepository.UpdateAsync(domainPayment, id);
 
         return mapper.Map<PaymentDto>(result);
     }
