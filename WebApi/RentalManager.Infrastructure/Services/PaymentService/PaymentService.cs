@@ -29,9 +29,9 @@ public class PaymentService(IPaymentRepository paymentRepository, IMapper mapper
         return mapper.Map<IEnumerable<PaymentDto>>(result);
     }
 
-    public async Task DeleteAsync(int id)
+    public Task DeleteAsync(int id)
     {
-        await paymentRepository.DeleteAsync(id);
+        return paymentRepository.DeleteAsync(id);
     }
 
     public async Task<PaymentDto> GetAsync(int id)
@@ -50,8 +50,8 @@ public class PaymentService(IPaymentRepository paymentRepository, IMapper mapper
         return mapper.Map<PaymentDto>(result);
     }
 
-    public async Task Deactivate(int id)
+    public Task Deactivate(int id)
     {
-        await paymentRepository.Deactivate(id);
+        return paymentRepository.Deactivate(id);
     }
 }

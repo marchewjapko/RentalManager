@@ -18,11 +18,15 @@ public class PaymentProfiles : Profile
             .ForMember(x => x.Method, x => x.MapFrom(a => a.Method))
             .ForMember(x => x.Amount, x => x.MapFrom(a => a.Amount))
             .ForMember(x => x.DateFrom, x => x.MapFrom(a => a.DateFrom))
-            .ForMember(x => x.DateTo, x => x.MapFrom(a => a.DateTo));
+            .ForMember(x => x.DateTo, x => x.MapFrom(a => a.DateTo))
+            .ForMember(x => x.CreatedBy, x => x.Ignore())
+            .ForMember(x => x.CreatedTs, x => x.Ignore())
+            .ForMember(x => x.UpdatedTs, x => x.Ignore())
+            .ForMember(x => x.IsActive, x => x.Ignore());
 
         CreateMap<CreatePayment, Payment>()
             .ForMember(x => x.AgreementId, x => x.MapFrom(a => a.AgreementId));
-
+        
         CreateMap<UpdatePayment, Payment>()
             .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 

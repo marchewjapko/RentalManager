@@ -5,22 +5,28 @@ using RentalManager.Infrastructure.Models.DTO;
 
 namespace RentalManager.Infrastructure.Models.Profiles;
 
-public class AgreementProfile : Profile
+public class AgreementProfiles : Profile
 {
-    public AgreementProfile()
+    public AgreementProfiles()
     {
         CreateMap<AgreementBaseCommand, Agreement>()
             .Include<CreateAgreement, Agreement>()
             .Include<UpdateAgreement, Agreement>()
             .ForMember(x => x.UserId, x => x.MapFrom(a => a.UserId))
-            .ForMember(x => x.ClientId, x => x.MapFrom(a => a.Client.Id))
-            .ForMember(x => x.Client, x => x.MapFrom(a => a.Client))
+            .ForMember(x => x.IsActive, x => x.MapFrom(a => a.IsActive))
+            .ForMember(x => x.ClientId, x => x.MapFrom(a => a.ClientId))
+            .ForMember(x => x.Client, x => x.Ignore())
             .ForMember(x => x.Comment, x => x.MapFrom(a => a.Comment))
             .ForMember(x => x.Deposit, x => x.MapFrom(a => a.Deposit))
             .ForMember(x => x.TransportFromPrice, x => x.MapFrom(a => a.TransportFromPrice))
             .ForMember(x => x.TransportToPrice, x => x.MapFrom(a => a.TransportToPrice))
             .ForMember(x => x.DateAdded, x => x.MapFrom(a => a.DateAdded))
-            .ForMember(x => x.Equipments, x => x.MapFrom(a => new List<Equipment>()));
+            .ForMember(x => x.Equipments, x => x.MapFrom(a => new List<Equipment>()))
+            .ForMember(x => x.Payments, x => x.Ignore())
+            .ForMember(x => x.Id, x => x.Ignore())
+            .ForMember(x => x.CreatedBy, x => x.Ignore())
+            .ForMember(x => x.CreatedTs, x => x.Ignore())
+            .ForMember(x => x.UpdatedTs, x => x.Ignore());
 
         CreateMap<CreateAgreement, Agreement>()
             .ForMember(x => x.Payments, x => x.MapFrom(a => a.Payments));
@@ -34,13 +40,14 @@ public class AgreementProfile : Profile
             {
                 Id = a.UserId
             }))
+            .ForMember(x => x.Client, x => x.MapFrom(a => a.Client))
             .ForMember(x => x.IsActive, x => x.MapFrom(a => a.IsActive))
             .ForMember(x => x.Equipments, x => x.MapFrom(a => a.Equipments))
             .ForMember(x => x.Payments, x => x.MapFrom(a => a.Payments))
             .ForMember(x => x.Comment, x => x.MapFrom(a => a.Comment))
             .ForMember(x => x.Deposit, x => x.MapFrom(a => a.Deposit))
-            .ForMember(x => x.TransportFrom, x => x.MapFrom(a => a.TransportFromPrice))
-            .ForMember(x => x.TransportTo, x => x.MapFrom(a => a.TransportToPrice))
+            .ForMember(x => x.TransportFromPrice, x => x.MapFrom(a => a.TransportFromPrice))
+            .ForMember(x => x.TransportToPrice, x => x.MapFrom(a => a.TransportToPrice))
             .ForMember(x => x.DateAdded, x => x.MapFrom(a => a.DateAdded));
     }
 }

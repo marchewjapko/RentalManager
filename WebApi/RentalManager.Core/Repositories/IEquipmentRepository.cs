@@ -9,7 +9,7 @@ public interface IEquipmentRepository
 
     Task<Equipment> GetAsync(int id);
 
-    Task<IEnumerable<Equipment>> GetAsync(List<int> ids);
+    Task<ICollection<Equipment>> GetAsync(ICollection<int> ids);
 
     Task DeleteAsync(int id);
 

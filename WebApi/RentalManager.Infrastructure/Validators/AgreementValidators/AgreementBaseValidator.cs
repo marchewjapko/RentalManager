@@ -13,10 +13,10 @@ public class AgreementBaseValidator : AbstractValidator<AgreementBaseCommand>
         RuleFor(x => x.IsActive)
             .NotNull();
 
-        RuleFor(x => x.Client)
+        RuleFor(x => x.ClientId)
             .NotEmpty();
 
-        RuleFor(x => x.Equipments)
+        RuleFor(x => x.EquipmentsIds)
             .NotEmpty()
             .Must(x => x.Count > 0)
             .WithMessage("'EquipmentIds' must contain at least one element")

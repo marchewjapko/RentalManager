@@ -1,8 +1,6 @@
 ﻿using Bogus;
 using FluentValidation.TestHelper;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
-using RentalManager.Infrastructure.Models.Commands.ClientCommands;
-using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.Validators.AgreementValidators;
 
 namespace RentalManager.Tests.ValidatorsTests;
@@ -16,8 +14,12 @@ public class AgreementValidatorTests
         return new Faker<AgreementBaseCommand>()
             .RuleFor(x => x.UserId, () => 1)
             .RuleFor(x => x.IsActive, () => true)
-            .RuleFor(x => x.Client, () => new CreateOrGetClient())
-            .RuleFor(x => x.Equipments, () => new Faker<CreateOrGetEquipment>().Generate(5))
+            .RuleFor(x => x.ClientId, f => f.Random.Int())
+            .RuleFor(x => x.EquipmentsIds, f => new List<int>()
+            {
+                f.Random.Int(),
+                f.Random.Int(),
+            })
             .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
             .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
             .RuleFor(x => x.TransportFromPrice, f => f.Random.Int(1, 100))

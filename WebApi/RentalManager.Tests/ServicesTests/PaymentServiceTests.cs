@@ -18,7 +18,9 @@ public class PaymentServiceTests
     {
         // Arrange
         var payment = new Faker<Payment>().Generate();
-        var createPayment = new Faker<CreatePayment>().Generate();
+        var createPayment = new Faker<CreatePayment>()
+            .RuleFor(x => x.AgreementId, f => f.Random.Int())
+            .Generate();
         var paymentDto = new Faker<PaymentDto>().Generate();
         var mapperMock = new Mock<IMapper>();
         mapperMock.Setup(x => x.Map<Payment>(It.IsAny<CreatePayment>()))

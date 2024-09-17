@@ -13,13 +13,13 @@ public class AgreementBaseCommand
 
     [Required]
     [DefaultValue(true)]
-    public bool IsActive { get; init; }
+    public bool IsActive { get; init; } = true;
 
     [Required]
-    public CreateOrGetClient Client { get; init; }
+    public int ClientId { get; init; }
 
     [Required]
-    public List<CreateOrGetEquipment> Equipments { get; init; } = null!;
+    public ICollection<int> EquipmentsIds { get; init; }
 
     [DefaultValue("Fun comment")]
     public string? Comment { get; init; }

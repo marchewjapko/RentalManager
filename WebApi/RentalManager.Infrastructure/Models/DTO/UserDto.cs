@@ -8,7 +8,7 @@ public class UserDto
 
     public string? LastName { get; init; }
 
-    public string UserName { get; set; } = null!;
+    public string UserName { get; set; }
 
-    public IList<string> Roles { get; set; } = null!;
+    public IList<string> Roles { get; set; }
 }

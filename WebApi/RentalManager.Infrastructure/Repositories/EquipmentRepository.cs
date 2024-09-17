@@ -43,7 +43,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
         return result;
     }
 
-    public async Task<IEnumerable<Equipment>> GetAsync(List<int> ids)
+    public async Task<ICollection<Equipment>> GetAsync(ICollection<int> ids)
     {
         var result = await appDbContext.Equipments.Where(x => ids.Any(a => a == x.Id))
             .ToListAsync();

@@ -5,7 +5,7 @@ namespace RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
 public class AgreementNotFoundException : Exception, ICustomMappedException
 {
-    public AgreementNotFoundException(int id) : base($"Agreement with id {id} not found")
+    public AgreementNotFoundException(int id) : base($"Agreement with id {id} not found.")
     {
     }
 

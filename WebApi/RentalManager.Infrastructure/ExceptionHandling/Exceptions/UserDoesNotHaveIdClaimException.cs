@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
-public class PaymentNotFoundException : Exception, ICustomMappedException
+public class UserDoesNotHaveIdClaimException : Exception, ICustomMappedException
 {
-    public PaymentNotFoundException(int id) : base($"Payment with id {id} not found.")
+    public UserDoesNotHaveIdClaimException() : base($"Users does not have an id claim.")
     {
     }
 
@@ -13,9 +13,9 @@ public class PaymentNotFoundException : Exception, ICustomMappedException
     {
         return new ProblemDetails
         {
-            Title = "Payment not found",
+            Title = "No ID claim found",
             Detail = exception.Message,
-            Status = StatusCodes.Status404NotFound
+            Status = StatusCodes.Status406NotAcceptable
         };
     }
 }

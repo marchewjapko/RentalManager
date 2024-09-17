@@ -6,7 +6,7 @@ public class Agreement : DomainBase
 
     public int ClientId { get; set; }
 
-    public Client Client { get; set; } = null!;
+    public Client Client { get; set; }
 
     public string? Comment { get; set; }
 
@@ -18,7 +18,7 @@ public class Agreement : DomainBase
 
     public DateTime DateAdded { get; set; }
 
-    public ICollection<Equipment> Equipments { get; set; } = null!;
+    public ICollection<Equipment> Equipments { get; set; }
 
-    public ICollection<Payment> Payments { get; set; } = null!;
+    public ICollection<Payment> Payments { get; set; }
 }

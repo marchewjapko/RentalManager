@@ -45,8 +45,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 
     public async Task<IEnumerable<Client>> BrowseAllAsync(QueryClients queryClients)
     {
-        var result = appDbContext.Clients.Where(x => x.IsActive)
-            .AsQueryable();
+        var result = appDbContext.Clients.AsQueryable();
 
         result = FilterClients(result, queryClients);
 

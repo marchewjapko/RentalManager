@@ -7,7 +7,7 @@ public class PaymentBaseCommand
 {
     [Required]
     [DefaultValue("Cash")]
-    public string Method { get; set; } = null!;
+    public string Method { get; set; }
 
     [Required]
     [DefaultValue(100)]

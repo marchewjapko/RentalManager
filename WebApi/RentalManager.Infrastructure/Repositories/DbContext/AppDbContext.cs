@@ -9,13 +9,13 @@ public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
     }
 
-    public DbSet<Client> Clients { get; set; } = null!;
+    public DbSet<Client> Clients { get; set; }
 
-    public DbSet<Payment> Payments { get; set; } = null!;
+    public DbSet<Payment> Payments { get; set; }
 
-    public DbSet<Agreement> Agreements { get; set; } = null!;
+    public DbSet<Agreement> Agreements { get; set; }
 
-    public DbSet<Equipment> Equipments { get; set; } = null!;
+    public DbSet<Equipment> Equipments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

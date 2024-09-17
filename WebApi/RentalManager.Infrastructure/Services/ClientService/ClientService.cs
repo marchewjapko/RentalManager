@@ -29,9 +29,9 @@ public class ClientService(IClientRepository clientRepository, IMapper mapper) :
         return mapper.Map<IEnumerable<ClientDto>>(result);
     }
 
-    public async Task DeleteAsync(int id)
+    public Task DeleteAsync(int id)
     {
-        await clientRepository.DeleteAsync(id);
+        return clientRepository.DeleteAsync(id);
     }
 
     public async Task<ClientDto> GetAsync(int id)
@@ -48,8 +48,8 @@ public class ClientService(IClientRepository clientRepository, IMapper mapper) :
         return mapper.Map<ClientDto>(result);
     }
 
-    public async Task Deactivate(int id)
+    public Task Deactivate(int id)
     {
-        await clientRepository.Deactivate(id);
+        return clientRepository.Deactivate(id);
     }
 }

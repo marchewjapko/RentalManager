@@ -30,9 +30,9 @@ public class EquipmentService(
         return mapper.Map<IEnumerable<EquipmentDto>>(result);
     }
 
-    public async Task DeleteAsync(int id)
+    public Task DeleteAsync(int id)
     {
-        await equipmentRepository.DeleteAsync(id);
+        return equipmentRepository.DeleteAsync(id);
     }
 
     public async Task<EquipmentDto> GetAsync(int id)
@@ -50,8 +50,8 @@ public class EquipmentService(
         return mapper.Map<EquipmentDto>(result);
     }
 
-    public async Task Deactivate(int id)
+    public Task Deactivate(int id)
     {
-        await equipmentRepository.Deactivate(id);
+        return equipmentRepository.Deactivate(id);
     }
 }

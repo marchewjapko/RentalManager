@@ -5,7 +5,7 @@ namespace RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
 public class ClientNotFoundException : Exception, ICustomMappedException
 {
-    public ClientNotFoundException(int id) : base($"Client with id {id} not found")
+    public ClientNotFoundException(int id) : base($"Client with id {id} not found.")
     {
     }
 

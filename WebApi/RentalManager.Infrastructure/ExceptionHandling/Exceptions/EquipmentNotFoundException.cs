@@ -5,7 +5,7 @@ namespace RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
 public class EquipmentNotFoundException : Exception, ICustomMappedException
 {
-    public EquipmentNotFoundException(int id) : base($"Equipment with id {id} not found")
+    public EquipmentNotFoundException(int id) : base($"Equipment with id {id} not found.")
     {
     }
 

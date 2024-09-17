@@ -17,7 +17,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
 
@@ -34,6 +34,6 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         }
 
         context.Response.StatusCode = problemDetail.Status!.Value;
-        await context.Response.WriteAsJsonAsync(problemDetail);
+        return context.Response.WriteAsJsonAsync(problemDetail);
     }
 }

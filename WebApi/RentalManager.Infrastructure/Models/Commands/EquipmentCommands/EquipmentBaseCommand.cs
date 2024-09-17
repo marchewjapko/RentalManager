@@ -8,12 +8,9 @@ public class EquipmentBaseCommand
 {
     [Required]
     [DefaultValue("Fun equipment mk III")]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     [Required]
     [DefaultValue(100)]
     public int Price { get; set; }
-
-    [DefaultValue(null)]
-    public IFormFile? Image { get; set; }
 }
