@@ -3,6 +3,7 @@ using RentalManager.Core.Domain;
 using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
+using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
@@ -46,30 +47,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
     {
         var result = appDbContext.Payments.AsQueryable();
 
-        if (queryPayment.AgreementId != null)
-        {
-            result = result.Where(x => x.AgreementId == queryPayment.AgreementId);
-        }
-
-        if (queryPayment.Method != null)
-        {
-            result = result.Where(x => x.Method == queryPayment.Method);
-        }
-
-        if (queryPayment.From != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date > queryPayment.From.Value.Date);
-        }
-
-        if (queryPayment.To != null)
-        {
-            result = result.Where(x => x.CreatedTs.Date < queryPayment.To.Value.Date);
-        }
-
-        if (queryPayment.OnlyActive)
-        {
-            result = result.Where(x => x.IsActive);
-        }
+        result = FilterPayments(result, queryPayment);
 
         return await result.ToListAsync();
     }
@@ -92,6 +70,23 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         await appDbContext.SaveChangesAsync();
 
         return paymentToUpdate;
+    }
+    
+    private static IQueryable<Payment> FilterPayments(IQueryable<Payment> payments,
+        QueryPayment queryPayments)
+    {
+
+        payments = payments.Filter(x => x.AgreementId, queryPayments.AgreementId, FilterOperand.Equals);
+        payments = payments.Filter(x => x.Method, queryPayments.Method, FilterOperand.Contains);
+        payments = payments.Filter(x => x.DateFrom, queryPayments.From?.Date, FilterOperand.GreaterThanOrEqualTo);
+        payments = payments.Filter(x => x.DateTo, queryPayments.To?.Date, FilterOperand.LessThanOrEqualTo);
+        
+        if (queryPayments.OnlyActive)
+        {
+            payments = payments.Filter(x => x.IsActive, true, FilterOperand.Equals);
+        }
+
+        return payments;
     }
 
     public async Task Deactivate(int id)

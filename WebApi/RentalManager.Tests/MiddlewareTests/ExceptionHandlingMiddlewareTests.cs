@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Moq;
 using RentalManager.Infrastructure.ExceptionHandling;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
@@ -10,11 +12,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_AgreementNotFoundException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new AgreementNotFoundException(1);
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -27,11 +30,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_ClientNotFoundException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new ClientNotFoundException(1);
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -44,11 +48,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_EquipmentNotFoundException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new EquipmentNotFoundException(1);
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -61,11 +66,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_PaymentNotFoundException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new PaymentNotFoundException(1);
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -78,11 +84,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_UserNotFoundException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new UserNotFoundException(1);
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -95,11 +102,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_UserDoesNotHaveIdClaimException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new UserDoesNotHaveIdClaimException();
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -112,11 +120,12 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnMappedProblemDetail_UserIdClaimInvalidException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new UserIdClaimInvalidException("");
         var httpContext = new DefaultHttpContext();
         var problem = expectedException.GetProblemDetails(expectedException);
         var exceptionHandlingMiddleware =
-            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException));
+            new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);
@@ -129,11 +138,11 @@ public class ExceptionHandlingMiddlewareTests
     public async Task ShouldReturnStatus500WhenUnmappedException()
     {
         // Arrange
+        var mockLogger = new Mock<ILogger<ExceptionHandlingMiddleware>>();
         var expectedException = new Exception();
-        RequestDelegate mockNextMiddleware = _ => Task.FromException(expectedException);
         var httpContext = new DefaultHttpContext();
 
-        var exceptionHandlingMiddleware = new ExceptionHandlingMiddleware(mockNextMiddleware);
+        var exceptionHandlingMiddleware = new ExceptionHandlingMiddleware(_ => Task.FromException(expectedException), mockLogger.Object);
 
         // Act
         await exceptionHandlingMiddleware.InvokeAsync(httpContext);

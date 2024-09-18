@@ -154,7 +154,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Name = newClient.FirstName
+            FirstName = newClient.FirstName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -195,7 +195,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Surname = newClient.LastName
+            LastName = newClient.LastName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));
@@ -236,7 +236,7 @@ public class ClientRepositoryTests
 
         var query = new QueryClients
         {
-            Name = newClient.FirstName
+            FirstName = newClient.FirstName
         };
 
         Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(2));

@@ -4,6 +4,7 @@ using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
+using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
@@ -107,29 +108,17 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     private static IQueryable<Agreement> FilterAgreements(IQueryable<Agreement> agreements,
         QueryAgreements queryAgreements)
     {
-        if (queryAgreements.UserId.HasValue)
+        agreements = agreements.Filter(x => x.ClientId, queryAgreements.ClientId, FilterOperand.Equals);
+        agreements = agreements.Filter(x => x.UserId, queryAgreements.UserId, FilterOperand.Equals);
+        agreements = agreements.Filter(x => x.Client.LastName, queryAgreements.LastName, FilterOperand.Contains);
+        agreements = agreements.Filter(x => x.Client.City, queryAgreements.City, FilterOperand.Contains);
+        agreements = agreements.Filter(x => x.Client.Street, queryAgreements.Street, FilterOperand.Contains);
+        agreements = agreements.Filter(x => x.DateAdded.Date, queryAgreements.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
+        agreements = agreements.Filter(x => x.DateAdded.Date, queryAgreements.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
+        
+        if (queryAgreements.OnlyActive)
         {
-            agreements = agreements.Where(x => x.UserId == queryAgreements.UserId.Value);
-        }
-
-        if (queryAgreements.ClientId != null)
-        {
-            agreements = agreements.Where(x => x.ClientId == queryAgreements.ClientId);
-        }
-
-        if (queryAgreements.Surname != null)
-        {
-            agreements = agreements.Where(x => x.Client.LastName.Contains(queryAgreements.Surname));
-        }
-
-        if (queryAgreements.City != null)
-        {
-            agreements = agreements.Where(x => x.Client.City.Contains(queryAgreements.City));
-        }
-
-        if (queryAgreements.Street != null)
-        {
-            agreements = agreements.Where(x => x.Client.Street.Contains(queryAgreements.Street));
+            agreements = agreements.Filter(x => x.IsActive, true, FilterOperand.Equals);
         }
 
         if (queryAgreements.OnlyUnpaid)
@@ -139,24 +128,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
                     .First()
                     .DateTo < DateTime.Now.Date);
         }
-
-        if (queryAgreements.AddedFrom != null)
-        {
-            agreements =
-                agreements.Where(x => x.DateAdded.Date > queryAgreements.AddedFrom.Value.Date);
-        }
-
-        if (queryAgreements.AddedTo != null)
-        {
-            agreements =
-                agreements.Where(x => x.DateAdded.Date < queryAgreements.AddedTo.Value.Date);
-        }
-
-        if (queryAgreements.OnlyActive)
-        {
-            agreements = agreements.Where(x => x.IsActive);
-        }
-
+        
         return agreements;
     }
 

@@ -216,7 +216,7 @@ public class AgreementRepositoryTests
 
         var query1 = new QueryAgreements
         {
-            Surname = newAgreement.Client.LastName
+            LastName = newAgreement.Client.LastName
         };
 
         var query2 = new QueryAgreements

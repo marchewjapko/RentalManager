@@ -16,9 +16,11 @@ public class AgreementBaseCommand
     public bool IsActive { get; init; } = true;
 
     [Required]
+    [DefaultValue(1)]
     public int ClientId { get; init; }
 
     [Required]
+    [DefaultValue(new[] { 1 })]
     public ICollection<int> EquipmentsIds { get; init; }
 
     [DefaultValue("Fun comment")]

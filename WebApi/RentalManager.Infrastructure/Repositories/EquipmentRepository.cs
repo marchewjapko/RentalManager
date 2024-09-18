@@ -4,6 +4,7 @@ using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
+using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
@@ -103,26 +104,14 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
     private static IQueryable<Equipment> FilterClients(IQueryable<Equipment> equipments,
         QueryEquipment queryEquipment)
     {
-        if (queryEquipment.Name != null)
-        {
-            equipments = equipments.Where(x => x.Name.Contains(queryEquipment.Name));
-        }
-
-        if (queryEquipment.AddedFrom != null)
-        {
-            equipments =
-                equipments.Where(x => x.CreatedTs.Date > queryEquipment.AddedFrom.Value.Date);
-        }
-
-        if (queryEquipment.AddedTo != null)
-        {
-            equipments =
-                equipments.Where(x => x.CreatedTs.Date < queryEquipment.AddedTo.Value.Date);
-        }
-
+        
+        equipments = equipments.Filter(x => x.Name, queryEquipment.Name, FilterOperand.Contains);
+        equipments = equipments.Filter(x => x.CreatedTs.Date, queryEquipment.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
+        equipments = equipments.Filter(x => x.CreatedTs.Date, queryEquipment.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
+        
         if (queryEquipment.OnlyActive)
         {
-            equipments = equipments.Where(x => x.IsActive);
+            equipments = equipments.Filter(x => x.IsActive, true, FilterOperand.Equals);
         }
 
         return equipments;

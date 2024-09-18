@@ -5,6 +5,7 @@ using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 using RentalManager.Infrastructure.Repositories.DbContext;
+using RentalManager.Infrastructure.Extensions;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -92,44 +93,19 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     private static IQueryable<Client> FilterClients(IQueryable<Client> clients,
         QueryClients queryClients)
     {
-        if (queryClients.Name != null)
-        {
-            clients = clients.Where(x => x.FirstName.Contains(queryClients.Name));
-        }
 
-        if (queryClients.Surname != null)
-        {
-            clients = clients.Where(x => x.LastName.Contains(queryClients.Surname));
-        }
-
-        if (queryClients.Email != null)
-        {
-            clients = clients.Where(x => x.Email != null && x.Email.Contains(queryClients.Email));
-        }
-
-        if (queryClients.City != null)
-        {
-            clients = clients.Where(x => x.City.Contains(queryClients.City));
-        }
-
-        if (queryClients.Street != null)
-        {
-            clients = clients.Where(x => x.Street.Contains(queryClients.Street));
-        }
-
-        if (queryClients.AddedFrom != null)
-        {
-            clients = clients.Where(x => x.CreatedTs.Date > queryClients.AddedFrom.Value.Date);
-        }
-
-        if (queryClients.AddedTo != null)
-        {
-            clients = clients.Where(x => x.CreatedTs.Date < queryClients.AddedTo.Value.Date);
-        }
-
+        clients = clients.Filter(x => x.FirstName, queryClients.FirstName, FilterOperand.Contains);
+        clients = clients.Filter(x => x.LastName, queryClients.LastName, FilterOperand.Contains);
+        clients = clients.Filter(x => x.Email, queryClients.Email, FilterOperand.Contains);
+        clients = clients.Filter(x => x.City, queryClients.City, FilterOperand.Contains);
+        clients = clients.Filter(x => x.Street, queryClients.Street, FilterOperand.Contains);
+        clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
+        clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
+        clients = clients.Filter(x => x.FirstName, queryClients.FirstName, FilterOperand.Equals);
+        
         if (queryClients.OnlyActive)
         {
-            clients = clients.Where(x => x.IsActive);
+            clients = clients.Filter(x => x.IsActive, true, FilterOperand.Equals);
         }
 
         return clients;
