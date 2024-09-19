@@ -7,11 +7,13 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class ClientValidatorTests
 {
-    private readonly ClientBaseValidator _clientBaseValidator = new();
+    private readonly BaseClientValidator _baseClientValidator = new();
+    private readonly CreateClientValidator _createClientValidator = new();
+    private readonly UpdateClientValidator _updateClientValidator = new();
 
-    private static ClientBaseCommand InitializeClient()
+    private static BaseClientCommand InitializeClient()
     {
-        return new Faker<ClientBaseCommand>("pl")
+        return new Faker<BaseClientCommand>("pl")
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
             .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
@@ -26,10 +28,60 @@ public class ClientValidatorTests
     public async Task ValidateClient_Success()
     {
         // Arrange
-        var client = InitializeClient();
+        var client = new Faker<BaseClientCommand>("pl")
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetAddress())
+            .Generate();
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Test]
+    public async Task ValidateCreateClient_Success()
+    {
+        // Arrange
+        var client = new Faker<CreateClientCommand>("pl")
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetAddress())
+            .Generate();
+
+        // Act
+        var result = await _createClientValidator.TestValidateAsync(client);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Test]
+    public async Task ValidateUpdateClient_Success()
+    {
+        // Arrange
+        var client = new Faker<UpdateClientCommand>("pl")
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetAddress())
+            .Generate();
+
+        // Act
+        var result = await _updateClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -45,7 +97,7 @@ public class ClientValidatorTests
         client.FirstName = "John Jack";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -59,7 +111,7 @@ public class ClientValidatorTests
         client.FirstName = "John1Jack";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -79,7 +131,7 @@ public class ClientValidatorTests
         client.FirstName = "John.Jack";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -99,7 +151,7 @@ public class ClientValidatorTests
         client.FirstName = null!;
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -119,7 +171,7 @@ public class ClientValidatorTests
         client.FirstName = new string('A', 101);
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -143,7 +195,7 @@ public class ClientValidatorTests
         client.LastName = "Scott Brown";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -157,7 +209,7 @@ public class ClientValidatorTests
         client.LastName = "Scott1Brown";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -177,7 +229,7 @@ public class ClientValidatorTests
         client.LastName = "Scott.Brown";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -197,7 +249,7 @@ public class ClientValidatorTests
         client.LastName = null!;
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -217,7 +269,7 @@ public class ClientValidatorTests
         client.LastName = new string('A', 101);
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -241,7 +293,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "+48 123 456 789";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -255,7 +307,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123 456 789";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -269,7 +321,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123-456-789";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -283,7 +335,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "123456789";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -297,7 +349,7 @@ public class ClientValidatorTests
         client.PhoneNumber = "12 34 567 89";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -315,7 +367,7 @@ public class ClientValidatorTests
         client.Email = "email!@email.com";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -335,7 +387,7 @@ public class ClientValidatorTests
         client.Email = new string('A', 91) + "@email.com"; // 101 characters
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -359,7 +411,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC123456";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -373,7 +425,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC!23456";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -393,7 +445,7 @@ public class ClientValidatorTests
         client.IdCard = "ABC1234567";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -417,7 +469,7 @@ public class ClientValidatorTests
         client.City = "Paris!";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -437,7 +489,7 @@ public class ClientValidatorTests
         client.City = new string('A', 101);
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -461,7 +513,7 @@ public class ClientValidatorTests
         client.Street = "al. AK 12B!";
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -481,7 +533,7 @@ public class ClientValidatorTests
         client.Street = new string('A', 101);
 
         // Act
-        var result = await _clientBaseValidator.TestValidateAsync(client);
+        var result = await _baseClientValidator.TestValidateAsync(client);
 
         // Assert
         result.ShouldHaveAnyValidationError();

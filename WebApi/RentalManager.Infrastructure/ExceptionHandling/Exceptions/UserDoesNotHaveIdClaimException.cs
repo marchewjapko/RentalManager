@@ -5,7 +5,7 @@ namespace RentalManager.Infrastructure.ExceptionHandling.Exceptions;
 
 public class UserDoesNotHaveIdClaimException : Exception, ICustomMappedException
 {
-    public UserDoesNotHaveIdClaimException() : base($"Users does not have an id claim.")
+    public UserDoesNotHaveIdClaimException() : base("Users does not have an id claim.")
     {
     }
 

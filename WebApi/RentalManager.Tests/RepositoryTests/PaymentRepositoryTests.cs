@@ -248,6 +248,54 @@ public class PaymentRepositoryTests
     }
 
     [Test]
+    public async Task ShouldFilter_DateAddedBetween()
+    {
+        // Arrange
+        var dateSearchFrom = new DateTime(2020, 1, 1);
+        var dateSearchTo = new DateTime(2020, 1, 7);
+
+        var dateRangeFromInRange = new DateTime(2020, 1, 2);
+        var dateRangeToInRange = new DateTime(2020, 1, 5);
+
+        var dateRangeFromOutsideRange = new DateTime(2020, 1, 8);
+        var dateRangeToOutsideRange = new DateTime(2020, 1, 17);
+
+        var newPayment = new Faker<Payment>()
+            .RuleFor(x => x.Id, f => f.UniqueIndex)
+            .RuleFor(x => x.AgreementId, () => MockAgreement.Id)
+            .RuleFor(x => x.Agreement, () => MockAgreement)
+            .RuleFor(x => x.Method, f => f.Random.Word())
+            .RuleFor(x => x.Amount, f => f.Random.Int())
+            .RuleFor(x => x.DateFrom, f => dateRangeFromInRange)
+            .RuleFor(x => x.DateTo, () => dateRangeToInRange)
+            .RuleFor(x => x.IsActive, () => true)
+            .Generate(2);
+
+        MockPayment.DateFrom = dateRangeFromOutsideRange;
+        MockPayment.DateTo = dateRangeToOutsideRange;
+        _appDbContext.Payments.Add(MockPayment);
+        _appDbContext.Payments.AddRange(newPayment);
+        await _appDbContext.SaveChangesAsync();
+        Assume.That(_appDbContext.Payments.Count(), Is.EqualTo(3));
+
+        var query = new QueryPayment
+        {
+            ValidRangeFrom = dateSearchFrom,
+            ValidRangeTo = dateSearchTo
+        };
+
+        // Act
+        var result = (await _paymentRepository.BrowseAllAsync(query)).ToList();
+
+        // Assert
+        Assert.Multiple(() => {
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.All(x => x.DateFrom == dateRangeFromInRange), Is.True);
+            Assert.That(result.All(x => x.DateTo == dateRangeToInRange), Is.True);
+        });
+    }
+
+    [Test]
     public async Task ShouldUpdate()
     {
         // Arrange
@@ -278,6 +326,14 @@ public class PaymentRepositoryTests
     }
 
     [Test]
+    public void ShouldNotUpdate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<PaymentNotFoundException>(async () =>
+            await _paymentRepository.UpdateAsync(new Payment(), 1));
+    }
+
+    [Test]
     public async Task ShouldDeactivate()
     {
         // Arrange
@@ -293,5 +349,13 @@ public class PaymentRepositoryTests
         // Assert
         var payment = _appDbContext.Payments.First();
         Assert.That(payment.IsActive, Is.False);
+    }
+
+    [Test]
+    public void ShouldNotDeactivate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<PaymentNotFoundException>(async () =>
+            await _paymentRepository.Deactivate(1));
     }
 }

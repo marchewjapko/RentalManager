@@ -9,9 +9,9 @@ public class AgreementProfiles : Profile
 {
     public AgreementProfiles()
     {
-        CreateMap<AgreementBaseCommand, Agreement>()
-            .Include<CreateAgreement, Agreement>()
-            .Include<UpdateAgreement, Agreement>()
+        CreateMap<BaseAgreementCommand, Agreement>()
+            .Include<CreateAgreementCommand, Agreement>()
+            .Include<UpdateAgreementCommand, Agreement>()
             .ForMember(x => x.UserId, x => x.MapFrom(a => a.UserId))
             .ForMember(x => x.IsActive, x => x.MapFrom(a => a.IsActive))
             .ForMember(x => x.ClientId, x => x.MapFrom(a => a.ClientId))
@@ -28,10 +28,10 @@ public class AgreementProfiles : Profile
             .ForMember(x => x.CreatedTs, x => x.Ignore())
             .ForMember(x => x.UpdatedTs, x => x.Ignore());
 
-        CreateMap<CreateAgreement, Agreement>()
+        CreateMap<CreateAgreementCommand, Agreement>()
             .ForMember(x => x.Payments, x => x.MapFrom(a => a.Payments));
 
-        CreateMap<UpdateAgreement, Agreement>()
+        CreateMap<UpdateAgreementCommand, Agreement>()
             .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 
         CreateMap<Agreement, AgreementDto>()

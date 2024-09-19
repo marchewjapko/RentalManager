@@ -21,7 +21,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         logger.LogError(exception, exception.Message);
-            
+
         context.Response.ContentType = "application/json";
 
         var problemDetail = new ProblemDetails
@@ -37,6 +37,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         }
 
         context.Response.StatusCode = problemDetail.Status!.Value;
+
         return context.Response.WriteAsJsonAsync(problemDetail);
     }
 }

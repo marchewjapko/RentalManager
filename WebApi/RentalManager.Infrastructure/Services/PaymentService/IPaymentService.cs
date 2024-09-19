@@ -7,7 +7,7 @@ namespace RentalManager.Infrastructure.Services.PaymentService;
 
 public interface IPaymentService
 {
-    Task<PaymentDto> AddAsync(CreatePayment createPayment,
+    Task<PaymentDto> AddAsync(CreatePaymentCommand createPayment,
         ClaimsPrincipal user);
 
     Task<PaymentDto> GetAsync(int id);
@@ -15,7 +15,7 @@ public interface IPaymentService
     Task<IEnumerable<PaymentDto>> BrowseAllAsync(QueryPayment queryPayment);
 
     Task DeleteAsync(int id);
-    Task<PaymentDto> UpdateAsync(UpdatePayment updatePayment, int id);
+    Task<PaymentDto> UpdateAsync(UpdatePaymentCommand updatePayment, int id);
 
     Task Deactivate(int id);
 }

@@ -7,11 +7,13 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class EquipmentValidatorTests
 {
-    private readonly EquipmentBaseValidator _equipmentBaseValidator = new();
+    private readonly BaseEquipmentValidator _baseEquipmentValidator = new();
+    private readonly CreateEquipmentValidator _createEquipmentValidator = new();
+    private readonly UpdateEquipmentValidator _updateEquipmentValidator = new();
 
-    private static EquipmentBaseCommand InitializeEquipment()
+    private static BaseEquipmentCommand InitializeEquipment()
     {
-        return new Faker<EquipmentBaseCommand>()
+        return new Faker<BaseEquipmentCommand>()
             .RuleFor(x => x.Name, f => f.Commerce.ProductName())
             .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
             .Generate();
@@ -24,7 +26,7 @@ public class EquipmentValidatorTests
         var equipment = InitializeEquipment();
 
         // Act
-        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
+        var result = await _baseEquipmentValidator.TestValidateAsync(equipment);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -40,7 +42,7 @@ public class EquipmentValidatorTests
         equipment.Price = -1;
 
         // Act
-        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
+        var result = await _baseEquipmentValidator.TestValidateAsync(equipment);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -54,6 +56,38 @@ public class EquipmentValidatorTests
 
     #endregion
 
+    [Test]
+    public async Task ValidateCreateEquipment_Success()
+    {
+        // Arrange
+        var equipment = new Faker<CreateEquipmentCommand>()
+            .RuleFor(x => x.Name, f => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
+            .Generate();
+
+        // Act
+        var result = await _createEquipmentValidator.TestValidateAsync(equipment);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Test]
+    public async Task ValidateUpdateEquipment_Success()
+    {
+        // Arrange
+        var equipment = new Faker<UpdateEquipmentCommand>()
+            .RuleFor(x => x.Name, f => f.Commerce.ProductName())
+            .RuleFor(x => x.Price, f => f.Random.Int(1, 200))
+            .Generate();
+
+        // Act
+        var result = await _updateEquipmentValidator.TestValidateAsync(equipment);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
     #region NameRules
 
     [Test]
@@ -64,7 +98,7 @@ public class EquipmentValidatorTests
         equipment.Name = "Fun equipment mk4;";
 
         // Act
-        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
+        var result = await _baseEquipmentValidator.TestValidateAsync(equipment);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -84,7 +118,7 @@ public class EquipmentValidatorTests
         equipment.Name = new string('A', 101);
 
         // Act
-        var result = await _equipmentBaseValidator.TestValidateAsync(equipment);
+        var result = await _baseEquipmentValidator.TestValidateAsync(equipment);
 
         // Assert
         result.ShouldHaveAnyValidationError();

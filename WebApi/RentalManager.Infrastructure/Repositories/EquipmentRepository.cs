@@ -104,11 +104,10 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
     private static IQueryable<Equipment> FilterClients(IQueryable<Equipment> equipments,
         QueryEquipment queryEquipment)
     {
-        
         equipments = equipments.Filter(x => x.Name, queryEquipment.Name, FilterOperand.Contains);
         equipments = equipments.Filter(x => x.CreatedTs.Date, queryEquipment.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
         equipments = equipments.Filter(x => x.CreatedTs.Date, queryEquipment.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
-        
+
         if (queryEquipment.OnlyActive)
         {
             equipments = equipments.Filter(x => x.IsActive, true, FilterOperand.Equals);

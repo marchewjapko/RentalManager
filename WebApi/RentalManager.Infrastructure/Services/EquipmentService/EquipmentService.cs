@@ -13,7 +13,7 @@ public class EquipmentService(
     IEquipmentRepository equipmentRepository,
     IMapper mapper) : IEquipmentService
 {
-    public async Task<EquipmentDto> AddAsync(CreateEquipment createEquipment, ClaimsPrincipal user)
+    public async Task<EquipmentDto> AddAsync(CreateEquipmentCommand createEquipment, ClaimsPrincipal user)
     {
         var newEquipment = mapper.Map<Equipment>(createEquipment);
         newEquipment.CreatedBy = user.GetId();
@@ -42,7 +42,7 @@ public class EquipmentService(
         return mapper.Map<EquipmentDto>(result);
     }
 
-    public async Task<EquipmentDto> UpdateAsync(UpdateEquipment updateEquipment, int id)
+    public async Task<EquipmentDto> UpdateAsync(UpdateEquipmentCommand updateEquipment, int id)
     {
         var result =
             await equipmentRepository.UpdateAsync(mapper.Map<Equipment>(updateEquipment), id);

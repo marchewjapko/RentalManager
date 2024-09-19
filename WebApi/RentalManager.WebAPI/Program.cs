@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using RentalManager.Infrastructure.ExceptionHandling;
 using RentalManager.Infrastructure.Models.Profiles;
 using RentalManager.Infrastructure.Options;
 using RentalManager.Infrastructure.Repositories.DbContext;
 using RentalManager.Infrastructure.Services;
+using RentalManager.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowSpecificOrigins = "allowSpecificOrigins";
@@ -22,64 +22,12 @@ builder.Services.AddCors(options => {
         });
 });
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllers()
-    .AddJsonOptions(options => {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(options => {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Rental Manager API",
-        Version = "v1"
-    });
-    options.AddSecurityDefinition("OpenIdConnect", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OpenIdConnect,
-        OpenIdConnectUrl = new Uri(builder.Configuration["OpenIdProvider:Configuration"]!)
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "OpenIdConnect"
-                }
-            },
-            []
-        }
-    });
-    options.AddSecurityDefinition("JWT Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please insert JWT with Bearer into field",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "JWT Bearer"
-                }
-            },
-            []
-        }
-    });
-});
-
-builder.Services.RegisterApiServices();
-
-builder.Services.RegisterValidatorServices();
 
 if (builder.Configuration["InMemory"] == "True")
 {
@@ -110,11 +58,15 @@ builder.Services.AddAuthentication(options => {
         options.MetadataAddress = builder.Configuration["OpenIdProvider:Configuration"]!;
     });
 
+builder.Services.RegisterApiServices();
+
+builder.Services.RegisterValidatorServices();
+
 builder.Services.RegisterProfiles();
 
-builder.RegisterOptions();
+builder.Services.RegisterOptions();
 
-builder.Services.AddHttpClient();
+builder.RegisterSwagger();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

@@ -4,14 +4,14 @@ using RentalManager.Infrastructure.Validators.PaymentValidators;
 
 namespace RentalManager.Infrastructure.Validators.AgreementValidators;
 
-public class CreateAgreementValidator : AbstractValidator<CreateAgreement>
+public class CreateAgreementValidator : AbstractValidator<CreateAgreementCommand>
 {
     public CreateAgreementValidator()
     {
         RuleFor(x => x)
-            .SetValidator(new AgreementBaseValidator());
+            .SetValidator(new BaseAgreementValidator());
 
         RuleForEach(x => x.Payments)
-            .SetValidator(new PaymentBaseValidator());
+            .SetValidator(new BasePaymentValidator());
     }
 }

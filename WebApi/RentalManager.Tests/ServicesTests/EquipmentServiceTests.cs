@@ -18,11 +18,11 @@ public class EquipmentServiceTests
     {
         // Arrange
         var equipment = new Faker<Equipment>().Generate();
-        var createEquipment = new Faker<CreateEquipment>().Generate();
+        var createEquipment = new Faker<CreateEquipmentCommand>().Generate();
         var equipmentDto = new Faker<EquipmentDto>().Generate();
 
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Equipment>(It.IsAny<CreateEquipment>()))
+        mapperMock.Setup(x => x.Map<Equipment>(It.IsAny<CreateEquipmentCommand>()))
             .Returns(equipment);
         mapperMock.Setup(x => x.Map<EquipmentDto>(It.IsAny<Equipment>()))
             .Returns(equipmentDto);
@@ -121,10 +121,10 @@ public class EquipmentServiceTests
     {
         // Arrange
         var equipment = new Faker<Equipment>().Generate();
-        var updateEquipment = new Faker<UpdateEquipment>().Generate();
+        var updateEquipment = new Faker<UpdateEquipmentCommand>().Generate();
         var equipmentDto = new Faker<EquipmentDto>().Generate();
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Equipment>(It.IsAny<UpdateEquipment>()))
+        mapperMock.Setup(x => x.Map<Equipment>(It.IsAny<UpdateEquipmentCommand>()))
             .Returns(equipment);
         mapperMock.Setup(x => x.Map<EquipmentDto>(It.Is<Equipment>(a => a == equipment)))
             .Returns(equipmentDto);

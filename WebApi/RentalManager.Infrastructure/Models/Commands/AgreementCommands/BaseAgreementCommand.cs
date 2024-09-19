@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using RentalManager.Infrastructure.Models.Commands.ClientCommands;
-using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 
 namespace RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 
-public class AgreementBaseCommand
+public class BaseAgreementCommand
 {
     [Required]
     [DefaultValue(1)]

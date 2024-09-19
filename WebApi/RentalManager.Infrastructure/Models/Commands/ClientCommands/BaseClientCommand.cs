@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentalManager.Infrastructure.Models.Commands.ClientCommands;
 
-public class ClientBaseCommand
+public class BaseClientCommand
 
 {
     [Required]

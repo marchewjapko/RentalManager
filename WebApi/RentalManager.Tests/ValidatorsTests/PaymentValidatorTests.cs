@@ -7,11 +7,13 @@ namespace RentalManager.Tests.ValidatorsTests;
 
 public class PaymentValidatorTests
 {
-    private readonly PaymentBaseValidator _paymentBaseValidator = new();
+    private readonly BasePaymentValidator _basePaymentValidator = new();
+    private readonly CreatePaymentValidator _createPaymentValidator = new();
+    private readonly UpdatePaymentValidator _updatePaymentValidator = new();
 
-    private static PaymentBaseCommand InitializePayment()
+    private static BasePaymentCommand InitializePayment()
     {
-        return new Faker<PaymentBaseCommand>()
+        return new Faker<BasePaymentCommand>()
             .RuleFor(x => x.Method, () => "Cash")
             .RuleFor(x => x.Amount, f => f.Random.Int(1, 100))
             .RuleFor(x => x.DateFrom, () => DateTime.Today)
@@ -26,7 +28,7 @@ public class PaymentValidatorTests
         var payment = InitializePayment();
 
         // Act
-        var result = await _paymentBaseValidator.TestValidateAsync(payment);
+        var result = await _basePaymentValidator.TestValidateAsync(payment);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -42,7 +44,7 @@ public class PaymentValidatorTests
         payment.Amount = -1;
 
         // Act
-        var result = await _paymentBaseValidator.TestValidateAsync(payment);
+        var result = await _basePaymentValidator.TestValidateAsync(payment);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -67,7 +69,7 @@ public class PaymentValidatorTests
         payment.DateTo = DateTime.Today.AddDays(-1);
 
         // Act
-        var result = await _paymentBaseValidator.TestValidateAsync(payment);
+        var result = await _basePaymentValidator.TestValidateAsync(payment);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -81,6 +83,42 @@ public class PaymentValidatorTests
 
     #endregion
 
+    [Test]
+    public async Task ValidateCreatePayment_Success()
+    {
+        // Arrange
+        var payment = new Faker<CreatePaymentCommand>()
+            .RuleFor(x => x.Method, () => "Cash")
+            .RuleFor(x => x.Amount, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateFrom, () => DateTime.Today)
+            .RuleFor(x => x.DateTo, () => DateTime.Today.AddMonths(1))
+            .Generate();
+
+        // Act
+        var result = await _createPaymentValidator.TestValidateAsync(payment);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Test]
+    public async Task ValidateUpdatePayment_Success()
+    {
+        // Arrange
+        var payment = new Faker<UpdatePaymentCommand>()
+            .RuleFor(x => x.Method, () => "Cash")
+            .RuleFor(x => x.Amount, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateFrom, () => DateTime.Today)
+            .RuleFor(x => x.DateTo, () => DateTime.Today.AddMonths(1))
+            .Generate();
+
+        // Act
+        var result = await _updatePaymentValidator.TestValidateAsync(payment);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
     #region MethodRules
 
     [Test]
@@ -91,7 +129,7 @@ public class PaymentValidatorTests
         payment.Method = "Cash;";
 
         // Act
-        var result = await _paymentBaseValidator.TestValidateAsync(payment);
+        var result = await _basePaymentValidator.TestValidateAsync(payment);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -111,7 +149,7 @@ public class PaymentValidatorTests
         payment.Method = new string('A', 11);
 
         // Act
-        var result = await _paymentBaseValidator.TestValidateAsync(payment);
+        var result = await _basePaymentValidator.TestValidateAsync(payment);
 
         // Assert
         result.ShouldHaveAnyValidationError();

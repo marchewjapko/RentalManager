@@ -4,8 +4,8 @@ using RentalManager.Core.Repositories;
 using RentalManager.Global.Queries;
 using RentalManager.Global.Queries.Sorting;
 using RentalManager.Infrastructure.ExceptionHandling.Exceptions;
-using RentalManager.Infrastructure.Repositories.DbContext;
 using RentalManager.Infrastructure.Extensions;
+using RentalManager.Infrastructure.Repositories.DbContext;
 
 namespace RentalManager.Infrastructure.Repositories;
 
@@ -93,7 +93,6 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     private static IQueryable<Client> FilterClients(IQueryable<Client> clients,
         QueryClients queryClients)
     {
-
         clients = clients.Filter(x => x.FirstName, queryClients.FirstName, FilterOperand.Contains);
         clients = clients.Filter(x => x.LastName, queryClients.LastName, FilterOperand.Contains);
         clients = clients.Filter(x => x.Email, queryClients.Email, FilterOperand.Contains);
@@ -102,7 +101,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
         clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
         clients = clients.Filter(x => x.FirstName, queryClients.FirstName, FilterOperand.Equals);
-        
+
         if (queryClients.OnlyActive)
         {
             clients = clients.Filter(x => x.IsActive, true, FilterOperand.Equals);

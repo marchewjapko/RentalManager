@@ -9,9 +9,9 @@ public class PaymentProfiles : Profile
 {
     public PaymentProfiles()
     {
-        CreateMap<PaymentBaseCommand, Payment>()
-            .Include<CreatePayment, Payment>()
-            .Include<UpdatePayment, Payment>()
+        CreateMap<BasePaymentCommand, Payment>()
+            .Include<CreatePaymentCommand, Payment>()
+            .Include<UpdatePaymentCommand, Payment>()
             .ForPath(x => x.Id, x => x.Ignore())
             .ForPath(x => x.AgreementId, x => x.Ignore())
             .ForMember(x => x.Agreement, x => x.Ignore())
@@ -24,10 +24,10 @@ public class PaymentProfiles : Profile
             .ForMember(x => x.UpdatedTs, x => x.Ignore())
             .ForMember(x => x.IsActive, x => x.Ignore());
 
-        CreateMap<CreatePayment, Payment>()
+        CreateMap<CreatePaymentCommand, Payment>()
             .ForMember(x => x.AgreementId, x => x.MapFrom(a => a.AgreementId));
-        
-        CreateMap<UpdatePayment, Payment>()
+
+        CreateMap<UpdatePaymentCommand, Payment>()
             .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 
         CreateMap<Payment, PaymentDto>()

@@ -2,7 +2,7 @@
 
 namespace RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 
-public class CreateAgreement : AgreementBaseCommand
+public class CreateAgreementCommand : BaseAgreementCommand
 {
-    public IEnumerable<CreatePayment> Payments { get; init; }
+    public IEnumerable<CreatePaymentCommand> Payments { get; init; }
 }

@@ -23,7 +23,7 @@ public class ClientProfilesTests
     public void ClientProfile_ShouldMapBaseCommandToClient()
     {
         // Arrange
-        var command = new Faker<ClientBaseCommand>()
+        var command = new Faker<BaseClientCommand>()
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
             .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
@@ -32,10 +32,10 @@ public class ClientProfilesTests
             .RuleFor(x => x.Street, f => f.Address.StreetAddress())
             .RuleFor(x => x.IdCard, f => f.Random.Word())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Client>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.FirstName, Is.EqualTo(command.FirstName));
@@ -49,14 +49,13 @@ public class ClientProfilesTests
             Assert.That(result.CreatedTs, Is.Not.Default);
             Assert.That(result.UpdatedTs, Is.Null);
         });
-        
     }
 
     [Test]
     public void ClientProfile_ShouldMapCreateCommandToClient()
     {
         // Arrange
-        var command = new Faker<CreateClient>()
+        var command = new Faker<CreateClientCommand>()
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
             .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
@@ -65,10 +64,10 @@ public class ClientProfilesTests
             .RuleFor(x => x.Street, f => f.Address.StreetAddress())
             .RuleFor(x => x.IdCard, f => f.Random.Word())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Client>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.FirstName, Is.EqualTo(command.FirstName));
@@ -88,7 +87,7 @@ public class ClientProfilesTests
     public void ClientProfile_ShouldMapUpdateCommandToClient()
     {
         // Arrange
-        var command = new Faker<UpdateClient>()
+        var command = new Faker<UpdateClientCommand>()
             .RuleFor(x => x.FirstName, f => f.Name.FirstName())
             .RuleFor(x => x.LastName, f => f.Name.LastName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
@@ -97,10 +96,10 @@ public class ClientProfilesTests
             .RuleFor(x => x.Street, f => f.Address.StreetAddress())
             .RuleFor(x => x.IdCard, f => f.Random.Word())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Client>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.FirstName, Is.EqualTo(command.FirstName));
@@ -135,10 +134,10 @@ public class ClientProfilesTests
             .RuleFor(x => x.CreatedTs, f => f.Date.Past())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<ClientDto>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.FirstName, Is.EqualTo(command.FirstName));

@@ -23,14 +23,14 @@ public class EquipmentProfilesTests
     public void EquipmentProfile_ShouldMapBaseCommandToEquipment()
     {
         // Arrange
-        var command = new Faker<EquipmentBaseCommand>()
+        var command = new Faker<BaseEquipmentCommand>()
             .RuleFor(x => x.Name, f => f.Name.FirstName())
             .RuleFor(x => x.Price, f => f.Random.Int())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Equipment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Name, Is.EqualTo(command.Name));
@@ -39,21 +39,20 @@ public class EquipmentProfilesTests
             Assert.That(result.CreatedTs, Is.Not.Default);
             Assert.That(result.UpdatedTs, Is.Null);
         });
-        
     }
 
     [Test]
     public void EquipmentProfile_ShouldMapCreateCommandToEquipment()
     {
         // Arrange
-        var command = new Faker<CreateEquipment>()
+        var command = new Faker<CreateEquipmentCommand>()
             .RuleFor(x => x.Name, f => f.Name.FirstName())
             .RuleFor(x => x.Price, f => f.Random.Int())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Equipment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Name, Is.EqualTo(command.Name));
@@ -68,14 +67,14 @@ public class EquipmentProfilesTests
     public void EquipmentProfile_ShouldMapUpdateCommandToEquipment()
     {
         // Arrange
-        var command = new Faker<UpdateEquipment>()
+        var command = new Faker<UpdateEquipmentCommand>()
             .RuleFor(x => x.Name, f => f.Name.FirstName())
             .RuleFor(x => x.Price, f => f.Random.Int())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Equipment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Name, Is.EqualTo(command.Name));
@@ -100,10 +99,10 @@ public class EquipmentProfilesTests
             .RuleFor(x => x.CreatedTs, f => f.Date.Past())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<EquipmentDto>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Name, Is.EqualTo(command.Name));

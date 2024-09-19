@@ -3,11 +3,11 @@ using RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 
 namespace RentalManager.Infrastructure.Validators.PaymentValidators;
 
-public class UpdatePaymentValidator : AbstractValidator<UpdatePayment>
+public class UpdatePaymentValidator : AbstractValidator<UpdatePaymentCommand>
 {
     public UpdatePaymentValidator()
     {
         RuleFor(x => x)
-            .SetValidator(new PaymentBaseValidator());
+            .SetValidator(new BasePaymentValidator());
     }
 }

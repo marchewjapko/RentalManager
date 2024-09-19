@@ -18,7 +18,7 @@ public class AgreementService(
     IMapper mapper)
     : IAgreementService
 {
-    public async Task<AgreementDto> AddAsync(CreateAgreement createAgreement,
+    public async Task<AgreementDto> AddAsync(CreateAgreementCommand createAgreement,
         ClaimsPrincipal principal)
     {
         var user = await userService.GetAsync(createAgreement.UserId);
@@ -32,19 +32,18 @@ public class AgreementService(
 
         var newAgreement = await agreementRepository.AddAsync(agreement);
 
-        return mapper.Map<AgreementDto>(newAgreement, options => {
-            options.AfterMap((o, dto) => dto.User = user);
-        });
+        return mapper.Map<AgreementDto>(newAgreement, options => { options.AfterMap((o, dto) => dto.User = user); });
     }
 
     public async Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements)
     {
         var agreements = await agreementRepository.BrowseAllAsync(queryAgreements);
-        var result = mapper.Map<IEnumerable<AgreementDto>>(agreements).ToList();
+        var result = mapper.Map<IEnumerable<AgreementDto>>(agreements)
+            .ToList();
 
         foreach (var agreement in result)
             agreement.User = await userService.GetAsync(agreement.User.Id);
-        
+
         return result;
     }
 
@@ -57,13 +56,11 @@ public class AgreementService(
     {
         var agreement = await agreementRepository.GetAsync(id);
         var user = await userService.GetAsync(agreement.UserId);
-        
-        return mapper.Map<AgreementDto>(agreement, options => {
-            options.AfterMap((o, dto) => dto.User = user);
-        });
+
+        return mapper.Map<AgreementDto>(agreement, options => { options.AfterMap((o, dto) => dto.User = user); });
     }
 
-    public async Task<AgreementDto> UpdateAsync(UpdateAgreement updateAgreement,
+    public async Task<AgreementDto> UpdateAsync(UpdateAgreementCommand updateAgreement,
         int id,
         ClaimsPrincipal principal)
     {
@@ -76,10 +73,8 @@ public class AgreementService(
         agreement.Equipments = await equipmentRepository.GetAsync(updateAgreement.EquipmentsIds);
 
         var updatedAgreement = await agreementRepository.UpdateAsync(agreement, id);
-        
-        return mapper.Map<AgreementDto>(updatedAgreement, options => {
-            options.AfterMap((o, dto) => dto.User = user);
-        });
+
+        return mapper.Map<AgreementDto>(updatedAgreement, options => { options.AfterMap((o, dto) => dto.User = user); });
     }
 
     public Task Deactivate(int id)

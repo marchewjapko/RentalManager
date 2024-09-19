@@ -7,13 +7,13 @@ namespace RentalManager.Infrastructure.Services.ClientService;
 
 public interface IClientService
 {
-    Task<ClientDto> AddAsync(CreateClient createClient, ClaimsPrincipal user);
+    Task<ClientDto> AddAsync(CreateClientCommand createClient, ClaimsPrincipal user);
 
     Task<ClientDto> GetAsync(int id);
 
     Task DeleteAsync(int id);
 
-    Task<ClientDto> UpdateAsync(UpdateClient updateClient, int id);
+    Task<ClientDto> UpdateAsync(UpdateClientCommand updateClient, int id);
 
     Task<IEnumerable<ClientDto>> BrowseAllAsync(QueryClients queryClients);
 

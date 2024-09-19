@@ -16,7 +16,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
 {
     [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddEquipment([FromForm] CreateEquipment createEquipment)
+    public async Task<IActionResult> AddEquipment([FromForm] CreateEquipmentCommand createEquipment)
     {
         var result = await equipmentService.AddAsync(createEquipment, User);
 
@@ -53,7 +53,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
     [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateEquipment(
-        [FromForm] UpdateEquipment updateEquipment,
+        [FromForm] UpdateEquipmentCommand updateEquipment,
         int id)
     {
         var result = await equipmentService.UpdateAsync(updateEquipment, id);

@@ -3,11 +3,11 @@ using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 
 namespace RentalManager.Infrastructure.Validators.EquipmentValidators;
 
-public class UpdateEquipmentValidator : AbstractValidator<UpdateEquipment>
+public class UpdateEquipmentValidator : AbstractValidator<UpdateEquipmentCommand>
 {
     public UpdateEquipmentValidator()
     {
         RuleFor(x => x)
-            .SetValidator(new EquipmentBaseValidator());
+            .SetValidator(new BaseEquipmentValidator());
     }
 }

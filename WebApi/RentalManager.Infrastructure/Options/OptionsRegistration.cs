@@ -5,12 +5,9 @@ namespace RentalManager.Infrastructure.Options;
 
 public static class OptionsRegistration
 {
-    public static void RegisterOptions(this WebApplicationBuilder builder)
+    public static void RegisterOptions(this IServiceCollection services)
     {
-        builder.Services.AddOptions<IdentityServiceOptions>()
+        services.AddOptions<IdentityServiceOptions>()
             .BindConfiguration(IdentityServiceOptions.IdentityService);
-
-        builder.Services.AddOptions<DocumentServiceOptions>()
-            .BindConfiguration(DocumentServiceOptions.DocumentService);
     }
 }

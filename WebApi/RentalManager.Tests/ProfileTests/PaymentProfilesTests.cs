@@ -9,7 +9,7 @@ namespace RentalManager.Tests.ProfileTests;
 
 public class PaymentProfilesTests
 {
-        private static readonly MapperConfiguration Config = new(x => x.AddProfile<PaymentProfiles>());
+    private static readonly MapperConfiguration Config = new(x => x.AddProfile<PaymentProfiles>());
     private static readonly IMapper Mapper = Config.CreateMapper();
 
     [Test]
@@ -23,16 +23,16 @@ public class PaymentProfilesTests
     public void PaymentProfile_ShouldMapBaseCommandToPayment()
     {
         // Arrange
-        var command = new Faker<PaymentBaseCommand>()
+        var command = new Faker<BasePaymentCommand>()
             .RuleFor(x => x.Method, f => f.Random.Word())
             .RuleFor(x => x.Amount, f => f.Random.Int())
             .RuleFor(x => x.DateFrom, f => f.Date.Past())
             .RuleFor(x => x.DateTo, f => f.Date.Past())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Payment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Method, Is.EqualTo(command.Method));
@@ -43,24 +43,23 @@ public class PaymentProfilesTests
             Assert.That(result.CreatedTs, Is.Not.Default);
             Assert.That(result.UpdatedTs, Is.Null);
         });
-        
     }
 
     [Test]
     public void PaymentProfile_ShouldMapCreateCommandToPayment()
     {
         // Arrange
-        var command = new Faker<CreatePayment>()
+        var command = new Faker<CreatePaymentCommand>()
             .RuleFor(x => x.Method, f => f.Random.Word())
             .RuleFor(x => x.Amount, f => f.Random.Int())
             .RuleFor(x => x.DateFrom, f => f.Date.Past())
             .RuleFor(x => x.DateTo, f => f.Date.Past())
             .RuleFor(x => x.AgreementId, f => f.Random.Int())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Payment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Method, Is.EqualTo(command.Method));
@@ -78,16 +77,16 @@ public class PaymentProfilesTests
     public void PaymentProfile_ShouldMapUpdateCommandToPayment()
     {
         // Arrange
-        var command = new Faker<UpdatePayment>()
+        var command = new Faker<UpdatePaymentCommand>()
             .RuleFor(x => x.Method, f => f.Random.Word())
             .RuleFor(x => x.Amount, f => f.Random.Int())
             .RuleFor(x => x.DateFrom, f => f.Date.Past())
             .RuleFor(x => x.DateTo, f => f.Date.Past())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<Payment>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Method, Is.EqualTo(command.Method));
@@ -116,10 +115,10 @@ public class PaymentProfilesTests
             .RuleFor(x => x.CreatedTs, f => f.Date.Past())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .Generate();
-        
+
         // Act
         var result = Mapper.Map<PaymentDto>(command);
-        
+
         // Assert
         Assert.Multiple(() => {
             Assert.That(result.Method, Is.EqualTo(command.Method));

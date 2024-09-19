@@ -96,6 +96,7 @@ public class ClientRepositoryTests
     [Test]
     public void ShouldNotGetClient()
     {
+        // Assert
         Assert.ThrowsAsync<ClientNotFoundException>(async () =>
             await _clientRepository.GetAsync(1));
     }
@@ -257,6 +258,51 @@ public class ClientRepositoryTests
     }
 
     [Test]
+    public async Task ShouldFilter_DateAddedBetween()
+    {
+        // Arrange
+        var dateTimeSearchFrom = new DateTime(2020, 1, 1);
+        var dateTimeSearchTo = new DateTime(2020, 1, 16);
+
+        var dateTimeInRange = new DateTime(2020, 1, 10);
+        var dateTimeOutsideRange = new DateTime(2020, 1, 31);
+
+        var newClient = new Faker<Client>()
+            .RuleFor(x => x.Id, f => f.UniqueIndex + 1)
+            .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+            .RuleFor(x => x.LastName, f => f.Name.LastName())
+            .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###-###-###"))
+            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.IdCard, () => "ABC 123456")
+            .RuleFor(x => x.City, f => f.Address.City())
+            .RuleFor(x => x.Street, f => f.Address.StreetName())
+            .RuleFor(x => x.CreatedTs, () => dateTimeInRange)
+            .Generate(2);
+
+        MockClient.CreatedTs = dateTimeOutsideRange;
+        _appDbContext.Add(MockClient);
+        _appDbContext.AddRange(newClient);
+        await _appDbContext.SaveChangesAsync();
+
+        var query = new QueryClients
+        {
+            AddedFrom = dateTimeSearchFrom,
+            AddedTo = dateTimeSearchTo
+        };
+
+        Assume.That(_appDbContext.Clients.Count(), Is.EqualTo(3));
+
+        // Act
+        var result = (await _clientRepository.BrowseAllAsync(query)).ToList();
+
+        // Assert
+        Assert.Multiple(() => {
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.All(x => x.CreatedTs == dateTimeInRange), Is.True);
+        });
+    }
+
+    [Test]
     public async Task ShouldUpdate()
     {
         // Arrange
@@ -285,6 +331,14 @@ public class ClientRepositoryTests
     }
 
     [Test]
+    public void ShouldNotUpdate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+            await _clientRepository.UpdateAsync(new Client(), 1));
+    }
+
+    [Test]
     public async Task ShouldDeactivate()
     {
         // Arrange
@@ -301,5 +355,13 @@ public class ClientRepositoryTests
             Assert.That(_appDbContext.Clients.First()
                 .IsActive, Is.False);
         });
+    }
+
+    [Test]
+    public void ShouldNotDeactivate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<ClientNotFoundException>(async () =>
+            await _clientRepository.Deactivate(1));
     }
 }

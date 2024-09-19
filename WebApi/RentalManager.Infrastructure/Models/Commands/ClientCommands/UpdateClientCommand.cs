@@ -1,3 +1,3 @@
 ﻿namespace RentalManager.Infrastructure.Models.Commands.ClientCommands;
 
-public class CreateClient : ClientBaseCommand;
+public class UpdateClientCommand : BaseClientCommand;

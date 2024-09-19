@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentalManager.Infrastructure.Models.Commands.PaymentCommands;
 
-public class PaymentBaseCommand
+public class BasePaymentCommand
 {
     [Required]
     [DefaultValue("Cash")]

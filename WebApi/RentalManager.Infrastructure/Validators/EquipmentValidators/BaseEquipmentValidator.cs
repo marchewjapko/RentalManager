@@ -3,9 +3,9 @@ using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 
 namespace RentalManager.Infrastructure.Validators.EquipmentValidators;
 
-public class EquipmentBaseValidator : AbstractValidator<EquipmentBaseCommand>
+public class BaseEquipmentValidator : AbstractValidator<BaseEquipmentCommand>
 {
-    public EquipmentBaseValidator()
+    public BaseEquipmentValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

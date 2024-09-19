@@ -16,7 +16,7 @@ public class ClientController(IClientService clientService) : Controller
 {
     [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddClient([FromBody] CreateClient createClient)
+    public async Task<IActionResult> AddClient([FromBody] CreateClientCommand createClient)
     {
         var result = await clientService.AddAsync(createClient, User);
 
@@ -52,7 +52,7 @@ public class ClientController(IClientService clientService) : Controller
 
     [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateClient([FromBody] UpdateClient updateClient, int id)
+    public async Task<IActionResult> UpdateClient([FromBody] UpdateClientCommand updateClient, int id)
     {
         var result = await clientService.UpdateAsync(updateClient, id);
 

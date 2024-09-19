@@ -243,6 +243,90 @@ public class AgreementRepositoryTests
     }
 
     [Test]
+    public async Task ShouldFilter_Unpaid()
+    {
+        // Arrange
+        var newAgreement = new Faker<Agreement>()
+            .RuleFor(x => x.Id, f => f.UniqueIndex)
+            .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.ClientId, () => MockClient.Id)
+            .RuleFor(x => x.Client, () => MockClient)
+            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
+            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TransportFromPrice, () => null)
+            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateAdded, () => DateTime.Now)
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Payments, new Faker<Payment>().RuleFor(x => x.DateTo, f => f.Date.Past())
+                .Generate(2))
+            .Generate(2);
+
+        MockAgreement.Payments.Add(new Faker<Payment>().RuleFor(x => x.DateTo, f => f.Date.Future()));
+        _appDbContext.Agreements.Add(MockAgreement);
+        _appDbContext.Agreements.AddRange(newAgreement);
+        await _appDbContext.SaveChangesAsync();
+        Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(3));
+
+        var queryAgreements = new QueryAgreements
+        {
+            OnlyUnpaid = true
+        };
+
+        // Act
+        var result = (await _agreementRepository.BrowseAllAsync(queryAgreements)).ToList();
+
+        // Assert
+        Assert.Multiple(() => { Assert.That(result, Has.Count.EqualTo(2)); });
+    }
+
+    [Test]
+    public async Task ShouldFilter_DateAddedBetween()
+    {
+        // Arrange
+        var dateTimeSearchFrom = new DateTime(2020, 1, 1);
+        var dateTimeSearchTo = new DateTime(2020, 1, 16);
+
+        var dateTimeInRange = new DateTime(2020, 1, 10);
+        var dateTimeOutsideRange = new DateTime(2020, 1, 31);
+
+        var newAgreement = new Faker<Agreement>()
+            .RuleFor(x => x.Id, f => f.UniqueIndex)
+            .RuleFor(x => x.UserId, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.ClientId, () => MockClient.Id)
+            .RuleFor(x => x.Client, () => MockClient)
+            .RuleFor(x => x.Comment, f => f.Lorem.Sentence())
+            .RuleFor(x => x.Deposit, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TransportFromPrice, () => null)
+            .RuleFor(x => x.TransportToPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.DateAdded, () => dateTimeInRange)
+            .RuleFor(x => x.Equipments, () => new List<Equipment> { MockEquipment })
+            .RuleFor(x => x.Payments, new Faker<Payment>().RuleFor(x => x.DateTo, f => f.Date.Past())
+                .Generate(2))
+            .Generate(2);
+
+        MockAgreement.DateAdded = dateTimeOutsideRange;
+        _appDbContext.Agreements.Add(MockAgreement);
+        _appDbContext.Agreements.AddRange(newAgreement);
+        await _appDbContext.SaveChangesAsync();
+        Assume.That(_appDbContext.Agreements.Count(), Is.EqualTo(3));
+
+        var queryAgreements = new QueryAgreements
+        {
+            AddedFrom = dateTimeSearchFrom,
+            AddedTo = dateTimeSearchTo
+        };
+
+        // Act
+        var result = (await _agreementRepository.BrowseAllAsync(queryAgreements)).ToList();
+
+        // Assert
+        Assert.Multiple(() => {
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.All(x => x.DateAdded == dateTimeInRange), Is.True);
+        });
+    }
+
+    [Test]
     public async Task ShouldUpdate()
     {
         // Arrange
@@ -276,6 +360,14 @@ public class AgreementRepositoryTests
     }
 
     [Test]
+    public void ShouldNotUpdate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
+            await _agreementRepository.UpdateAsync(new Agreement(), 1));
+    }
+
+    [Test]
     public async Task ShouldDeactivate()
     {
         // Arrange
@@ -291,5 +383,13 @@ public class AgreementRepositoryTests
         // Assert
         var agreement = _appDbContext.Agreements.First();
         Assert.That(agreement.IsActive, Is.False);
+    }
+
+    [Test]
+    public void ShouldNotDeactivate_NotFound()
+    {
+        // Assert
+        Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
+            await _agreementRepository.Deactivate(1));
     }
 }

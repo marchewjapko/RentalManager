@@ -46,20 +46,20 @@ public static class ServiceRegistration
             configuration.EnableFormBindingSourceAutomaticValidation = true;
         });
 
-        services.AddScoped<IValidator<CreateEquipment>, CreateEquipmentValidator>();
-        services.AddScoped<IValidator<UpdateEquipment>, UpdateEquipmentValidator>();
+        services.AddScoped<IValidator<CreateEquipmentCommand>, CreateEquipmentValidator>();
+        services.AddScoped<IValidator<UpdateEquipmentCommand>, UpdateEquipmentValidator>();
 
-        services.AddScoped<IValidator<CreatePayment>, CreatePaymentValidator>();
-        services.AddScoped<IValidator<UpdatePayment>, UpdatePaymentValidator>();
+        services.AddScoped<IValidator<CreatePaymentCommand>, CreatePaymentValidator>();
+        services.AddScoped<IValidator<UpdatePaymentCommand>, UpdatePaymentValidator>();
 
-        services.AddScoped<IValidator<CreateClient>, CreateClientValidator>();
-        services.AddScoped<IValidator<UpdateClient>, UpdateClientValidator>();
+        services.AddScoped<IValidator<CreateClientCommand>, CreateClientValidator>();
+        services.AddScoped<IValidator<UpdateClientCommand>, UpdateClientValidator>();
 
-        services.AddScoped<IValidator<CreatePayment>, CreatePaymentValidator>();
-        services.AddScoped<IValidator<UpdatePayment>, UpdatePaymentValidator>();
+        services.AddScoped<IValidator<CreatePaymentCommand>, CreatePaymentValidator>();
+        services.AddScoped<IValidator<UpdatePaymentCommand>, UpdatePaymentValidator>();
 
-        services.AddScoped<IValidator<CreateAgreement>, CreateAgreementValidator>();
-        services.AddScoped<IValidator<UpdateAgreement>, UpdateAgreementValidator>();
+        services.AddScoped<IValidator<CreateAgreementCommand>, CreateAgreementValidator>();
+        services.AddScoped<IValidator<UpdateAgreementCommand>, UpdateAgreementValidator>();
 
         services.AddFluentValidationAutoValidation();
     }

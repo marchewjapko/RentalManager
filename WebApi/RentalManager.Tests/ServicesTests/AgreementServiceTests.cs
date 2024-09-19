@@ -22,14 +22,14 @@ public class AgreementServiceTests
             .RuleFor(x => x.Payments, () => new List<Payment> { new Faker<Payment>() })
             .RuleFor(x => x.Client, () => new Faker<Client>())
             .Generate();
-        var createAgreement = new Faker<CreateAgreement>();
+        var createAgreement = new Faker<CreateAgreementCommand>();
         var agreementDto = new Faker<AgreementDto>()
             .RuleFor(x => x.Payments, () => new List<PaymentDto> { new Faker<PaymentDto>() })
             .RuleFor(x => x.Client, () => new Faker<ClientDto>())
             .Generate();
 
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Agreement>(It.IsAny<CreateAgreement>()))
+        mapperMock.Setup(x => x.Map<Agreement>(It.IsAny<CreateAgreementCommand>()))
             .Returns(agreement);
         mapperMock.Setup(x => x.Map(It.IsAny<Agreement>(),
                 It.IsAny<Action<IMappingOperationOptions<object, AgreementDto>>>()))
@@ -185,14 +185,14 @@ public class AgreementServiceTests
             .RuleFor(x => x.Payments, () => new List<Payment> { new Faker<Payment>() })
             .RuleFor(x => x.Client, () => new Faker<Client>())
             .Generate();
-        var updateAgreement = new Faker<UpdateAgreement>();
+        var updateAgreement = new Faker<UpdateAgreementCommand>();
         var agreementDto = new Faker<AgreementDto>()
             .RuleFor(x => x.Payments, () => new List<PaymentDto> { new Faker<PaymentDto>() })
             .RuleFor(x => x.Client, () => new Faker<ClientDto>())
             .Generate();
 
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Agreement>(It.IsAny<UpdateAgreement>()))
+        mapperMock.Setup(x => x.Map<Agreement>(It.IsAny<UpdateAgreementCommand>()))
             .Returns(agreement);
         mapperMock.Setup(x => x.Map(It.IsAny<Agreement>(),
                 It.IsAny<Action<IMappingOperationOptions<object, AgreementDto>>>()))

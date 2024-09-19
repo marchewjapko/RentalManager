@@ -1,9 +1,6 @@
-﻿using System.Linq.Expressions;
-using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Global.Queries;
-using RentalManager.Infrastructure.Extensions;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Services.AgreementService;
@@ -18,7 +15,7 @@ public class AgreementController(IAgreementService agreementService)
 {
     [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddAgreement([FromBody] CreateAgreement createAgreement)
+    public async Task<IActionResult> AddAgreement([FromBody] CreateAgreementCommand createAgreement)
     {
         var result = await agreementService.AddAsync(createAgreement, User);
 
@@ -56,7 +53,7 @@ public class AgreementController(IAgreementService agreementService)
     [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAgreement(
-        [FromBody] UpdateAgreement updateAgreement,
+        [FromBody] UpdateAgreementCommand updateAgreement,
         int id)
     {
         var result = await agreementService.UpdateAsync(updateAgreement, id, User);

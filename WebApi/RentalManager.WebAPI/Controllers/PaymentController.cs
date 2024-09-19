@@ -23,7 +23,7 @@ public class PaymentController : Controller
 
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
-    public async Task<IActionResult> AddPayment([FromBody] CreatePayment createPayment)
+    public async Task<IActionResult> AddPayment([FromBody] CreatePaymentCommand createPayment)
     {
         var result = await _paymentService.AddAsync(createPayment, User);
 
@@ -58,7 +58,7 @@ public class PaymentController : Controller
 
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdatePayment([FromBody] UpdatePayment updatePayment, int id)
+    public async Task<IActionResult> UpdatePayment([FromBody] UpdatePaymentCommand updatePayment, int id)
     {
         var result = await _paymentService.UpdateAsync(updatePayment, id);
 

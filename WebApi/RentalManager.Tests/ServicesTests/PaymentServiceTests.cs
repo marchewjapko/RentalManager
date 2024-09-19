@@ -18,12 +18,12 @@ public class PaymentServiceTests
     {
         // Arrange
         var payment = new Faker<Payment>().Generate();
-        var createPayment = new Faker<CreatePayment>()
+        var createPayment = new Faker<CreatePaymentCommand>()
             .RuleFor(x => x.AgreementId, f => f.Random.Int())
             .Generate();
         var paymentDto = new Faker<PaymentDto>().Generate();
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Payment>(It.IsAny<CreatePayment>()))
+        mapperMock.Setup(x => x.Map<Payment>(It.IsAny<CreatePaymentCommand>()))
             .Returns(payment);
         mapperMock.Setup(x => x.Map<PaymentDto>(It.Is<Payment>(a => a == payment)))
             .Returns(paymentDto);
@@ -124,10 +124,10 @@ public class PaymentServiceTests
     {
         // Arrange
         var payment = new Faker<Payment>().Generate();
-        var updatePayment = new Faker<UpdatePayment>().Generate();
+        var updatePayment = new Faker<UpdatePaymentCommand>().Generate();
         var paymentDto = new Faker<PaymentDto>().Generate();
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Payment>(It.IsAny<UpdatePayment>()))
+        mapperMock.Setup(x => x.Map<Payment>(It.IsAny<UpdatePaymentCommand>()))
             .Returns(payment);
         mapperMock.Setup(x => x.Map<PaymentDto>(It.Is<Payment>(a => a == payment)))
             .Returns(paymentDto);

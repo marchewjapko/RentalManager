@@ -115,7 +115,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
         agreements = agreements.Filter(x => x.Client.Street, queryAgreements.Street, FilterOperand.Contains);
         agreements = agreements.Filter(x => x.DateAdded.Date, queryAgreements.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
         agreements = agreements.Filter(x => x.DateAdded.Date, queryAgreements.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
-        
+
         if (queryAgreements.OnlyActive)
         {
             agreements = agreements.Filter(x => x.IsActive, true, FilterOperand.Equals);
@@ -123,12 +123,21 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         if (queryAgreements.OnlyUnpaid)
         {
-            agreements = agreements.Where(x =>
-                x.Payments.OrderByDescending(payment => payment.DateTo)
-                    .First()
-                    .DateTo < DateTime.Now.Date);
+            foreach (var ar in agreements)
+            {
+                var zz = ar.Payments.ToList();
+
+                var xx = ar.Payments.OrderByDescending(payment => payment.DateTo)
+                    .ToList();
+
+                ;
+            }
+
+            agreements = agreements.Where(x => x.Payments.Count == 0 || x.Payments.OrderByDescending(payment => payment.DateTo)
+                .First()
+                .DateTo < DateTime.Now.Date);
         }
-        
+
         return agreements;
     }
 

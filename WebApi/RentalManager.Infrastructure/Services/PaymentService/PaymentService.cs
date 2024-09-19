@@ -12,7 +12,7 @@ namespace RentalManager.Infrastructure.Services.PaymentService;
 public class PaymentService(IPaymentRepository paymentRepository, IMapper mapper)
     : IPaymentService
 {
-    public async Task<PaymentDto> AddAsync(CreatePayment createPayment, ClaimsPrincipal user)
+    public async Task<PaymentDto> AddAsync(CreatePaymentCommand createPayment, ClaimsPrincipal user)
     {
         var newPayment = mapper.Map<Payment>(createPayment);
         newPayment.CreatedBy = user.GetId();
@@ -41,7 +41,7 @@ public class PaymentService(IPaymentRepository paymentRepository, IMapper mapper
         return mapper.Map<PaymentDto>(result);
     }
 
-    public async Task<PaymentDto> UpdateAsync(UpdatePayment updatePayment, int id)
+    public async Task<PaymentDto> UpdateAsync(UpdatePaymentCommand updatePayment, int id)
     {
         var domainPayment = mapper.Map<Payment>(updatePayment);
 

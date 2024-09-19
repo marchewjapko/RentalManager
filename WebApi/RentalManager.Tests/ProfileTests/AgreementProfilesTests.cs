@@ -31,7 +31,7 @@ public class AgreementProfilesTests
     public void AgreementProfile_ShouldMapBaseCommandToAgreement()
     {
         // Arrange
-        var command = new Faker<AgreementBaseCommand>()
+        var command = new Faker<BaseAgreementCommand>()
             .RuleFor(x => x.UserId, f => f.Random.Int())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .RuleFor(x => x.ClientId, f => f.Random.Int())
@@ -72,7 +72,7 @@ public class AgreementProfilesTests
     public void AgreementProfile_ShouldMapCreateCommandToAgreement()
     {
         // Arrange
-        var command = new Faker<CreateAgreement>()
+        var command = new Faker<CreateAgreementCommand>()
             .RuleFor(x => x.UserId, f => f.Random.Int())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .RuleFor(x => x.ClientId, f => f.Random.Int())
@@ -86,13 +86,13 @@ public class AgreementProfilesTests
             .RuleFor(x => x.TransportFromPrice, f => f.Random.Int())
             .RuleFor(x => x.TransportToPrice, f => f.Random.Int())
             .RuleFor(x => x.DateAdded, f => f.Date.Past())
-            .RuleFor(x => x.Payments, () => new List<CreatePayment>
+            .RuleFor(x => x.Payments, () => new List<CreatePaymentCommand>
             {
-                new Faker<CreatePayment>()
+                new Faker<CreatePaymentCommand>()
                     .RuleFor(x => x.Method, f => f.Random.String()),
-                new Faker<CreatePayment>()
+                new Faker<CreatePaymentCommand>()
                     .RuleFor(x => x.Method, f => f.Random.String()),
-                new Faker<CreatePayment>()
+                new Faker<CreatePaymentCommand>()
                     .RuleFor(x => x.Method, f => f.Random.String())
             })
             .Generate();
@@ -136,7 +136,7 @@ public class AgreementProfilesTests
     public void AgreementProfile_ShouldMapUpdateCommandToAgreement()
     {
         // Arrange
-        var command = new Faker<UpdateAgreement>()
+        var command = new Faker<UpdateAgreementCommand>()
             .RuleFor(x => x.UserId, f => f.Random.Int())
             .RuleFor(x => x.IsActive, f => f.Random.Bool())
             .RuleFor(x => x.ClientId, f => f.Random.Int())
@@ -189,7 +189,7 @@ public class AgreementProfilesTests
                 new Faker<Equipment>(),
                 new Faker<Equipment>()
             })
-            .RuleFor(x => x.Payments, () => new List<Payment>()
+            .RuleFor(x => x.Payments, () => new List<Payment>
             {
                 new Faker<Payment>(),
                 new Faker<Payment>()

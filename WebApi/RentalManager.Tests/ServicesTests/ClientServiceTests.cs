@@ -18,10 +18,10 @@ public class ClientServiceTests
     {
         // Arrange
         var client = new Faker<Client>().Generate();
-        var createClient = new Faker<CreateClient>().Generate();
+        var createClient = new Faker<CreateClientCommand>().Generate();
         var clientDto = new Faker<ClientDto>().Generate();
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Client>(It.IsAny<CreateClient>()))
+        mapperMock.Setup(x => x.Map<Client>(It.IsAny<CreateClientCommand>()))
             .Returns(client);
         mapperMock.Setup(x => x.Map<ClientDto>(It.IsAny<Client>()))
             .Returns(clientDto);
@@ -125,10 +125,10 @@ public class ClientServiceTests
     {
         // Arrange
         var client = new Faker<Client>().Generate();
-        var updateClient = new Faker<UpdateClient>().Generate();
+        var updateClient = new Faker<UpdateClientCommand>().Generate();
         var clientDto = new Faker<ClientDto>().Generate();
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(x => x.Map<Client>(It.IsAny<UpdateClient>()))
+        mapperMock.Setup(x => x.Map<Client>(It.IsAny<UpdateClientCommand>()))
             .Returns(client);
         mapperMock.Setup(x => x.Map<ClientDto>(It.Is<Client>(a => a == client)))
             .Returns(clientDto);

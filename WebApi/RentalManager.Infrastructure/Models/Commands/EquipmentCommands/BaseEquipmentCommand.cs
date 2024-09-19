@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 
 namespace RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 
-public class EquipmentBaseCommand
+public class BaseEquipmentCommand
 {
     [Required]
     [DefaultValue("Fun equipment mk III")]

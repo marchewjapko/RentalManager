@@ -3,9 +3,9 @@ using RentalManager.Infrastructure.Models.Commands.ClientCommands;
 
 namespace RentalManager.Infrastructure.Validators.ClientValidators;
 
-public class ClientBaseValidator : AbstractValidator<ClientBaseCommand>
+public class BaseClientValidator : AbstractValidator<BaseClientCommand>
 {
-    public ClientBaseValidator()
+    public BaseClientValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()

@@ -71,23 +71,6 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
         return paymentToUpdate;
     }
-    
-    private static IQueryable<Payment> FilterPayments(IQueryable<Payment> payments,
-        QueryPayment queryPayments)
-    {
-
-        payments = payments.Filter(x => x.AgreementId, queryPayments.AgreementId, FilterOperand.Equals);
-        payments = payments.Filter(x => x.Method, queryPayments.Method, FilterOperand.Contains);
-        payments = payments.Filter(x => x.DateFrom, queryPayments.From?.Date, FilterOperand.GreaterThanOrEqualTo);
-        payments = payments.Filter(x => x.DateTo, queryPayments.To?.Date, FilterOperand.LessThanOrEqualTo);
-        
-        if (queryPayments.OnlyActive)
-        {
-            payments = payments.Filter(x => x.IsActive, true, FilterOperand.Equals);
-        }
-
-        return payments;
-    }
 
     public async Task Deactivate(int id)
     {
@@ -100,5 +83,21 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
         result.IsActive = false;
         await appDbContext.SaveChangesAsync();
+    }
+
+    private static IQueryable<Payment> FilterPayments(IQueryable<Payment> payments,
+        QueryPayment queryPayments)
+    {
+        payments = payments.Filter(x => x.AgreementId, queryPayments.AgreementId, FilterOperand.Equals);
+        payments = payments.Filter(x => x.Method, queryPayments.Method, FilterOperand.Contains);
+        payments = payments.Filter(x => x.DateFrom, queryPayments.ValidRangeTo?.Date, FilterOperand.LessThanOrEqualTo);
+        payments = payments.Filter(x => x.DateTo, queryPayments.ValidRangeFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
+
+        if (queryPayments.OnlyActive)
+        {
+            payments = payments.Filter(x => x.IsActive, true, FilterOperand.Equals);
+        }
+
+        return payments;
     }
 }

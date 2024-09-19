@@ -9,9 +9,9 @@ public class ClientProfiles : Profile
 {
     public ClientProfiles()
     {
-        CreateMap<ClientBaseCommand, Client>()
-            .Include<CreateClient, Client>()
-            .Include<UpdateClient, Client>()
+        CreateMap<BaseClientCommand, Client>()
+            .Include<CreateClientCommand, Client>()
+            .Include<UpdateClientCommand, Client>()
             .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.FirstName, x => x.MapFrom(a => a.FirstName))
             .ForMember(x => x.LastName, x => x.MapFrom(a => a.LastName))
@@ -25,8 +25,8 @@ public class ClientProfiles : Profile
             .ForMember(x => x.UpdatedTs, x => x.Ignore())
             .ForMember(x => x.IsActive, x => x.Ignore());
 
-        CreateMap<CreateClient, Client>();
-        CreateMap<UpdateClient, Client>()
+        CreateMap<CreateClientCommand, Client>();
+        CreateMap<UpdateClientCommand, Client>()
             .ForMember(x => x.UpdatedTs, x => x.MapFrom(a => DateTime.Now));
 
         CreateMap<Client, ClientDto>()

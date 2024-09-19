@@ -11,7 +11,7 @@ namespace RentalManager.Infrastructure.Services.ClientService;
 
 public class ClientService(IClientRepository clientRepository, IMapper mapper) : IClientService
 {
-    public async Task<ClientDto> AddAsync(CreateClient createClient, ClaimsPrincipal user)
+    public async Task<ClientDto> AddAsync(CreateClientCommand createClient, ClaimsPrincipal user)
     {
         var newClient = mapper.Map<Client>(createClient);
         newClient.CreatedBy = user.GetId();
@@ -41,7 +41,7 @@ public class ClientService(IClientRepository clientRepository, IMapper mapper) :
         return mapper.Map<ClientDto>(result);
     }
 
-    public async Task<ClientDto> UpdateAsync(UpdateClient updateClient, int id)
+    public async Task<ClientDto> UpdateAsync(UpdateClientCommand updateClient, int id)
     {
         var result = await clientRepository.UpdateAsync(mapper.Map<Client>(updateClient), id);
 
