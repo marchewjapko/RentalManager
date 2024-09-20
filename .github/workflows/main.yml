@@ -1,2 +1,7 @@
-- name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+            - name: Coverlet coverage test
+  uses: b3b00/coverlet-action@1.3.0
+  with:
+    output: lcov.info
+    outputFormat: lcov
+    testProject: 'WebApi/RentalManager.Tests/RentalManager.Tests.csproj'
+          
