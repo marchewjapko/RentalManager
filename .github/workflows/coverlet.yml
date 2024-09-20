@@ -34,6 +34,12 @@ jobs:
         working-directory: ./WebApi/RentalManager.Tests
         run: dotnet test --results-directory ./TestResults --collect:"XPlat Code Coverage" --no-restore
         
+      - name: Where is it
+        run: ls
+                
+      - name: Where is it2
+        run: ls WebApi/RentalManager.Tests/TestResults
+
       - name: Copy test result
         run: cp WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
 
