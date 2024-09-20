@@ -43,7 +43,7 @@ jobs:
           path: "./coverage.xml"
 
   Get-Custom-Badge:
-    needs: Generate-Code-Coverage-Report
+    needs: Get-Code-Coverage
     runs-on: ubuntu-latest
     steps:
       - id: date
