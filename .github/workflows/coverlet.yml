@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  Generate Code Coverage Report:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,35 +21,37 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: Restore Dependencies
         run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      - name: Build the project
+      - name: Build the Project
         run: dotnet build --configuration Release --property WarningLevel=0 "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      - name: Clear NuGet cache
+      - name: Clear NuGet Cache
         run: dotnet nuget locals all --clear
 
-      - name: Run tests with coverage
+      - name: Run Tests with Coverage
         run: dotnet test --results-directory WebApi/RentalManager.Tests/TestResults --collect:"XPlat Code Coverage" "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
-        
-      - name: Where is it
-        run: ls
-                
-      - name: Where is it2
-        run: ls WebApi/RentalManager.Tests
-                        
-      - name: Where is it3
-        run: ls WebApi
-                        
-      - name: Where is it4
-        run: ls WebApi/RentalManager.Tests/TestResults
 
-      - name: Copy test result
+      - name: Copy Test Results
         run: cp WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
 
-      - name: Upload coverage report
+      - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: "./coverage.xml"
+
+  Custom Badge Job:
+    runs-on: ubuntu-latest
+    steps:
+      - id: date
+        run: echo "##[set-output name=data;]$(date)"
+      - name: Time badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: test
+          LABEL: 'Test?'
+          STATUS: 'Yay!'
+          COLOR: 00EEFF
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
