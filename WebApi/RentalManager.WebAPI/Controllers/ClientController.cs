@@ -20,7 +20,7 @@ public class ClientController(IClientService clientService) : Controller
     {
         var result = await clientService.AddAsync(createClient, User);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
@@ -30,7 +30,7 @@ public class ClientController(IClientService clientService) : Controller
         var result =
             await clientService.BrowseAllAsync(queryClients);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [HttpDelete("{id:int}")]
@@ -47,7 +47,7 @@ public class ClientController(IClientService clientService) : Controller
     {
         var clientDto = await clientService.GetAsync(id);
 
-        return Json(clientDto);
+        return Ok(clientDto);
     }
 
     [ProducesResponseType(typeof(ClientDto), 200)]
@@ -56,7 +56,7 @@ public class ClientController(IClientService clientService) : Controller
     {
         var result = await clientService.UpdateAsync(updateClient, id);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Route("Deactivate/{id}")]

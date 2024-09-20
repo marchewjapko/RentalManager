@@ -6,6 +6,10 @@
         <LangVersion>12</LangVersion>
         <UserSecretsId>070aec92-da5a-4f24-aede-17740ed25e70</UserSecretsId>
     </PropertyGroup>
+    <PropertyGroup>
+        <CoverletOutputFormat>opencover</CoverletOutputFormat>
+        <Exclude>[YourNamespace.YourClass*]</Exclude>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8"/>

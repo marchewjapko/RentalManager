@@ -17,7 +17,7 @@ public class UserController(IUserService userService) : Controller
     {
         var result = await userService.BrowseAllAsync();
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(UserDto), 200)]
@@ -26,7 +26,7 @@ public class UserController(IUserService userService) : Controller
     {
         var clientDto = await userService.GetAsync(id);
 
-        return Json(clientDto);
+        return Ok(clientDto);
     }
 
     [ProducesResponseType(typeof(UserDto), 200)]
@@ -48,18 +48,5 @@ public class UserController(IUserService userService) : Controller
         };
 
         return Ok(me);
-    }
-
-    [Route("/[Controller]/GetMyClaims")]
-    [HttpGet]
-    public IActionResult GetMyClaims()
-    {
-        return Json(HttpContext.User.Claims.Select(x => {
-            dynamic result = new ExpandoObject();
-            result.Type = x.Type;
-            result.Value = x.Value;
-
-            return result;
-        }));
     }
 }

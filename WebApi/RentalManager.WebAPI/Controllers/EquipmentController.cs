@@ -5,8 +5,6 @@ using RentalManager.Infrastructure.Models.Commands.EquipmentCommands;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Services.EquipmentService;
 
-// ReSharper disable RouteTemplates.RouteParameterConstraintNotResolved
-
 namespace RentalManager.WebAPI.Controllers;
 
 [ApiController]
@@ -20,7 +18,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
     {
         var result = await equipmentService.AddAsync(createEquipment, User);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<EquipmentDto>), 200)]
@@ -29,7 +27,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
     {
         var result = await equipmentService.BrowseAllAsync(queryEquipment);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -47,7 +45,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
     {
         var clientDto = await equipmentService.GetAsync(id);
 
-        return Json(clientDto);
+        return Ok(clientDto);
     }
 
     [ProducesResponseType(typeof(EquipmentDto), 200)]
@@ -58,7 +56,7 @@ public class EquipmentController(IEquipmentService equipmentService) : Controlle
     {
         var result = await equipmentService.UpdateAsync(updateEquipment, id);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Route("Deactivate/{id}")]

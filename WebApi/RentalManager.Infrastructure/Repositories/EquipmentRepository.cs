@@ -119,28 +119,16 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
     private static IQueryable<Equipment> SortClients(IQueryable<Equipment> equipments,
         QueryEquipment queryEquipment)
     {
-        if (queryEquipment.Descending)
+        var sortOrder = queryEquipment.Descending ? SortOrder.DESC : SortOrder.ASC;
+
+        equipments = queryEquipment.SortEquipmentBy switch
         {
-            equipments = queryEquipment.SortEquipmentBy switch
-            {
-                SortEquipmentBy.Id => equipments.OrderByDescending(x => x.Id),
-                SortEquipmentBy.Name => equipments.OrderByDescending(x => x.Name),
-                SortEquipmentBy.DateAdded => equipments.OrderByDescending(x => x.CreatedTs),
-                SortEquipmentBy.Price => equipments.OrderByDescending(x => x.Price),
-                _ => equipments.OrderByDescending(x => x.CreatedTs)
-            };
-        }
-        else
-        {
-            equipments = queryEquipment.SortEquipmentBy switch
-            {
-                SortEquipmentBy.Id => equipments.OrderBy(x => x.Id),
-                SortEquipmentBy.Name => equipments.OrderBy(x => x.Name),
-                SortEquipmentBy.DateAdded => equipments.OrderBy(x => x.CreatedTs),
-                SortEquipmentBy.Price => equipments.OrderBy(x => x.Price),
-                _ => equipments.OrderBy(x => x.CreatedTs)
-            };
-        }
+            SortEquipmentBy.Id => equipments.Sort(x => x.Id, sortOrder),
+            SortEquipmentBy.Name => equipments.Sort(x => x.Name, sortOrder),
+            SortEquipmentBy.DateAdded => equipments.Sort(x => x.CreatedTs, sortOrder),
+            SortEquipmentBy.Price => equipments.Sort(x => x.Price, sortOrder),
+            _ => equipments.Sort(x => x.CreatedTs, sortOrder)
+        };
 
         equipments = equipments.Skip(queryEquipment.Position);
         equipments = equipments.Take(queryEquipment.PageSize);

@@ -144,26 +144,15 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     private static IQueryable<Agreement> SortAgreements(IQueryable<Agreement> agreements,
         QueryAgreements queryAgreements)
     {
-        if (queryAgreements.Descending)
+        var sortOrder = queryAgreements.Descending ? SortOrder.DESC : SortOrder.ASC;
+
+        agreements = queryAgreements.SortAgreementsBy switch
         {
-            agreements = queryAgreements.SortAgreementsBy switch
-            {
-                SortAgreementsBy.Id => agreements.OrderByDescending(x => x.Id),
-                SortAgreementsBy.Surname => agreements.OrderByDescending(x => x.Client.LastName),
-                SortAgreementsBy.DateAdded => agreements.OrderByDescending(x => x.DateAdded),
-                _ => agreements.OrderByDescending(x => x.DateAdded)
-            };
-        }
-        else
-        {
-            agreements = queryAgreements.SortAgreementsBy switch
-            {
-                SortAgreementsBy.Id => agreements.OrderBy(x => x.Id),
-                SortAgreementsBy.Surname => agreements.OrderBy(x => x.Client.LastName),
-                SortAgreementsBy.DateAdded => agreements.OrderBy(x => x.DateAdded),
-                _ => agreements.OrderBy(x => x.DateAdded)
-            };
-        }
+            SortAgreementsBy.Id => agreements.Sort(x => x.Id, sortOrder),
+            SortAgreementsBy.Surname => agreements.Sort(x => x.Client.LastName, sortOrder),
+            SortAgreementsBy.DateAdded => agreements.Sort(x => x.DateAdded, sortOrder),
+            _ => agreements.Sort(x => x.DateAdded, sortOrder)
+        };
 
         agreements = agreements.Skip(queryAgreements.Position);
         agreements = agreements.Take(queryAgreements.PageSize);

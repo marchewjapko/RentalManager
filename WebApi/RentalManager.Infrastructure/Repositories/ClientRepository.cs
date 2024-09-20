@@ -100,7 +100,6 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
         clients = clients.Filter(x => x.Street, queryClients.Street, FilterOperand.Contains);
         clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedFrom?.Date, FilterOperand.GreaterThanOrEqualTo);
         clients = clients.Filter(x => x.CreatedTs.Date, queryClients.AddedTo?.Date, FilterOperand.LessThanOrEqualTo);
-        clients = clients.Filter(x => x.FirstName, queryClients.FirstName, FilterOperand.Equals);
 
         if (queryClients.OnlyActive)
         {
@@ -113,28 +112,16 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     private static IQueryable<Client> SortClients(IQueryable<Client> clients,
         QueryClients queryClients)
     {
-        if (queryClients.Descending)
+        var sortOrder = queryClients.Descending ? SortOrder.DESC : SortOrder.ASC;
+
+        clients = queryClients.SortClientsBy switch
         {
-            clients = queryClients.SortClientsBy switch
-            {
-                SortClientsBy.Id => clients.OrderByDescending(x => x.Id),
-                SortClientsBy.Name => clients.OrderByDescending(x => x.FirstName),
-                SortClientsBy.Surname => clients.OrderByDescending(x => x.LastName),
-                SortClientsBy.DateAdded => clients.OrderByDescending(x => x.CreatedTs),
-                _ => clients.OrderByDescending(x => x.CreatedTs)
-            };
-        }
-        else
-        {
-            clients = queryClients.SortClientsBy switch
-            {
-                SortClientsBy.Id => clients.OrderBy(x => x.Id),
-                SortClientsBy.Name => clients.OrderBy(x => x.FirstName),
-                SortClientsBy.Surname => clients.OrderBy(x => x.LastName),
-                SortClientsBy.DateAdded => clients.OrderBy(x => x.CreatedTs),
-                _ => clients.OrderBy(x => x.CreatedTs)
-            };
-        }
+            SortClientsBy.Id => clients.Sort(x => x.Id, sortOrder),
+            SortClientsBy.Name => clients.Sort(x => x.FirstName, sortOrder),
+            SortClientsBy.Surname => clients.Sort(x => x.LastName, sortOrder),
+            SortClientsBy.DateAdded => clients.Sort(x => x.CreatedTs, sortOrder),
+            _ => clients.Sort(x => x.CreatedTs, sortOrder)
+        };
 
         clients = clients.Skip(queryClients.Position);
         clients = clients.Take(queryClients.PageSize);

@@ -19,7 +19,7 @@ public class AgreementController(IAgreementService agreementService)
     {
         var result = await agreementService.AddAsync(createAgreement, User);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<AgreementDto>), 200)]
@@ -29,7 +29,7 @@ public class AgreementController(IAgreementService agreementService)
     {
         var result = await agreementService.BrowseAllAsync(queryAgreements);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -38,7 +38,7 @@ public class AgreementController(IAgreementService agreementService)
     {
         await agreementService.DeleteAsync(id);
 
-        return Ok();
+        return NoContent();
     }
 
     [ProducesResponseType(typeof(AgreementDto), 200)]
@@ -47,7 +47,7 @@ public class AgreementController(IAgreementService agreementService)
     {
         var result = await agreementService.GetAsync(id);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(AgreementDto), 200)]
@@ -58,7 +58,7 @@ public class AgreementController(IAgreementService agreementService)
     {
         var result = await agreementService.UpdateAsync(updateAgreement, id, User);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Route("Deactivate/{id}")]
@@ -67,6 +67,6 @@ public class AgreementController(IAgreementService agreementService)
     {
         await agreementService.Deactivate(id);
 
-        return Ok();
+        return NoContent();
     }
 }

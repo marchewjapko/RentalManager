@@ -12,37 +12,30 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class PaymentController : Controller
+public class PaymentController(IPaymentService paymentService) : Controller
 {
-    private readonly IPaymentService _paymentService;
-
-    public PaymentController(IPaymentService paymentService)
-    {
-        _paymentService = paymentService;
-    }
-
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]
     public async Task<IActionResult> AddPayment([FromBody] CreatePaymentCommand createPayment)
     {
-        var result = await _paymentService.AddAsync(createPayment, User);
+        var result = await paymentService.AddAsync(createPayment, User);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<PaymentDto>), 200)]
     [HttpGet]
     public async Task<IActionResult> BrowseAllPayments([FromQuery] QueryPayment queryPayment)
     {
-        var result = await _paymentService.BrowseAllAsync(queryPayment);
+        var result = await paymentService.BrowseAllAsync(queryPayment);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePayment(int id)
     {
-        await _paymentService.DeleteAsync(id);
+        await paymentService.DeleteAsync(id);
 
         return NoContent();
     }
@@ -51,25 +44,25 @@ public class PaymentController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPayment(int id)
     {
-        var result = await _paymentService.GetAsync(id);
+        var result = await paymentService.GetAsync(id);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePayment([FromBody] UpdatePaymentCommand updatePayment, int id)
     {
-        var result = await _paymentService.UpdateAsync(updatePayment, id);
+        var result = await paymentService.UpdateAsync(updatePayment, id);
 
-        return Json(result);
+        return Ok(result);
     }
 
     [Route("Deactivate/{id}")]
     [HttpPatch]
     public async Task<IActionResult> DeactivatePayment(int id)
     {
-        await _paymentService.Deactivate(id);
+        await paymentService.Deactivate(id);
 
         return NoContent();
     }

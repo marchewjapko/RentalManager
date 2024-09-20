@@ -4,7 +4,7 @@ using RentalManager.Infrastructure.Extensions;
 
 namespace RentalManager.Tests.ExtensionsTests;
 
-public class ContextFilteringExtensionsTests
+public class ContextExtensionsTests
 {
     [Test]
     public void ShouldFilterClients_FistNameEquals()
@@ -136,6 +136,19 @@ public class ContextFilteringExtensionsTests
         // Assert
         var exception = Assert.Throws<InvalidOperationException>(() =>
             entities.Filter(x => x.InvalidField, "", FilterOperand.LessThanOrEqualTo));
+        Assert.That(exception.Message, Is.EqualTo("The specified member is not a writable property."));
+    }
+    
+    [Test]
+    public void ShouldNotSort_NotAProperty()
+    {
+        // Arrange
+        var entities = new Faker<TestEntity>().Generate(100)
+            .AsQueryable();
+
+        // Assert
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            entities.Sort(x => x.InvalidField, SortOrder.ASC));
         Assert.That(exception.Message, Is.EqualTo("The specified member is not a writable property."));
     }
 
