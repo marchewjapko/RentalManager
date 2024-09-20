@@ -43,10 +43,17 @@ jobs:
           path: "./coverage.xml"
 
   Custom-Badge-Job:
+    needs: Generate-Code-Coverage-Report
     runs-on: ubuntu-latest
     steps:
       - id: date
         run: echo "##[set-output name=data;]$(date)"
+      - name: Download File
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+      - name: Use File
+        run: cat coverage.xml
       - name: Time badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
