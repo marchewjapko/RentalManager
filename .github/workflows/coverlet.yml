@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
       - name: Build the project
-        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+        run: dotnet build --configuration Release --property WarningLevel=0 "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
@@ -33,9 +33,13 @@ jobs:
       - name: Run tests with coverage
         working-directory: ./WebApi/RentalManager.Tests
         run: dotnet test --results-directory ./TestResults --collect:"XPlat Code Coverage"
+        
+      - name: Copy test result
+        working-directory:
+        run: cp ./WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: "WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml"
+          path: "./.cobertura.xml"
