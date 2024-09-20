@@ -1,4 +1,4 @@
-name: CI
+name: Coverlet
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
           failOnError: true  # Fail the job if there are errors
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.json  # Path to the coverage report
