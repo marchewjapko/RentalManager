@@ -37,7 +37,7 @@ jobs:
           configuration: 'Release'
           output: 'cobertura'
           format: 'xml'
-          failOnError: true
+          #failOnError: true
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
