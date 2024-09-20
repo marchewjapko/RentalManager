@@ -38,7 +38,10 @@ jobs:
         run: ls
                 
       - name: Where is it2
-        run: ls WebApi/RentalManager.Tests/TestResults
+        run: ls WebApi/RentalManager.Tests
+                        
+      - name: Where is it3
+        run: ls WebApi
 
       - name: Copy test result
         run: cp WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
