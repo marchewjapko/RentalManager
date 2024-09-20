@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  Generate Code Coverage Report:
+  Generate-Code-Coverage-Report:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,7 +42,7 @@ jobs:
           name: coverage-report
           path: "./coverage.xml"
 
-  Custom Badge Job:
+  Custom-Badge-Job:
     runs-on: ubuntu-latest
     steps:
       - id: date
