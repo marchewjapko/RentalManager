@@ -13,6 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # - name: Set up .NET
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: '8.0.x'  # Specify the .NET version you are using
+
+      # - name: Restore dependencies
+      #   run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+
+      # - name: Build the project
+      #   run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
 
