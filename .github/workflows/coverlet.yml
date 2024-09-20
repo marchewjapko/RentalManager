@@ -1,0 +1,43 @@
+name: Coverlet
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Specify the .NET version you are using
+
+      - name: Restore dependencies
+        run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+
+      - name: Build the project
+        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj" --verbosity detailed
+
+      - name: Run tests with coverage
+        uses: b3b00/coverlet-action@1.3.0
+        with:
+          project: 'WebApi/RentalManager.Tests/RentalManager.Tests.csproj'  # Path to your test project(s)
+          configuration: 'Release'  # Configuration to use
+          output: 'coverage.xml'  # Output file for coverage report
+          format: 'xml'  # Format of the coverage report (json, xml, etc.)
+          failOnError: true  # Fail the job if there are errors
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.json  # Path to the coverage report
