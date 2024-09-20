@@ -13,20 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'  # Specify the .NET version you are using
-
-      - name: Restore dependencies
-        run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
-
-      - name: Build the project
-        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj" --verbosity detailed
-
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
 
@@ -35,7 +21,7 @@ jobs:
         with:
           testProject: "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
           configuration: 'Release'
-          output: 'cobertura'
+          output: 'cobertura.xml'
           format: 'xml'
           #failOnError: true
 
@@ -43,4 +29,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage.json  # Path to the coverage report
+          path: cobertura.xml  # Path to the coverage report
