@@ -31,8 +31,7 @@ jobs:
         run: dotnet nuget locals all --clear
 
       - name: Run tests with coverage
-        working-directory: ./WebApi/RentalManager.Tests
-        run: dotnet test --results-directory ./TestResults --collect:"XPlat Code Coverage" --no-restore
+        run: dotnet test --results-directory WebApi/RentalManager.Tests/TestResults --collect:"XPlat Code Coverage" --no-restore "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
         
       - name: Where is it
         run: ls
@@ -42,6 +41,9 @@ jobs:
                         
       - name: Where is it3
         run: ls WebApi
+                        
+      - name: Where is it4
+        run: ls WebApi/RentalManager.Tests/TestResults
 
       - name: Copy test result
         run: cp WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
