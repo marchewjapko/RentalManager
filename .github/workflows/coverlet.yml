@@ -16,31 +16,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Set up .NET
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '8.0.x'  # Specify the .NET version you are using
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Specify the .NET version you are using
 
-      # - name: Restore dependencies
-      #   run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+      - name: Restore dependencies
+        run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      # - name: Build the project
-      #   run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+      - name: Build the project
+        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
 
       - name: Run tests with coverage
-        uses: b3b00/coverlet-action@1.3.0
-        with:
-          testProject: "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
-          configuration: 'Release'
-          output: 'cobertura.xml'
-          format: 'xml'
-          #failOnError: true
+        working-directory: ./WebApi/RentalManager.Tests
+        run: dotnet test --results-directory ./TestResults --collect:"XPlat Code Coverage"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: cobertura.xml  # Path to the coverage report
+          path: "WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml"
