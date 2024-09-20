@@ -31,7 +31,7 @@ jobs:
         run: dotnet nuget locals all --clear
 
       - name: Run tests with coverage
-        run: dotnet test --results-directory WebApi/RentalManager.Tests/TestResults --collect:"XPlat Code Coverage" --no-restore "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
+        run: dotnet test --results-directory WebApi/RentalManager.Tests/TestResults --collect:"XPlat Code Coverage" "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
         
       - name: Where is it
         run: ls
