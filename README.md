@@ -4,6 +4,10 @@ The aim of *RenatalManager* is to help manage the rentals of medical equipment s
 
 I fully realize this could have all been achieved with a simple spreadsheet with much less hassle.
 
+## Status
+![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage) <br />
+[![CodeQL](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql)
+
 ## Installation
 
 Each of the components of the system is published as a separate image to Docker hub. Included in the project is the Docker Compose file, that can be used to pull said images and install the entire thing, simply run the following:

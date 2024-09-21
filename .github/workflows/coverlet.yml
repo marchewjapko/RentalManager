@@ -1,4 +1,4 @@
-name: Coverlet
+name: Code Coverage
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  Get-Code-Coverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,25 +19,45 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'  # Specify the .NET version you are using
+          dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: Restore Dependencies
         run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      - name: Build the project
-        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj" --verbosity detailed
+      - name: Build the Project
+        run: dotnet build --configuration Release --property WarningLevel=0 "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      - name: Run tests with coverage
-        uses: b3b00/coverlet-action@1.3.0
-        with:
-          project: 'WebApi/RentalManager.Tests/RentalManager.Tests.csproj'  # Path to your test project(s)
-          configuration: 'Release'  # Configuration to use
-          output: 'coverage.xml'  # Output file for coverage report
-          format: 'xml'  # Format of the coverage report (json, xml, etc.)
-          failOnError: true  # Fail the job if there are errors
+      - name: Clear NuGet Cache
+        run: dotnet nuget locals all --clear
 
-      - name: Upload coverage report
+      - name: Run Tests with Coverage
+        run: dotnet test --results-directory WebApi/RentalManager.Tests/TestResults --collect:"XPlat Code Coverage" "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
+
+      - name: Copy Test Results
+        run: cp WebApi/RentalManager.Tests/TestResults/*/coverage.cobertura.xml ./coverage.xml
+
+      - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage.json  # Path to the coverage report
+          path: "./coverage.xml"
+
+  Get-Custom-Badge:
+    needs: Get-Code-Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download File
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+      - name: Use File
+        id: file-parse
+        run: xml_file="./coverage.xml"; line_rate=$(grep -oP 'line-rate="\K[^"]+' "$xml_file"| head -1); line_rate="${line_rate/0./""}"; result="${line_rate:0:2},${line_rate:2:1}"; echo "web-api-code-coverage=$result" >> "$GITHUB_OUTPUT"
+      - name: Time badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: web-api-test-coverage
+          LABEL: 'Web API Test Coverage'
+          STATUS: ${{ steps.file-parse.outputs.web-api-code-coverage }}%
+          COLOR: 00EEFF
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
