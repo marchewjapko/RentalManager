@@ -1,4 +1,4 @@
-name: Coverlet
+name: Code Coverage
 
 on:
   push:
@@ -54,12 +54,12 @@ jobs:
           name: coverage-report
       - name: Use File
         id: file-parse
-        run: xml_file="./coverage.xml"; line_rate=$(grep -oP 'line-rate="\K[^"]+' "$xml_file"| head -1); echo "web-api-code-coverage=$line_rate" >> "$GITHUB_OUTPUT"
+        run: xml_file="./coverage.cobertura.xml"; line_rate=$(grep -oP 'line-rate="\K[^"]+' "$xml_file"| head -1); line_rate="${line_rate/0./""}"; line_rate="$(($line_rate / 10000000000000))"; result="${line_rate:0:2},${line_rate:2}"; echo "web-api-code-coverage=$result" >> "$GITHUB_OUTPUT"
       - name: Time badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
-          NAME: test
-          LABEL: 'Test?'
-          STATUS: ${{ steps.file-parse.outputs.web-api-code-coverage }}
+          NAME: web-api-test-coverage
+          LABEL: 'Web API Test Coverage'
+          STATUS: ${{ steps.file-parse.outputs.web-api-code-coverage }}%
           COLOR: 00EEFF
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
