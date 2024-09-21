@@ -54,7 +54,7 @@ jobs:
           name: coverage-report
       - name: Use File
         id: file-parse
-        run: xml_file="./coverage.cobertura.xml"; line_rate=$(grep -oP 'line-rate="\K[^"]+' "$xml_file"| head -1); line_rate="${line_rate/0./""}"; line_rate="$(($line_rate / 10000000000000))"; result="${line_rate:0:2},${line_rate:2}"; echo "web-api-code-coverage=$result" >> "$GITHUB_OUTPUT"
+        run: xml_file="./coverage.cobertura.xml"; line_rate=$(grep -oP 'line-rate="\K[^"]+' "$xml_file"| head -1); line_rate="${line_rate/0./""}"; result="${line_rate:0:2},${line_rate:2:1}"; echo "web-api-code-coverage=$result" >> "$GITHUB_OUTPUT"
       - name: Time badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
