@@ -5,7 +5,7 @@ The aim of *RenatalManager* is to help manage the rentals of medical equipment s
 I fully realize this could have all been achieved with a simple spreadsheet with much less hassle.
 
 ## Status
-![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage) <br />
+![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage/shields/shields.json) <br />
 [![CodeQL](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql)
 
 ## Installation
