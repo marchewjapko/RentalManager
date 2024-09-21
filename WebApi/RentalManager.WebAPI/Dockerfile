@@ -6,10 +6,10 @@ ENV ASPNETCORE_URLS=http://+:80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["RentalManager.WebAPI/RentalManager.WebAPI.csproj", "RentalManager.WebAPI/"]
+COPY ["WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj", "RentalManager.WebAPI/"]
 RUN dotnet restore "RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 COPY . .
-WORKDIR "/src/RentalManager.WebAPI"
+WORKDIR "/src/WebApi/RentalManager.WebAPI"
 RUN dotnet build "RentalManager.WebAPI.csproj" -c Release -o /app/build
 
 FROM build AS publish
