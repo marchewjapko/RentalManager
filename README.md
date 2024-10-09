@@ -27,8 +27,8 @@ The system is made up of the following components:
 ## Building and Publishing Docker images
 To build your own images, run the following:
 
-    docker build -f .\WebApi\RentalManager.WebAPI\Dockerfile -t [your docker hub username]/rental-manager-api .
-    docker build -f .\WebApi\RentalManager.DocumentService\Dockerfile -t [your docker hub username]/rental-manager-document-service .
+    docker build -t [your docker hub username]/rental-manager-api ./WebAPI
+    docker build -t [your docker hub username]/rental-manager-document-service ./DocumentService
 To publish them, under you own username:
 
     docker push [your docker hub username]/rental-manager-api:latest

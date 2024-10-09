@@ -32,3 +32,7 @@
 /.idea/*
 RentalManager.sln.DotSettings.user
 RentalManager.WebApp/app/lib/actions/apiClient/*
+
+*SIMC_Urzedowy_*.csv*
+*TERC_Urzedowy_*.csv*
+*ULIC_Urzedowy_*.csv*
