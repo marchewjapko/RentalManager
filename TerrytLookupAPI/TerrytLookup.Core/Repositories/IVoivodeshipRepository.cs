@@ -8,5 +8,7 @@ public interface IVoivodeshipRepository
 
     IAsyncEnumerable<Voivodeship> BrowseAllAsync();
 
-    Task<Voivodeship> GetByIdAsync(Guid id);
+    Task<Voivodeship?> GetByIdAsync(Guid id);
+
+    Task<bool> ExistAnyAsync();
 }

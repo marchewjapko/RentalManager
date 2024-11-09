@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using TerrytLookup.Infrastructure.Models.Enums;
 
-namespace TerrytLookup.Infrastructure.Models.Dto;
+namespace TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
 
 public class CreateTownDto : IEquatable<CreateTownDto>
 {
@@ -17,12 +18,12 @@ public class CreateTownDto : IEquatable<CreateTownDto>
     ///     Terryt property: <c>RM</c>
     /// </summary>
     public required TownType Type { get; init; }
-    
+
     /// <summary>
     ///     Terryt property: <c>WOJ</c>
     /// </summary>
     public required int VoivodeshipTerrytId { get; init; }
-    
+
     /// <summary>
     ///     Terryt property: <c>POW</c>
     /// </summary>
@@ -32,10 +33,27 @@ public class CreateTownDto : IEquatable<CreateTownDto>
     ///     Terryt property: <c>GMI</c>
     /// </summary>
     public required int MunicipalityTerrytId { get; init; }
-    
+
+    public required DateOnly ValidFromDate { get; set; }
+
     public ConcurrentBag<CreateStreetDto> Streets { get; init; } = [];
 
     public CreateVoivodeshipDto? Voivodeship { get; set; }
+
+    public bool Equals(CreateTownDto? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return TerrytId == other.TerrytId;
+    }
 
     public bool IsChildOf(CreateTownDto town)
     {
@@ -60,21 +78,6 @@ public class CreateTownDto : IEquatable<CreateTownDto>
     public void CopyStreetsTo(CreateTownDto town)
     {
         foreach (var street in Streets) town.Streets.Add(street);
-    }
-
-    public bool Equals(CreateTownDto? other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return TerrytId == other.TerrytId;
     }
 
     public override bool Equals(object? obj)

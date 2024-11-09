@@ -14,4 +14,6 @@ public class Voivodeship
     public DateOnly ValidFromDate { get; set; }
 
     public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
+
+    public required ICollection<Town> Towns { get; set; }
 }

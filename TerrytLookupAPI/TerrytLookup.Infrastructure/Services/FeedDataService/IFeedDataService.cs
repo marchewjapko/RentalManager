@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
-using TerrytLookup.Infrastructure.Models.Dto;
+using TerrytLookup.Infrastructure.Models.Dto.Terryt.Updates;
 
 namespace TerrytLookup.Infrastructure.Services.FeedDataService;
 
 public interface IFeedDataService
 {
     Task FeedTerrytDataAsync(IFormFile tercCsvFile, IFormFile simcCsvFile, IFormFile ulicCsvFile);
+    
+    Task UpdateTerc(TerrytUpdateDto<TercUpdateDto> updateDto);
 }

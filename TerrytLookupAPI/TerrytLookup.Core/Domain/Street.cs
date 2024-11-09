@@ -7,7 +7,7 @@ public class Street
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public int TerrytId { get; set; }
+    public int TerrytNameId { get; set; }
 
     public required string Name { get; set; }
 

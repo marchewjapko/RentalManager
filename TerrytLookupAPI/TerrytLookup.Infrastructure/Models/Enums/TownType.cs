@@ -1,4 +1,4 @@
-﻿namespace TerrytLookup.Infrastructure.Models.Dto;
+﻿namespace TerrytLookup.Infrastructure.Models.Enums;
 
 /// <summary>
 ///     Value corresponding to <b> RM </b> from Simc Dataset

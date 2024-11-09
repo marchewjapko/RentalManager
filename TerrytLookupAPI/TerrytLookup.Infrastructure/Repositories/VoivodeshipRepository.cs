@@ -1,30 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using TerrytLookup.Core.Domain;
 using TerrytLookup.Core.Repositories;
-using TerrytLookup.Infrastructure.Extensions;
 using TerrytLookup.Infrastructure.Repositories.DbContext;
 
 namespace TerrytLookup.Infrastructure.Repositories;
 
-public class VoivodeshipRepository(AppDbContext appDbContext) : IVoivodeshipRepository
+public class VoivodeshipRepository(AppDbContext context) : IVoivodeshipRepository
 {
     public Task AddRangeAsync(IEnumerable<Voivodeship> voivodeships)
     {
-        if (appDbContext.Database.IsRelational())
-        {
-            return appDbContext.InsertRelational(voivodeships);
-        }
-
-        return appDbContext.InsertNonRelational(voivodeships);
+        return context.BulkInsertAsync(voivodeships, b => b.IncludeGraph = true);
     }
 
     public IAsyncEnumerable<Voivodeship> BrowseAllAsync()
     {
-        return appDbContext.Voivodeships.AsAsyncEnumerable();
+        return context.Voivodeships.AsAsyncEnumerable();
     }
 
-    public Task<Voivodeship> GetByIdAsync(Guid id)
+    public Task<Voivodeship?> GetByIdAsync(Guid id)
     {
-        return appDbContext.Voivodeships.FirstOrDefaultAsync(x => x.Id == id);
+        return context.Voivodeships.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public Task<bool> ExistAnyAsync()
+    {
+        return context.Streets.AnyAsync();
     }
 }

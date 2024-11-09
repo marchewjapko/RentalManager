@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace TerrytLookup.Infrastructure.Models.Dto;
+namespace TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
 
 public class CreateVoivodeshipDto
 {
@@ -9,4 +9,6 @@ public class CreateVoivodeshipDto
     public required string Name { get; init; }
 
     public ConcurrentBag<CreateTownDto> Towns { get; init; } = [];
+
+    public required DateOnly ValidFromDate { get; set; }
 }

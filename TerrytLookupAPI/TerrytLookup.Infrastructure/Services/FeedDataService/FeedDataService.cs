@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
-using TerrytLookup.Infrastructure.Models.Dto;
+using TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
 using TerrytLookup.Infrastructure.Models.Dto.Terryt;
+using TerrytLookup.Infrastructure.Models.Dto.Terryt.Updates;
+using TerrytLookup.Infrastructure.Models.Enums;
+using TerrytLookup.Infrastructure.Services.VoivodeshipService;
 
 namespace TerrytLookup.Infrastructure.Services.FeedDataService;
 
-public class FeedDataService(IMapper mapper) : IFeedDataService
+public class FeedDataService(IMapper mapper, IVoivodeshipService voivodeshipService) : IFeedDataService
 {
-    private static int _counter;
-
     /// <summary>
     ///     Asynchronously processes and feeds data from the provided CSV files into the appropriate data structures.
     /// </summary>
@@ -24,9 +25,6 @@ public class FeedDataService(IMapper mapper) : IFeedDataService
     /// </remarks>
     public async Task FeedTerrytDataAsync(IFormFile tercCsvFile, IFormFile simcCsvFile, IFormFile ulicCsvFile)
     {
-        var now = DateTime.Now;
-        _counter++;
-
         try
         {
             var tercReader = new TerrytReader(tercCsvFile);
@@ -55,13 +53,18 @@ public class FeedDataService(IMapper mapper) : IFeedDataService
 
             Parallel.ForEach(streets, street => AssignStreetToTown(street, towns));
             ConsolidateTowns(towns, voivodeships);
+
+            await voivodeshipService.AddRange(voivodeships.Select(x => x.Value));
         }
         catch (Exception ex)
         {
             throw new TerrytParsingException(ex);
         }
+    }
 
-        Console.WriteLine($"#{_counter:D3} - Elapsed time: {(DateTime.Now - now).TotalSeconds}");
+    public Task UpdateTerc(TerrytUpdateDto<TercUpdateDto> updateDto)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -109,7 +112,7 @@ public class FeedDataService(IMapper mapper) : IFeedDataService
         town.Voivodeship = voivodeship;
         voivodeship.Towns.Add(town);
     }
-    
+
     /// <summary>
     ///     Consolidates streets from sub-towns into their respective parent towns. <br />
     ///     Towns that aren't deleted are instead assigned to their voivodeship

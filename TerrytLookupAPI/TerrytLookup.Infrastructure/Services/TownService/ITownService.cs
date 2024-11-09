@@ -4,9 +4,9 @@ namespace TerrytLookup.Infrastructure.Services.TownService;
 
 public interface ITownService
 {
-    // public Task AddAsync(IEnumerable<SimcDto> simcDtos);
-    //
-    // public ValueTask<List<SimcDto>> ParseSimcData(Stream stream);
+    public IEnumerable<TownDto> BrowseAllAsync(string? name, Guid? voivodeshipId);
 
-    public IEnumerable<CreateTownDto> BrowseAllAsync(string name);
+    public Task<TownDto> GetByIdAsync(Guid id);
+
+    Task<bool> ExistAnyAsync();
 }

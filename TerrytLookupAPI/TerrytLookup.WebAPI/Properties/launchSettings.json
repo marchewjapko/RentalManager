@@ -6,18 +6,18 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "InMemory": "False"
+        "DatabaseType": "Persistent"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:38924"
     },
-    "WebAPI - In Memory": {
+    "WebAPI - Singe Use DB": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "InMemory": "True"
+        "DatabaseType": "SingleUse"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:38924"

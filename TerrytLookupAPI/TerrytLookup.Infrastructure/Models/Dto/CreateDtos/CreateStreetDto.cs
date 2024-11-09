@@ -1,4 +1,4 @@
-﻿namespace TerrytLookup.Infrastructure.Models.Dto;
+﻿namespace TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
 
 public class CreateStreetDto
 {
@@ -9,4 +9,6 @@ public class CreateStreetDto
     public required string Name { get; init; }
 
     public CreateTownDto? Town { get; set; }
+
+    public required DateOnly ValidFromDate { get; set; }
 }

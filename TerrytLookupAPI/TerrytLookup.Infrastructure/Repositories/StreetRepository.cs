@@ -6,35 +6,35 @@ using TerrytLookup.Infrastructure.Repositories.DbContext;
 
 namespace TerrytLookup.Infrastructure.Repositories;
 
-public class TownRepository(AppDbContext context) : ITownRepository
+public class StreetRepository(AppDbContext context) : IStreetRepository
 {
-    public Task AddRangeAsync(IList<Town> towns)
+    public Task AddRangeAsync(IList<Street> towns)
     {
         return context.BulkInsertAsync(towns);
     }
 
-    public IAsyncEnumerable<Town> BrowseAllAsync(string? name, Guid? voivodeshipId)
+    public IAsyncEnumerable<Street> BrowseAllAsync(string? name, Guid? townId)
     {
-        var query = context.Towns.AsNoTracking()
+        var query = context.Streets.AsNoTracking()
             .AsQueryable();
 
         if (name is not null)
         {
-            query = query.Where(town => town.Name.Contains(name));
+            query = query.Where(x => x.Name.Contains(name));
         }
 
-        if (voivodeshipId.HasValue)
+        if (townId.HasValue)
         {
-            query = query.Where(x => x.VoivodeshipId == voivodeshipId);
+            query = query.Where(x => x.TownId == townId);
         }
 
         return query.Take(AppDbContext.PageSize)
             .AsAsyncEnumerable();
     }
 
-    public Task<Town?> GetByIdAsync(Guid id)
+    public Task<Street?> GetByIdAsync(Guid id)
     {
-        return context.Towns.FirstOrDefaultAsync(x => x.Id == id);
+        return context.Streets.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public Task<bool> ExistAnyAsync()

@@ -18,4 +18,6 @@ public class Town
     public DateOnly ValidFromDate { get; set; }
 
     public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
+
+    public required ICollection<Street> Streets { get; set; }
 }

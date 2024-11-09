@@ -1,4 +1,4 @@
-﻿namespace TerrytLookup.Infrastructure.Models.Dto;
+﻿namespace TerrytLookup.Infrastructure.Models.Enums;
 
 /// <summary>
 ///     Value corresponding to <b> RODZ_GMI </b> from Simc Dataset <br />
