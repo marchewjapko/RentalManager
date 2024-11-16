@@ -8,31 +8,31 @@ public class UlicDto
     ///     Terryt property: <c>WOJ</c>
     /// </summary>
     [Name("WOJ")]
-    public required int VoivodeshipId { get; set; }
+    public required int VoivodeshipId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>POW</c>
     /// </summary>
     [Name("POW")]
-    public required int CountyId { get; set; }
+    public required int CountyId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>GMI</c>
     /// </summary>
     [Name("GMI")]
-    public required int MunicipalityId { get; set; }
+    public required int MunicipalityId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>RODZ_GMI</c>
     /// </summary>
     [Name("RODZ_GMI")]
-    public required int EntityTypeId { get; set; }
+    public required int EntityTypeId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>SYM</c>
     /// </summary>
     [Name("SYM")]
-    public required int TownId { get; set; }
+    public required int TownId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>SYM_UL</c>
@@ -42,29 +42,29 @@ public class UlicDto
     ///     Thusly it is not unique
     /// </remarks>
     [Name("SYM_UL")]
-    public required int StreetNameId { get; set; }
+    public required int StreetNameId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>CECHA</c>
     /// </summary>
     [Name("CECHA")]
-    public required string StreetPrefix { get; set; }
+    public required string StreetPrefix { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>NAZWA_1</c>
     /// </summary>
     [Name("NAZWA_1")]
-    public required string StreetNameFirstPart { get; set; }
+    public required string StreetNameFirstPart { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>NAZWA_2</c>
     /// </summary>
     [Name("NAZWA_2")]
-    public string? StreetNameSecondPart { get; set; }
+    public string? StreetNameSecondPart { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>STAN_NA</c>
     /// </summary>
     [Name("STAN_NA")]
-    public required DateOnly ValidFromDate { get; set; }
+    public required DateOnly ValidFromDate { get; init; }
 }

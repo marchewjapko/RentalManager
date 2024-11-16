@@ -3,7 +3,7 @@ using TerrytLookup.Core.Domain;
 using TerrytLookup.Core.Repositories;
 using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
 using TerrytLookup.Infrastructure.Models.Dto;
-using TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
+using TerrytLookup.Infrastructure.Models.Dto.Internal.CreateDtos;
 
 namespace TerrytLookup.Infrastructure.Services.VoivodeshipService;
 
@@ -14,7 +14,7 @@ public class VoivodeshipService(IVoivodeshipRepository voivodeshipRepository, IM
         var entities = mapper.Map<IEnumerable<Voivodeship>>(voivodeships)
             .ToList();
 
-        return voivodeshipRepository.AddRangeAsync(entities);
+        return voivodeshipRepository.AddRangeAsync(entities); 
     }
 
     public IEnumerable<VoivodeshipDto> BrowseAllAsync()
@@ -24,7 +24,7 @@ public class VoivodeshipService(IVoivodeshipRepository voivodeshipRepository, IM
         return mapper.Map<IEnumerable<VoivodeshipDto>>(voivodeships);
     }
 
-    public async Task<VoivodeshipDto> GetByIdAsync(Guid id)
+    public async Task<VoivodeshipDto> GetByIdAsync(int id)
     {
         var voivodeship = await voivodeshipRepository.GetByIdAsync(id);
 

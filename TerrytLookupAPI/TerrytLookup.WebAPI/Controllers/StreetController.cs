@@ -19,7 +19,7 @@ public class StreetController(IStreetService streetService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     [HttpGet]
-    public IActionResult BrowseAllStreets(string? name, Guid? townId)
+    public IActionResult BrowseAllStreets(string? name, int? townId)
     {
         var result = streetService.BrowseAllAsync(name, townId);
 
@@ -29,14 +29,15 @@ public class StreetController(IStreetService streetService) : ControllerBase
     /// <summary>
     ///     Retrieves a specific street by its unique identifier.
     /// </summary>
-    /// <param name="id">The unique identifier of the street.</param>
+    /// <param name="townId">Identifier of the town the street is located in.</param>
+    /// <param name="nameId">ID of the street's name.</param>
     /// <returns>The <see cref="StreetDto" /> representing the street.</returns>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetDto))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetTownById(Guid id)
+    [HttpGet("{townId:int}/{nameId:int}")]
+    public async Task<IActionResult> GetTownById(int townId, int nameId)
     {
-        var result = await streetService.GetByIdAsync(id);
+        var result = await streetService.GetByIdAsync(townId, nameId);
 
         return Ok(result);
     }

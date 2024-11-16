@@ -6,9 +6,9 @@ public interface IStreetRepository
 {
     Task AddRangeAsync(IList<Street> towns);
 
-    IAsyncEnumerable<Street> BrowseAllAsync(string? name, Guid? townId);
+    IAsyncEnumerable<Street> BrowseAllAsync(string? name, int? townId);
 
-    Task<Street?> GetByIdAsync(Guid id);
+    Task<Street?> GetByIdAsync(int townId, int nameId);
 
     Task<bool> ExistAnyAsync();
 }

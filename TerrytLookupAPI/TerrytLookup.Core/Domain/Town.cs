@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TerrytLookup.Core.Domain;
 
 [Index(nameof(Name))]
-public class Town
+public class Town : BaseEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    public int TerrytId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Id { get; set; }
 
     public required string Name { get; set; }
 
-    public Guid VoivodeshipId { get; set; }
+    [ForeignKey("ParentTownId")]
+    public Town? ParentTown { get; set; }
 
-    public required Voivodeship Voivodeship { get; set; }
-
-    public DateOnly ValidFromDate { get; set; }
-
-    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
+    public required County County { get; set; }
 
     public required ICollection<Street> Streets { get; set; }
 }

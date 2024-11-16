@@ -8,23 +8,23 @@ namespace TerrytLookup.Infrastructure.Repositories;
 
 public class VoivodeshipRepository(AppDbContext context) : IVoivodeshipRepository
 {
-    public Task AddRangeAsync(IEnumerable<Voivodeship> voivodeships)
-    {
-        return context.BulkInsertAsync(voivodeships, b => b.IncludeGraph = true);
-    }
-
     public IAsyncEnumerable<Voivodeship> BrowseAllAsync()
     {
         return context.Voivodeships.AsAsyncEnumerable();
     }
 
-    public Task<Voivodeship?> GetByIdAsync(Guid id)
+    public Task<Voivodeship?> GetByIdAsync(int id)
     {
         return context.Voivodeships.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public Task<bool> ExistAnyAsync()
     {
-        return context.Streets.AnyAsync();
+        return context.Voivodeships.AnyAsync();
+    }
+
+    public Task AddRangeAsync(IEnumerable<Voivodeship> voivodeships)
+    {
+        return context.BulkInsertAsync(voivodeships, b => b.IncludeGraph = true);
     }
 }

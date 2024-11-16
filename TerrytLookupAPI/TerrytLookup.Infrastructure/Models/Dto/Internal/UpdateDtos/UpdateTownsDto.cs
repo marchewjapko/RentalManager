@@ -1,10 +1,8 @@
-﻿namespace TerrytLookup.Infrastructure.Models.Dto.UpdateDtos;
+﻿namespace TerrytLookup.Infrastructure.Models.Dto.Internal.UpdateDtos;
 
 public class UpdateTownsDto
 {
     public UpdateTownUpdateType UpdateType { get; set; }
-    
-    public int NewVoivodeshipId { get; set; }
     
     public int NewVoivodeshipId { get; set; }
 }

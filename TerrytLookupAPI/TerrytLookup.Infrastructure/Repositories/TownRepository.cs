@@ -13,7 +13,7 @@ public class TownRepository(AppDbContext context) : ITownRepository
         return context.BulkInsertAsync(towns);
     }
 
-    public IAsyncEnumerable<Town> BrowseAllAsync(string? name, Guid? voivodeshipId)
+    public IAsyncEnumerable<Town> BrowseAllAsync(string? name, int? voivodeshipId, int? countyId)
     {
         var query = context.Towns.AsNoTracking()
             .AsQueryable();
@@ -25,20 +25,27 @@ public class TownRepository(AppDbContext context) : ITownRepository
 
         if (voivodeshipId.HasValue)
         {
-            query = query.Where(x => x.VoivodeshipId == voivodeshipId);
+            query = query.Where(x => x.County.Voivodeship.Id == voivodeshipId);
         }
+        
+        if (countyId.HasValue)
+        {
+            query = query.Where(x => x.County.CountyId == countyId);
+        }
+
+        query = query.Where(x => x.ParentTown == null);
 
         return query.Take(AppDbContext.PageSize)
             .AsAsyncEnumerable();
     }
 
-    public Task<Town?> GetByIdAsync(Guid id)
+    public Task<Town?> GetByIdAsync(int id)
     {
         return context.Towns.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public Task<bool> ExistAnyAsync()
     {
-        return context.Streets.AnyAsync();
+        return context.Towns.AnyAsync();
     }
 }

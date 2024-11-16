@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
-using TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
+using TerrytLookup.Infrastructure.Models.Dto.Internal.CreateDtos;
 using TerrytLookup.Infrastructure.Models.Dto.Terryt;
 using TerrytLookup.Infrastructure.Models.Dto.Terryt.Updates;
-using TerrytLookup.Infrastructure.Models.Enums;
 using TerrytLookup.Infrastructure.Services.VoivodeshipService;
 
 namespace TerrytLookup.Infrastructure.Services.FeedDataService;
@@ -42,17 +41,26 @@ public class FeedDataService(IMapper mapper, IVoivodeshipService voivodeshipServ
             var ulic = await ulicTask;
 
             var voivodeships = new Dictionary<int, CreateVoivodeshipDto>();
+            var counties = new Dictionary<(int voivodeshipId, int countyId), CreateCountyDto>();
             var towns = new Dictionary<int, CreateTownDto>();
             IEnumerable<CreateStreetDto> streets = new List<CreateStreetDto>();
 
             Parallel.Invoke(
-                () => { voivodeships = mapper.Map<Dictionary<int, CreateVoivodeshipDto>>(terc.Where(x => x.EntityType == "województwo")); },
+                () => { voivodeships = mapper.Map<Dictionary<int, CreateVoivodeshipDto>>(terc.Where(x => x.IsVoivodeship())); },
+                () => { counties = mapper.Map<Dictionary<(int voivodeshipId, int countyId), CreateCountyDto>>(terc.Where(x => x.IsCounty())); },
                 () => { towns = mapper.Map<Dictionary<int, CreateTownDto>>(simc); },
                 () => { streets = mapper.Map<IEnumerable<CreateStreetDto>>(ulic); }
             );
 
-            Parallel.ForEach(streets, street => AssignStreetToTown(street, towns));
-            ConsolidateTowns(towns, voivodeships);
+            Parallel.Invoke(
+                () => Parallel.ForEach(streets, street => AssignStreetToTown(street, towns)),
+                () => Parallel.ForEach(counties, county => AssignCountyToVoivodeship(county.Value, voivodeships))
+            );
+
+            Parallel.ForEach(towns, town => {
+                AssignTownToCounty(town.Value, counties);
+                AssignParentToTown(town.Value, towns);
+            });
 
             await voivodeshipService.AddRange(voivodeships.Select(x => x.Value));
         }
@@ -62,23 +70,11 @@ public class FeedDataService(IMapper mapper, IVoivodeshipService voivodeshipServ
         }
     }
 
-    public Task UpdateTerc(TerrytUpdateDto<TercUpdateDto> updateDto)
+    public Task UpdateSimc(TerrytUpdateDto<SimcUpdateDto> updateDto)
     {
         throw new NotImplementedException();
     }
 
-    /// <summary>
-    ///     Assigns a street to its town.
-    /// </summary>
-    /// <param name="street">The <see cref="CreateStreetDto" /> object of the street to be assigned.</param>
-    /// <param name="towns">
-    ///     A dictionary of <see cref="CreateTownDto" />, where the key is the town's ID and the value is the
-    ///     town DTO.
-    /// </param>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown when the town's <see cref="CreateTownDto.VoivodeshipTerrytId" /> does not exists in
-    ///     <paramref name="towns" />
-    /// </exception>
     public static void AssignStreetToTown(CreateStreetDto street, Dictionary<int, CreateTownDto> towns)
     {
         if (!towns.TryGetValue(street.TerrytTownId, out var town))
@@ -90,73 +86,40 @@ public class FeedDataService(IMapper mapper, IVoivodeshipService voivodeshipServ
         town.Streets.Add(street);
     }
 
-    /// <summary>
-    ///     Assigns a town to its voivodeship.
-    /// </summary>
-    /// <param name="town">The <see cref="CreateTownDto" /> object of the town to be assigned.</param>
-    /// <param name="voivodeships">
-    ///     A dictionary of <see cref="CreateVoivodeshipDto" />, where the key is the voivodeship ID and the value is the
-    ///     voivodeship DTO.
-    /// </param>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown when the town's <see cref="CreateTownDto.VoivodeshipTerrytId" /> does not exists in
-    ///     <paramref name="voivodeships" />
-    /// </exception>
-    public static void AssignTownToVoivodeship(CreateTownDto town, Dictionary<int, CreateVoivodeshipDto> voivodeships)
+    public static void AssignCountyToVoivodeship(CreateCountyDto county, Dictionary<int, CreateVoivodeshipDto> voivodeships)
     {
-        if (!voivodeships.TryGetValue(town.VoivodeshipTerrytId, out var voivodeship))
+        if (!voivodeships.TryGetValue(county.TerrytId.voivodeshipId, out var voivodeship))
         {
-            throw new InvalidOperationException($"Town {town.Name} is not a part of any voivodeship.");
+            throw new InvalidOperationException($"County {county.Name} is not a part of any voivodeship.");
         }
 
-        town.Voivodeship = voivodeship;
-        voivodeship.Towns.Add(town);
+        county.Voivodeship = voivodeship;
+        voivodeship.Counties.Add(county);
     }
 
-    /// <summary>
-    ///     Consolidates streets from sub-towns into their respective parent towns. <br />
-    ///     Towns that aren't deleted are instead assigned to their voivodeship
-    /// </summary>
-    /// <param name="towns">
-    ///     A dictionary where the key is an integer identifier for the town,
-    ///     and the value is a <see cref="CreateTownDto" /> representing the town's details.
-    /// </param>
-    /// <param name="voivodeships">
-    ///     A dictionary where the key is an integer identifier for the voivodeship,
-    ///     and the value is a <see cref="CreateVoivodeshipDto" /> representing the voivodeship's details.
-    /// </param>
-    /// <remarks>
-    ///     This method identifies parent towns that are of type Urban Municipality with a specific
-    ///     MunicipalityTerrytId and TownType of City. It then processes each town in the provided
-    ///     dictionary that is either a Delegation or a District of Warsaw. If a town has streets,
-    ///     it checks for a corresponding parent town and copies the streets to it.
-    ///     If a sub-town does not have a parent town, an <see cref="InvalidOperationException" />
-    ///     is thrown.
-    /// </remarks>
-    /// <exception cref="InvalidOperationException">Thrown when a sub-town does not have a parent town.</exception>
-    public static void ConsolidateTowns(Dictionary<int, CreateTownDto> towns, Dictionary<int, CreateVoivodeshipDto> voivodeships)
+    public static void AssignTownToCounty(CreateTownDto town, Dictionary<(int voivodeshipId, int countyId), CreateCountyDto> counties)
     {
-        var parentTowns = towns.Where(x => x.Value is { UnitType: TownUnitType.UrbanMunicipality, MunicipalityTerrytId: 1, Type: TownType.City })
-            .Select(x => x.Value)
-            .ToHashSet();
+        if (!counties.TryGetValue(town.CountyTerrytId, out var county))
+        {
+            throw new InvalidOperationException($"Town {town.Name} is not a part of any county.");
+        }
 
-        Parallel.ForEach(towns, town => {
-            if (!town.Value.ShouldBeRemoved())
-            {
-                AssignTownToVoivodeship(town.Value, voivodeships);
+        town.County = county;
+        county.Towns.Add(town);
+    }
 
-                return;
-            }
+    public static void AssignParentToTown(CreateTownDto town, Dictionary<int, CreateTownDto> towns)
+    {
+        if (town.ParentTownTerrytId == town.TerrytId)
+        {
+            return;
+        }
 
-            if (!town.Value.Streets.IsEmpty)
-            {
-                var parentTown = parentTowns.FirstOrDefault(x => town.Value.IsChildOf(x)) ??
-                                 throw new InvalidOperationException($"Sub-town {town.Value.Name} does not have a parent town.");
+        if (!towns.TryGetValue(town.ParentTownTerrytId, out var parentTown))
+        {
+            throw new InvalidOperationException($"Town {town.Name} does not have a parent town.");
+        }
 
-                town.Value.CopyStreetsTo(parentTown);
-            }
-
-            towns.Remove(town.Key);
-        });
+        town.ParentTown = parentTown;
     }
 }

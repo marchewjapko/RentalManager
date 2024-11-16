@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
 using TerrytLookup.Infrastructure.Models.Dto.Terryt.Updates;
+using TerrytLookup.Infrastructure.Services.CountyService;
 using TerrytLookup.Infrastructure.Services.FeedDataService;
 using TerrytLookup.Infrastructure.Services.StreetService;
 using TerrytLookup.Infrastructure.Services.TownService;
@@ -13,12 +14,13 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     This controller is meant to manipulate Terryt database data.
 /// </summary>
-[Route("[Controller]")]
+[Route("[Controller]/[Action]")]
 public class DataFeedController(
     ILogger<DataFeedController> logger,
     ITownService townService,
     IStreetService streetService,
     IVoivodeshipService voivodeshipService,
+    ICountyService countyService,
     IFeedDataService feedDataService) : ControllerBase
 {
     /// <summary>
@@ -35,7 +37,7 @@ public class DataFeedController(
     [ProducesErrorResponseType(typeof(ProblemDetails))]
     [Consumes("multipart/form-data")]
     [Produces("application/json")]
-    [HttpPost("[Action]")]
+    [HttpPost]
     public async Task<IActionResult> InitializeData([Required] IFormFile tercCsvFile,
         [Required] IFormFile simcCsvFile,
         [Required] IFormFile ulicCsvFile)
@@ -51,13 +53,18 @@ public class DataFeedController(
         {
             throw new DatabaseNotEmptyException();
         }
-
+        
         if (await streetService.ExistAnyAsync())
         {
             throw new DatabaseNotEmptyException();
         }
-
+        
         if (await voivodeshipService.ExistAnyAsync())
+        {
+            throw new DatabaseNotEmptyException();
+        }   
+        
+        if (await countyService.ExistAnyAsync())
         {
             throw new DatabaseNotEmptyException();
         }
@@ -72,14 +79,14 @@ public class DataFeedController(
     /// <summary>
     /// 
     /// </summary>
-    [HttpPut("[Action]")]
-    public Task<IActionResult> UpdateTerc([Required] IFormFile tercXmlFile)
+    [HttpPut]
+    public Task<IActionResult> UpdateSimc([Required] IFormFile tercXmlFile)
     {
         var deserializer = new XmlSerializer(typeof(TerrytUpdateDto<TercUpdateDto>));
         
         var reader = tercXmlFile.OpenReadStream();
         
-        var movies = (TerrytUpdateDto<TercUpdateDto>)deserializer.Deserialize(reader);
+        var movies = deserializer.Deserialize(reader) as TerrytUpdateDto<TercUpdateDto>;
         
         reader.Close();
         

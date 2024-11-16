@@ -8,61 +8,37 @@ public class SimcDto : IEquatable<SimcDto>
     ///     Terryt property: <c>WOJ</c>
     /// </summary>
     [Name("WOJ")]
-    public required int VoivodeshipId { get; set; }
-
+    public required int VoivodeshipId { get; init; }    
+    
     /// <summary>
     ///     Terryt property: <c>POW</c>
     /// </summary>
     [Name("POW")]
-    public required int CountyId { get; set; }
-
-    /// <summary>
-    ///     Terryt property: <c>GMI</c>
-    /// </summary>
-    [Name("GMI")]
-    public required int MunicipalityId { get; set; }
-
-    /// <summary>
-    ///     Terryt property: <c>RODZ_GMI</c>
-    /// </summary>
-    [Name("RODZ_GMI")]
-    public required int UnitType { get; set; }
-
-    /// <summary>
-    ///     Terryt property: <c>RM</c>
-    /// </summary>
-    [Name("RM")]
-    public required int TownType { get; set; }
-
-    /// <summary>
-    ///     Terryt property: <c>MZ</c>
-    /// </summary>
-    [Name("MZ")]
-    public required bool HasCommonName { get; set; }
-
+    public required int CountyId { get; init; }
+    
     /// <summary>
     ///     Terryt property: <c>NAZWA</c>
     /// </summary>
     [Name("NAZWA")]
-    public required string TownName { get; set; }
+    public required string Name { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>SYM</c>
     /// </summary>
     [Name("SYM")]
-    public required int TownId { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
-    ///     Terryt property: <c>SYMPOD</c>
+    ///     Terryt property: <c>SYMSTAT</c>
     /// </summary>
-    [Name("SYMPOD")]
-    public required int ParentTownId { get; set; }
+    [Name("SYMSTAT")]
+    public required int ParentId { get; init; }
 
     /// <summary>
     ///     Terryt property: <c>STAN_NA</c>
     /// </summary>
     [Name("STAN_NA")]
-    public required DateOnly ValidFromDate { get; set; }
+    public required DateOnly ValidFromDate { get; init; }
 
     public bool Equals(SimcDto? other)
     {
@@ -76,7 +52,7 @@ public class SimcDto : IEquatable<SimcDto>
             return true;
         }
 
-        return TownId == other.TownId;
+        return Id == other.Id;
     }
 
     public override bool Equals(object? obj)
@@ -101,6 +77,6 @@ public class SimcDto : IEquatable<SimcDto>
 
     public override int GetHashCode()
     {
-        return TownId;
+        return Id;
     }
 }

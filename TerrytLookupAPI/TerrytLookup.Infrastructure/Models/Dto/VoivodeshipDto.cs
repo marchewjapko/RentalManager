@@ -2,7 +2,7 @@
 
 public class VoivodeshipDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public required string Name { get; set; }
 }

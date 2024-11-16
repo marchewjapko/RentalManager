@@ -31,8 +31,8 @@ public class VoivodeshipController(IVoivodeshipService voivodeshipService) : Con
     /// <returns>The <see cref="VoivodeshipDto" /> representing the voivodeship.</returns>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VoivodeshipDto))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetVoivodeshipById(Guid id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetVoivodeshipById(int id)
     {
         var result = await voivodeshipService.GetByIdAsync(id);
 

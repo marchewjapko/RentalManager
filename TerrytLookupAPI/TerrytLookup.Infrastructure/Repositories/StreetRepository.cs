@@ -13,7 +13,7 @@ public class StreetRepository(AppDbContext context) : IStreetRepository
         return context.BulkInsertAsync(towns);
     }
 
-    public IAsyncEnumerable<Street> BrowseAllAsync(string? name, Guid? townId)
+    public IAsyncEnumerable<Street> BrowseAllAsync(string? name, int? townId)
     {
         var query = context.Streets.AsNoTracking()
             .AsQueryable();
@@ -25,16 +25,21 @@ public class StreetRepository(AppDbContext context) : IStreetRepository
 
         if (townId.HasValue)
         {
-            query = query.Where(x => x.TownId == townId);
+            query = query.Where(x => x.Town.Id == townId || (x.Town.ParentTown != null && x.Town.ParentTown.Id == townId));
         }
+        
+        query = query.GroupBy(x => x.Name)
+            .OrderBy(x => x.Key)
+            .Select(x => x.First());
 
-        return query.Take(AppDbContext.PageSize)
+        return query
+            .Take(AppDbContext.PageSize)
             .AsAsyncEnumerable();
     }
 
-    public Task<Street?> GetByIdAsync(Guid id)
+    public Task<Street?> GetByIdAsync(int townId, int nameId)
     {
-        return context.Streets.FirstOrDefaultAsync(x => x.Id == id);
+        return context.Streets.FirstOrDefaultAsync(x => x.TownId == townId && x.NameId == nameId);
     }
 
     public Task<bool> ExistAnyAsync()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TerrytLookup.Core.Repositories;
 using TerrytLookup.Infrastructure.Repositories;
+using TerrytLookup.Infrastructure.Services.CountyService;
 using TerrytLookup.Infrastructure.Services.FeedDataService;
 using TerrytLookup.Infrastructure.Services.StreetService;
 using TerrytLookup.Infrastructure.Services.TownService;
@@ -15,6 +16,9 @@ public static class ServiceRegistration
         services.AddScoped<IVoivodeshipRepository, VoivodeshipRepository>();
         services.AddScoped<IVoivodeshipService, VoivodeshipService.VoivodeshipService>();
 
+        services.AddScoped<ICountyRepository, CountyRepository>();
+        services.AddScoped<ICountyService, CountyService.CountyService>();
+        
         services.AddScoped<ITownRepository, TownRepository>();
         services.AddScoped<ITownService, TownService.TownService>();
 

@@ -1,5 +1,5 @@
 ﻿using TerrytLookup.Infrastructure.Models.Dto;
-using TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
+using TerrytLookup.Infrastructure.Models.Dto.Internal.CreateDtos;
 
 namespace TerrytLookup.Infrastructure.Services.VoivodeshipService;
 
@@ -9,7 +9,7 @@ public interface IVoivodeshipService
 
     public IEnumerable<VoivodeshipDto> BrowseAllAsync();
 
-    public Task<VoivodeshipDto> GetByIdAsync(Guid id);
+    public Task<VoivodeshipDto> GetByIdAsync(int id);
 
     Task<bool> ExistAnyAsync();
 }

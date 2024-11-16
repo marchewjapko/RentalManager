@@ -3,7 +3,7 @@ using TerrytLookup.Core.Domain;
 using TerrytLookup.Core.Repositories;
 using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
 using TerrytLookup.Infrastructure.Models.Dto;
-using TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
+using TerrytLookup.Infrastructure.Models.Dto.Internal.CreateDtos;
 
 namespace TerrytLookup.Infrastructure.Services.StreetService;
 
@@ -17,13 +17,13 @@ public class StreetService(IStreetRepository streetRepository, IMapper mapper) :
         return streetRepository.AddRangeAsync(entities);
     }
 
-    public async Task<StreetDto> GetByIdAsync(Guid id)
+    public async Task<StreetDto> GetByIdAsync(int townId, int nameId)
     {
-        var street = await streetRepository.GetByIdAsync(id);
+        var street = await streetRepository.GetByIdAsync(townId, nameId);
 
         if (street is null)
         {
-            throw new StreetNotFoundException(id);
+            throw new StreetNotFoundException(townId, nameId);
         }
 
         return mapper.Map<StreetDto>(street);
@@ -34,7 +34,7 @@ public class StreetService(IStreetRepository streetRepository, IMapper mapper) :
         return streetRepository.ExistAnyAsync();
     }
 
-    public IEnumerable<StreetDto> BrowseAllAsync(string? name, Guid? townId)
+    public IEnumerable<StreetDto> BrowseAllAsync(string? name, int? townId)
     {
         var streets = streetRepository.BrowseAllAsync(name, townId);
 

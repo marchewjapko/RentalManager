@@ -1,4 +1,4 @@
-﻿namespace TerrytLookup.Infrastructure.Models.Dto.CreateDtos;
+﻿namespace TerrytLookup.Infrastructure.Models.Dto.Internal.CreateDtos;
 
 public class CreateStreetDto
 {

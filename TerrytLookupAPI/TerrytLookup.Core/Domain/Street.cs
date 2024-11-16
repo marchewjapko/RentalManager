@@ -3,19 +3,13 @@
 namespace TerrytLookup.Core.Domain;
 
 [Index(nameof(Name))]
-public class Street
+public class Street : BaseEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    public int TerrytNameId { get; set; }
-
+    public int NameId { get; set; }
+    
     public required string Name { get; set; }
-
-    public Guid TownId { get; set; }
-
+    
+    public int TownId { get; set; }
+    
     public required Town Town { get; set; }
-
-    public DateOnly ValidFromDate { get; set; }
-
-    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }

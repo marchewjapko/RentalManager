@@ -7,5 +7,5 @@ public interface IFeedDataService
 {
     Task FeedTerrytDataAsync(IFormFile tercCsvFile, IFormFile simcCsvFile, IFormFile ulicCsvFile);
     
-    Task UpdateTerc(TerrytUpdateDto<TercUpdateDto> updateDto);
+    Task UpdateSimc(TerrytUpdateDto<SimcUpdateDto> updateDto);
 }
