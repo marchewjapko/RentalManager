@@ -1,4 +1,6 @@
-﻿namespace RentalManager.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RentalManager.Core.Domain;
 
 public class Agreement : DomainBase
 {
@@ -6,9 +8,10 @@ public class Agreement : DomainBase
 
     public int ClientId { get; set; }
 
-    public Client Client { get; set; }
+    public required Client Client { get; set; }
 
-    public string? Comment { get; set; }
+    [MaxLength(200)]
+    public required string? Comment { get; set; }
 
     public int Deposit { get; set; }
 
@@ -18,7 +21,7 @@ public class Agreement : DomainBase
 
     public DateTime DateAdded { get; set; }
 
-    public ICollection<Equipment> Equipments { get; set; }
+    public ICollection<Equipment> Equipments { get; set; } = [];
 
-    public ICollection<Payment> Payments { get; set; }
+    public ICollection<Payment> Payments { get; set; } = [];
 }

@@ -333,9 +333,12 @@ public class ClientRepositoryTests
     [Test]
     public void ShouldNotUpdate_NotFound()
     {
+        // Arrange
+        var client = new Faker<Client>().Generate();
+        
         // Assert
         Assert.ThrowsAsync<ClientNotFoundException>(async () =>
-            await _clientRepository.UpdateAsync(new Client(), 1));
+            await _clientRepository.UpdateAsync(client, 1));
     }
 
     [Test]

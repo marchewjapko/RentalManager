@@ -134,7 +134,7 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
     private static IQueryable<Agreement> SortAgreements(IQueryable<Agreement> agreements,
         QueryAgreements queryAgreements)
     {
-        var sortOrder = queryAgreements.Descending ? SortOrder.DESC : SortOrder.ASC;
+        var sortOrder = queryAgreements.Descending ? SortOrder.Desc : SortOrder.Asc;
 
         agreements = queryAgreements.SortAgreementsBy switch
         {

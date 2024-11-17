@@ -8,15 +8,15 @@ public class BaseClientCommand
 {
     [Required]
     [DefaultValue("John")]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
 
     [Required]
     [DefaultValue("Kowalski")]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
 
     [Required]
     [DefaultValue("+48 123 123 123")]
-    public string PhoneNumber { get; set; }
+    public required string PhoneNumber { get; set; }
 
     [DefaultValue("JohnKowalski@email.com")]
     public string? Email { get; set; }
@@ -26,9 +26,9 @@ public class BaseClientCommand
 
     [Required]
     [DefaultValue("Warsaw")]
-    public string City { get; set; }
+    public required string City { get; set; }
 
     [Required]
     [DefaultValue("Woodland Ave 4/6/8")]
-    public string Street { get; set; }
+    public string? Street { get; set; }
 }

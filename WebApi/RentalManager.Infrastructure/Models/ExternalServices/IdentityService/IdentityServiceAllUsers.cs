@@ -5,5 +5,5 @@ namespace RentalManager.Infrastructure.Models.ExternalServices.IdentityService;
 public class IdentityServiceAllUsers
 {
     [JsonPropertyName("results")]
-    public IEnumerable<IdentityServiceUser> Results { get; init; }
+    public required IEnumerable<IdentityServiceUser> Results { get; init; }
 }

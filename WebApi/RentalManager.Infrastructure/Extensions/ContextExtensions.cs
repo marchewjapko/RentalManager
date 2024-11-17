@@ -90,6 +90,6 @@ public enum FilterOperand
 
 public enum SortOrder
 {
-    ASC,
-    DESC
+    Asc,
+    Desc
 }

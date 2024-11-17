@@ -22,8 +22,10 @@ public class ClientControllerTests
 
         var controller = new ClientController(clientService.Object);
 
+        var command = new Faker<CreateClientCommand>().Generate();
+
         // Act
-        var result = await controller.AddClient(new CreateClientCommand()) as OkObjectResult;
+        var result = await controller.AddClient(command) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {
@@ -106,8 +108,10 @@ public class ClientControllerTests
 
         var controller = new ClientController(clientService.Object);
 
+        var command = new Faker<UpdateClientCommand>().Generate();
+        
         // Act
-        var result = await controller.UpdateClient(new UpdateClientCommand(), 1) as OkObjectResult;
+        var result = await controller.UpdateClient(command, 1) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {

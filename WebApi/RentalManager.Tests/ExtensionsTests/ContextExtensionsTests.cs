@@ -148,7 +148,7 @@ public class ContextExtensionsTests
 
         // Assert
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            entities.Sort(x => x.InvalidField, SortOrder.ASC));
+            entities.Sort(x => x.InvalidField, SortOrder.Asc));
         Assert.That(exception.Message, Is.EqualTo("The specified member is not a writable property."));
     }
 

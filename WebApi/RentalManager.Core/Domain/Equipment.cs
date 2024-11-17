@@ -1,10 +1,13 @@
-﻿namespace RentalManager.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RentalManager.Core.Domain;
 
 public class Equipment : DomainBase
 {
-    public string Name { get; set; }
+    [MaxLength(100)]
+    public required string Name { get; set; }
 
     public int Price { get; set; }
 
-    public ICollection<Agreement> Agreements { get; set; }
+    public ICollection<Agreement> Agreements { get; set; } = [];
 }

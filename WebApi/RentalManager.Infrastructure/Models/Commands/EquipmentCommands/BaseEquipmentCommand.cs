@@ -7,7 +7,7 @@ public class BaseEquipmentCommand
 {
     [Required]
     [DefaultValue("Fun equipment mk III")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [Required]
     [DefaultValue(100)]

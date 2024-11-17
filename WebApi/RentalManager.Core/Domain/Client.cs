@@ -1,18 +1,27 @@
-﻿namespace RentalManager.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RentalManager.Core.Domain;
 
 public class Client : DomainBase
 {
-    public string FirstName { get; set; }
+    [MaxLength(100)]
+    public required string FirstName { get; set; }
 
-    public string LastName { get; set; }
+    [MaxLength(100)]
+    public required string LastName { get; set; }
+    
+    [MaxLength(15)]
+    public required string PhoneNumber { get; set; }
 
-    public string PhoneNumber { get; set; }
-
+    [MaxLength(100)]
     public string? Email { get; set; }
 
+    [MaxLength(10)]
     public string? IdCard { get; set; }
 
-    public string City { get; set; }
+    [MaxLength(100)]
+    public required string City { get; set; }
 
-    public string Street { get; set; }
+    [MaxLength(100)]
+    public string? Street { get; set; }
 }

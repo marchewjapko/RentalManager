@@ -32,7 +32,7 @@ public class AgreementService(
 
         var newAgreement = await agreementRepository.AddAsync(agreement);
 
-        return mapper.Map<AgreementDto>(newAgreement, options => { options.AfterMap((o, dto) => dto.User = user); });
+        return mapper.Map<AgreementDto>(newAgreement, options => { options.AfterMap((_, dto) => dto.User = user); });
     }
 
     public async Task<IEnumerable<AgreementDto>> BrowseAllAsync(QueryAgreements queryAgreements)
@@ -57,7 +57,7 @@ public class AgreementService(
         var agreement = await agreementRepository.GetAsync(id);
         var user = await userService.GetAsync(agreement.UserId);
 
-        return mapper.Map<AgreementDto>(agreement, options => { options.AfterMap((o, dto) => dto.User = user); });
+        return mapper.Map<AgreementDto>(agreement, options => { options.AfterMap((_, dto) => dto.User = user); });
     }
 
     public async Task<AgreementDto> UpdateAsync(UpdateAgreementCommand updateAgreement,
@@ -74,7 +74,7 @@ public class AgreementService(
 
         var updatedAgreement = await agreementRepository.UpdateAsync(agreement, id);
 
-        return mapper.Map<AgreementDto>(updatedAgreement, options => { options.AfterMap((o, dto) => dto.User = user); });
+        return mapper.Map<AgreementDto>(updatedAgreement, options => { options.AfterMap((_, dto) => dto.User = user); });
     }
 
     public Task Deactivate(int id)

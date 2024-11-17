@@ -204,7 +204,6 @@ public class EquipmentRepositoryTests
         var dateTimeSearchTo = new DateTime(2020, 1, 16);
 
         var dateTimeInRange = new DateTime(2020, 1, 10);
-        var dateTimeOutsideRange = new DateTime(2020, 1, 31);
 
         var newEquipments = new Faker<Equipment>()
             .RuleFor(x => x.Id, f => f.UniqueIndex)
@@ -261,9 +260,12 @@ public class EquipmentRepositoryTests
     [Test]
     public void ShouldNotUpdate_NotFound()
     {
+        // Arrange
+        var equipment = new Faker<Equipment>().Generate();
+        
         // Assert
         Assert.ThrowsAsync<EquipmentNotFoundException>(async () =>
-            await _equipmentRepository.UpdateAsync(new Equipment(), 1));
+            await _equipmentRepository.UpdateAsync(equipment, 1));
     }
 
     [Test]

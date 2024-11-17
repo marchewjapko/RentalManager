@@ -5,5 +5,5 @@ namespace RentalManager.Infrastructure.Models.ExternalServices.IdentityService;
 public class IdentityServiceGroup
 {
     [JsonPropertyName("name")]
-    public string Name { get; init; }
+    public required string Name { get; init; }
 }

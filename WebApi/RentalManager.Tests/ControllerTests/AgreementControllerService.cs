@@ -6,7 +6,6 @@ using RentalManager.Global.Queries;
 using RentalManager.Infrastructure.Models.Commands.AgreementCommands;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Services.AgreementService;
-using RentalManager.Infrastructure.Services.PaymentService;
 using RentalManager.WebAPI.Controllers;
 
 namespace RentalManager.Tests.ControllerTests;
@@ -22,9 +21,11 @@ public class AgreementControllerService
             .ReturnsAsync(new Faker<AgreementDto>().Generate());
 
         var controller = new AgreementController(agreementService.Object);
+        
+        var agreement = new Faker<CreateAgreementCommand>().Generate();
 
         // Act
-        var result = await controller.AddAgreement(new CreateAgreementCommand()) as OkObjectResult;
+        var result = await controller.AddAgreement(agreement) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {
@@ -107,8 +108,10 @@ public class AgreementControllerService
 
         var controller = new AgreementController(agreementService.Object);
 
+        var agreement = new Faker<UpdateAgreementCommand>().Generate();
+        
         // Act
-        var result = await controller.UpdateAgreement(new UpdateAgreementCommand(), 1) as OkObjectResult;
+        var result = await controller.UpdateAgreement(agreement, 1) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {

@@ -112,7 +112,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
     private static IQueryable<Client> SortClients(IQueryable<Client> clients,
         QueryClients queryClients)
     {
-        var sortOrder = queryClients.Descending ? SortOrder.DESC : SortOrder.ASC;
+        var sortOrder = queryClients.Descending ? SortOrder.Desc : SortOrder.Asc;
 
         clients = queryClients.SortClientsBy switch
         {

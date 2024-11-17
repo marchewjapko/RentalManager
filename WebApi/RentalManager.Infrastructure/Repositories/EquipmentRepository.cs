@@ -119,7 +119,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
     private static IQueryable<Equipment> SortClients(IQueryable<Equipment> equipments,
         QueryEquipment queryEquipment)
     {
-        var sortOrder = queryEquipment.Descending ? SortOrder.DESC : SortOrder.ASC;
+        var sortOrder = queryEquipment.Descending ? SortOrder.Desc : SortOrder.Asc;
 
         equipments = queryEquipment.SortEquipmentBy switch
         {

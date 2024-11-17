@@ -19,7 +19,7 @@ public class BaseAgreementCommand
 
     [Required]
     [DefaultValue(new[] { 1 })]
-    public ICollection<int> EquipmentsIds { get; init; }
+    public required ICollection<int> EquipmentsIds { get; init; }
 
     [DefaultValue("Fun comment")]
     public string? Comment { get; init; }

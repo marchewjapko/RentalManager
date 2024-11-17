@@ -4,15 +4,15 @@ public class AgreementDto
 {
     public int Id { get; init; }
 
-    public UserDto User { get; set; }
+    public required UserDto User { get; set; }
 
     public bool IsActive { get; init; }
 
-    public ClientDto Client { get; init; }
+    public required ClientDto Client { get; init; }
 
-    public IEnumerable<EquipmentDto> Equipments { get; init; }
+    public required IEnumerable<EquipmentDto> Equipments { get; init; }
 
-    public IEnumerable<PaymentDto> Payments { get; init; }
+    public required IEnumerable<PaymentDto> Payments { get; init; }
 
     public string? Comment { get; init; }
 

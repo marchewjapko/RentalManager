@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using AutoMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using RentalManager.Infrastructure.Options;
 

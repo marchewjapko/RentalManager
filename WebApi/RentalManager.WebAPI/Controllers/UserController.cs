@@ -1,5 +1,4 @@
-﻿using System.Dynamic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalManager.Infrastructure.Models.DTO;
 using RentalManager.Infrastructure.Services.UserService;

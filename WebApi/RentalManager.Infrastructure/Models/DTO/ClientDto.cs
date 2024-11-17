@@ -4,17 +4,17 @@ public class ClientDto
 {
     public int Id { get; init; }
 
-    public string FirstName { get; init; }
+    public required string FirstName { get; init; }
 
-    public string LastName { get; init; }
+    public required string LastName { get; init; }
 
-    public string PhoneNumber { get; init; }
+    public required string PhoneNumber { get; init; }
 
     public string? Email { get; init; }
 
     public string? IdCard { get; init; }
 
-    public string City { get; init; }
+    public required string City { get; init; }
 
-    public string Street { get; init; }
+    public string? Street { get; init; }
 }

@@ -22,8 +22,10 @@ public class PaymentControllerTests
 
         var controller = new PaymentController(paymentService.Object);
 
+        var command = new Faker<CreatePaymentCommand>().Generate();
+        
         // Act
-        var result = await controller.AddPayment(new CreatePaymentCommand()) as OkObjectResult;
+        var result = await controller.AddPayment(command) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {
@@ -106,8 +108,10 @@ public class PaymentControllerTests
 
         var controller = new PaymentController(paymentService.Object);
 
+        var command = new Faker<UpdatePaymentCommand>().Generate();
+        
         // Act
-        var result = await controller.UpdatePayment(new UpdatePaymentCommand(), 1) as OkObjectResult;
+        var result = await controller.UpdatePayment(command, 1) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {

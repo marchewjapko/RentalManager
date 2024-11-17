@@ -266,7 +266,7 @@ public class PaymentRepositoryTests
             .RuleFor(x => x.Agreement, () => MockAgreement)
             .RuleFor(x => x.Method, f => f.Random.Word())
             .RuleFor(x => x.Amount, f => f.Random.Int())
-            .RuleFor(x => x.DateFrom, f => dateRangeFromInRange)
+            .RuleFor(x => x.DateFrom, () => dateRangeFromInRange)
             .RuleFor(x => x.DateTo, () => dateRangeToInRange)
             .RuleFor(x => x.IsActive, () => true)
             .Generate(2);
@@ -328,9 +328,12 @@ public class PaymentRepositoryTests
     [Test]
     public void ShouldNotUpdate_NotFound()
     {
+        // Arrange
+        var payment = new Faker<Payment>().Generate();
+        
         // Assert
         Assert.ThrowsAsync<PaymentNotFoundException>(async () =>
-            await _paymentRepository.UpdateAsync(new Payment(), 1));
+            await _paymentRepository.UpdateAsync(payment, 1));
     }
 
     [Test]

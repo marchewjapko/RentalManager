@@ -38,7 +38,7 @@ public class AgreementProfiles : Profile
             .ForMember(x => x.Id, x => x.MapFrom(a => a.Id))
             .ForMember(x => x.User, x => x.MapFrom(a => new UserDto
             {
-                Id = a.UserId
+                Id = a.UserId,
             }))
             .ForMember(x => x.Client, x => x.MapFrom(a => a.Client))
             .ForMember(x => x.IsActive, x => x.MapFrom(a => a.IsActive))

@@ -22,8 +22,10 @@ public class EquipmentControllerTests
 
         var controller = new EquipmentController(equipmentService.Object);
 
+        var command = new Faker<CreateEquipmentCommand>().Generate();
+        
         // Act
-        var result = await controller.AddEquipment(new CreateEquipmentCommand()) as OkObjectResult;
+        var result = await controller.AddEquipment(command) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {
@@ -106,8 +108,10 @@ public class EquipmentControllerTests
 
         var controller = new EquipmentController(equipmentService.Object);
 
+        var command = new Faker<UpdateEquipmentCommand>().Generate();
+        
         // Act
-        var result = await controller.UpdateEquipment(new UpdateEquipmentCommand(), 1) as OkObjectResult;
+        var result = await controller.UpdateEquipment(command, 1) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() => {

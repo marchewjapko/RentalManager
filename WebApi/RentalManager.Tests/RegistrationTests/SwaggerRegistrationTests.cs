@@ -25,6 +25,11 @@ public class SwaggerRegistrationTests
         var serviceProvider = builder.Services.BuildServiceProvider();
         var swaggerGen = serviceProvider.GetService<ISwaggerProvider>();
 
+        if (swaggerGen is null)
+        {
+            throw new NullReferenceException();
+        }
+
         var swaggerDoc = swaggerGen.GetSwagger("v1");
         Assert.Multiple(() => {
             Assert.That(swaggerDoc, Is.Not.Null);

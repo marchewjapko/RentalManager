@@ -56,7 +56,7 @@ public class UserControllerTests
     }
 
     [Test]
-    public async Task WhoAmI_ShouldReturnMe()
+    public void WhoAmI_ShouldReturnMe()
     {
         // Arrange
         var context = new DefaultHttpContext();
@@ -72,11 +72,12 @@ public class UserControllerTests
 
         var userService = new Mock<IUserService>();
 
-        var controller = new UserController(userService.Object);
-
-        controller.ControllerContext = new ControllerContext
+        var controller = new UserController(userService.Object)
         {
-            HttpContext = context
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            }
         };
 
         // Act

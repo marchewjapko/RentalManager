@@ -362,9 +362,15 @@ public class AgreementRepositoryTests
     [Test]
     public void ShouldNotUpdate_NotFound()
     {
+        // Arrange
+        var client = new Faker<Client>().Generate();
+        var agreement = new Faker<Agreement>()
+            .RuleFor(x => x.Client, () => client)
+            .Generate();
+
         // Assert
         Assert.ThrowsAsync<AgreementNotFoundException>(async () =>
-            await _agreementRepository.UpdateAsync(new Agreement(), 1));
+            await _agreementRepository.UpdateAsync(agreement, 1));
     }
 
     [Test]

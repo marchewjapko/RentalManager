@@ -8,14 +8,14 @@ public class IdentityServiceUser
     public int Pk { get; init; }
 
     [JsonPropertyName("username")]
-    public string UserName { get; init; }
+    public required string UserName { get; init; }
 
     [JsonPropertyName("groups_obj")]
-    public IEnumerable<IdentityServiceGroup> Groups { get; init; }
+    public required IEnumerable<IdentityServiceGroup> Groups { get; init; }
 
     [JsonPropertyName("type")]
-    public string Type { get; init; }
+    public required string Type { get; init; }
 
     [JsonPropertyName("attributes")]
-    public Dictionary<string, object> Attributes { get; init; }
+    public required Dictionary<string, object> Attributes { get; init; }
 }
