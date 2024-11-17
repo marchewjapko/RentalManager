@@ -37,5 +37,5 @@ jobs:
               /d:sonar.cs.opencover.reportsPaths=coverage.xml
           dotnet build --no-incremental "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
           dotnet test --collect:"XPlat Code Coverage;Format=opencover" ".\WebApi\RentalManager.Tests\RentalManager.Tests.csproj"
-          cp ".\WebApi\RentalManager.Tests\TestResults\*\coverage.opencover.xml" .\coverage.xml
+          cp "./WebApi/RentalManager.Tests/TestResults/*/coverage.opencover.xml" .\coverage.xml
           dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
