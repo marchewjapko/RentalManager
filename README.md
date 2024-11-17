@@ -5,11 +5,11 @@ The aim of *RenatalManager* is to help manage the rentals of medical equipment s
 I fully realize this could have all been achieved with a simple spreadsheet with much less hassle.
 
 ## Status
-	
-[![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage/shields/shields.json)](https://github.com/marchewjapko/RentalManager/actions/workflows/coverlet.yml) <br/><br/>
-[![Publish Docker image](https://github.com/marchewjapko/RentalManager/actions/workflows/web-api-docker.yml/badge.svg)](https://github.com/marchewjapko/RentalManager/pkgs/container/rentalmanager) <br/><br/>
-[![CodeQL](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql) <br/><br/>
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=marchewjapko_RentalManager&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=marchewjapko_RentalManager)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=marchewjapko_RentalManager&metric=coverage)](https://sonarcloud.io/summary/new_code?id=marchewjapko_RentalManager) <br/><br/>
+[![Publish Docker image](https://github.com/marchewjapko/RentalManager/actions/workflows/web-api-docker.yml/badge.svg)](https://github.com/marchewjapko/RentalManager/pkgs/container/rentalmanager) <br/><br/>
+[![CodeQL](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql)
 
 ## Installation
 
