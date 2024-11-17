@@ -87,7 +87,7 @@ public class DataFeedController(
         
         var reader = tercXmlFile.OpenReadStream();
         
-        var movies = deserializer.Deserialize(reader) as TerrytUpdateDto<TercUpdateDto>;
+        var updateDto = deserializer.Deserialize(reader) as TerrytUpdateDto<TercUpdateDto>;
         
         reader.Close();
         
