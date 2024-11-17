@@ -2,7 +2,7 @@
 
 namespace TerrytLookup.Infrastructure.Models.Dto.Terryt;
 
-public class UlicDto
+public sealed class UlicDto
 {
     /// <summary>
     ///     Terryt property: <c>WOJ</c>

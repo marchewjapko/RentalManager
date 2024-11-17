@@ -2,7 +2,7 @@
 
 namespace TerrytLookup.Infrastructure.Models.Dto.Terryt;
 
-public class SimcDto : IEquatable<SimcDto>
+public sealed class SimcDto : IEquatable<SimcDto>
 {
     /// <summary>
     ///     Terryt property: <c>WOJ</c>

@@ -10,7 +10,7 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class EquipmentController(IEquipmentService equipmentService) : Controller
+public class EquipmentController(IEquipmentService equipmentService) : ControllerBase
 {
     [ProducesResponseType(typeof(EquipmentDto), 200)]
     [HttpPost]

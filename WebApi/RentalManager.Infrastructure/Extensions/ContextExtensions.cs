@@ -74,7 +74,7 @@ public static class ContextExtensions
     {
         var expressionString = propertyExpression.ToString();
         const string pattern = @"(\w+\.){1}(.+)";
-        var match = Regex.Match(expressionString, pattern, RegexOptions.IgnoreCase);
+        var match = Regex.Match(expressionString, pattern, RegexOptions.IgnoreCase | RegexOptions.NonBacktracking);
 
         return match.Groups[2].Value;
     }

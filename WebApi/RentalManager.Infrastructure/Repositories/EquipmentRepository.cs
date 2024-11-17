@@ -73,7 +73,7 @@ public class EquipmentRepository(AppDbContext appDbContext) : IEquipmentReposito
 
     public async Task<Equipment> UpdateAsync(Equipment equipment, int id)
     {
-        var equipmentToUpdate = appDbContext.Equipments.FirstOrDefault(x => x.Id == id);
+        var equipmentToUpdate = await appDbContext.Equipments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (equipmentToUpdate == null)
         {

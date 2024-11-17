@@ -105,15 +105,12 @@ if (builder.Configuration["InMemory"] == "False") {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
     
-    if (context.Database.GetPendingMigrations().Any()) {
-        context.Database.Migrate();
-    }
+    await context.Database.MigrateAsync();
+
+    await app.RunAsync();
 }
 
 // Use exception handling middleware
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();
-
-[ExcludeFromCodeCoverage]
-public partial class Program { }

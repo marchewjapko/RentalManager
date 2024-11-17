@@ -2,14 +2,14 @@
 
 namespace TerrytLookup.Infrastructure.Models.Dto.Terryt;
 
-public class TercDto : IEquatable<TercDto>
+public sealed class TercDto : IEquatable<TercDto>
 {
     /// <summary>
     ///     Terryt property: <c>WOJ</c>
     /// </summary>
     [Name("WOJ")]
     public required int VoivodeshipId { get; init; }
-    
+
     /// <summary>
     ///     Terryt property: <c>POW</c>
     /// </summary>
@@ -44,8 +44,8 @@ public class TercDto : IEquatable<TercDto>
     public bool IsCounty()
     {
         string[] county = ["powiat", "miasto na prawach powiatu", "miasto stołeczne, na prawach powiatu"];
-        
-        return county.Any(x => CountyId.HasValue && string.Equals(EntityType, x, StringComparison.InvariantCultureIgnoreCase));
+
+        return Array.Exists(county, x => CountyId.HasValue && string.Equals(EntityType, x, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public bool Equals(TercDto? other)

@@ -14,7 +14,6 @@ public static class DbContextDomainConfiguration
         modelBuilder.Entity<Agreement>()
             .HasMany(x => x.Equipments)
             .WithMany(x => x.Agreements)
-            // .UsingEntity(x => x.ToTable("AgreementEquipment"));
             .UsingEntity<Dictionary<string, object>>(
                 x => x.HasOne<Equipment>()
                     .WithMany()

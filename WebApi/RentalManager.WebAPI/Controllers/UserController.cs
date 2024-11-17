@@ -9,7 +9,7 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class UserController(IUserService userService) : Controller
+public class UserController(IUserService userService) : ControllerBase
 {
     [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
     [HttpGet]

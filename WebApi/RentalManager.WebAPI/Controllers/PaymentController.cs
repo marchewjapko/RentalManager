@@ -12,7 +12,7 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class PaymentController(IPaymentService paymentService) : Controller
+public class PaymentController(IPaymentService paymentService) : ControllerBase
 {
     [ProducesResponseType(typeof(PaymentDto), 200)]
     [HttpPost]

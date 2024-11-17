@@ -2,9 +2,9 @@
 
 public class StreetDto
 {
-    public int TownId { get; set; }
+    public int TownId { get; init; }
     
-    public int NameId { get; set; }
+    public int NameId { get; init; }
 
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 }

@@ -12,7 +12,7 @@ namespace RentalManager.WebAPI.Controllers;
 [ApiController]
 [Authorize]
 [Route("[Controller]")]
-public class ClientController(IClientService clientService) : Controller
+public class ClientController(IClientService clientService) : ControllerBase
 {
     [ProducesResponseType(typeof(ClientDto), 200)]
     [HttpPost]

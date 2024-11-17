@@ -8,7 +8,6 @@ public class BaseEntityProfiles : Profile
     public BaseEntityProfiles()
     {
         CreateMap<object, BaseEntity>()
-            //.ForMember(x => x.Id, opt => opt.Ignore())
             .ForMember(x => x.CreateTimestamp, opt => opt.Ignore())
             .ForMember(x => x.UpdateTimestamp, opt => opt.Ignore());
     }

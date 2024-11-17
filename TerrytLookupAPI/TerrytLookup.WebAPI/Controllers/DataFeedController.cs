@@ -46,7 +46,7 @@ public class DataFeedController(
         foreach (var file in files)
             if (file.ContentType != "text/csv")
             {
-                throw new InvalidFileContentTypeExtension(file.ContentType);
+                throw new InvalidFileContentTypeExtensionException(file.ContentType);
             }
 
         if (await townService.ExistAnyAsync())

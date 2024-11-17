@@ -21,6 +21,8 @@ public class CountyController(ICountyService countyService) : ControllerBase
     [HttpGet]
     public IActionResult BrowseAllCounties(string? name, int? voivodeshipId)
     {
+        var x = ModelState.IsValid;
+        
         var result = countyService.BrowseAllAsync(name, voivodeshipId);
 
         return Ok(result);

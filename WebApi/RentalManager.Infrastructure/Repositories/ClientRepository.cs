@@ -57,7 +57,7 @@ public class ClientRepository(AppDbContext appDbContext) : IClientRepository
 
     public async Task<Client> UpdateAsync(Client client, int id)
     {
-        var clientToUpdate = appDbContext.Clients.FirstOrDefault(x => x.Id == id);
+        var clientToUpdate = await appDbContext.Clients.FirstOrDefaultAsync(x => x.Id == id);
 
         if (clientToUpdate == null)
         {

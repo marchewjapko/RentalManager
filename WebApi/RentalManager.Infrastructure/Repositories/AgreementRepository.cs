@@ -66,11 +66,11 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
     public async Task<Agreement> UpdateAsync(Agreement agreement, int id)
     {
-        var agreementToUpdate = appDbContext.Agreements
+        var agreementToUpdate = await appDbContext.Agreements
             .Include(x => x.Equipments)
             .Include(x => x.Client)
             .Include(x => x.Payments)
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (agreementToUpdate == null)
         {
@@ -123,16 +123,6 @@ public class AgreementRepository(AppDbContext appDbContext) : IAgreementReposito
 
         if (queryAgreements.OnlyUnpaid)
         {
-            foreach (var ar in agreements)
-            {
-                var zz = ar.Payments.ToList();
-
-                var xx = ar.Payments.OrderByDescending(payment => payment.DateTo)
-                    .ToList();
-
-                ;
-            }
-
             agreements = agreements.Where(x => x.Payments.Count == 0 || x.Payments.OrderByDescending(payment => payment.DateTo)
                 .First()
                 .DateTo < DateTime.Now.Date);

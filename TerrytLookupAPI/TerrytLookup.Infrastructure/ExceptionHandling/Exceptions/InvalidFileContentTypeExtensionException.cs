@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
 
-public class InvalidFileContentTypeExtension(string contentType)
+public class InvalidFileContentTypeExtensionException(string contentType)
     : Exception($"Unable to read file with content type of '{contentType}'."), ICustomMappedException
 {
     public ProblemDetails GetProblemDetails(Exception exception)

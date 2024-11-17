@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace TerrytLookup.Infrastructure.Services.FeedDataService;
 
-public class TerrytReader : IDisposable
+public sealed class TerrytReader : IDisposable
 {
     private static readonly CsvConfiguration CsvConfig = new(CultureInfo.InvariantCulture)
     {
@@ -45,12 +45,11 @@ public class TerrytReader : IDisposable
     {
         var records = _csvReader.GetRecordsAsync<T>();
 
-        // var result = records.ToHashSetAsync();
-        var result = records.ToHashSetAsync();
+        var result = records.ToHashSetAsync()
+            .AsTask();
 
-        result.AsTask()
-            .ContinueWith(_ => Dispose());
+        result.ContinueWith(_ => Dispose());
 
-        return result.AsTask();
+        return result;
     }
 }

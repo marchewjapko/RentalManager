@@ -54,7 +54,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
 
     public async Task<Payment> UpdateAsync(Payment payment, int id)
     {
-        var paymentToUpdate = appDbContext.Payments.FirstOrDefault(x => x.Id == id);
+        var paymentToUpdate = await appDbContext.Payments.FirstOrDefaultAsync(x => x.Id == id);
 
         if (paymentToUpdate == null)
         {

@@ -11,7 +11,7 @@ namespace RentalManager.WebAPI.Controllers;
 //[Authorize]
 [Route("[Controller]")]
 public class AgreementController(IAgreementService agreementService)
-    : Controller
+    : ControllerBase
 {
     [ProducesResponseType(typeof(AgreementDto), 200)]
     [HttpPost]
