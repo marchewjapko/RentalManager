@@ -1,4 +1,4 @@
-name: RentalManager SonarCloud Code Coverage
+name: RentalManager SonarCloud Analysis
 
 on:
   push:
@@ -22,14 +22,8 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
-
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Install dotnet-coverage
-        run: dotnet tool install --global dotnet-coverage
 
       - name: Run SonarCloud analysis
         env:
@@ -40,7 +34,15 @@ jobs:
           dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" \
               /o:"$SONAR_ORGANIZATION_KEY" \
               /d:sonar.token="$SONAR_TOKEN" \
-              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+              /d:sonar.cs.opencover.reportsPaths=coverage.xml
           dotnet build --no-incremental "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
-          dotnet-coverage collect "dotnet test .\WebApi\RentalManager.Tests\RentalManager.Tests.csproj /p:ExcludeByFile='**/program.cs\'" -f xml -o "coverage.xml"
+          dotnet test --collect:"XPlat Code Coverage;Format=opencover" ".\WebApi\RentalManager.Tests\RentalManager.Tests.csproj"
+          coverage_file=$(find "./WebApi/RentalManager.Tests/TestResults" -type f -name "coverage.opencover.xml" | head -n 1)
+          mv "$coverage_file" ./coverage.xml
           dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: "./coverage.xml"
