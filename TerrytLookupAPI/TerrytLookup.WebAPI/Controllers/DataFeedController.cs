@@ -44,10 +44,10 @@ public class DataFeedController(
         [Required] IFormFile ulicCsvFile)
     {
         IFormFile[] files = [tercCsvFile, simcCsvFile, ulicCsvFile];
-        foreach (var file in files)
-            if (file.ContentType != "text/csv")
+        foreach (var contentType in files.Select(x => x.ContentType))
+            if (contentType != "text/csv")
             {
-                throw new InvalidFileContentTypeExtensionException(file.ContentType);
+                throw new InvalidFileContentTypeExtensionException(contentType);
             }
 
         if (await townService.ExistAnyAsync())
