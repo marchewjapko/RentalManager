@@ -22,7 +22,7 @@ public class OptionsRegistrationTests
         Assert.That(optionTypes.All(x => handledGenerics.Contains(x)), Is.True);
     }
     
-    private List<Type> GetAllOptionTypes()
+    private static List<Type> GetAllOptionTypes()
     {
         var assembly = Assembly.Load("RentalManager.Infrastructure");
         var types = assembly.GetTypes();

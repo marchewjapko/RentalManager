@@ -109,7 +109,7 @@ public class EquipmentRepositoryTests
         var result = await _equipmentRepository.GetAsync([1, 2]);
 
         // Assert
-        Assert.That(result.Count(), Is.EqualTo(2));
+        Assert.That(result, Has.Count.EqualTo(2));
     }
 
     [Test]

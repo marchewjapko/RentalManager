@@ -257,7 +257,7 @@ public class UserServiceTests
 
     #region Json Reponses
 
-    public static string GetUserByIdResponse()
+    private static string GetUserByIdResponse()
     {
         return """
                {
@@ -305,7 +305,7 @@ public class UserServiceTests
                """;
     }
 
-    public static string GetUserByIdResponse_NotInternal()
+    private static string GetUserByIdResponse_NotInternal()
     {
         return """
                {
@@ -353,7 +353,7 @@ public class UserServiceTests
                """;
     }
 
-    public static string GetUsersResponse()
+    private static string GetUsersResponse()
     {
         return """
                {
@@ -463,7 +463,7 @@ public class UserServiceTests
                """;
     }
 
-    public static string GetUsersResponse_MultipleUsers()
+    private static string GetUsersResponse_MultipleUsers()
     {
         return """
                {

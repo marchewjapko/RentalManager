@@ -20,7 +20,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
 
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        logger.LogError(exception, exception.Message);
+        logger.LogError(exception, "An error occurred: {Message}", exception.Message);
 
         context.Response.ContentType = "application/json";
 

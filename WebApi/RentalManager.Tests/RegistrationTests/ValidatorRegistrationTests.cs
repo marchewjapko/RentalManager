@@ -23,7 +23,7 @@ public class ValidatorRegistrationTests
             .All(x => handledGenerics.Contains(x)), Is.True);
     }
 
-    private List<Type> GetAllCommandTypes()
+    private static List<Type> GetAllCommandTypes()
     {
         var assembly = Assembly.Load("RentalManager.Infrastructure");
         var types = assembly.GetTypes();

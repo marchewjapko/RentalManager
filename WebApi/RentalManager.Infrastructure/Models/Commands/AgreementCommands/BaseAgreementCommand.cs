@@ -18,7 +18,7 @@ public class BaseAgreementCommand
     public int ClientId { get; init; }
 
     [Required]
-    [DefaultValue(new[] { 1 })]
+    [DefaultValue("{1}")]
     public required ICollection<int> EquipmentsIds { get; init; }
 
     [DefaultValue("Fun comment")]
