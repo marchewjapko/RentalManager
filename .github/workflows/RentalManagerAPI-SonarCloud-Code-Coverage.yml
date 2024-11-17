@@ -42,6 +42,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Your SonarCloud token
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet sonarscanner begin /k:"{{ env.sonar_projet_key }}" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.coverageReportPaths="**/coverage.cobertura.xml"
+          dotnet sonarscanner begin /k:"${{ env.sonar_projet_key }}" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.coverageReportPaths="**/coverage.cobertura.xml"
           dotnet build
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
