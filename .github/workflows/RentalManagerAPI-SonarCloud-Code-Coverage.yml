@@ -1,0 +1,46 @@
+name: RentalManager SonarCloud Code Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest    
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+          SONAR_PROJECT_KEY: marchewjapko_RentalManager
+          SONAR_ORGANIZATION_KEY: marchew-japko-personal-projects
+        run: |
+          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" \
+              /o:"$SONAR_ORGANIZATION_KEY" \
+              /d:sonar.token="$SONAR_TOKEN" \
+              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet build --no-incremental "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+          dotnet-coverage collect "dotnet test .\WebApi\RentalManager.Tests\RentalManager.Tests.csproj /p:ExcludeByFile='**/program.cs\'" -f xml -o "coverage.xml"
+          dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"

@@ -23,9 +23,8 @@ Each of the components of the system is published as a separate image to Docker 
 The system is made up of the following components:
 
  - WebAPI - a [ASP.NET Core ](https://dotnet.microsoft.com/en-us/apps/aspnet) web API forming the core of the project. Used to manipulate data directly associated with rentals (a simple CRUD service)
- -  WebApp - a React web application written in [Next.js](https://nextjs.org/)
+ - WebApp - a React web application written in [Next.js](https://nextjs.org/)
  - DocumentService - a [FastAPI](https://fastapi.tiangolo.com/) web service, its purpose is to create necessary PDF documents
- - TerrytLookup - another [ASP.NET Core ](https://dotnet.microsoft.com/en-us/apps/aspnet) web API. This one allows querying the [Terryt Registry](https://eteryt.stat.gov.pl/eTeryt/rejestr_teryt/informacje_podstawowe/informacje_podstawowe.aspx)
 
 ## Building and Publishing Docker images
 To build your own images, run the following:
@@ -38,9 +37,5 @@ To publish them, under you own username:
     docker push [your docker hub username]/rental-manager-document-service:latest
 
 ## Used libraries
-
-[ToDo]
-
-## Using TerrytLookup Service
 
 [ToDo]
