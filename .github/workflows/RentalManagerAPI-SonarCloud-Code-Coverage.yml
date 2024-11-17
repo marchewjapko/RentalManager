@@ -1,4 +1,4 @@
-name: SonarCloud
+name: RentalManager SonarCloud Code Coverage
 
 on:
   push:
@@ -34,9 +34,9 @@ jobs:
           SONAR_PROJECT_KEY: marchewjapko_RentalManager
           SONAR_ORGANIZATION_KEY: marchew-japko-personal-projects
         run: |
-          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY"
-              /o:"$SONAR_ORGANIZATION_KEY"
-              /d:sonar.token="$SONAR_TOKEN"
+          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" \
+              /o:"$SONAR_ORGANIZATION_KEY" \
+              /d:sonar.token="$SONAR_TOKEN" \
               /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build --no-incremental "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
           dotnet-coverage collect "dotnet test .\WebApi\RentalManager.Tests\RentalManager.Tests.csproj" -f xml -o "coverage.xml"
