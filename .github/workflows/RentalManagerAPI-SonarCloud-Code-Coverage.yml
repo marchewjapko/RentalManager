@@ -12,8 +12,6 @@ jobs:
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest    
-    env:
-      sonar_projet_key: marchewjapko_RentalManager
 
     steps:
       - name: Checkout code
@@ -27,21 +25,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
 
-      - name: Build
-        run: dotnet build --configuration Release "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
-
-      - name: Run tests
-        run: dotnet test --collect:"XPlat Code Coverage" --configuration Release "WebApi/RentalManager.Tests/RentalManager.Tests.csproj"
-
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Run SonarCloud analysis
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Auto-generated token for GitHub Actions
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Your SonarCloud token
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+          SONAR_PROJECT_KEY: marchewjapko_RentalManager
         run: |
-          export PATH="$PATH:/root/.dotnet/tools"
-          dotnet sonarscanner begin /k:"${{ env.sonar_projet_key }}" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.coverageReportPaths="**/coverage.cobertura.xml"
-          dotnet build
-          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY"
+              /d:sonar.token="$SONAR_TOKEN"
+              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet build --no-incremental "WebApi/RentalManager.WebAPI/RentalManager.WebAPI.csproj"
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
