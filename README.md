@@ -5,16 +5,10 @@ The aim of *RenatalManager* is to help manage the rentals of medical equipment s
 I fully realize this could have all been achieved with a simple spreadsheet with much less hassle.
 
 ## Status
-
-<div align="center">
-</br>
 	
-[![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage/shields/shields.json)](https://github.com/marchewjapko/RentalManager/actions/workflows/coverlet.yml) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![Publish Docker image](https://github.com/marchewjapko/RentalManager/actions/workflows/web-api-docker.yml/badge.svg)](https://github.com/marchewjapko/RentalManager/pkgs/container/rentalmanager) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[![](https://byob.yarr.is/marchewjapko/RentalManager/web-api-test-coverage/shields/shields.json)](https://github.com/marchewjapko/RentalManager/actions/workflows/coverlet.yml) <br/><br/>
+[![Publish Docker image](https://github.com/marchewjapko/RentalManager/actions/workflows/web-api-docker.yml/badge.svg)](https://github.com/marchewjapko/RentalManager/pkgs/container/rentalmanager) <br/><br/>
 [![CodeQL](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/marchewjapko/RentalManager/actions/workflows/github-code-scanning/codeql)
-
-</div>
-
 
 ## Installation
 
