@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +7,6 @@ using RentalManager.Infrastructure.Options;
 using RentalManager.Infrastructure.Repositories.DbContext;
 using RentalManager.Infrastructure.Services;
 using RentalManager.WebAPI;
-
-[assembly: ExcludeFromCodeCoverage]
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowSpecificOrigins = "allowSpecificOrigins";
