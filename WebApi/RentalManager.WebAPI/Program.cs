@@ -113,4 +113,4 @@ if (builder.Configuration["InMemory"] == "False") {
 // Use exception handling middleware
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.Run();
+await app.RunAsync();

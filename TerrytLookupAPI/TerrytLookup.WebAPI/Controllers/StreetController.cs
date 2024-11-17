@@ -7,6 +7,7 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     Controller for managing street-related operations.
 /// </summary>
+[ApiController]
 [Route("[Controller]")]
 public class StreetController(IStreetService streetService) : ControllerBase
 {

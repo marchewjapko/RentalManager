@@ -7,6 +7,7 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     Controller for managing voivodeship-related operations.
 /// </summary>
+[ApiController]
 [Route("[Controller]")]
 public class VoivodeshipController(IVoivodeshipService voivodeshipService) : ControllerBase
 {

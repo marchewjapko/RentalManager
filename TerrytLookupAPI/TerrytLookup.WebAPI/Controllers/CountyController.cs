@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TerrytLookup.Infrastructure.ExceptionHandling.Exceptions;
 using TerrytLookup.Infrastructure.Models.Dto;
 using TerrytLookup.Infrastructure.Services.CountyService;
 
@@ -7,6 +8,7 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     Controller for managing county-related operations.
 /// </summary>
+[ApiController]
 [Route("[Controller]")]
 public class CountyController(ICountyService countyService) : ControllerBase
 {
@@ -21,8 +23,6 @@ public class CountyController(ICountyService countyService) : ControllerBase
     [HttpGet]
     public IActionResult BrowseAllCounties(string? name, int? voivodeshipId)
     {
-        var x = ModelState.IsValid;
-        
         var result = countyService.BrowseAllAsync(name, voivodeshipId);
 
         return Ok(result);

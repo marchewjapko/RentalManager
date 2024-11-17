@@ -14,6 +14,7 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     This controller is meant to manipulate Terryt database data.
 /// </summary>
+[ApiController]
 [Route("[Controller]/[Action]")]
 public class DataFeedController(
     ILogger<DataFeedController> logger,

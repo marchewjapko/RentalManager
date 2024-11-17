@@ -75,7 +75,7 @@ public sealed class TercDto : IEquatable<TercDto>
             return true;
         }
 
-        if (obj.GetType() != typeof(TercDto))
+        if (obj is TercDto)
         {
             return false;
         }

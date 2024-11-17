@@ -7,6 +7,7 @@ namespace TerrytLookup.WebAPI.Controllers;
 /// <summary>
 ///     Controller for managing town-related operations.
 /// </summary>
+[ApiController]
 [Route("[Controller]")]
 public class TownController(ITownService townService) : ControllerBase
 {
